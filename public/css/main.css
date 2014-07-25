@@ -1,0 +1,57 @@
+ul {
+	list-style: none outside none;
+}
+
+main{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 150px;
+}
+
+nav .menu{
+	color: white;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 150px;
+	padding: 21px 25px;
+	background-color: #030303;
+	z-index: 2;
+	box-sizing: border-box;
+}
+
+section.song-list > .list-container {
+	position: absolute;
+	left: 505px;
+}
+
+section.song-list > .list-container .scroller {
+	overflow-y: auto;
+	height: 100%;
+	padding: 25px;
+	box-sizing: border-box;
+}
+
+section.song-list .list-actions {
+	margin-bottom: 10px;
+}
+
+section.song-list  .list-actions {
+	margin-bottom: 25px;
+	overflow: hidden;
+}
+
+section.sidebar.show {
+    z-index: 2;
+    width: 140px;
+    position: fixed;
+    left: 165px;
+    top: 15px;
+}
+
+section.sidebar .user-sidebar{
+
+}
