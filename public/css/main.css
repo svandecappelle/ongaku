@@ -26,6 +26,11 @@ nav .menu{
 section.song-list > .list-container {
 	position: absolute;
 	left: 505px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	padding: 10px;
+	background-color: #F3F3F3;
 }
 
 section.song-list > .list-container .scroller {
@@ -37,6 +42,9 @@ section.song-list > .list-container .scroller {
 
 section.song-list .list-actions {
 	margin-bottom: 10px;
+	position: absolute;
+	right: 0px;
+	padding: 10px;
 }
 
 section.song-list  .list-actions {
@@ -54,4 +62,119 @@ section.sidebar.show {
 
 section.sidebar .user-sidebar{
 
+}
+
+span.button{
+	background-color: black;
+	color: white;
+	border-radius: 2px;
+	font-size: 10pt;
+	padding: 5px;
+	margin-left: 3px;
+	cursor: pointer;
+	transition: background-color 0.3s ease 0s;
+	-webkit-transition: all 0.3s ease 0s;
+}
+
+span.button:hover{
+	background-color: #DCDCDC;
+	color: black;
+}
+
+section.song-list > .list-container .infos{
+	position: absolute;
+	font-size: 15pt;
+}
+
+section.song-list > .list-container .infos>.artist{
+	font-weight: bold;
+}
+
+section.song-list > .list-container .infos>.album>img{
+	width: 100%;
+	margin-right: 10px;
+}
+
+section.song-list > .list-container .infos>.album>.title{
+	font-style: oblique;
+}
+
+section.song-list > .list-container{
+	min-width: 450px;
+	overflow: auto;
+}
+
+section.song-list > .list-container .songs-container{
+	margin: 20px;
+	position: absolute;
+	top: 50px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
+section.song-list > .list-container .songs-container ul li{
+	margin-bottom: 2px;
+}
+
+section.song-list > .list-container .songs-container .song{
+	margin-bottom: 2px;
+	background-color: white;
+	border-radius: 3px;
+	cursor: pointer;
+	width: 100%;
+	white-space: nowrap;
+}
+
+section.song-list > .list-container .songs-container .song:hover{
+	color: #33B;
+}
+
+section.song-list > .list-container .songs-container .song .track-info{
+	display: inline-block;
+}
+
+section.song-list > .list-container .songs-container .song .track-info.track-px{
+	width: 100%;
+}
+
+section.song-list > .list-container .songs-container .song .track-num{
+	width: 56px;
+	text-align: right;
+	margin-left: 16px;
+}
+
+section.song-list > .list-container .songs-container .song:hover .track-num:before{
+	content: '\f04b';
+	font-family: "FontAwesome";
+	left: -16px;
+	position: relative;
+}
+
+section.song-list > .list-container .songs-container .song .track-num:after{
+	content: '\f001';
+	margin-left: 3px;
+	margin-right: 3px;
+	font-family: "FontAwesome";
+}
+
+section.song-list > .list-container .songs-container .song .track-info.track{
+	position: absolute;
+	left: 115px;
+	right: 63px;
+}
+
+section.song-list > .list-container .songs-container .song .track-artist{
+	width: 40%;
+}
+
+section.song-list > .list-container .songs-container .song .track-title{
+	width: 60%;
+}
+
+section.song-list > .list-container .songs-container .song .track-time{
+	width: 60px;
+	padding-left: 15px;
+	position: absolute;
+	right: 0px;
 }

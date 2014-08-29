@@ -4,5 +4,41 @@ block append sidebar
 block append songlist
 	section.song-list
 		.list-container
+			.infos
+				.artist
+					span Artiste Inconnu
+				.album
+					img(url="https://a4-images.myspacecdn.com/images04/3/66428a7344ef45cab06b730823baf13a/full.jpg")
+					span.title Album Inconnu
 			.list-actions
-				button Play All
+				span.button
+					i.fa.fa-heart
+				span.button
+					i.fa.fa-plus
+			.songs-container
+				ul
+					li
+						a.song
+							.track-info.track-px
+								.track-info.track-num
+									span 01
+								.track-info.track-time
+									span 3:08
+							.track-info.track
+								.track-info.track-title
+									span Titre Inconnu
+								.track-info.track-artist
+									span Artiste Inconnu
+					li
+						a.song
+							.track-info.track-px
+								.track-info.track-num
+									span 02
+								.track-info.track-time
+									span 4:25
+							.track-info.track
+								.track-info.track-title
+									span Titre Inconnu
+								.track-info.track-artist
+									span Artiste Inconnu
+				.song
