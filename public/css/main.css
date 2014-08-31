@@ -1,5 +1,6 @@
 ul {
 	list-style: none outside none;
+	padding: 0;
 }
 
 main{
