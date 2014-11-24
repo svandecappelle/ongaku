@@ -2,8 +2,14 @@ html
 	head 
 		title Library
 		meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
-		link(rel="stylesheet" type="text/css", href="/css/main.css")
-		link(rel="stylesheet" type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
+		link(rel="stylesheet", type="text/css", href="/css/main.css")
+		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
+		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.min.css")
+		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
+		
+		script(src="/jquery/jquery-2.1.1.min.js")
+		script(src="/mediaelement/mediaelement-and-player.js")
+		script(src="/bootstrap/js/bootstrap.js")
 		
 	body
 		nav.menu
@@ -26,9 +32,13 @@ html
 						a Library
 					li
 						a Upload
-					li
-						a Followers
 
 		main
 			block sidebar
 			block songlist
+			include player
+
+		script.
+			// using jQuery
+			$('video,audio').mediaelementplayer(/* Options */);
+			

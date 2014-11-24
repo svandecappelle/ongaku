@@ -28,7 +28,8 @@
     	   "async"			:		"~0.2.8",
          "vid-streamer": "0.1.4",
          "connect-busboy" : "*",
-         "morgan":  "*"
+         "morgan":  "*",
+        "underscore": "*"
 	},
    "bin"	: "./app.js",
    "scripts": {

@@ -28,6 +28,10 @@ module.exports = function (app, options) {
 		middleware.getVideo(req, res, "./video/" + req.param.video);
     });
 
+    app.get('/stream/:media', function (req, res) {
+    	logger.info("streaming");
+    	middleware.stream(req, res, nconf.get("library") + req.param.media);
+    });
 
     if (nconf.get("uploader")){
 		var fs = require('fs');

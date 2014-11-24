@@ -1,0 +1,11 @@
+block player
+	.player
+		.pending-list
+			.list
+				.song
+					.song-title A title
+					.songe-artist Artist
+					.songe-infos 2m30s
+
+		audio(controls="controls", width="100%")
+			source(type="audio/mp3", src="/stream/#{data.playing}")

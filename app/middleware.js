@@ -5,7 +5,8 @@ var middleware = {},
 	async = require('async'),
 	nconf = require('nconf'),
 	fs = require('fs'),
-	logger = require('log4js').getLogger("Middleware");
+	logger = require('log4js').getLogger("Middleware"),
+	_ = require("underscore");
 
 /*
 	Render a view. Control if rights are valid to access the view and if user is authenticated (if needed).
@@ -25,6 +26,11 @@ middleware.render = function(view, req, res, objs){
 	var call = async.compose(this.session, this.meta);
 
 	call(middlewareObject, function(err, middlewareObject){
+		_.extend(middlewareObject.objs, {
+			data: {
+				playing: "01-GypsyCab.mp3"
+			}
+		});
 		res.render(view, middlewareObject.objs);
 	});
 };
@@ -36,7 +42,7 @@ middleware.redirect = function(view, res){
 	res.redirect(view);
 };
 
-middleware.getVideo = function(req, res, path){
+middleware.stream = function(req, res, path){
 	if (this.requireAuthentication(req)){
 		// need an auth
 		logger.info("Client not connected: cannot acces to video ["+req.ip+"]");
@@ -52,8 +58,8 @@ middleware.getVideo = function(req, res, path){
 			"mode": "development",
 			"forceDownload": false,
 			"random": false,
-			"rootFolder": "./video",
-			"rootPath": "video",
+			"rootFolder": nconf.get("library"),
+			"rootPath": "stream",
 			"server": "VidStreamer.js/0.1.4"
 		};
 
@@ -96,7 +102,8 @@ middleware.post = function(req, res, callback){
 };
 
 middleware.requireAuthentication = function(req){
-	return !req.isAuthenticated();
+	return false;
+	//return !req.isAuthenticated();
 };
 
 module.exports = middleware;
