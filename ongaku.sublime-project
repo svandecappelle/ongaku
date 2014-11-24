@@ -5,5 +5,9 @@
 			"follow_symlinks": true,
 			"path": "."
 		},
+		{
+			"follow_symlinks": true,
+			"path": "/home/svandecappelle/workspace/groovebasin"
+		}
 	]
 }
