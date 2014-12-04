@@ -6,10 +6,14 @@ html
 		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
 		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.min.css")
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-bootstrap/ui.fancytree.min.css")
+		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-win8/ui.fancytree.min.css")  
 		
 		script(src="/jquery/jquery-2.1.1.min.js")
+		script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
 		script(src="/mediaelement/mediaelement-and-player.js")
 		script(src="/bootstrap/js/bootstrap.js")
+		script(src="/fancytree-2.6.0/jquery.fancytree-all.min.js")
 		
 	body
 		nav.menu
@@ -41,4 +45,8 @@ html
 		script.
 			// using jQuery
 			$('video,audio').mediaelementplayer(/* Options */);
+			$(function(){
+				// Create the tree inside the <div id="tree"> element.
+				$(".tree").fancytree();
+			});
 			

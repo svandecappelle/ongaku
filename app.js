@@ -69,9 +69,6 @@ function start(){
     var served = app.listen(nconf.get('port'));
 
     logger.info("Ready to serve on " + nconf.get('port') + " port");
-
-    var scan = require("./app/scanner");
-    scan.library();
 }
 
 var okToStart = preload();

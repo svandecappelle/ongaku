@@ -5,35 +5,55 @@ module.exports = function (app, options) {
 	var authentication = require("./authentication");
 	var logger = require("log4js").getLogger('route');
 	var passport = require("passport");
+	var library = require("./library");
+	var _ = require("underscore");
+
 	authentication.initialize(app);
 	authentication.createRoutes(app);
 
 	app.get('/', function (req, res) {
 		logger.info("Client access to index ["+req.ip+"]");
-    	middleware.render('songlist', req, res);
-    });
+
+		var libraryDatas = library.get();
+
+		var artists = _.uniq(_.pluck(libraryDatas, 'artist'));
+		libraryDatas = _.map(artists, function(artist){
+			var filtered = [].concat(_.where(libraryDatas, {artist: artist}));
+			var titlesAlbum = _.pluck(filtered, 'title');
+			logger.debug(titlesAlbum);
+			return {
+				artist: artist,
+				album: {
+					title: "Title album",
+					titles: titlesAlbum
+				}
+			};
+		});
+
+		middleware.render('songlist', req, res, {library: libraryDatas});
+	});
 
 	app.get('/403', function (req, res){
 		middleware.render('403', req, res);
 	});
 
-    app.get('/video/:video', function (req, res){
-    	// ".ogg": "video/ogg
-    	// to convert to ogv
-    	// ffmpeg -i demoreel.mp4 -c:v libtheora -c:a libvorbis demoreel.ogv
-    	
-    	// To webm
-    	// ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -an -pass 1 -f webm /dev/null
+	app.get('/video/:video', function (req, res){
+		// ".ogg": "video/ogg
+		// to convert to ogv
+		// ffmpeg -i demoreel.mp4 -c:v libtheora -c:a libvorbis demoreel.ogv
+		
+		// To webm
+		// ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -an -pass 1 -f webm /dev/null
 		// ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -codec:a libvorbis -b:a 128k -pass 2 -f webm sortie.webm
 		middleware.getVideo(req, res, "./video/" + req.param.video);
-    });
+	});
 
-    app.get('/stream/:media', function (req, res) {
-    	logger.info("streaming");
-    	middleware.stream(req, res, nconf.get("library") + req.param.media);
-    });
+	app.get('/stream/:media', function (req, res) {
+		logger.info("streaming");
+		middleware.stream(req, res, nconf.get("library") + req.param.media);
+	});
 
-    if (nconf.get("uploader")){
+	if (nconf.get("uploader")){
 		var fs = require('fs');
 		var busboy = require('connect-busboy');
 		//...

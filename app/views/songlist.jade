@@ -18,28 +18,17 @@ block append songlist
 			.songs-container
 				// TODO retrieve this list from server side 
 				ul
-					li
-						a.song
-							.track-info.track-px
-								.track-info.track-num
-									span 01
-								.track-info.track-time
-									span 3:08
-							.track-info.track
-								.track-info.track-title
-									span Titre Inconnu
-								.track-info.track-artist
-									span Artiste Inconnu
-					li
-						a.song
-							.track-info.track-px
-								.track-info.track-num
-									span 02
-								.track-info.track-time
-									span 4:25
-							.track-info.track
-								.track-info.track-title
-									span Titre Inconnu
-								.track-info.track-artist
-									span Artiste Inconnu
+					for files in library
+						li
+							a.song
+								.track-info.track-px
+									.track-info.track-num
+										span 01
+									.track-info.track-time
+										span 3:08
+								.track-info.track
+									.track-info.track-title
+										span= files.file
+									.track-info.track-artist
+										span Artiste Inconnu
 				.song

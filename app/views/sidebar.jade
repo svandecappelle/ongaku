@@ -15,12 +15,12 @@ section.sidebar.show
 						option Artists
 						option Albums
 						option Genre
-		ul.navlist-menu
-			li Title 1
-			li Title 2
-			li Title 3
-			li Title 4
-			li Title 5
-			li Title 6
-			li Title 7
-			li Title 8
+		.tree
+			ul.navlist-menu
+				for artistsGroup in library
+					li.folder= artistsGroup.artist
+						ul
+							li.folder= artistsGroup.album.title
+								ul
+									for file in artistsGroup.album.titles	
+										li= file
