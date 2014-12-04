@@ -16,21 +16,35 @@ module.exports = function (app, options) {
 
 		var libraryDatas = library.get();
 
-		var artists = _.uniq(_.pluck(libraryDatas, 'artist'));
-		libraryDatas = _.map(artists, function(artist){
-			var filtered = [].concat(_.where(libraryDatas, {artist: artist}));
-			var titlesAlbum = _.pluck(filtered, 'title');
-			logger.debug(titlesAlbum);
-			return {
-				artist: artist,
-				album: {
-					title: "Title album",
-					titles: titlesAlbum
+		var grpByArtists = _.groupBy(libraryDatas, 'artist');
+
+		var groupByArtistsAndAlbum = [];
+
+		
+		_.each(grpByArtists, function(tracks, artist){
+
+			var albums = _.map(_.groupBy(tracks, 'album'), function(tracks, title){
+				if (!title){
+					title = "Unknown album"
 				}
+				return {title: title, tracks: tracks};
+			});
+			
+			if (!artist){
+				artist = "Uknown artist";
+			}
+
+			var artist = {
+				artist: artist,
+				albums: albums
 			};
+
+			groupByArtistsAndAlbum.push(artist);
+
 		});
 
-		middleware.render('songlist', req, res, {library: libraryDatas});
+		logger.warn(groupByArtistsAndAlbum[0].albums[0]);
+		middleware.render('songlist', req, res, {library: groupByArtistsAndAlbum});
 	});
 
 	app.get('/403', function (req, res){

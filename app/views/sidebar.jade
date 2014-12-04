@@ -20,7 +20,8 @@ section.sidebar.show
 				for artistsGroup in library
 					li.folder= artistsGroup.artist
 						ul
-							li.folder= artistsGroup.album.title
-								ul
-									for file in artistsGroup.album.titles	
-										li= file
+							for album in artistsGroup.albums
+								li.folder= album.title
+									ul
+										for track in album.tracks
+											li= track.title

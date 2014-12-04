@@ -33,9 +33,7 @@
 							var metadataParser = mm(fs.createReadStream(newpath));
 
 							metadataParser.on("metadata", function(metadatas){
-								var libElement = Scanner.song(file, stat, newpath);
-								
-								libElement.metadatas = metadatas;
+								var libElement = Scanner.song(file, stat, metadatas, newpath);
 								results.push(libElement);
 								logger.debug(libElement);
 								cb(null, results); // asynchronously call the loop
@@ -55,10 +53,12 @@
 		});
 	};
 
-	Scanner.song = function(file, stats, path){
+	Scanner.song = function(file, stats, metadatas, path){
 		return {
-			artist: "artist",
-			title: file
+			artist: metadatas.artist.join(" / "),
+			title: file,
+			album: metadatas.album,
+			metadatas: metadatas
 		};
 	};
 
