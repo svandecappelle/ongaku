@@ -5,7 +5,8 @@
 		logger = require("log4js").getLogger("Scanner"),
 		async = require("async"),
 		_  = require("underscore"),
-		path = require("path");
+		path = require("path"),
+		mm = require('musicmetadata');;
 
 	Scanner.library = function(callback){
 		var lib = [];
@@ -27,12 +28,19 @@
 					var newpath = path.join(apath, file);
 					fs.stat(newpath, function(err, stat) {
 						if (err) return cb(err);
-
+						
 						if (stat.isFile()) {
-							var libElement = Scanner.song(file, stat, newpath);
+							var metadataParser = mm(fs.createReadStream(newpath));
 
-							results.push(libElement);
-							cb(null, results); // asynchronously call the loop
+							metadataParser.on("metadata", function(metadatas){
+								var libElement = Scanner.song(file, stat, newpath);
+								
+								libElement.metadatas = metadatas;
+								results.push(libElement);
+								logger.debug(libElement);
+								cb(null, results); // asynchronously call the loop
+							});
+							
 						}
 						if (stat.isDirectory()) {
 							Scanner.scan(newpath, results,cb); // recursion loop
@@ -40,6 +48,7 @@
 					});
 				},
 				function(err) {
+					logger.info("Scan finished");
 					callback(err); // loop over, come out
 				}
 			);

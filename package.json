@@ -29,7 +29,8 @@
          "vid-streamer": "0.1.4",
          "connect-busboy" : "*",
          "morgan":  "*",
-        "underscore": "*"
+        "underscore": "*",
+        "musicmetadata": "*"
 	},
    "bin"	: "./app.js",
    "scripts": {
