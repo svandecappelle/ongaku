@@ -15,13 +15,19 @@ section.sidebar.show
 						option Artists
 						option Albums
 						option Genre
-		.tree
-			ul.navlist-menu
-				for artistsGroup in library
-					li.folder= artistsGroup.artist
-						ul
-							for album in artistsGroup.albums
-								li.folder= album.title
-									ul
-										for track in album.tracks
-											li= track.title
+		.library
+			.tree
+				ul
+					for artistsGroup in library
+						li
+							span
+								i.glyphicon.glyphicon-folder-open
+								= artistsGroup.artist
+							ul
+								for album in artistsGroup.albums
+									li(style="display: none")
+										span= album.title
+										ul
+											for track in album.tracks
+												li(style="display: none")
+													span= track.title

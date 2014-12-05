@@ -6,6 +6,7 @@ html
 		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
 		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.min.css")
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap-combined.min.css")
 		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-bootstrap/ui.fancytree.min.css")
 		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-win8/ui.fancytree.min.css")  
 		
@@ -45,8 +46,17 @@ html
 		script.
 			// using jQuery
 			$('video,audio').mediaelementplayer(/* Options */);
-			$(function(){
+			/*$(function(){
 				// Create the tree inside the <div id="tree"> element.
 				$(".tree").fancytree();
+			});*/
+			$(function () {
+				$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+				$('.tree li.parent_li > span').on('click', function (e) {
+					var menu = $(this).parent('li.parent_li').find(' > ul');
+					var children = $(this).parent('li.parent_li').find(' > ul > li');
+					children.toggle("fast");
+					e.stopPropagation();
+				});
 			});
 			
