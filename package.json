@@ -31,7 +31,8 @@
          "morgan":  "*",
         "underscore": "*",
         "musicmetadata": "*",
-        "groove": "*"
+        "groove": "*",
+        "uuid": "*"
 	},
    "bin"	: "./app.js",
    "scripts": {

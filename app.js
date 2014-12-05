@@ -10,7 +10,8 @@ var fs = require('fs'),
     logger = require('log4js').getLogger('Server'),
     path = require('path'),
     pkg = require('./package.json'),
-    nconf = require('nconf');
+    nconf = require('nconf'),
+    library = require("./app/library");
 
 function preload(){
     nconf.argv().env();
@@ -65,10 +66,14 @@ function start(){
     
     var middleware = require("./app/middleware");
 
-    // LISTEN PORT APP
-    var served = app.listen(nconf.get('port'));
+    logger.info("Please wait for scan library");
+    library.scan(function(){
 
-    logger.info("Ready to serve on " + nconf.get('port') + " port");
+        // LISTEN PORT APP
+        var served = app.listen(nconf.get('port'));
+
+        logger.info("Ready to serve on " + nconf.get('port') + " port");
+    });
 }
 
 var okToStart = preload();

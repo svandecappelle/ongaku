@@ -9,11 +9,12 @@
 		nconf = require("nconf"),
 		mm = require('musicmetadata'),
 		// groove seems to be better than mm
-		groove = require('groove');
+		groove = require('groove'),
+		uuid = require('uuid');
 
 	Scanner.library = function(callback){
 		var lib = [];
-		this.scan("/home/svandecappelle/Musique", lib, function(){
+		this.scan(nconf.get("library"), lib, function(){
 			callback(lib);
 		});
 	};
@@ -40,10 +41,7 @@
 							if (_.contains(nconf.get('supported-files'), path.extname(newpath).replace(".", ""))){
 								groove.open(newpath, function(err, file) {
 									if (err) throw err;
-									logger.debug(file.metadata());
-									//console.log("duration:", file.duration());
-									
-									var libElement = Scanner.song(file, file.metadata(), newpath);
+									var libElement = Scanner.song(newpath, file.metadata(), newpath);
 									results.push(libElement);
 									logger.debug(libElement);
 									
@@ -72,9 +70,11 @@
 	Scanner.song = function(file, metadatas, path){
 		return {
 			artist: metadatas.artist,
-			title: file,
+			file: file,
+			title: metadatas.title,
 			album: metadatas.album,
-			metadatas: metadatas
+			metadatas: metadatas,
+			uid: uuid.v1()
 		};
 	};
 

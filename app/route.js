@@ -14,37 +14,12 @@ module.exports = function (app, options) {
 	app.get('/', function (req, res) {
 		logger.info("Client access to index ["+req.ip+"]");
 
-		library.get(function( libraryDatas ){
-			var grpByArtists = _.groupBy(libraryDatas, 'artist');
-			var groupByArtistsAndAlbum = [];
+		var libraryDatas = library.get();
 
-			logger.debug(libraryDatas);
-			_.each(grpByArtists, function(tracks, artist){
+		logger.debug(libraryDatas[0].albums[0].tracks[0].metadatas);
+		logger.debug(libraryDatas);
+		middleware.render('songlist', req, res, {library: libraryDatas});
 
-				var albums = _.map(_.groupBy(tracks, 'album'), function(tracks, title){
-					if (!title){
-						title = "Unknown album"
-					}
-					return {title: title, tracks: tracks};
-				});
-				
-				if (!artist){
-					artist = "Uknown artist";
-				}
-
-				var artist = {
-					artist: artist,
-					albums: albums
-				};
-
-				groupByArtistsAndAlbum.push(artist);
-
-			});
-
-			// logger.warn(groupByArtistsAndAlbum[0].albums[0]);
-			logger.debug(groupByArtistsAndAlbum);
-			middleware.render('songlist', req, res, {library: groupByArtistsAndAlbum});
-		});
 	});
 
 	app.get('/403', function (req, res){
@@ -63,8 +38,8 @@ module.exports = function (app, options) {
 	});
 
 	app.get('/stream/:media', function (req, res) {
-		logger.info("streaming");
-		middleware.stream(req, res, nconf.get("library") + req.param.media);
+		logger.info("streaming ");
+		middleware.stream(req, res, req.params.media);
 	});
 
 	if (nconf.get("uploader")){

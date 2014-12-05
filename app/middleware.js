@@ -6,7 +6,8 @@ var middleware = {},
 	nconf = require('nconf'),
 	fs = require('fs'),
 	logger = require('log4js').getLogger("Middleware"),
-	_ = require("underscore");
+	_ = require("underscore"),
+	library = require("./library");
 
 /*
 	Render a view. Control if rights are valid to access the view and if user is authenticated (if needed).
@@ -28,7 +29,8 @@ middleware.render = function(view, req, res, objs){
 	call(middlewareObject, function(err, middlewareObject){
 		_.extend(middlewareObject.objs, {
 			data: {
-				playing: "01-GypsyCab.mp3"
+				// TODO for the test get the first entry of library
+				playing: _.first(_.keys(library.flatten))
 			}
 		});
 		res.render(view, middlewareObject.objs);
@@ -42,7 +44,8 @@ middleware.redirect = function(view, res){
 	res.redirect(view);
 };
 
-middleware.stream = function(req, res, path){
+middleware.stream = function(req, res, uuid){
+	logger.info("start stream file: " + uuid);
 	if (this.requireAuthentication(req)){
 		// need an auth
 		logger.info("Client not connected: cannot acces to video ["+req.ip+"]");
@@ -52,7 +55,11 @@ middleware.stream = function(req, res, path){
 	}else{
 		logger.info("Stream video");
 		var fs = require("fs");
-		var src = path;
+		var src = library.getRelativePath(uuid);
+
+		logger.debug(src);
+		var reqStreaming = _.clone(req);
+		reqStreaming.url = "/stream/" + src;
 
 		var settings = {
 			"mode": "development",
@@ -64,7 +71,7 @@ middleware.stream = function(req, res, path){
 		};
 
 		var vidStreamer = require("vid-streamer").settings(settings);
-		vidStreamer(req, res);
+		vidStreamer(reqStreaming, res);
 	}
 };
 
