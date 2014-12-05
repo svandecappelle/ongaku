@@ -1,5 +1,6 @@
 {
     "port": "8000",
     "uploader": false,
-    "library": "/home/svandecappelle/Musique"
+    "library": "/home/svandecappelle/Musique",
+    "supported-files": ["mp3" , "wav", "wma", "flac", "ogg"]
 }

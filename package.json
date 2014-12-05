@@ -30,7 +30,8 @@
          "connect-busboy" : "*",
          "morgan":  "*",
         "underscore": "*",
-        "musicmetadata": "*"
+        "musicmetadata": "*",
+        "groove": "*"
 	},
    "bin"	: "./app.js",
    "scripts": {

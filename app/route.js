@@ -14,37 +14,37 @@ module.exports = function (app, options) {
 	app.get('/', function (req, res) {
 		logger.info("Client access to index ["+req.ip+"]");
 
-		var libraryDatas = library.get();
+		library.get(function( libraryDatas ){
+			var grpByArtists = _.groupBy(libraryDatas, 'artist');
+			var groupByArtistsAndAlbum = [];
 
-		var grpByArtists = _.groupBy(libraryDatas, 'artist');
+			logger.debug(libraryDatas);
+			_.each(grpByArtists, function(tracks, artist){
 
-		var groupByArtistsAndAlbum = [];
-
-		
-		_.each(grpByArtists, function(tracks, artist){
-
-			var albums = _.map(_.groupBy(tracks, 'album'), function(tracks, title){
-				if (!title){
-					title = "Unknown album"
+				var albums = _.map(_.groupBy(tracks, 'album'), function(tracks, title){
+					if (!title){
+						title = "Unknown album"
+					}
+					return {title: title, tracks: tracks};
+				});
+				
+				if (!artist){
+					artist = "Uknown artist";
 				}
-				return {title: title, tracks: tracks};
+
+				var artist = {
+					artist: artist,
+					albums: albums
+				};
+
+				groupByArtistsAndAlbum.push(artist);
+
 			});
-			
-			if (!artist){
-				artist = "Uknown artist";
-			}
 
-			var artist = {
-				artist: artist,
-				albums: albums
-			};
-
-			groupByArtistsAndAlbum.push(artist);
-
+			// logger.warn(groupByArtistsAndAlbum[0].albums[0]);
+			logger.debug(groupByArtistsAndAlbum);
+			middleware.render('songlist', req, res, {library: groupByArtistsAndAlbum});
 		});
-
-		logger.warn(groupByArtistsAndAlbum[0].albums[0]);
-		middleware.render('songlist', req, res, {library: groupByArtistsAndAlbum});
 	});
 
 	app.get('/403', function (req, res){

@@ -4,12 +4,10 @@
 	var scan = require("./scanner");
 	var library = [];
 
-	scan.library(function(lib){
-		library = lib;
-	});
-
-	Library.get = function(){
-		return library;
+	Library.get = function(callback){
+		scan.library(function(lib){
+			callback(lib);
+		});
 	};
 
 }(exports));
