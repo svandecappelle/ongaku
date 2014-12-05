@@ -71,6 +71,7 @@
 		return {
 			artist: metadatas.artist,
 			file: file,
+			relativePath: file.replace(nconf.get("library"), ""),
 			title: metadatas.title,
 			album: metadatas.album,
 			metadatas: metadatas,

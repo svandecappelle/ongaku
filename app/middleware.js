@@ -27,10 +27,11 @@ middleware.render = function(view, req, res, objs){
 	var call = async.compose(this.session, this.meta);
 
 	call(middlewareObject, function(err, middlewareObject){
+		logger.info("Test with first entry of library", _.first(_.first(library.flatten).track));
 		_.extend(middlewareObject.objs, {
 			data: {
 				// TODO for the test get the first entry of library
-				playing: _.first(_.keys(library.flatten))
+				playing: _.first(_.first(library.flatten).track)
 			}
 		});
 		res.render(view, middlewareObject.objs);

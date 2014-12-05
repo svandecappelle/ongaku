@@ -14,7 +14,9 @@
 		scan.library(function(lib){
 			
 			var grpByArtists = _.groupBy(lib, 'artist');
-			Library.flatten = _.groupBy(lib, 'uid');
+			Library.flatten = _.map(_.groupBy(lib, 'uid'), function(track, uuid){
+				return {uuid: uuid, track: track};
+			});
 			
 			var groupByArtistsAndAlbum = [];
 
@@ -47,7 +49,7 @@
 	};
 
 	Library.getRelativePath = function(uuid){
-		return this.flatten[uuid][0].file.replace(nconf.get("library"), "");
+		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track).relativePath;
 	};
 
 	Library.get = function(){
