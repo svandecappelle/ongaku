@@ -17,18 +17,18 @@ block append songlist
 					i.fa.fa-plus
 			.songs-container
 				// TODO retrieve this list from server side 
-				ul
-					for files in library
+				ul.playlist
+					for track in data.playlist
 						li
 							a.song
 								.track-info.track-px
 									.track-info.track-num
 										span 01
 									.track-info.track-time
-										span 3:08
+										span= track.duration
 								.track-info.track
 									.track-info.track-title
-										span= files.file
+										span= track.title
 									.track-info.track-artist
-										span Artiste Inconnu
+										span= track.artist
 				.song

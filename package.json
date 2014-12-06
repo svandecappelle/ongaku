@@ -32,7 +32,8 @@
         "underscore": "*",
         "musicmetadata": "*",
         "groove": "*",
-        "uuid": "*"
+        "uuid": "*",
+        "lame": "*"
 	},
    "bin"	: "./app.js",
    "scripts": {

@@ -42,6 +42,19 @@ module.exports = function (app, options) {
 		middleware.stream(req, res, req.params.media);
 	});
 
+	app.post('/playlist/add/:uid', function(req, res){
+		var uidFile = req.params.uid;
+		logger.info("Add file to playlist", uidFile);
+		if (req.session.playlist === undefined){
+			req.session.playlist = [];
+		}
+		req.session.playlist.push(library.getByUid(uidFile));
+		req.session.save(function(){
+			res.setHeader('Access-Control-Allow-Credentials', 'true');
+			res.send(req.session.playlist);
+		});
+	});
+
 	if (nconf.get("uploader")){
 		var fs = require('fs');
 		var busboy = require('connect-busboy');

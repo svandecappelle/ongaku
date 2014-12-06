@@ -56,4 +56,8 @@
 		return this.data;
 	};
 
+	Library.getByUid = function(uuid){
+		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track);
+	};
+
 }(exports));

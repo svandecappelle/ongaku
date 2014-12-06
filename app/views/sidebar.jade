@@ -30,4 +30,45 @@ section.sidebar.show
 										ul
 											for track in album.tracks
 												li(style="display: none")
-													span= track.title
+													span.track(data-uid="#{track.uid}")= track.title
+block scripts
+	script.
+		$(function(){
+			$('.track').on("dblclick", function(){
+				var uidFile = $(this).data("uid");
+				$.post("/playlist/add/".concat(uidFile), function(playlist){
+					$("ul.playlist").empty();
+					var tracknumber = 0;
+					$.each(playlist, function(index, val){
+						tracknumber += 1;
+						var track = "\
+							<li>\
+								<a class='song'>\
+									<div class='track-info track-px'>\
+										<div class='track-info track-num'>\
+											{{num}}\
+										</div>\
+										<div class='track-info track-time'>\
+											{{time}}\
+										</div>\
+									</div>\
+									<div class='track-info track'>\
+										<div class='track-info track-title'>\
+											{{title}}\
+										</div>\
+										<div class='track-info track-artist'>\
+											{{artist}}\
+										</div>\
+									</div>\
+								</a>\
+							</li>";
+						track = track.replace("{{num}}", tracknumber);
+						track = track.replace("{{time}}", val.duration);
+						track = track.replace("{{title}}", val.title);
+						track = track.replace("{{artist}}", val.artist);
+						
+						var track = $("ul.playlist").append(track);
+					});
+				});
+			});
+		});

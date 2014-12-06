@@ -41,7 +41,7 @@
 							if (_.contains(nconf.get('supported-files'), path.extname(newpath).replace(".", ""))){
 								groove.open(newpath, function(err, file) {
 									if (err) throw err;
-									var libElement = Scanner.song(newpath, file.metadata(), newpath);
+									var libElement = Scanner.song(newpath, file.metadata(), file.duration());
 									results.push(libElement);
 									logger.debug(libElement);
 									
@@ -67,14 +67,20 @@
 		});
 	};
 
-	Scanner.song = function(file, metadatas, path){
+	Scanner.song = function(file, metadatas, duration){
+		var durationMin = Math.floor(duration / 60);
+		var durationSec = Math.floor(duration % 60);
+		if (durationSec < 10){
+			durationSec = "0".concat(durationSec);
+		}
 		return {
-			artist: metadatas.artist,
+			artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : "Unknown artist",
 			file: file,
 			relativePath: file.replace(nconf.get("library"), ""),
-			title: metadatas.title,
-			album: metadatas.album,
+			title: metadatas.title ? metadatas.title : metadatas.TITLE ? metadatas.TITLE : path.basename(file.replace(nconf.get("library"), "")),
+			album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
 			metadatas: metadatas,
+			duration: durationMin.toString().concat(":").concat(durationSec),
 			uid: uuid.v1()
 		};
 	};
