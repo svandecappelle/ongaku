@@ -17,7 +17,7 @@ section.sidebar.show
 						option Genre
 		.library
 			.tree
-				ul
+				ul.lib
 					for artistsGroup in library
 						li
 							span
@@ -34,6 +34,13 @@ section.sidebar.show
 block scripts
 	script.
 		$(function(){
+			var marginOffset = 250;
+			$('.lib').height($('.menu.menu-discover').height() - marginOffset);
+			
+			$(window).resize(function(){
+				$('.lib').height($('.menu.menu-discover').height() - marginOffset);
+			});
+
 			$('.track').on("dblclick", function(){
 				var uidFile = $(this).data("uid");
 				$.post("/playlist/add/".concat(uidFile), function(playlist){

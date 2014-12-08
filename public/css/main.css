@@ -274,11 +274,6 @@ section.song-list > .list-container .songs-container .song .track-time{
 	padding-right: 8px;
 }
 
-.tree ul.hidden {
-	/*display: none;*/
-}
-
-.library{
-	max-height: 100%;
+.lib{
 	overflow: auto;
 }
