@@ -48,10 +48,11 @@ module.exports = function (app, options) {
 		if (req.session.playlist === undefined){
 			req.session.playlist = [];
 		}
-		req.session.playlist.push(library.getByUid(uidFile));
+		var track = library.getByUid(uidFile);
+		req.session.playlist.push(track);
 		req.session.save(function(){
 			res.setHeader('Access-Control-Allow-Credentials', 'true');
-			res.send(req.session.playlist);
+			res.send({all: req.session.playlist, lastAdded: track});
 		});
 	});
 

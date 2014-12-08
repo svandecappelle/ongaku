@@ -13,6 +13,21 @@
 		$("#controls")[0].pause();
 		$("#controls")[0].load();
 		$("#controls")[0].play();
-	}
+	};
+
+	function Controls(){
+
+	};
+
+	Controls.prototype.bind = function(){
+		$(".play .button").click(function(){
+			$.ongaku.play($(this).data("uid"));
+		});
+		$('a.song').click(function(){
+			$.ongaku.play($(this).data("uid"));
+		});
+	};
+
+	$.ongaku.controls = new Controls();
 
 }(jQuery);

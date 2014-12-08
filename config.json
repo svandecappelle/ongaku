@@ -2,5 +2,5 @@
     "port": "8000",
     "uploader": false,
     "library": "/home/svandecappelle/Musique",
-    "supported-files": ["mp3" , "wav", "wma", "flac", "ogg"]
+    "supported-files": ["mp3" , "wav", "wma", "ogg"]
 }

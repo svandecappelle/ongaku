@@ -209,19 +209,25 @@ section.song-list > .list-container .songs-container .song .track-time{
 	height: 180px;
 }
 
+.pending-list .list{
+	width: auto;
+	overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
 .pending-list .song{
-	/*max-width: 40px;*/
 	margin: 3px;
-	float: left;
 	padding: 2px;
 	display: inline-block;
 	cursor: pointer;
 	vertical-align: top;
 	position: relative;
-	overflow: hidden;
 	transition: all 0.25s ease 0s;
-	min-width: 150px;
-	min-height: 150px;
+	width: 150px;
+	height: 150px;
+	display: inline-block;
+    vertical-align: middle;
 }
 
 .pending-list .song:after{
@@ -257,6 +263,7 @@ section.song-list > .list-container .songs-container .song .track-time{
     left: 0;
     right: 0;
     transition: all 0.25s ease-in-out 0s;
+    white-space: pre-wrap;
 }
 
 .pending-list .song .layer{

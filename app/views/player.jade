@@ -18,11 +18,3 @@ block player
 
 		audio#controls(controls="controls", width="100%")
 			source#mp3src(type="audio/mp3", src="/stream/#{data.playing.uid}")
-
-block append scripts
-	script.
-		$(function(){
-			$(".play .button").click(function(){
-				$.ongaku.play($(this).data("uid"));
-			});
-		});

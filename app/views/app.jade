@@ -15,6 +15,7 @@ html
 		script(src="/mediaelement/mediaelement-and-player.js")
 		script(src="/bootstrap/js/bootstrap.js")
 		script(src="/fancytree-2.6.0/jquery.fancytree-all.min.js")
+		script(src="/jquery-mousewheel-3.1.12/jquery.mousewheel.min.js")
 		script(src="/lib/app.js")
 		
 	body
@@ -59,6 +60,13 @@ html
 					children.toggle("fast");
 					e.stopPropagation();
 				});
+				$.ongaku.controls.bind();
+				
+				$(".pending-list .list").bind("mousewheel", function(event, delta) {
+					this.scrollLeft -= (delta * 30);
+					event.preventDefault();
+				});
 			});
+
 
 		block scripts
