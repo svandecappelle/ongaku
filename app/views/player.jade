@@ -2,10 +2,19 @@ block player
 	.player
 		.pending-list
 			.list
-				.song
-					.song-title #{data.playing.title}
-					.songe-artist #{data.playing.artist}
-					.songe-infos 2m30s
+				for track in data.playlist
+					.song
+						.info
+							.song-title= track.title
+							.song-artist= track.artist
+							.song-infos= track.duration
+						.play
+							.button Play
+						.layer
+							.top
+							.left
+							.right
+							.bottom
 
 		audio(controls="controls", width="100%")
 			source(type="audio/mp3", src="/stream/#{data.playing.uid}")
