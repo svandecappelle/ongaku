@@ -197,10 +197,10 @@ section.song-list > .list-container .songs-container .song .track-time{
 	right: 0px;
 	bottom: 30px;
 	height: 36px;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.75);
 	text-align: center;
 	color: white;
-	transition: height 1s linear 1s;
+	transition: height 1s linear 0.3s;
 	border-top: 6px solid black;
 	font-size: 0.8em;
 }
@@ -234,7 +234,19 @@ section.song-list > .list-container .songs-container .song .track-time{
 	right: 16px;
 	bottom: 16px;
 	left: 16px;
-	z-index: 9;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.pending-list .song:before{
+	content: "";
+	width: auto;
+	height: auto;
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
 	border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -252,9 +264,12 @@ section.song-list > .list-container .songs-container .song .track-time{
 	height: 100%;
 	display: block;
 	position: absolute;
-	z-index: 8;
 	background: none repeat scroll 0% 0% rgba(29, 8, 30, 0);
 	transition: all 0.3s ease-in-out 0s;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 .pending-list .song:hover .layer{
@@ -263,7 +278,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 
 .pending-list .song .layer .top{
 	width: 0%;
-	height: 15px;
+	height: 16px;
 	background: none repeat scroll 0% 0% #F8F4E1;
 	position: absolute;
 	top: 0px;
@@ -273,7 +288,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 
 .pending-list .song .layer .bottom{
 	width: 0%; 
-	height: 15px; 
+	height: 16px; 
 	background: #f8f4e1; 
 	position: absolute; 
 	bottom: 0; 
@@ -314,7 +329,14 @@ section.song-list > .list-container .songs-container .song .track-time{
 	display: none;
 	color: white;
 	padding: 2px;
-	z-index: 9;
+	z-index: 1;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 80px;
+	padding-left: 25px;
+	padding-right: 25px;
 }
 
 .pending-list .song .play .button{

@@ -9,12 +9,20 @@ block player
 							.song-artist= track.artist
 							.song-infos= track.duration
 						.play
-							.button Play
+							.button(data-uid="#{track.uid}") Play
 						.layer
 							.top
 							.left
 							.right
 							.bottom
 
-		audio(controls="controls", width="100%")
-			source(type="audio/mp3", src="/stream/#{data.playing.uid}")
+		audio#controls(controls="controls", width="100%")
+			source#mp3src(type="audio/mp3", src="/stream/#{data.playing.uid}")
+
+block append scripts
+	script.
+		$(function(){
+			$(".play .button").click(function(){
+				$.ongaku.play($(this).data("uid"));
+			});
+		});
