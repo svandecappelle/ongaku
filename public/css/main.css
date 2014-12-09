@@ -200,7 +200,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 	background-color: rgba(0, 0, 0, 0.75);
 	text-align: center;
 	color: white;
-	transition: height 1s linear 0.3s;
+	transition: height 0.5s linear 0.1s;
 	border-top: 6px solid black;
 	font-size: 0.8em;
 }
@@ -211,7 +211,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 
 .pending-list .list{
 	width: auto;
-	overflow-x: scroll;
+	overflow-x: visible;
     overflow-y: hidden;
     white-space: nowrap;
 }
@@ -306,7 +306,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 .pending-list .song .layer .left{
 	width: 16px; 
 	height: 0%; 
-	background: #f8f4e1; 
+	background: #f8f4e1;
 	position: absolute; 
 	bottom: 0; 
 	right: 0;
@@ -344,6 +344,14 @@ section.song-list > .list-container .songs-container .song .track-time{
 	top: 80px;
 	padding-left: 25px;
 	padding-right: 25px;
+}
+
+.pending-list .song.playing .layer .left, .pending-list .song.playing .layer .right, .pending-list .song.playing .layer .top, .pending-list .song.playing .layer .bottom{
+	background-color: red;
+}
+
+.pending-list .song.playing:before, .pending-list .song.playing:after{
+	border-color: red;
 }
 
 .pending-list .song .play .button{

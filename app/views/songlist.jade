@@ -18,12 +18,13 @@ block append songlist
 			.songs-container
 				// TODO retrieve this list from server side 
 				ul.playlist
+					- var trackNum = 0
 					for track in data.playlist
 						li
-							a.song(data-uid="#{track.uid}")
+							a.song(data-uid="#{track.uid}", data-track="#{++trackNum}")
 								.track-info.track-px
 									.track-info.track-num
-										span 01
+										span= trackNum
 									.track-info.track-time
 										span= track.duration
 								.track-info.track
