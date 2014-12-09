@@ -341,7 +341,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 	margin: auto;
 	left: 0;
 	right: 0;
-	top: 80px;
+	bottom: 25px;
 	padding-left: 25px;
 	padding-right: 25px;
 }
@@ -358,6 +358,10 @@ section.song-list > .list-container .songs-container .song .track-time{
 	border: 1px solid white;
 	margin-bottom: 5px;
 	margin: auto;
+}
+
+.pending-list .song:hover .info{
+	z-index: 9;
 }
 
 .pending-list .song:hover .play{
@@ -413,21 +417,24 @@ section.song-list > .list-container .songs-container .song .track-time{
     border-radius:5px;
     display:inline-block;
     padding:3px 8px;
-    text-decoration:none
+    text-decoration:none;
+    cursor: pointer;
 }
 .tree li.parent_li>span {
-    cursor:pointer
+    cursor:pointer;
 }
 .tree>ul>li::before, .tree>ul>li::after {
-    border:0
+    border:0;
 }
 .tree li:last-child::before {
-    height:30px
+    height:30px;
 }
-.tree li.parent_li>span:hover, .tree li.parent_li>span:hover+ul li span {
+.tree li>span:hover, .tree li>span:hover+ul li span {
     background:#eee;
     border:1px solid #94a0b4;
-    color:#000
+    color:#000;
+    user-select: none;
+    -moz-user-select: none;
 }
 
 .tree li>span>i {

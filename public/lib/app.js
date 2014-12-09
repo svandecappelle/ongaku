@@ -35,10 +35,12 @@
 	};
 
 	Controls.prototype.bind = function(){
-		$(".play .button").click(function(){
-			$(this)
-			$.ongaku.play($(this).data("uid"));
+		$(".pending-list .list .song").click(function(){
+			console.log('plau');
+			console.log($(this).find(".button"));
+			$.ongaku.play($(this).find(".button").data("uid"));
 		});
+
 		$('a.song').click(function(){
 			$.ongaku.play($(this).data("uid"));
 		});

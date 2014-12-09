@@ -49,10 +49,7 @@ html
 			$('video,audio').mediaelementplayer({
 				success: function (me) {
 					me.addEventListener('ended', function () {
-						
-
 						$.ongaku.next();
-
 					});
 				}
 			});
