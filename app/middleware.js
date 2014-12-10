@@ -67,10 +67,12 @@ middleware.stream = function(req, res, uuid){
 			var libraryEntry = library.getByUid(uuid);
 			var audio = {
 				duration: libraryEntry.duration,
-				location: libraryEntry.file
+				location: libraryEntry.file,
+				uid: libraryEntry.uid,
+				sessionId: req.sessionID
 			};
 			logger.info(audio);
-			transcoder.sendAudioFile(audio, res);
+			transcoder.transcode(audio, req, res);
 		}else{
 			logger.debug(src);
 			var reqStreaming = _.clone(req);

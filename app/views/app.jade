@@ -8,7 +8,9 @@ html
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap-combined.min.css")
 		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-bootstrap/ui.fancytree.min.css")
-		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-win8/ui.fancytree.min.css")  
+		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-win8/ui.fancytree.min.css")
+		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/alertify.min.css")
+		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
 		
 		script(src="/jquery/jquery-2.1.1.min.js")
 		script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
@@ -16,6 +18,7 @@ html
 		script(src="/bootstrap/js/bootstrap.js")
 		script(src="/fancytree-2.6.0/jquery.fancytree-all.min.js")
 		script(src="/jquery-mousewheel-3.1.12/jquery.mousewheel.min.js")
+		script(src="/alertifyjs-0.10.2/alertify.min.js")
 		script(src="/lib/app.js")
 		
 	body
@@ -48,6 +51,9 @@ html
 		script.
 			$('video,audio').mediaelementplayer({
 				success: function (me) {
+					me.addEventListener('loadedmetadata', function () {
+						alertify.dismissAll();
+					});
 					me.addEventListener('ended', function () {
 						$.ongaku.next();
 					});

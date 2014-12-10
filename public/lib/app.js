@@ -7,7 +7,7 @@
 
 	$.ongaku = new Player();
 
-	Player.prototype.play = function(uid){
+	Player.prototype.play = function(uid, encoding){
 		$(".playing").removeClass('playing');
 		this.current = uid;
 
@@ -17,6 +17,11 @@
 		$("#controls")[0].load();
 		$("#controls")[0].play();
 
+		if (encoding !== 'mp3'){
+			console.log("okokokok");
+			alertify.message('Transcoding...', 0);
+		}
+
 		$(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
 	};
 
@@ -24,8 +29,10 @@
 		var nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().next();
 		if (nextSong){
 			var nextUid = nextSong.find(".button").data('uid');
+			var encoding = nextSong.find(".button").data('encoding');
+			
 			if (nextUid){
-				this.play(nextUid);
+				this.play(nextUid, encoding);
 			}
 		}
 	};
@@ -36,8 +43,6 @@
 
 	Controls.prototype.bind = function(){
 		$(".pending-list .list .song").click(function(){
-			console.log('plau');
-			console.log($(this).find(".button"));
 			$.ongaku.play($(this).find(".button").data("uid"));
 		});
 

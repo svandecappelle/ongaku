@@ -9,7 +9,7 @@ block player
 							.song-artist= track.artist
 							.song-infos= track.duration
 						.play
-							.button(data-uid="#{track.uid}") Play
+							.button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
 						.layer
 							.top
 							.left
