@@ -7,7 +7,9 @@ var middleware = {},
 	fs = require('fs'),
 	logger = require('log4js').getLogger("Middleware"),
 	_ = require("underscore"),
-	library = require("./library");
+	library = require("./library"),
+	path = require("path"),
+	transcoder = require("./transcoder");
 
 /*
 	Render a view. Control if rights are valid to access the view and if user is authenticated (if needed).
@@ -61,21 +63,31 @@ middleware.stream = function(req, res, uuid){
 		var fs = require("fs");
 		var src = library.getRelativePath(uuid);
 
-		logger.debug(src);
-		var reqStreaming = _.clone(req);
-		reqStreaming.url = "/stream/" + src;
+		if (path.extname(src).replace(".", "") !== 'mp3'){
+			var libraryEntry = library.getByUid(uuid);
+			var audio = {
+				duration: libraryEntry.duration,
+				location: libraryEntry.file
+			};
+			logger.info(audio);
+			transcoder.sendAudioFile(audio, res);
+		}else{
+			logger.debug(src);
+			var reqStreaming = _.clone(req);
+			reqStreaming.url = "/stream/" + src;
 
-		var settings = {
-			"mode": "development",
-			"forceDownload": false,
-			"random": false,
-			"rootFolder": nconf.get("library"),
-			"rootPath": "stream",
-			"server": "VidStreamer.js/0.1.4"
-		};
+			var settings = {
+				"mode": "development",
+				"forceDownload": false,
+				"random": false,
+				"rootFolder": nconf.get("library"),
+				"rootPath": "stream",
+				"server": "VidStreamer.js/0.1.4"
+			};
 
-		var vidStreamer = require("vid-streamer").settings(settings);
-		vidStreamer(reqStreaming, res);
+			var vidStreamer = require("vid-streamer").settings(settings);
+			vidStreamer(reqStreaming, res);
+		}
 	}
 };
 
