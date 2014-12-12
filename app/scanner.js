@@ -81,7 +81,8 @@
 			album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
 			metadatas: metadatas,
 			duration: durationMin.toString().concat(":").concat(durationSec),
-			uid: uuid.v1()
+			uid: uuid.v1(),
+			encoding: path.extname(file.replace(nconf.get("library"), "")).replace(".", "")
 		};
 	};
 

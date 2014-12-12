@@ -4,6 +4,9 @@
 	var childProcess = require("child_process");
 	var logger = require('log4js').getLogger("Transcoder");
 	var fs = require("fs");
+	var lame = require("lame");
+	var assert = require('assert');
+	var _ = require("underscore");
 
 	Transcoder.sendVideoFile = function(params, res) {
 		res.writeHead({
@@ -78,6 +81,78 @@
 		audioConv.stderr.on('data', function(d) {
 			logger.debug(d.toString());
 		});
-	};	
+	};
+
+	// TODO find if it is better to transcode on streaming or on upload.
+	Transcoder.transcode = function(params, req, res) {
+		logger.debug("sending audio file");
+		groove.setLogging(groove.LOG_INFO);
+		
+		var playlist = groove.createPlaylist();
+		var encoder = groove.createEncoder();
+
+
+		encoder.formatShortName = "mp3";
+		encoder.codecShortName = "lame";
+
+		var outputFile = "/tmp/".concat(params.sessionId).concat(".mp3");
+		var outStream = fs.createWriteStream(outputFile);
+		// One file streaming by connected user
+
+		var streamStarted = false;
+		encoder.on('buffer', function() {
+			var buffer;
+			while (buffer = encoder.getBuffer()) {
+				if (buffer.buffer) {
+					outStream.write(buffer.buffer);
+					
+				} else {
+					if(!streamStarted){
+						streamStarted = true;
+						startStream(req, res, outputFile, params.sessionId);
+					}
+
+					cleanup(playlist, encoder);
+					return;
+				}
+			}
+		});
+		encoder.attach(playlist, function(err) {
+			assert.ifError(err);
+
+			groove.open(params.location, function(err, file) {
+				assert.ifError(err);
+				playlist.insert(file, null);
+			});
+		});
+	};
+
+	function startStream(req, res, outputFile, sessionId){
+		var reqStreaming = _.clone(req);
+		reqStreaming.url = "/stream/".concat(sessionId).concat(".mp3");
+
+		var settings = {
+			"mode": "development",
+			"forceDownload": false,
+			"random": false,
+			"rootFolder": "/tmp/",
+			"rootPath": "stream",
+			"server": "VidStreamer.js/0.1.4"
+		};
+
+		var vidStreamer = require("vid-streamer").settings(settings);
+		vidStreamer(reqStreaming, res);
+	}
+
+	function cleanup(playlist, encoder) {
+		var file = playlist.items()[0].file;
+		playlist.clear();
+		file.close(function(err) {
+			assert.ifError(err);
+			encoder.detach(function(err) {
+				assert.ifError(err);
+			});
+		});
+	}
 
 }(exports));

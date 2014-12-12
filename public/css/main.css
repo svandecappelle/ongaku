@@ -444,3 +444,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 .lib{
 	overflow: auto;
 }
+
+.ajs-message{
+	z-index: 99999;
+}
