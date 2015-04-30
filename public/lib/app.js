@@ -3,7 +3,7 @@
 
 	function Player(){
 
-	};
+	}
 
 	$.ongaku = new Player();
 
@@ -39,7 +39,7 @@
 
 	function Controls(){
 
-	};
+	}
 
 	Controls.prototype.bind = function(){
 		$(".pending-list .list .song").click(function(){
@@ -52,5 +52,74 @@
 	};
 
 	$.ongaku.controls = new Controls();
+
+	function Playlist (){
+
+	}
+
+	Playlist.prototype.append = function(uidFile) {
+		$.post("/playlist/add/".concat(uidFile), function(playlist){
+			$("ul.playlist").empty();
+			var tracknumber = 0;
+
+			$.each(playlist.all, function(index, val){
+				tracknumber += 1;
+				var track = "\
+					<li>\
+						<a class='song' data-uid='{{uid}}'>\
+							<div class='track-info track-px'>\
+								<div class='track-info track-num'>\
+									{{num}}\
+								</div>\
+								<div class='track-info track-time'>\
+									{{time}}\
+								</div>\
+							</div>\
+							<div class='track-info track'>\
+								<div class='track-info track-title'>\
+									{{title}}\
+								</div>\
+								<div class='track-info track-artist'>\
+									{{artist}}\
+								</div>\
+							</div>\
+						</a>\
+					</li>";
+
+				track = track.replace("{{uid}}", val.uid);
+				track = track.replace("{{num}}", tracknumber);
+				track = track.replace("{{time}}", val.duration);
+				track = track.replace("{{title}}", val.title);
+				track = track.replace("{{artist}}", val.artist);
+				
+				var track = $("ul.playlist").append(track);
+			});
+
+			var trackObj = playlist.lastAdded;
+
+			var track ="\
+			<div class='song'>\
+				<div class='info'>\
+					<div class='song-title'> " + trackObj.title + "</div>\
+					<div class='song-artist'> " + trackObj.artist + "</div>\
+					<div class='song-infos'> " + trackObj.duration + "</div>\
+				</div>\
+				<div class='play'>\
+					<div class='button' data-uid='" + trackObj.uid + "'> Play</div>\
+				</div>\
+				<div class='layer'>\
+					<div class='top'></div>\
+					<div class='left'></div>\
+					<div class='right'></div>\
+					<div class='bottom'></div>\
+				</div>\
+			</div>";
+			$('.pending-list .list').append(track);
+			$.ongaku.controls.bind();
+
+		});
+	};
+
+	$.ongaku.playlist = new Playlist();
 
 }(jQuery);
