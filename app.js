@@ -11,7 +11,7 @@ var fs = require('fs'),
     path = require('path'),
     pkg = require('./package.json'),
     nconf = require('nconf'),
-    library = require("./app/library");
+    library = require("./src/library");
 
 function preload(){
     nconf.argv().env();
@@ -47,7 +47,7 @@ function start(){
     var morgan  = require('morgan');
 
     // public PATHS
-    app.set('views', __dirname + '/app/views');
+    app.set('views', __dirname + '/src/views');
     app.set('view engine', 'jade');
     app.use(express.static(__dirname + '/public'));
     app.use(bodyParser());
@@ -62,9 +62,9 @@ function start(){
 
 
     // ROUTES
-    var routes = require('./app/route')(app);
+    var routes = require('./src/route')(app);
     
-    var middleware = require("./app/middleware");
+    var middleware = require("./src/middleware");
 
     logger.info("Please wait for scan library");
     library.scan(function(){

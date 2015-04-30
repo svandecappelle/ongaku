@@ -12,6 +12,7 @@
 		groove = require('groove'),
 		uuid = require('uuid');
 
+	logger.setLevel("INFO");
 	Scanner.library = function(callback){
 		var lib = [];
 		this.scan(nconf.get("library"), lib, function(){

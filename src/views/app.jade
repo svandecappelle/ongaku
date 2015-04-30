@@ -2,7 +2,6 @@ html
 	head 
 		title Library
 		meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
-		link(rel="stylesheet", type="text/css", href="/css/main.css")
 		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
 		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.min.css")
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
@@ -11,6 +10,7 @@ html
 		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-win8/ui.fancytree.min.css")
 		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/alertify.min.css")
 		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
+		link(rel="stylesheet", type="text/css", href="/css/main.css")
 		
 		script(src="/jquery/jquery-2.1.1.min.js")
 		script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
@@ -23,25 +23,38 @@ html
 		
 	body
 		nav.menu
-			a Search
 			.menu.menu-discover
 				ul
 					li
-						a Featured
+						a
+							i.glyphicon.glyphicon-star
+							span Featured
 					li
-						a Music
+						a 
+							i.glyphicon.glyphicon-music
+							span Music
 					li
-						a Videos
+						a 
+							i.glyphicon.glyphicon-search
+							span Videos
 					li
-						a Users
+						a 
+							i.glyphicon.glyphicon-user
+							span Users
 					li
-						a Radios
+						a 
+							i.glyphicon.glyphicon-tasks
+							span Radios
 			.menu.me
 				ul
 					li
-						a Library
+						a 
+							i.glyphicon.glyphicon-book
+							span Library
 					li
-						a Upload
+						a 
+							i.glyphicon.glyphicon-upload
+							span Upload
 
 		main
 			block sidebar
