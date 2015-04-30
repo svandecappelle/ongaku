@@ -160,6 +160,7 @@ section.song-list > .list-container{
 
 section.song-list > .list-container .playlist{
 	margin: 0px;
+	padding-bottom: 30px;
 }
 
 section.song-list > .list-container .songs-container{
@@ -170,6 +171,7 @@ section.song-list > .list-container .songs-container{
 	left: 0px;
 	right: 0px;
 	z-index: 3;
+	overflow: auto;
 }
 
 section.song-list > .list-container .songs-container ul li{
