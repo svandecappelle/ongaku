@@ -1,6 +1,6 @@
 {
     "port": "8000",
     "uploader": false,
-    "library": "/home/svandecappelle/Musique",
+    "library": "/home/moguba/Musique",
     "supported-files": ["mp3" , "wav", "wma", "ogg", "flac"]
 }

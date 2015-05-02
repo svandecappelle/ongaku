@@ -502,3 +502,27 @@ section.song-list > .list-container .songs-container .song .track-time{
 .ajs-message{
 	z-index: 99999;
 }
+
+li.group{
+	margin-right: 10px;
+}
+
+.trackaction{
+	float: right;
+	cursor: pointer;
+	margin: 2px;
+	transition: all 0.3s ease-in-out 0s;
+}
+
+.trackaction:hover{
+	color: #BEBEBE;
+}
+
+.lib .group .track{
+	border-bottom: 1px solid #BEBEBE;
+	cursor: pointer;
+}
+
+.lib .group .track:hover{
+	background-color: #EFEFEF;
+}

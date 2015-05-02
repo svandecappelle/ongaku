@@ -1,38 +1,38 @@
 section.sidebar.show
-	.user-sidebar
+	.user-sidebar(style="height: 100%; overflow-y: auto;")
 		h1 Library
 		.search
-			.row
-				.col-lg-8
-					.input-group
-						span.input-group-addon
-							i.glyphicon.glyphicon-search
-						input.form-control(type="text", placeholder="Search", style="height:39px")
-				.btn-group.col-lg-4
-					button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Group by
-						span.caret(style="margin-left: 5px;")
-					ul.dropdown-menu(role="menu", style="margin-left: 15px;")
-						li
-							a Songs
-							a Artists
-							a Albums
-							a Genre
+			.col-lg-8
+				.input-group
+					span.input-group-addon
+						i.glyphicon.glyphicon-search
+					input.form-control(type="text", placeholder="Search", style="height:39px")
+			.btn-group.col-lg-4
+				button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Group by
+					span.caret(style="margin-left: 5px;")
+				ul.dropdown-menu(role="menu", style="margin-left: 15px;")
+					li
+						a Songs
+						a Artists
+						a Albums
+						a Genre
 		.library
-			.tree
-				ul.lib
-					for artistsGroup in library
-						li
-							span
-								i.glyphicon.glyphicon-folder-open
-								= artistsGroup.artist
-							ul
-								for album in artistsGroup.albums
-									li(style="display: none")
-										span= album.title
-										ul
-											for track in album.tracks
-												li(style="display: none")
-													span.track(data-uid="#{track.uid}")= track.title
+			ul.lib
+				for artistsGroup in library
+					li.group
+						span
+							= artistsGroup.artist
+						ul
+							for album in artistsGroup.albums
+								li.group
+									span= album.title
+									ul
+										for track in album.tracks
+											li
+												.track.trackappend(data-uid="#{track.uid}")= track.title
+													i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
+													i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
+												
 	.pending-list
 			.list
 				for track in data.playlist
@@ -55,7 +55,7 @@ block scripts
 
 			});
 
-			$('.track').on("dblclick", function(){
+			$('.trackappend').on("click", function(){
 				var uidFile = $(this).data("uid");
 				$.ongaku.playlist.append(uidFile);
 			});
