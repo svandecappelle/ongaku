@@ -1,6 +1,5 @@
 block player
 	.player
-
 		audio#controls(controls="controls", width="100%")
 			if (data.playing)
 				source#mp3src(type="audio/mp3", src="/stream/#{data.playing.uid}")

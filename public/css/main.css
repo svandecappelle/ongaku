@@ -586,3 +586,9 @@ ul.group.open>li{
 .lib .group .tracklist>li:hover{
 	background-color: #EFEFEF;
 }
+
+.notrackplaying{
+	background-color: black;
+	width: 100%;
+	height: 30px;
+}

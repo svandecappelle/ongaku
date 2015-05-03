@@ -31,7 +31,13 @@ middleware.render = function(view, req, res, objs){
 	call(middlewareObject, function(err, middlewareObject){
 
 		//logger.info("Test with first entry of library", _.first(_.first(library.flatten).track));
-		var play =  _.first(req.session.playlist);
+		var play = null;
+		if (req.session.playlist){
+			play = _.first(req.session.playlist);
+		}else{
+			play = _.first(_.first(library.flatten).track);
+		}
+
 		logger.info("player song: ", play);
 		_.extend(middlewareObject.objs, {
 			data: {

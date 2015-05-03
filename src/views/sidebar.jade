@@ -6,7 +6,7 @@ section.sidebar.show
 				.input-group
 					span.input-group-addon
 						i.glyphicon.glyphicon-search
-					input.form-control(type="text", placeholder="Search", style="height:39px")
+					input.searchbox.form-control(type="text", placeholder="Search", style="height:39px")
 			.btn-group.col-lg-4
 				button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Group by
 					span.caret(style="margin-left: 5px;")
@@ -22,7 +22,7 @@ section.sidebar.show
 					li
 						a.link
 							img.artist
-							span= artistsGroup.artist
+							span.artistname= artistsGroup.artist
 						a
 							i.glyphicon.glyphicon-plus.trackaction.albumappend
 						ul.group.album
@@ -30,7 +30,7 @@ section.sidebar.show
 								li
 									a.link
 										img.album
-										span= album.title
+										span.albumtitle= album.title
 									a
 										i.glyphicon.glyphicon-plus.trackaction.albumappend
 									ul.group.tracklist

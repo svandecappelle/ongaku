@@ -62,24 +62,9 @@ html
 			include player
 
 		script.
-			$('video,audio').mediaelementplayer({
-				success: function (me) {
-					me.addEventListener('loadedmetadata', function () {
-						alertify.dismissAll();
-					});
-					me.addEventListener('ended', function () {
-						$.ongaku.next();
-					});
-				}
-			});
 			$(function () {
-				$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
-				$('.tree li.parent_li > span').on('click', function (e) {
-					var menu = $(this).parent('li.parent_li').find(' > ul');
-					var children = $(this).parent('li.parent_li').find(' > ul > li');
-					children.toggle("fast");
-					e.stopPropagation();
-				});
+				$.ongaku.build();
+
 				$.ongaku.controls.bind();
 				
 				$(".pending-list .list").bind("mousewheel", function(event, delta) {
