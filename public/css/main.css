@@ -19,6 +19,10 @@ a{
 	cursor: pointer;
 }
 
+a:hover{
+	text-decoration: none;
+}
+
 nav{
 	color: white;
 	width: 45px;
@@ -503,13 +507,63 @@ section.song-list > .list-container .songs-container .song .track-time{
 	z-index: 99999;
 }
 
+.search{
+	height: 50px;
+}
+
+img.album{
+	height: 50px;
+	width: 50px;
+	margin-right: 10px;
+}
+
+img.artist{
+	height: 50px;
+	width: 50px;
+	margin-right: 10px;
+}
+
+
 ul.group>li{
 	margin-right: 10px;
 	height: 0px;
 	overflow: hidden;
+	background: none repeat scroll 0% 0% #FFF;
+	box-shadow: 0px 0px 5px #AAA;
+	border-radius: 5px;
+	transition: all 0.3s ease-in-out 0s;
+	width: 100px;
+}
+
+ul.group{
+	padding: 10px;
+	transition: all 0.3s ease-in-out 0s;
+}
+
+ul.group.artist{
+	width: 200px;
+}
+
+ul.group.album{
+	width: 400px;
+}
+
+ul.group.tracklist{
+	width: auto;
+}
+
+ul.group.tracklist>li{
+	margin-bottom: 5px;
+	padding-left: 6px;
+}
+
+ul.group.details{
+	width: auto;
 }
 
 ul.group.open>li{
+	cursor: pointer;
+	width: auto;
 	height: auto;
 	overflow: visible;
 }
@@ -526,10 +580,9 @@ ul.group.open>li{
 }
 
 .lib .group .track{
-	border-bottom: 1px solid #BEBEBE;
 	cursor: pointer;
 }
 
-.lib .group .track:hover{
+.lib .group .tracklist>li:hover{
 	background-color: #EFEFEF;
 }

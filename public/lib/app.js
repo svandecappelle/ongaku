@@ -62,7 +62,7 @@
 		$(".group").on("click", function(event){
 			event.preventDefault();
 			event.stopPropagation();
-			console.log("open second: ", $(this).children("li").children("ul.group"));
+			$(this).toggleClass("details");
 			$(this).children("li").children("ul.group").toggleClass("open");
 		});
 	};

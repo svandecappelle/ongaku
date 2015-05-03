@@ -17,21 +17,28 @@ section.sidebar.show
 						a Albums
 						a Genre
 		.library
-			ul.lib.group.open
+			ul.lib.group.artist.open
 				for artistsGroup in library
 					li
-						a.link= artistsGroup.artist
-						ul.group
+						a.link
+							img.artist
+							span= artistsGroup.artist
+						a
+							i.glyphicon.glyphicon-plus.trackaction.albumappend
+						ul.group.album
 							for album in artistsGroup.albums
 								li
-									a= album.title
-									ul.group
+									a.link
+										img.album
+										span= album.title
+									a
+										i.glyphicon.glyphicon-plus.trackaction.albumappend
+									ul.group.tracklist
 										for track in album.tracks
 											li
 												.track.trackappend(data-uid="#{track.uid}")= track.title
 													i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
 													i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
-												
 	.pending-list
 			.list
 				for track in data.playlist
