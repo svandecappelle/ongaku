@@ -53,6 +53,22 @@
 
 	$.ongaku.controls = new Controls();
 
+	function Library (){
+
+	}
+
+	Library.prototype.bind = function() {
+		console.log("bind library");
+		$(".group").on("click", function(event){
+			event.preventDefault();
+			event.stopPropagation();
+			console.log("open second: ", $(this).children("li").children("ul.group"));
+			$(this).children("li").children("ul.group").toggleClass("open");
+		});
+	};
+
+	$.ongaku.library = new Library();
+
 	function Playlist (){
 
 	}

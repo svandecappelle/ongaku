@@ -503,8 +503,15 @@ section.song-list > .list-container .songs-container .song .track-time{
 	z-index: 99999;
 }
 
-li.group{
+ul.group>li{
 	margin-right: 10px;
+	height: 0px;
+	overflow: hidden;
+}
+
+ul.group.open>li{
+	height: auto;
+	overflow: visible;
 }
 
 .trackaction{

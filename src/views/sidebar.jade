@@ -17,16 +17,15 @@ section.sidebar.show
 						a Albums
 						a Genre
 		.library
-			ul.lib
+			ul.lib.group.open
 				for artistsGroup in library
-					li.group
-						span
-							= artistsGroup.artist
-						ul
+					li
+						a.link= artistsGroup.artist
+						ul.group
 							for album in artistsGroup.albums
-								li.group
-									span= album.title
-									ul
+								li
+									a= album.title
+									ul.group
 										for track in album.tracks
 											li
 												.track.trackappend(data-uid="#{track.uid}")= track.title
@@ -51,6 +50,8 @@ section.sidebar.show
 block scripts
 	script.
 		$(function(){
+			$.ongaku.library.bind();
+
 			$('.parent_li').on("dblclick", function(){
 
 			});
