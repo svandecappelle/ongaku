@@ -409,11 +409,11 @@ section.song-list > .list-container .songs-container .song .track-time{
 }
 
 .pending-list .song.playing .layer .left, .pending-list .song.playing .layer .right, .pending-list .song.playing .layer .top, .pending-list .song.playing .layer .bottom{
-	background-color: red;
+	background-color: rgba(187, 92, 192, 1);
 }
 
 .pending-list .song.playing:before, .pending-list .song.playing:after{
-	border-color: red;
+	border-color: rgba(187, 92, 192, 1);
 }
 
 .pending-list .song .play .button{

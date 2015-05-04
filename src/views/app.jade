@@ -10,6 +10,7 @@ html
 		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-win8/ui.fancytree.min.css")
 		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/alertify.min.css")
 		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
+		link(rel="stylesheet", type="text/css", href="/jScrollPane/jquery.jscrollpane.css")
 		link(rel="stylesheet", type="text/css", href="/css/main.css")
 		
 		script(src="/jquery/jquery-2.1.1.min.js")
@@ -19,6 +20,7 @@ html
 		script(src="/fancytree-2.6.0/jquery.fancytree-all.min.js")
 		script(src="/jquery-mousewheel-3.1.12/jquery.mousewheel.min.js")
 		script(src="/alertifyjs-0.10.2/alertify.min.js")
+		script(src="/jScrollPane/jquery.jscrollpane.min.js")
 		script(src="/lib/app.js")
 		
 	body
@@ -73,6 +75,8 @@ html
 				}
 			});
 			$(function () {
+				$('.scroll-pane').jScrollPane();
+				
 				$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
 				$('.tree li.parent_li > span').on('click', function (e) {
 					var menu = $(this).parent('li.parent_li').find(' > ul');
