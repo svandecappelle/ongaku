@@ -131,12 +131,15 @@
 		$(".artistappend").on("click", function(event){
 			event.preventDefault();
 			event.stopPropagation();
-
-			$(this).parent().find(".track").each(function(id, track){
-				console.log(track);
-				$.ongaku.playlist.append($(track).data("uid"));
-			});
+			$.ongaku.playlist.appendFromElement($(this));
 		});
+		
+		$(".albumappend").on("click", function(event){
+			event.preventDefault();
+			event.stopPropagation();
+			$.ongaku.playlist.appendFromElement($(this));
+		});
+
 		$(".pending-list .list").bind("mousewheel", ".jspContainer", function(event, delta) {
 			var leftPos = $('.pending-list .list .jspPane').position().left;
 			leftPos += (delta * 30);
@@ -175,6 +178,13 @@
 		});
 	};
 
+
+	Playlist.prototype.appendFromElement = function(element) {
+		$(element).parent().find(".track").each(function(id, track){
+			console.log(track);
+			$.ongaku.playlist.append($(track).data("uid"));
+		});
+	};
 
 	Playlist.prototype.rebuild = function(playlist) {
 		$("ul.playlist").empty();

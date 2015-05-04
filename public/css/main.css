@@ -160,7 +160,7 @@ section.song-list > .list-container .infos>.album>.title{
 }
 
 section.song-list > .list-container{
-	min-width: 450px;
+	min-width: 60%;
 	overflow: auto;
 }
 
