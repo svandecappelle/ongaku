@@ -619,3 +619,12 @@ ul.group.open>li{
 	top: 0;
 	left: 130%;
 }
+
+.menu.project{
+	position: absolute;
+	bottom: 50px;
+}
+
+.menu.project a>span{
+	padding-top: 4px;
+}
