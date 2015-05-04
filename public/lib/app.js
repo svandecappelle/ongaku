@@ -214,7 +214,7 @@
 			});
 
 			var trackObj = playlist.lastAdded;
-			if (trackObj){
+			if (trackObj !== undefined){
 				var track ="\
 				<div class='song'>\
 					<div class='layer'>\
@@ -232,14 +232,16 @@
 						<div class='button' data-uid='" + trackObj.uid + "'> Play</div>\
 					</div>\
 				</div>";
-				$('.pending-list .list').append(track);
+				$('.pending-list .list .jspPane').append(track);
 			
 				var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + "' width='100%'><source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + "'></audio>";
 				if ($.ongaku.isFirst()){
 					$(".notrackplaying").remove();
 					$.ongaku.next();
 				}
+				$('.scroll-pane').jScrollPane();
 			}
+			
 			$.ongaku.controls.bind();
 	};
 
