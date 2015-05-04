@@ -10,6 +10,15 @@ block append songlist
 				.album
 					img(url="https://a4-images.myspacecdn.com/images04/3/66428a7344ef45cab06b730823baf13a/full.jpg")
 					span.title Unsaved Playlist
+				.playlists
+					button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
+						span.caret(style="margin-left: 5px;")
+					ul.dropdown-menu(role="menu", style="margin-left: 15px;")
+						li
+							a Playlist1
+							a Playlist2
+							a Playlist3
+							a Playlist4
 			.list-actions
 				span.button
 					i.fa.fa-heart

@@ -17,6 +17,7 @@ nav ul, nav ol{
 
 a{
 	cursor: pointer;
+	color: #13CC00;
 }
 
 a:hover{
@@ -180,25 +181,24 @@ section.song-list > .list-container .songs-container{
 }
 
 section.song-list > .list-container .songs-container ul li{
-	margin-bottom: 2px;
+	margin-bottom: 4px;
+	background-color: white;
+	border-radius: 3px;
 }
 
 section.song-list > .list-container .songs-container .song{
 	margin-bottom: 2px;
-	background-color: white;
-	border-radius: 3px;
 	cursor: pointer;
 	width: 100%;
 	white-space: nowrap;
 }
 
 section.song-list > .list-container .songs-container .song:hover{
-	color: #33B;
+	color: #33BBB1;
 }
 
 section.song-list > .list-container .songs-container .song .track-info{
 	display: inline-block;
-	background-color: white;
 	padding-left: 6px;
 	overflow: hidden;
 }
@@ -281,6 +281,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 	overflow-x: visible;
     overflow-y: hidden;
     white-space: nowrap;
+    height: 180px;
 }
 
 .pending-list .song{
@@ -338,7 +339,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 	height: 100%;
 	display: block;
 	position: absolute;
-	background: none repeat scroll 0% 0% rgba(29, 8, 30, 0);
+	background: none repeat scroll 0% 0% rgba(0, 84, 1, 0.25);
 	transition: all 0.3s ease-in-out 0s;
 	top: 0;
 	left: 0;
@@ -347,7 +348,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 }
 
 .pending-list .song:hover .layer{
-	background: none repeat scroll 0% 0% rgba(29, 8, 30, 0.8);
+	background: none repeat scroll 0% 0% rgba(87, 213, 88, 0.3);
 }
 
 .pending-list .song .layer .top{
@@ -514,13 +515,11 @@ section.song-list > .list-container .songs-container .song .track-time{
 
 img.album{
 	height: 50px;
-	width: 50px;
 	margin-right: 10px;
 }
 
 img.artist{
 	height: 50px;
-	width: 50px;
 	margin-right: 10px;
 }
 
@@ -612,4 +611,10 @@ ul.group.open>li{
 	background-color: black;
 	width: 100%;
 	height: 30px;
+}
+
+.playlists{
+	position: absolute;
+	top: 0;
+	left: 130%;
 }

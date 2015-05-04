@@ -118,7 +118,6 @@
 		$(".group>li").on("click", function(event){
 			event.preventDefault();
 			event.stopPropagation();
-			//$(this).parent().toggleClass("details");
 			$(this).toggleClass("detail");
 			$(this).children("ul.group").toggleClass("open");
 		});
@@ -126,6 +125,22 @@
 		var that = this;
 		$("input.searchbox").on("change", function(){
 			that.search($(this).val());
+		});
+
+		$(".artistappend").on("click", function(event){
+			event.preventDefault();
+			event.stopPropagation();
+
+			$(this).parent().find(".track").each(function(id, track){
+				console.log(track);
+				$.ongaku.playlist.append($(track).data("uid"));
+			});
+		});
+		$(".pending-list .list").bind("mousewheel", ".jspContainer", function(event, delta) {
+			var leftPos = $('.pending-list .list .jspPane').position().left;
+			leftPos += (delta * 30);
+			$(".pending-list .list .jspPane").css({left : leftPos});
+			event.preventDefault();
 		});
 	};
 
@@ -146,10 +161,22 @@
 	function Playlist (){
 
 	}
+	
+	Playlist.prototype.remove = function(uidFile) {
+		$.post("/playlist/remove/".concat(uidFile), function(playlist){
+			$.ongaku.playlist.rebuild(playlist);
+		});
+	};
 
 	Playlist.prototype.append = function(uidFile) {
 		$.post("/playlist/add/".concat(uidFile), function(playlist){
-			$("ul.playlist").empty();
+			$.ongaku.playlist.rebuild(playlist);
+		});
+	};
+
+
+	Playlist.prototype.rebuild = function(playlist) {
+		$("ul.playlist").empty();
 			var tracknumber = 0;
 
 			$.each(playlist.all, function(index, val){
@@ -186,33 +213,33 @@
 			});
 
 			var trackObj = playlist.lastAdded;
-
-			var track ="\
-			<div class='song'>\
-				<div class='info'>\
-					<div class='song-title'> " + trackObj.title + "</div>\
-					<div class='song-artist'> " + trackObj.artist + "</div>\
-					<div class='song-infos'> " + trackObj.duration + "</div>\
-				</div>\
-				<div class='play'>\
-					<div class='button' data-uid='" + trackObj.uid + "'> Play</div>\
-				</div>\
-				<div class='layer'>\
-					<div class='top'></div>\
-					<div class='left'></div>\
-					<div class='right'></div>\
-					<div class='bottom'></div>\
-				</div>\
-			</div>";
-			$('.pending-list .list').append(track);
-
-			var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + "' width='100%'><source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + "'></audio>";
-			if ($.ongaku.isFirst()){
-				$(".notrackplaying").remove();
-				$.ongaku.next();
+			if (trackObj){
+				var track ="\
+				<div class='song'>\
+					<div class='layer'>\
+						<div class='top'></div>\
+						<div class='left'></div>\
+						<div class='right'></div>\
+						<div class='bottom'></div>\
+					</div>\
+					<div class='info'>\
+						<div class='song-title'> " + trackObj.title + "</div>\
+						<div class='song-artist'> " + trackObj.artist + "</div>\
+						<div class='song-infos'> " + trackObj.duration + "</div>\
+					</div>\
+					<div class='play'>\
+						<div class='button' data-uid='" + trackObj.uid + "'> Play</div>\
+					</div>\
+				</div>";
+				$('.pending-list .list').append(track);
+			
+				var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + "' width='100%'><source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + "'></audio>";
+				if ($.ongaku.isFirst()){
+					$(".notrackplaying").remove();
+					$.ongaku.next();
+				}
 			}
 			$.ongaku.controls.bind();
-		});
 	};
 
 	$.ongaku.playlist = new Playlist();

@@ -54,6 +54,19 @@ module.exports = function (app, options) {
 			res.send({all: req.session.playlist, lastAdded: track});
 		});
 	});
+	
+	app.post('/playlist/remove/:id', function(req, res){
+		var id = req.params.id;
+		logger.info("Remove file index to playlist: ", id);
+		if (req.session.playlist !== undefined){
+			req.session.playlist.slice(id, 1);
+		}
+		
+		req.session.save(function(){
+			res.setHeader('Access-Control-Allow-Credentials', 'true');
+			res.send({all: req.session.playlist});
+		});
+	});
 
 	if (nconf.get("uploader")){
 		var fs = require('fs');

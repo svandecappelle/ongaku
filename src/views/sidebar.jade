@@ -21,18 +21,18 @@ section.sidebar.show
 				for artistsGroup in library
 					li
 						a.link
-							img.artist
+							img.artist(src="/img/artist-tmp.jpg")
 							span.artistname= artistsGroup.artist
-						a
-							i.glyphicon.glyphicon-plus.trackaction.albumappend
+						a.artistappend
+							i.glyphicon.glyphicon-plus.trackaction
 						ul.group.album
 							for album in artistsGroup.albums
 								li
 									a.link
-										img.album
+										img.album(src="/img/album.jpg")
 										span.albumtitle= album.title
-									a
-										i.glyphicon.glyphicon-plus.trackaction.albumappend
+									a.albumappend
+										i.glyphicon.glyphicon-plus.trackaction
 									ul.group.tracklist
 										for track in album.tracks
 											li
@@ -40,20 +40,21 @@ section.sidebar.show
 													i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
 													i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
 	.pending-list
-			.list
+			.list.scroll-pane
 				for track in data.playlist
 					.song
+						.layer
+							.top
+							.left
+							.right
+							.bottom
 						.info
 							.song-title= track.title
 							.song-artist= track.artist
 							.song-infos= track.duration
 						.play
 							.button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
-						.layer
-							.top
-							.left
-							.right
-							.bottom
+
 block scripts
 	script.
 		$(function(){

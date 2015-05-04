@@ -65,15 +65,9 @@ html
 
 		script.
 			$(function () {
-
 				$('.scroll-pane').jScrollPane();
 				$.ongaku.build();
 				$.ongaku.controls.bind();
-				
-				$(".pending-list .list").bind("mousewheel", function(event, delta) {
-					this.scrollLeft -= (delta * 30);
-					event.preventDefault();
-				});
 			});
 
 
