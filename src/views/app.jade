@@ -3,7 +3,7 @@ html
 		title Library
 		meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
 		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
-		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.min.css")
+		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.css")
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
 		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap-combined.min.css")
 		link(rel="stylesheet", type="text/css", href="/fancytree-2.6.0/skin-bootstrap/ui.fancytree.min.css")
@@ -64,26 +64,10 @@ html
 			include player
 
 		script.
-			$('video,audio').mediaelementplayer({
-				success: function (me) {
-					me.addEventListener('loadedmetadata', function () {
-						alertify.dismissAll();
-					});
-					me.addEventListener('ended', function () {
-						$.ongaku.next();
-					});
-				}
-			});
 			$(function () {
+
 				$('.scroll-pane').jScrollPane();
-				
-				$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
-				$('.tree li.parent_li > span').on('click', function (e) {
-					var menu = $(this).parent('li.parent_li').find(' > ul');
-					var children = $(this).parent('li.parent_li').find(' > ul > li');
-					children.toggle("fast");
-					e.stopPropagation();
-				});
+				$.ongaku.build();
 				$.ongaku.controls.bind();
 				
 				$(".pending-list .list").bind("mousewheel", function(event, delta) {

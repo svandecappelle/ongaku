@@ -7,30 +7,86 @@
 
 	$.ongaku = new Player();
 
+	Player.prototype.isFirst = function() {
+		return this.current === undefined;
+	};
+
+	Player.prototype.setCurrent = function(currentId) {
+		this.current = currentId;
+	};
+
+	Player.prototype.getCurrent = function() {
+		return this.current;
+	};
+
 	Player.prototype.play = function(uid, encoding){
 		$(".playing").removeClass('playing');
 		this.current = uid;
-
+		console.log("start playing: ", this.current);
+		
 		$("#controls").attr("src", "/stream/".concat(uid));
 		$("#mp3src").attr("src", "/stream/".concat(uid)).remove().appendTo("#controls");
+
 		$("#controls")[0].pause();
 		$("#controls")[0].load();
 		$("#controls")[0].play();
 
 		if (encoding !== 'mp3'){
-			console.log("okokokok");
-			alertify.message('Transcoding...', 0);
+			alertify.sucess('Transcoding...', 0);
 		}
 
 		$(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
 	};
 
+	Player.prototype.stop = function(uid, encoding){
+		$("#controls")[0].stop();
+	};
+
+	Player.prototype.build = function() {
+		
+		console.log("build audio controls");
+		$('video,audio').mediaelementplayer({
+			success: function (me) {
+				me.addEventListener('loadedmetadata', function () {
+					alertify.dismissAll();
+				});
+				me.addEventListener('ended', function () {
+					$.ongaku.next();
+				});
+				me.addEventListener('play', function(){
+					if ($.ongaku.isFirst()){
+						alertify.warning('Add a track to play', 2);
+						$.ongaku.stop();
+					}else if($(".playing").length === 0){
+						console.log("need to select into playing: " + $.ongaku.getCurrent());
+						$(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
+					}
+				});
+			},
+			failure: function(me){
+				console.log(me);
+			}
+		});
+	
+	};
+
 	Player.prototype.next = function(){		
-		var nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().next();
+		var nextSong = null;
+		if (this.current){
+			nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().next();
+		}else{
+			nextSong = $(".play>.button").first().parent().parent();
+		}
+		
+		console.log("Start next song: ", this.current);
+
 		if (nextSong){
 			var nextUid = nextSong.find(".button").data('uid');
 			var encoding = nextSong.find(".button").data('encoding');
-			
+			if (this.current === undefined){
+				console.log("first song:: need to build controls");
+				$.ongaku.build();
+			}
 			if (nextUid){
 				this.play(nextUid, encoding);
 			}
@@ -43,15 +99,49 @@
 
 	Controls.prototype.bind = function(){
 		$(".pending-list .list .song").click(function(){
-			$.ongaku.play($(this).find(".button").data("uid"));
+			$.ongaku.play($(this).find(".button").data("uid"), $(this).find(".button").data("encoding"));
 		});
 
 		$('a.song').click(function(){
-			$.ongaku.play($(this).data("uid"));
+			$.ongaku.play($(this).data("uid"), $(this).data("encoding"));
 		});
 	};
 
 	$.ongaku.controls = new Controls();
+
+	function Library (){
+
+	}
+
+	Library.prototype.bind = function() {
+		console.log("bind library");
+		$(".group>li").on("click", function(event){
+			event.preventDefault();
+			event.stopPropagation();
+			//$(this).parent().toggleClass("details");
+			$(this).toggleClass("detail");
+			$(this).children("ul.group").toggleClass("open");
+		});
+
+		var that = this;
+		$("input.searchbox").on("change", function(){
+			that.search($(this).val());
+		});
+	};
+
+	Library.prototype.search = function(pattern) {
+		console.log("search for: ", pattern);
+		$(".track").each(function(){
+			if ($(this).text().toLowerCase().lastIndexOf(pattern.toLowerCase()) !== -1){
+				$(this).show();
+				console.log($(this).text());
+			}else{
+				$(this).hide();
+			}
+		});
+	};
+
+	$.ongaku.library = new Library();
 
 	function Playlist (){
 
@@ -115,8 +205,13 @@
 				</div>\
 			</div>";
 			$('.pending-list .list').append(track);
-			$.ongaku.controls.bind();
 
+			var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + "' width='100%'><source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + "'></audio>";
+			if ($.ongaku.isFirst()){
+				$(".notrackplaying").remove();
+				$.ongaku.next();
+			}
+			$.ongaku.controls.bind();
 		});
 	};
 

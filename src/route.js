@@ -16,7 +16,6 @@ module.exports = function (app, options) {
 
 		var libraryDatas = library.get();
 
-		logger.debug(libraryDatas[0].albums[0].tracks[0].metadatas);
 		logger.debug(libraryDatas);
 		middleware.render('songlist', req, res, {library: libraryDatas});
 
