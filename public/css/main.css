@@ -541,6 +541,7 @@ ul.group{
 
 ul.group.artist{
 	width: auto;
+	margin-bottom: 55px;
 }
 
 ul.group.artist>li{

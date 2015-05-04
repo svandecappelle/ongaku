@@ -120,6 +120,7 @@
 			event.stopPropagation();
 			$(this).toggleClass("detail");
 			$(this).children("ul.group").toggleClass("open");
+			$('.scroll-pane').jScrollPane();
 		});
 
 		var that = this;
