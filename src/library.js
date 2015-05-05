@@ -11,6 +11,7 @@
 
 
 	Library.scan = function(callback){
+		this.scanProgress = true;
 		scan.library(function(lib){
 			
 			var grpByArtists = _.groupBy(lib, 'artist');
@@ -43,9 +44,14 @@
 			});
 
 			Library.data = groupByArtistsAndAlbum;
+			Library.scanProgress = false;
 			callback();
 
 		});
+	};
+
+	Library.scanning = function(){
+		return this.scanProgress;
 	};
 
 	Library.getRelativePath = function(uuid){

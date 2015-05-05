@@ -36,7 +36,7 @@
 						if (err) return cb(err);
 						
 						if (stat.isFile()) {
-							logger.info("File found".concat(newpath));
+							logger.debug("File found".concat(newpath));
 							var metadataParser = mm(fs.createReadStream(newpath));
 
 							if (_.contains(nconf.get('supported-files'), path.extname(newpath).replace(".", ""))){
@@ -61,7 +61,7 @@
 					});
 				},
 				function(err) {
-					logger.info("Scan finished");
+					logger.info("Scan " + apath + " finished");
 					callback(err); // loop over, come out
 				}
 			);

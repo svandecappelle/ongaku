@@ -121,7 +121,7 @@ section.sidebar.show {
 }
 
 section.sidebar .user-sidebar{
-
+	outline: none;
 }
 
 span.button{
@@ -627,4 +627,13 @@ ul.group.open>li{
 
 .menu.project a>span{
 	padding-top: 4px;
+}
+
+.message {
+	text-align: center;
+	margin-top: 10%;
+}
+
+.message span.text{
+	padding-left: 10px;
 }

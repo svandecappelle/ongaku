@@ -32,10 +32,13 @@ middleware.render = function(view, req, res, objs){
 
 		//logger.info("Test with first entry of library", _.first(_.first(library.flatten).track));
 		var play = null;
+		var message = null;
 		if (req.session.playlist){
 			play = _.first(req.session.playlist);
-		}else{
+		}else if(_.first(library.flatten)){
 			play = _.first(_.first(library.flatten).track);
+		}else if (library.scanning){
+			message = "Scanning library";
 		}
 
 		logger.info("player song: ", play);
@@ -44,7 +47,8 @@ middleware.render = function(view, req, res, objs){
 				// TODO for the test get the first entry of library
 				playing: play,
 				//playing: null,
-				playlist: req.session.playlist ? req.session.playlist : []
+				playlist: req.session.playlist ? req.session.playlist : [],
+				message: message
 			}
 		});
 

@@ -17,13 +17,17 @@ section.sidebar.show
 						a Albums
 						a Genre
 		.library
+			if (data.message != null)
+				h1.message
+					i.fa.fa-circle-o-notch.fa-spin 
+					span.text= data.message
 			ul.lib.group.artist.open
 				for artistsGroup in library
 					li
 						a.link
 							img.artist(src="/img/artist-tmp.jpg")
 							span.artistname= artistsGroup.artist
-						a.artistappend
+						a.artistappend(data-toggle="tooltip" data-placement="left" title="Tooltip on left")
 							i.glyphicon.glyphicon-plus.trackaction
 						ul.group.album
 							for album in artistsGroup.albums
@@ -31,7 +35,7 @@ section.sidebar.show
 									a.link
 										img.album(src="/img/album.jpg")
 										span.albumtitle= album.title
-									a.albumappend
+									a.albumappend(data-toggle="tooltip" data-placement="left" title="Tooltip on left")
 										i.glyphicon.glyphicon-plus.trackaction
 									ul.group.tracklist
 										for track in album.tracks

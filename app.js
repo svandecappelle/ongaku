@@ -11,7 +11,8 @@ var fs = require('fs'),
     path = require('path'),
     pkg = require('./package.json'),
     nconf = require('nconf'),
-    library = require("./src/library");
+    library = require("./src/library"),
+    async = require("async");
 
 function preload(){
     nconf.argv().env();
@@ -67,13 +68,19 @@ function start(){
     var middleware = require("./src/middleware");
 
     logger.info("Please wait for scan library");
-    library.scan(function(){
-
-        // LISTEN PORT APP
-        var served = app.listen(nconf.get('port'));
-
-        logger.info("Ready to serve on " + nconf.get('port') + " port");
-    });
+    async.parallel([
+        function(){
+             // LISTEN PORT APP
+            var served = app.listen(nconf.get('port'));
+            logger.info("Ready to serve on " + nconf.get('port') + " port");
+        },
+        function(){
+            library.scan(function(){
+               logger.info("Library scanned");
+            });
+        }
+    ]);
+    
 }
 
 var okToStart = preload();
