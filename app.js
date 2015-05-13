@@ -68,15 +68,24 @@ function start(){
     var middleware = require("./src/middleware");
 
     logger.info("Please wait for scan library");
+
+    var served = app.listen(nconf.get('port'));
+    var io = require('socket.io')(served);
+
     async.parallel([
         function(){
              // LISTEN PORT APP
-            var served = app.listen(nconf.get('port'));
+            
             logger.info("Ready to serve on " + nconf.get('port') + " port");
+            io.on('connection', function(socket){
+                logger.info("User connected to socket.io");
+            });
+
         },
         function(){
             library.scan(function(){
                logger.info("Library scanned");
+               io.emit('library:scanned', {message: "Library scanned"});
             });
         }
     ]);

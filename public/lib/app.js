@@ -142,7 +142,7 @@
 
 		$(".pending-list .list").bind("mousewheel", ".jspContainer", function(event, delta) {
 			var leftPos = $('.pending-list .list .jspPane').position().left;
-			leftPos += (delta * 30);
+			leftPos += (delta * 70);
 			$(".pending-list .list .jspPane").css({left : leftPos});
 			event.preventDefault();
 		});
