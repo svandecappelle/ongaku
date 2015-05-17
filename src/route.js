@@ -21,6 +21,11 @@ module.exports = function (app, options) {
 
 	});
 
+	app.get('/admin/', function (req, res) {
+		logger.info("Client access to admin index ["+req.ip+"]");
+		middleware.render('admin/index', req, res, {});
+	});
+
 	app.get('/403', function (req, res){
 		middleware.render('403', req, res);
 	});
