@@ -32,10 +32,17 @@
 		$("#controls")[0].play();
 
 		if (encoding !== 'mp3'){
-			alertify.sucess('Transcoding...', 0);
+			alertify.success('Transcoding...', 0);
 		}
 
 		$(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
+		var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text();
+		console.log("play: " + title);
+		$.marqueeTitle({
+			text: "Ongaku - Playing: " + title,
+			dir: "left",
+			speed: 500
+		});
 	};
 
 	Player.prototype.stop = function(uid, encoding){
@@ -257,4 +264,31 @@
 
 	$.ongaku.playlist = new Playlist();
 
+    var shift = {
+        "left": function (a) {
+            a.push(a.shift());
+        },
+        "right": function (a) {
+            a.unshift(a.pop());
+        }
+    };
+    
+    $.marqueeTitle = function (options) {
+        var opts = $.extend({},
+        {
+            text: "",
+            dir: "left",
+            speed: 200,
+            wait: 1000,
+        }, options),
+            t = (opts.text || document.title).split("");
+        if (!t) {
+            return;
+        }
+        t.push(" ");
+		document.title = t;
+		/*setTimeout(function () {
+			titleScroller(t.substr(1) + t.substr(0, 1));
+		}, 500);*/
+	};
 }(jQuery);
