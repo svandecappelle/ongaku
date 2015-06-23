@@ -342,7 +342,7 @@ section.song-list > .list-container .songs-container .song .track-time{
 	height: 100%;
 	display: block;
 	position: absolute;
-	background: none repeat scroll 0% 0% rgba(0, 84, 1, 0.25);
+	background: none repeat scroll 0% 0% rgba(29, 51, 29, 0.5);
 	transition: all 0.3s ease-in-out 0s;
 	top: 0;
 	left: 0;
@@ -350,8 +350,16 @@ section.song-list > .list-container .songs-container .song .track-time{
 	bottom: 0;
 }
 
+.pending-list .song.playing .layer{
+	background: none repeat scroll 0% 0% rgba(24, 20, 22, 0.56);
+}
+
 .pending-list .song:hover .layer{
-	background: none repeat scroll 0% 0% rgba(87, 213, 88, 0.3);
+	background: none repeat scroll 0% 0% rgba(6, 72, 6, 0.5);
+}
+
+.pending-list .song.playing:hover .layer{
+	background: none repeat scroll 0% 0% rgba(72, 69, 68, 0.3);
 }
 
 .pending-list .song .layer .top{
@@ -418,11 +426,11 @@ section.song-list > .list-container .songs-container .song .track-time{
 }
 
 .pending-list .song.playing .layer .left, .pending-list .song.playing .layer .right, .pending-list .song.playing .layer .top, .pending-list .song.playing .layer .bottom{
-	background-color: #97EDA7;
+	background-color: rgb(3, 3, 3);
 }
 
 .pending-list .song.playing:before, .pending-list .song.playing:after{
-	border-color: #97EDA7;
+	border-color: rgba(253, 255, 253, 0.6);
 }
 
 .pending-list .song .play .button{
