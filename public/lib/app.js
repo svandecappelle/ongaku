@@ -1,9 +1,70 @@
 +function ($) {
 	'use strict';
 
-	function Player(){
+	function TitleScroller(){
+    	this.appearCharLenghtLimit = 16;
+    	this.options = {};
+    };
+    
+    TitleScroller.prototype.configure = function(opts){
+		var that = this;
 
-	}
+    	this.stop(function(){
+    		that.turn = 1;
+    	
+			that.options = $.extend({
+				prefix: "Ongaku: ",
+				text: undefined,
+				speed: 200,
+				wait: 2000
+			}, opts);
+			document.title = that.options.prefix + that.options.text;
+			that.currentTitle = that.options.text;
+			if (that.appearCharLenghtLimit < that.options.text.length){
+				that.start();
+			}
+    	});
+		
+    };
+
+    TitleScroller.prototype.stop = function (callback) {
+    	var that = this;
+		that.stopFlag = true;
+    	setTimeout(function(){
+			that.stopFlag = false;
+			callback();
+		}, this.options.wait);
+    };
+
+    TitleScroller.prototype.start = function () {
+		var that = this;
+		if (that.options.text !== undefined){
+			that.currentTitle = that.currentTitle.substring(1, that.currentTitle.length) + that.currentTitle.substring(0, 1);
+			document.title = that.options.prefix + that.currentTitle;
+			setTimeout(function(){
+
+				if (that.stopFlag){
+					that.stopFlag = false;
+				}else{
+					if (that.turn === that.currentTitle.length){
+						that.turn = 1;
+						setTimeout(function(){
+							that.start();
+						}, that.options.wait);
+					}else{
+						that.turn += 1;
+						that.start();
+					}
+				}
+			}, that.options.speed);
+		}
+	};
+
+
+	function Player(){
+		this.titleScroller = new TitleScroller();
+		this.titleScroller.start();
+	};
 
 	$.ongaku = new Player();
 
@@ -38,9 +99,10 @@
 		$(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
 		var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text() + " ";
 		console.log("play: " + title);
-		$.marqueeTitle({
+		this.titleScroller.configure({
 			text: title,
-			speed: 500
+			speed: 500,
+			forceReset: true
 		});
 	};
 
@@ -271,32 +333,5 @@
             a.unshift(a.pop());
         }
     };
-    
-    $.marqueeTitle = function (options) {
-    	var that = this;
-        var opts = $.extend({
-        	prefix: "Ongaku - ",
-            text: document.title,
-            speed: 200,
-            wait: 2000,
-            turn: 1,
-        }, options);
-
-       	opts.text = opts.text.substring(1, opts.text.length) + opts.text.substring(0, 1);
-		document.title = opts.prefix + opts.text;
-		setTimeout(function(){
-
-			if (opts.turn === opts.text.length){
-				opts.turn = 1;
-				setTimeout(function(){
-					$.marqueeTitle(opts);
-				}, opts.wait);
-			}else{
-				opts.turn += 1;
-				$.marqueeTitle(opts);
-			}
-
-		}, opts.speed);
-	};
 
 }(jQuery);
