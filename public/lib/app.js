@@ -36,11 +36,10 @@
 		}
 
 		$(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
-		var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text();
+		var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text() + " ";
 		console.log("play: " + title);
 		$.marqueeTitle({
-			text: "Ongaku - Playing: " + title,
-			dir: "left",
+			text: title,
 			speed: 500
 		});
 	};
@@ -274,21 +273,30 @@
     };
     
     $.marqueeTitle = function (options) {
-        var opts = $.extend({},
-        {
-            text: "",
-            dir: "left",
+    	var that = this;
+        var opts = $.extend({
+        	prefix: "Ongaku - ",
+            text: document.title,
             speed: 200,
-            wait: 1000,
-        }, options),
-            t = (opts.text || document.title).split("");
-        if (!t) {
-            return;
-        }
-        t.push(" ");
-		document.title = t;
-		/*setTimeout(function () {
-			titleScroller(t.substr(1) + t.substr(0, 1));
-		}, 500);*/
+            wait: 2000,
+            turn: 1,
+        }, options);
+
+       	opts.text = opts.text.substring(1, opts.text.length) + opts.text.substring(0, 1);
+		document.title = opts.prefix + opts.text;
+		setTimeout(function(){
+
+			if (opts.turn === opts.text.length){
+				opts.turn = 1;
+				setTimeout(function(){
+					$.marqueeTitle(opts);
+				}, opts.wait);
+			}else{
+				opts.turn += 1;
+				$.marqueeTitle(opts);
+			}
+
+		}, opts.speed);
 	};
+
 }(jQuery);
