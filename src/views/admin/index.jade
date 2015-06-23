@@ -1,4 +1,6 @@
 extends ../app
+block append headpage
+	title Ongaku administration panel
 block append library
 	section.global-administration
 		ul.tabs
@@ -16,13 +18,13 @@ block append library
 							.col-sm-4
 								.toggle-icon.icon.red
 									.handle
-										.glyphicon.glyphicon-cloud-upload
+										.glyphicon.glyphicon-user
 						.form-group.form-group-sm
 							label.col-sm-2.control-label Allow user upload
 							.col-sm-4
 								.toggle-icon.icon.green
 									.handle
-										.glyphicon.glyphicon-user
+										.glyphicon.glyphicon-cloud-upload
 						.form-group.form-group-sm
 							label.col-sm-2.control-label User library is public
 							.col-sm-4
@@ -48,7 +50,7 @@ block append library
 				input#tab2(type="radio", name="tabs")
 				label.tab(for="tab2") Users
 				div#tab-content2.tab-content
-					span content2		 
+					span Users management (Not yet configurable).
 
 block append songlist
 
@@ -65,8 +67,8 @@ block append songlist
 				});
 
 				$("input[name='portnumber']").TouchSpin({
-					min: 0,
-					max: 10000,
+					min: 1,
+					max: 100000,
 					step: 1,
 					verticalbuttons: true
 				});

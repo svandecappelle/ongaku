@@ -642,42 +642,50 @@ ul.group.open>li{
 }
 
 /* TABS */
-.tabs *{
-    box-sizing: border-box;
-   	line-height: 21px;
+.tabs > li{
+	margin-top: 1px;
+}
+
+.tabs input{
+	height: 34px !important;
+}
+
+.toggle-icon>.handle>.glyphicon{
+	box-sizing: border-box;
+	line-height: 24px;
 }
 
 .tabs {
-  float: none;
-  list-style: none;
-  position: relative;
-  margin: 10px 4px 0px 10px;
-  text-align: left;
+	float: none;
+	list-style: none;
+	position: relative;
+	margin: 10px 4px 0px 10px;
+	text-align: left;
 }
 .tabs li {
-  float: left;
-  display: block;
+	float: left;
+	display: block;
 }
 .tabs input[type="radio"] {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
 }
 .tabs label.tab {
-  display: block;
-  padding: 14px 21px;
-  border-radius: 2px 2px 0 0;
-  font-size: 20px;
-  font-weight: normal;
-  text-transform: uppercase;
-  color: #70AE69;
-  cursor: pointer;
-  position: relative;
-  top: 4px;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
+	display: block;
+	padding: 14px 21px;
+	border-radius: 2px 2px 0 0;
+	font-size: 20px;
+	font-weight: normal;
+	text-transform: uppercase;
+	color: #70AE69;
+	cursor: pointer;
+	position: relative;
+	top: 4px;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	-webkit-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
 }
 .tabs label.tab:hover {
   background: #FAFAFA;
@@ -694,12 +702,16 @@ ul.group.open>li{
   top: 53px;
   left: 0;
   box-shadow: 4px -4px 2px -4px #AAA;
-  border-left: 1px solid;
-  border-bottom: 1px solid;
+  border-width: 1px; 
+  border-style: solid;
   border-color: #AAA;
-  border-right: 1px solid #AAA;
   border-radius: 5px;
 }
+
+.tabs li:first-child .tab-content{
+	border-top-left-radius: 0px;
+}
+
 .tabs [id^="tab"]:checked + label.tab {
   top: 0;
   padding-top: 17px;
@@ -711,7 +723,11 @@ ul.group.open>li{
   border-left: 1px solid;
   border-right: 1px solid;
   border-color: #AAA;
+  box-sizing: border-box;
+  line-height: 21px;
+  margin-top: 0px;
 }
+
 .tabs [id^="tab"]:checked ~ [id^="tab-content"] {
   display: block;
 }
