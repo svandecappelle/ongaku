@@ -11,6 +11,7 @@ html
 		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
 		link(rel="stylesheet", type="text/css", href="/jScrollPane/jquery.jscrollpane.css")
 		link(rel="stylesheet", type="text/css", href="/css/main.css")
+		link(rel="stylesheet", type="text/css", href="/video-js/video-js.css")
 		
 		script(src="/jquery/jquery-2.1.1.min.js")
 		script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
@@ -22,6 +23,7 @@ html
 		script(src="/jScrollPane/jquery.jscrollpane.min.js")
 		script(src="/socket.io/socket.io.js")
 		script(src="/lib/app.js")
+		script(src="/video-js/video.js")
 
 	body
 		nav.menu
@@ -70,6 +72,7 @@ html
 			include player
 
 		script.
+			videojs.options.flash.swf = "http://localhost:8000/video-js/video-js.swf";
 			$(function () {
 				$('.scroll-pane').jScrollPane();
 				$.ongaku.build();

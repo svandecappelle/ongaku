@@ -115,7 +115,7 @@
 		if ($('.player > audio').children().length > 0 && !this.isInitialised()){
 			this.initialised = true;
 			console.log("build audio controls");
-			$('video,audio').mediaelementplayer({
+			$('audio').mediaelementplayer({
 				success: function (me) {
 					console.log("musique player builded: playing starting");
 					me.addEventListener('loadedmetadata', function () {
