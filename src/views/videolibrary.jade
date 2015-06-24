@@ -14,9 +14,9 @@ section.sidebar.show
 					span.text= data.message
 			ul.lib.group.artist.open
 				for video in library
-					li
+					li(style="width: 494px; display: inline-block;")
 						a.link.video
-							video 
+							video(height="270", width="480")
 								source(src="/video/stream/#{video.uid}")
 	.pending-list
 			.list.scroll-pane
@@ -38,7 +38,12 @@ block scripts
 	script.
 		$(function(){
 			$.ongaku.library.bind();
-			$('video').mediaelementplayer();
+			$('video').mediaelementplayer({
+				// default if the <video width> is not specified
+				defaultVideoWidth: 480,
+				// default if the <video height> is not specified     
+				defaultVideoHeight: 270,
+			});
 
 			$('.parent_li').on("dblclick", function(){
 
