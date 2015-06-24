@@ -35,6 +35,8 @@
 					uid: uuid.v1().concat(".").concat(path.extname(filePath).replace(".", "")), 
 					file: "/video/stream".concat(filePath.replace(nconf.get("library"), "")),
 					type: "video",
+					name: path.basename(filePath),
+					extension: path.extname(filePath).replace(".", ""),
 					relativePath: filePath.replace(nconf.get("library"), ""),
 				});
 				cb(null, results); // asynchronously call the loop

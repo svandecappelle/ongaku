@@ -3,5 +3,5 @@
     "uploader": false,
     "library": "/home/svandecappelle/Musique",
     "audio": ["mp3",  "wav", "wma", "ogg", "flac"],
-    "video": ["mp4"]
+    "video": ["mp4", "webm", "flv"]
 }
