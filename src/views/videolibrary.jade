@@ -1,0 +1,51 @@
+section.sidebar.show
+	.user-sidebar.scroll-pane(style="height: 100%; overflow-y: auto;")
+		h1 Video library
+		.search
+			.col-lg-8
+				.input-group
+					span.input-group-addon
+						i.glyphicon.glyphicon-search
+					input.searchbox.form-control(type="text", placeholder="Search", style="height:39px")
+		.library
+			if (data.message !== null)
+				h1.message
+					i.fa.fa-circle-o-notch.fa-spin 
+					span.text= data.message
+			ul.lib.group.artist.open
+				for video in library
+					li
+						a.link.video
+							video 
+								source(src="/video/stream/#{video.uid}")
+	.pending-list
+			.list.scroll-pane
+				for track in data.playlist
+					.song
+						.layer
+							.top
+							.left
+							.right
+							.bottom
+						.info
+							.song-title= track.title
+							.song-artist= track.artist
+							.song-infos= track.duration
+						.play
+							.button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
+
+block scripts
+	script.
+		$(function(){
+			$.ongaku.library.bind();
+			$('video').mediaelementplayer();
+
+			$('.parent_li').on("dblclick", function(){
+
+			});
+
+			$('.trackappend').on("click", function(){
+				var uidFile = $(this).data("uid");
+				$.ongaku.playlist.append(uidFile);
+			});
+		});

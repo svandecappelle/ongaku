@@ -63,20 +63,26 @@ middleware.redirect = function(view, res){
 	res.redirect(view);
 };
 
-middleware.stream = function(req, res, uuid){
+middleware.stream = function(req, res, uuid, type){
 	logger.info("start stream file: " + uuid);
 	if (this.requireAuthentication(req)){
 		// need an auth
-		logger.info("Client not connected: cannot acces to video ["+req.ip+"]");
+		logger.info("Client not connected: cannot acces to audio / video ["+req.ip+"]");
 		req.session.redirectTo = req.originalUrl;
 		res.json({error: 'Need privileges'});
 		res.end();
 	}else{
-		logger.info("Stream video");
+		logger.info("Stream " + type);
 		var fs = require("fs");
-		var src = library.getRelativePath(uuid);
+		var src;
+		if (type === "audio"){
+			src = library.getAudioRelativePath(uuid);
+		}else if (type === "video"){
+			src = library.getVideoRelativePath(uuid);
+		}
+		
 
-		if (path.extname(src).replace(".", "") !== 'mp3'){
+		if (path.extname(src).replace(".", "") !== 'mp3' && type === 'audio'){
 			var libraryEntry = library.getByUid(uuid);
 			var audio = {
 				duration: libraryEntry.duration,

@@ -21,7 +21,7 @@ logger.setLevel(nconf.get('logLevel'));
 		app.get('/', function (req, res) {
 			logger.info("Client access to index ["+req.ip+"]");
 
-			var libraryDatas = library.get();
+			var libraryDatas = library.getAudio();
 
 			logger.debug(libraryDatas);
 			middleware.render('songlist', req, res, {library: libraryDatas});
@@ -32,7 +32,16 @@ logger.setLevel(nconf.get('logLevel'));
 			middleware.render('403', req, res);
 		});
 
-		app.get('/video/:video', function (req, res){
+		app.get('/video', function(req, res){
+			logger.info("Client access to videos ["+req.ip+"]");
+
+			var libraryDatas = library.getVideo();
+
+			logger.debug(libraryDatas);
+			middleware.render('videolist', req, res, {library: libraryDatas});
+		});
+
+		app.get('/video/stream/:media', function (req, res){
 			// ".ogg": "video/ogg
 			// to convert to ogv
 			// ffmpeg -i demoreel.mp4 -c:v libtheora -c:a libvorbis demoreel.ogv
@@ -40,12 +49,13 @@ logger.setLevel(nconf.get('logLevel'));
 			// To webm
 			// ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -an -pass 1 -f webm /dev/null
 			// ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -codec:a libvorbis -b:a 128k -pass 2 -f webm sortie.webm
-			middleware.getVideo(req, res, "./video/" + req.param.video);
+			logger.info("streaming video");
+			middleware.stream(req, res, req.params.media, "video");
 		});
 
 		app.get('/stream/:media', function (req, res) {
-			logger.info("streaming ");
-			middleware.stream(req, res, req.params.media);
+			logger.info("streaming audio");
+			middleware.stream(req, res, req.params.media, "audio");
 		});
 
 		if (nconf.get("uploader")){

@@ -1,8 +1,8 @@
 extends app
 block append headpage
-	title Ongaku music
+	title Ongaku video
 block append library
-	include library
+	include videolibrary
 block append songlist
 	section.song-list
 		.list-container
@@ -37,10 +37,10 @@ block append songlist
 									.track-info.track-num
 										span= trackNum
 									.track-info.track-time
-										span= track.duration
+										span= track.duration	
 								.track-info.track
 									.track-info.track-title
-										span= track.title
+										span= track.file
 									.track-info.track-artist
 										span= track.artist
 				.song

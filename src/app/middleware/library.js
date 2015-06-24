@@ -6,18 +6,27 @@
 		logger = require("log4js").getLogger('Library'),
 		nconf = require("nconf");
 
-	Library.data  = [];
+	Library.data  = {audio: [], video: []};
 	Library.flatten = {};
 	Library.scanProgress = false;
 
 	Library.beginScan = function(callback){
+		var that = this;
 		scan.library(function(lib){
-			
-			var grpByArtists = _.groupBy(lib, 'artist');
-			Library.flatten = _.map(_.groupBy(lib, 'uid'), function(track, uuid){
-				return {uuid: uuid, track: track};
+			that.populate("audio", lib.audio, function(){
+				that.populate("video", lib.video, callback);				
 			});
-			
+		});
+	};
+
+	Library.populate = function(type, lib, callback){
+		Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
+			return {uuid: uuid, track: track, type: type};
+		}));
+		
+		if (type === "audio"){
+
+			var grpByArtists = _.groupBy(lib, 'artist');
 			var groupByArtistsAndAlbum = [];
 
 			_.each(grpByArtists, function(tracks, artist){
@@ -41,10 +50,14 @@
 				groupByArtistsAndAlbum.push(artist);
 
 			});
-
-			Library.data = groupByArtistsAndAlbum;
-			callback();
-		});
+			Library.data[type] = groupByArtistsAndAlbum;
+		}else{
+			logger.info(_.map(_.groupBy(lib, 'uid'), function(track, uuid){
+				return {uuid: uuid, track: track, type: type};
+			}));
+			Library.data[type] = lib;
+		}
+		callback();
 	};
 
 	Library.scanning = function(){
@@ -60,12 +73,26 @@
 		});
 	};
 
-	Library.getRelativePath = function(uuid){
+	Library.getAudioRelativePath = function(uuid){
 		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track).relativePath;
 	};
 
-	Library.get = function(){
-		return this.data;
+	Library.getVideoRelativePath = function(uuid){
+		logger.info("search video with: " + uuid);
+		_.each(this.flatten, function(element){
+			if (element.type === "video"){
+				logger.debug(element);	
+			}
+		});
+		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track).relativePath;
+	};
+
+	Library.getAudio = function(){
+		return this.data.audio;
+	};
+
+	Library.getVideo = function(){
+		return this.data.video;
 	};
 
 	Library.getByUid = function(uuid){
