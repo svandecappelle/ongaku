@@ -35,8 +35,6 @@ middleware.render = function(view, req, res, objs){
 		var message = null;
 		if (req.session.playlist){
 			play = _.first(req.session.playlist);
-		}else if(_.first(library.flatten)){
-			//play = _.first(_.first(library.flatten).track);
 		}else if (library.scanning){
 			message = "Scanning library";
 		}
