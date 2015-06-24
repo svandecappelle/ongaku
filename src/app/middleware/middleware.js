@@ -1,15 +1,17 @@
 /*jslint node: true */
 "use strict";
 
-var middleware = {},
-	async = require('async'),
-	nconf = require('nconf'),
-	fs = require('fs'),
-	logger = require('log4js').getLogger("Middleware"),
-	_ = require("underscore"),
-	library = require("./library"),
-	path = require("path"),
-	transcoder = require("./transcoder");
+var middleware = {};
+
+var async = require('async');
+var nconf = require('nconf');
+var fs = require('fs');
+var logger = require('log4js').getLogger("Middleware");
+var _ = require("underscore");
+var path = require("path");
+
+var library = require("./library");
+var transcoder = require("./transcoder");
 
 /*
 	Render a view. Control if rights are valid to access the view and if user is authenticated (if needed).
@@ -34,9 +36,12 @@ middleware.render = function(view, req, res, objs){
 		var message = null;
 		if (req.session.playlist){
 			play = _.first(req.session.playlist);
-		}else if (library.scanning){
+		}else if (library.scanning()){
 			message = "Scanning library";
+			logger.info("library is scanning: " + library.scanning);
 		}
+
+		logger.info("Message is: " + message);
 
 		logger.info("player song: ", play);
 		_.extend(middlewareObject.objs, {

@@ -2,7 +2,7 @@ var application_root = __dirname,
         express = require('express'),
         path = require('path'),
         http = require('http');
-log4js = require("log4js");
+var log4js = require("log4js");
 var app = express();
 
 var fs = require('fs'),
@@ -10,9 +10,7 @@ var fs = require('fs'),
     logger = require('log4js').getLogger('Server'),
     path = require('path'),
     pkg = require('./package.json'),
-    nconf = require('nconf'),
-    library = require("./src/library"),
-    async = require("async");
+    nconf = require('nconf');
 
 function preload(){
     nconf.argv().env();
@@ -63,33 +61,9 @@ function start(){
 
 
     // ROUTES
-    var routes = require('./src/route')(app);
-    
-    var middleware = require("./src/middleware");
-
-    logger.info("Please wait for scan library");
-
-    var served = app.listen(nconf.get('port'));
-    var io = require('socket.io')(served);
-
-    async.parallel([
-        function(){
-             // LISTEN PORT APP
-            
-            logger.info("Ready to serve on " + nconf.get('port') + " port");
-            io.on('connection', function(socket){
-                logger.info("User connected to socket.io");
-            });
-
-        },
-        function(){
-            library.scan(function(){
-               logger.info("Library scanned");
-               io.emit('library:scanned', {message: "Library scanned"});
-            });
-        }
-    ]);
-    
+    var application = require('./src/app/');
+    application.load(app);
+    application.start();
 }
 
 var okToStart = preload();

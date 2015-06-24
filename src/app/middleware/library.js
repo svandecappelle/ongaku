@@ -8,10 +8,9 @@
 
 	Library.data  = [];
 	Library.flatten = {};
+	Library.scanProgress = false;
 
-
-	Library.scan = function(callback){
-		this.scanProgress = true;
+	Library.beginScan = function(callback){
 		scan.library(function(lib){
 			
 			var grpByArtists = _.groupBy(lib, 'artist');
@@ -44,14 +43,21 @@
 			});
 
 			Library.data = groupByArtistsAndAlbum;
-			Library.scanProgress = false;
 			callback();
-
 		});
 	};
 
 	Library.scanning = function(){
-		return this.scanProgress;
+		return this.scanProgress !== undefined ? this.scanProgress : false;
+	};
+
+	Library.scan = function(callback){
+		var that = this;
+		this.scanProgress = true;
+		this.beginScan(function(){
+			that.scanProgress = false;
+			callback();
+		});
 	};
 
 	Library.getRelativePath = function(uuid){
