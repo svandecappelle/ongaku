@@ -81,6 +81,7 @@
 	};
 
 	Player.prototype.play = function(uid, encoding){
+
 		$(".playing").removeClass('playing');
 		this.current = uid;
 		console.log("start playing: ", this.current);
@@ -110,32 +111,49 @@
 		$("#controls")[0].stop();
 	};
 
-	Player.prototype.build = function() {
-		
-		console.log("build audio controls");
-		$('video,audio').mediaelementplayer({
-			success: function (me) {
-				me.addEventListener('loadedmetadata', function () {
-					alertify.dismissAll();
-				});
-				me.addEventListener('ended', function () {
-					$.ongaku.next();
-				});
-				me.addEventListener('play', function(){
-					if ($.ongaku.isFirst()){
-						alertify.warning('Add a track to play', 2);
-						$.ongaku.stop();
-					}else if($(".playing").length === 0){
-						console.log("need to select into playing: " + $.ongaku.getCurrent());
-						$(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
+	Player.prototype.build = function(callback) {
+		if ($('.player > audio').children().length > 0 && !this.isInitialised()){
+			this.initialised = true;
+			console.log("build audio controls");
+			$('video,audio').mediaelementplayer({
+				success: function (me) {
+					console.log("musique player builded: playing starting");
+					me.addEventListener('loadedmetadata', function () {
+						alertify.dismissAll();
+					});
+					me.addEventListener('ended', function () {
+						$.ongaku.next();
+					});
+					me.addEventListener('play', function(){
+						if ($.ongaku.isFirst()){
+							alertify.warning('Add a track to play', 2);
+							$.ongaku.stop();
+						}else if($(".playing").length === 0){
+							console.log("need to select into playing: " + $.ongaku.getCurrent());
+							$(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
+						}
+					});
+					if (callback !== undefined){
+						callback();
 					}
-				});
-			},
-			failure: function(me){
-				console.log(me);
-			}
-		});
-	
+				},
+				error: function(me){
+					console.log("failure build musique player:", me);
+				}
+			});
+			
+			$('.player').height("30px");
+			$('.player > audio').show();
+		}else{
+			this.initialised = false;
+			$('.player').height("30px");
+			$('.player').css("background-color", "black");
+			$('.player>audio').hide();
+		}
+	};
+
+	Player.prototype.isInitialised = function() {
+		return this.initialised;
 	};
 
 	Player.prototype.next = function(){		
@@ -151,10 +169,6 @@
 		if (nextSong){
 			var nextUid = nextSong.find(".button").data('uid');
 			var encoding = nextSong.find(".button").data('encoding');
-			if (this.current === undefined){
-				console.log("first song:: need to build controls");
-				$.ongaku.build();
-			}
 			if (nextUid){
 				this.play(nextUid, encoding);
 			}
@@ -312,10 +326,17 @@
 				</div>";
 				$('.pending-list .list .jspPane').append(track);
 			
-				var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + "' width='100%'><source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + "'></audio>";
-				if ($.ongaku.isFirst()){
-					$(".notrackplaying").remove();
-					$.ongaku.next();
+				var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + ".mp3' width='100%'></audio>";
+				var source = "<source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + ".mp3'></source>";
+				if (!$.ongaku.isInitialised()){
+					console.log("first song:: need to build controls");
+					$(".player").empty();
+					$(".player").show();
+					$(".player").html(audioControls);
+					$(".player > audio").html(source);
+					$.ongaku.build(function(){
+						$.ongaku.next();
+					});
 				}
 				$('.scroll-pane').jScrollPane();
 			}
