@@ -74,13 +74,7 @@ middleware.stream = function(req, res, uuid, type){
 	}else{
 		logger.info("Stream " + type);
 		var fs = require("fs");
-		var src;
-		if (type === "audio"){
-			src = library.getAudioRelativePath(uuid);
-		}else if (type === "video"){
-			src = library.getVideoRelativePath(uuid);
-		}
-		
+		var src = library.getRelativePath(uuid);
 
 		if (path.extname(src).replace(".", "") !== 'mp3' && type === 'audio'){
 			var libraryEntry = library.getByUid(uuid);

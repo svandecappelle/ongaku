@@ -73,20 +73,10 @@
 		});
 	};
 
-	Library.getAudioRelativePath = function(uuid){
+	Library.getRelativePath = function(uuid){
 		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track).relativePath;
 	};
-
-	Library.getVideoRelativePath = function(uuid){
-		logger.info("search video with: " + uuid);
-		_.each(this.flatten, function(element){
-			if (element.type === "video"){
-				logger.debug(element);	
-			}
-		});
-		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track).relativePath;
-	};
-
+	
 	Library.getAudio = function(){
 		return this.data.audio;
 	};

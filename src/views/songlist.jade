@@ -28,6 +28,18 @@ block append songlist
 					i.fa.fa-plus
 			.songs-container.scroll-pane
 				// TODO retrieve this list from server side 
+				.playlist-columns
+					.tracks-columns
+						.track-info.track-px
+							.track-info.track-num
+								span Track
+							.track-info.track-time
+								span Duration
+						.track-info.track
+							.track-info.track-title
+								span Title
+							.track-info.track-artist
+								span Artist
 				ul.playlist
 					- var trackNum = 0
 					for track in data.playlist
