@@ -73,12 +73,16 @@
 	Auth.createRoutes = function(app) {
 		
 		//app.get('/api/login', middleware.redirectToAccountIfLoggedIn, controllers.login);
-		app.get('/logout', logout);		
+		app.get('/logout', logout);
 
 		app.post('/logout', logout);
 		
 		app.post('/login', function(req, res, next) {
 			login(req, res, next);
+		});
+
+		app.get('/login', function(req, res, next) {
+			middleware.render('login', req, res);
 		});
 	};
 
@@ -86,7 +90,6 @@
 		if (!username || !password) {
 			return done(new Error('[[error:invalid-user-data]]'));
 		}
-
 
 		if (!password) {
 			return done(new Error('[[error:invalid-user-data]]'));

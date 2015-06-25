@@ -17,7 +17,6 @@ logger.setLevel(nconf.get('logLevel'));
 		authentication.initialize(app);
 		authentication.createRoutes(app);
 
-
 		app.get('/', function (req, res) {
 			logger.info("Client access to index ["+req.ip+"]");
 

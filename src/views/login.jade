@@ -1,0 +1,40 @@
+html
+	head 
+		block headpage
+		meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
+		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap-combined.min.css")
+		link(rel="stylesheet", type="text/css", href="/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css")
+		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/alertify.min.css")
+		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
+		
+		script(src="/jquery/jquery-2.1.1.min.js")
+		script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
+		script(src="/bootstrap/js/bootstrap.js")
+		script(src="/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")
+		script(src="/alertifyjs-0.10.2/alertify.min.js")
+
+	body
+		.col-md-10.panel.panel-default.col-md-offset-1
+			span.small-title You need to be logged before continue
+			hr
+			form.form-horizontal.simple(method='post')
+				.form-group
+					label.col-sm-2.control-label(for="username")= username
+					.col-sm-10
+						input.form-control(type="text", id="username", name="username", placeholder="Nom d'utilisateur")
+				.form-group
+					label.col-sm-2.control-label(for="password")= password
+					.col-sm-10
+						input.form-control(type="password", id="password", name="password", placeholder="Mot de passe")
+				.form-group
+					.col-sm-offset-2.col-sm-10
+						button.btn.btn-primary.btn-lg.btn-block(id="login") Connect
+						a#reset-link(href="/reset")
+	
+block post-script
+	script.
+		$(function() {
+			$("#username").focus();
+		});
