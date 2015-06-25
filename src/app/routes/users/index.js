@@ -53,6 +53,18 @@ logger.setLevel(nconf.get('logLevel'));
 			middleware.stream(req, res, req.params.media, "video");
 		});
 
+		app.get('/video/library/filter/:search', function (req, res){
+			logger.info("Search filtering video library");
+			var libraryDatas = library.search(req.params.search, "video");
+			middleware.json(req, res, libraryDatas);
+		});
+
+		app.get('/library/filter/:search', function (req, res){
+			logger.info("Search filtering audio library");
+			var libraryDatas = library.search(req.params.search, "audio");
+			middleware.json(req, res, libraryDatas);
+		});
+
 		app.get('/stream/:media', function (req, res) {
 			logger.info("streaming audio");
 			middleware.stream(req, res, req.params.media, "audio");
@@ -91,11 +103,16 @@ logger.setLevel(nconf.get('logLevel'));
 				req.session.playlist = [];
 			}
 			var track = library.getByUid(uidFile);
-			req.session.playlist.push(track);
-			req.session.save(function(){
-				res.setHeader('Access-Control-Allow-Credentials', 'true');
-				res.send({all: req.session.playlist, lastAdded: track});
-			});
+			if (track !== undefined){
+				req.session.playlist.push(track);
+				req.session.save(function(){
+					res.setHeader('Access-Control-Allow-Credentials', 'true');
+					res.send({all: req.session.playlist, lastAdded: track});
+				});
+			}else{
+				logger.warn("A playlist add request returns unknown track for: " + uidFile);
+				res.send({all: req.session.playlist, lastAdded: track});				
+			}
 		});
 		
 		app.post('/playlist/remove/:id', function(req, res){

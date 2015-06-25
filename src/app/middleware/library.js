@@ -21,7 +21,7 @@
 
 	Library.populate = function(type, lib, callback){
 		Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
-			return {uuid: uuid, track: track, type: type};
+			return _.extend(track[0], {uuid: uuid, type: type});
 		}));
 		
 		if (type === "audio"){
@@ -74,9 +74,9 @@
 	};
 
 	Library.getRelativePath = function(uuid){
-		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track).relativePath;
+		return this.getByUid(uuid).relativePath;
 	};
-	
+
 	Library.getAudio = function(){
 		return this.data.audio;
 	};
@@ -86,7 +86,34 @@
 	};
 
 	Library.getByUid = function(uuid){
-		return _.first(_.findWhere(this.flatten, {uuid: uuid}).track);
+		logger.debug("get by uid: " + _.find(this.flatten, {uid: uuid}));	
+		return _.find(this.flatten, {uid: uuid});
+	};
+
+	Library.search = function(filter, type){
+		return _.filter(this.flatten, function(obj){ 
+			
+			if (type === "video" && obj.type === type){
+				return obj.name.match(filter);
+			}else if (type === "audio" && obj.type === type){
+				var output = obj.title.match(filter) || obj.album.match(filter);
+				if (!output){
+					_.each(obj.metadatas, function(val, key){
+						if (val.match(filter)){
+							output = true;
+						}
+					});
+				}
+
+				if (output){
+					logger.debug("Search matches for: ", obj);
+				}
+
+				return output;	
+			}
+
+			return false;
+		});
 	};
 
 }(exports));

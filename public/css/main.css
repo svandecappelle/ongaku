@@ -279,6 +279,41 @@ section.song-list > .list-container .songs-container .song .track-time, section.
 	right: 0px;
 }
 
+.search-results li{
+	position: relative;
+}
+
+.search-results .track-info.track-px{
+	position: absolute;
+	left: 0px;
+	right: 0px;
+}
+
+.search-results .track-info.track .track-num{
+	margin-left: -10px;
+}
+
+.search-results .track-info.track .track-time{
+	right: 10px;
+	position: absolute;
+	top: 0px;
+}
+
+.search-results .track-info.track{
+	margin-left: 20px;
+}
+
+
+.search-results .track-info.track .track-title{
+	width: 50%;
+	display: inline-block;
+	padding-left: 40px;
+}
+
+.search-results .track-info.track .track-artist{
+	display: inline-block;
+}
+
 .player{
 	position: fixed;
 	bottom: 0;

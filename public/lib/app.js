@@ -232,14 +232,53 @@
 
 	Library.prototype.search = function(pattern) {
 		console.log("search for: ", pattern);
-		$(".track").each(function(){
-			if ($(this).text().toLowerCase().lastIndexOf(pattern.toLowerCase()) !== -1){
-				$(this).show();
-				console.log($(this).text());
-			}else{
-				$(this).hide();
-			}
+		var that = this;
+		$.get("library/filter/".concat(pattern), function(output){
+			that.rebuild(output);
 		});
+	
+	};
+
+	Library.prototype.rebuild = function(library) {
+		console.log(library);
+		$(".lib.group.artist.open").empty();
+		$(".lib.group.artist.open").addClass("search-results");
+		var tracknumber = 0;
+		$.each(library, function(index, val){
+			tracknumber += 1;
+			var element = "<li>\
+				<a class='song search-result-track'>\
+					<div data-uid='{{uid}}' class='track trackappend track-info track-px'>\
+						<div class='track-info track-num'>\
+							{{num}}\
+						</div>\
+						<div class='track-info track-time'>\
+							{{time}}\
+						</div>\
+					</div>\
+					<div class='track-info track'>\
+						<div class='track-info track-title'>\
+							{{title}}\
+						</div>\
+						<div class='track-info track-artist'>\
+							{{artist}}\
+						</div>\
+					</div>\
+				</a>\
+			</li>";
+			element = element.replace("{{uid}}", val.uid);
+			element = element.replace("{{num}}", tracknumber);
+			element = element.replace("{{time}}", val.duration);
+			element = element.replace("{{title}}", val.title);
+			element = element.replace("{{artist}}", val.artist);
+			$(".search-results").append(element);
+		});
+		$('.scroll-pane').jScrollPane();
+
+		$(".search-result-track").on("click", function(event){
+			$.ongaku.playlist.appendFromElement($(this));
+		});
+
 	};
 
 	$.ongaku.library = new Library();
