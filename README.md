@@ -8,7 +8,8 @@ Music &amp; video browser player in nodejs.
 * Install node
 * Clone the project
 * Install project dependencies
-  ```npm install```
+  * Install libgroove: ![Instruction here](https://github.com/andrewrk/libgroove#installation)
+  * Run: ```npm install```
 * Configure your library dir in ```congig.json``` file
 * Start ```npm start```
 * Go to your browser at: ```hostname:8000/```
