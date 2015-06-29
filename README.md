@@ -2,14 +2,14 @@ ongaku
 ======
 
 Music &amp; video browser player in nodejs.
-Demo ![Here](http://mizore.fr:8000/)
+Demo [Here](http://mizore.fr:8000/ "here")
 
 # Getting started
 ## Installation
 * Install node
 * Clone the project
 * Install project dependencies
-  * Install libgroove: ![Instruction here](https://github.com/andrewrk/libgroove#installation)
+  * Install libgroove: [Instruction here](https://github.com/andrewrk/libgroove#installation "Instruction here")
   * Run: ```npm install```
 * Configure your library dir in ```congig.json``` file
 * Start ```npm start```
