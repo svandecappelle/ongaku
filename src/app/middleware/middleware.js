@@ -37,9 +37,12 @@
 
 			var play = null;
 			var message = null;
+			
 			if (req.session.playlist){
 				play = _.first(req.session.playlist);
-			}else if (library.scanning()){
+			}
+			
+			if (library.scanning()){
 				message = "Scanning library";
 			}
 
@@ -77,7 +80,7 @@
 		}else{
 			logger.info("Stream " + type);
 			var fs = require("fs");
-			var src = library.getRelativePath(uuid);
+			var src = library.getRelativePath(path.basename(uuid));
 
 			if (path.extname(src).replace(".", "") !== 'mp3' && type === 'audio'){
 				var libraryEntry = library.getByUid(uuid);

@@ -67,7 +67,7 @@
 	}
 
 	Scanner.scan = function(apath, results, callback, appender) {
-		logger.debug("Scanning directory: ".concat(apath));
+		logger.info("Scanning directory: ".concat(apath));
 		fs.readdir(apath, function(err, files) {
 			var counter = 0;
 			async.whilst(function() {
