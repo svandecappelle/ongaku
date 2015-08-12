@@ -1,93 +1,158 @@
 html
-	head 
-		block headpage
-		meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
-		link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
-		link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.css")
-		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
-		link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap-combined.min.css")
-		link(rel="stylesheet", type="text/css", href="/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css")
-		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/alertify.min.css")
-		link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
-		link(rel="stylesheet", type="text/css", href="/jScrollPane/jquery.jscrollpane.css")
-		link(rel="stylesheet", type="text/css", href="/css/main.css")
-		link(rel="stylesheet", type="text/css", href="/video-js/video-js.css")
-		link(rel="stylesheet", type="text/css", href="/video-js/video-js-ongaku-theme.css")
-		
-		script(src="/jquery/jquery-2.1.1.min.js")
-		script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
-		script(src="/mediaelement/mediaelement-and-player.js")
-		script(src="/bootstrap/js/bootstrap.js")
-		script(src="/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")
-		script(src="/jquery-mousewheel-3.1.12/jquery.mousewheel.min.js")
-		script(src="/alertifyjs-0.10.2/alertify.min.js")
-		script(src="/jScrollPane/jquery.jscrollpane.min.js")
-		script(src="/socket.io/socket.io.js")
-		script(src="/lib/app.js")
-		script(src="/video-js/video.js")
+    head 
+        block headpage
+        meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+        link(rel="stylesheet", type="text/css", href="/font-awesome-4.2.0/css/font-awesome.min.css")
+        link(rel="stylesheet", type="text/css", href="/mediaelement/mediaelementplayer.css")
+        link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap.min.css")
+        link(rel="stylesheet", type="text/css", href="/bootstrap/css/bootstrap-combined.min.css")
+        link(rel="stylesheet", type="text/css", href="/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css")
+        link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/alertify.min.css")
+        link(rel="stylesheet", type="text/css", href="/alertifyjs-0.10.2/css/themes/default.min.css")
+        link(rel="stylesheet", type="text/css", href="/jScrollPane/jquery.jscrollpane.css")
+        link(rel="stylesheet", type="text/css", href="/css/main.css")
+        link(rel="stylesheet", type="text/css", href="/video-js/video-js.css")
+        link(rel="stylesheet", type="text/css", href="/video-js/video-js-ongaku-theme.css")
+        
+        script(src="/jquery/jquery-2.1.1.min.js")
+        script(src="/jquery-ui-1.11.2/jquery-ui.min.js")
+        script(src="/mediaelement/mediaelement-and-player.js")
+        script(src="/bootstrap/js/bootstrap.js")
+        script(src="/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")
+        script(src="/jquery-mousewheel-3.1.12/jquery.mousewheel.min.js")
+        script(src="/alertifyjs-0.10.2/alertify.min.js")
+        script(src="/jScrollPane/jquery.jscrollpane.min.js")
+        script(src="/socket.io/socket.io.js")
+        script(src="/lib/app.js")
+        script(src="/video-js/video.js")
 
-	body
-		nav.menu
-			.menu.menu-discover
-				ul
-					li
-						a
-							i.glyphicon.glyphicon-star
-							span Featured
-					li
-						a(href="/")
-							i.glyphicon.glyphicon-music
-							span Music
-					li
-						a(href="/video")
-							i.glyphicon.glyphicon-facetime-video
-							span Videos
-					li
-						a 
-							i.glyphicon.glyphicon-user
-							span Users
-					li
-						a 
-							i.glyphicon.glyphicon-tasks
-							span Radios
-			.menu.me
-				ul
-					li
-						a 
-							i.glyphicon.glyphicon-book
-							span Library
-					li
-						a 
-							i.glyphicon.glyphicon-upload
-							span Upload
-			.menu.project
-				ul
-					li
-						a(href="https://github.com/svandecappelle/ongaku")
-							i.fa.fa-github(style="font-size: 20pt;")
-							span Project
+    body
+        #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 15px;",role="navigation")
+            h1(style="padding-left: 5%;float:left;margin:0px;")
+                a.header-link(href="/") Ongaku
+            span.mini-title(style="float:left") v2.0-beta
+            span.mini-title(style="float:left") The RSA key replicator bastion.
+            div.navbar-header
+                nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left")
+                    ul.nav.navbar.varbar-nav.pull-left
+                        li.nav-home
+                            a(href="/", title="Acceuil")
+                                i.fa.fa-home
+                                span.text Acceuil
+                    unless session.user.isAnonymous
+                        li.nav-keys
+                            a(href="/#{session.user.username}/keys", title="SSH Keys")
+                              i.fa.fa-key
+                              span.text session
 
-		main
-			block library
-			block songlist
-			include player
+            div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
+                ul
+                    if session.user.isAnonymous
+                        li
+                            a(href="/login") Connect
+                    else 
+                        li.dropdown(style="float: left;")
+                            a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
+                                i.fa.fa-fw.fa-bell-o(title="Notifications")
+                            ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
+                                if session.notifications.count > 0
+                                    li 
+                                        a(href="all") Tous
+                                    li.divider
+                                        each notif in session.notifications.datas
+                                            li 
+                                                a(href="/notification")= notif
+                                    li.dropdown(style="float: left; margin-left: 5px;")
+                                        a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
+                                        img(src="#{session.gravatar}", width="24px")
+                                        ul.dropdown-menu(role="menu")
+                                            li
+                                                if session.user.isAnonymous
+                                                    a(href="/login") Connection
+                                                else
+                                                    a(href="/user/#{session.user.username}")
+                                                        i.fa.fa-circle.status.online
+                                                        span#username(style="margin-left:10px;") #{session.user.username}
+                                                        a(href="/logout") Deconnection
+                                                    li.divider
+                                                    li
+                                                      a(href="/user/#{session.user.username}/status/online")
+                                                        i.fa.fa-circle.status.online
+                                                        span(style="margin-left:10px;") En ligne
+                                                    li
+                                                      a(href="/user/#{session.user.username}/status/away")
+                                                        i.fa.fa-circle.status.away
+                                                        span(style="margin-left:10px;") Absent
+                                                    li
+                                                      a(href="/user/#{session.user.username}/status/busy")
+                                                        i.fa.fa-circle.status.busy
+                                                        span(style="margin-left:10px;") Occupé
+                                                    li
+                                                      a(href="/user/#{session.user.username}/status/offline")
+                                                        i.fa.fa-circle.status.offline
+                                                        span(style="margin-left:10px;") Hors ligne
 
-		script.
-			videojs.options.flash.swf = "http://localhost:8000/video-js/video-js.swf";
-			$(function () {
-				$('.scroll-pane').jScrollPane();
-				$.ongaku.build();
-				$.ongaku.controls.bind();
-				var socket = io.connect('http://localhost:8000/');
-				socket.on('connect', function () {
-					console.log("Connected");
-				});
-				socket.on('library:scanned', function () {
-					console.log("Library scanned");
-					location.reload();
-				});
+        nav.menu.main-menu
+            .menu.menu-discover
+                ul
+                    li
+                        a
+                            i.glyphicon.glyphicon-star
+                            span Featured
+                    li
+                        a(href="/")
+                            i.glyphicon.glyphicon-music
+                            span Music
+                    li
+                        a(href="/video")
+                            i.glyphicon.glyphicon-facetime-video
+                            span Videos
+                    li
+                        a 
+                            i.glyphicon.glyphicon-user
+                            span Users
+                    li
+                        a 
+                            i.glyphicon.glyphicon-tasks
+                            span Radios
+            .menu.me
+                ul
+                    li
+                        a 
+                            i.glyphicon.glyphicon-book
+                            span Library
+                    li
+                        a 
+                            i.glyphicon.glyphicon-upload
+                            span Upload
+            .menu.project
+                ul
+                    li
+                        a(href="https://github.com/svandecappelle/ongaku")
+                            i.fa.fa-github(style="font-size: 20pt;")
+                            span Project
 
-			});
+        main.main-content
+            block library
+            block songlist
+            include player
+
+        script.
+            videojs.options.flash.swf = "http://localhost:8000/video-js/video-js.swf";
+            $(function () {
+                $('.scroll-pane').jScrollPane();
+                $.ongaku.build();
+                $.ongaku.controls.bind();
+                var socket = io.connect('http://localhost:8000/');
+                socket.on('connect', function () {
+                    console.log("Connected");
+                });
+                socket.on('library:scanned', function () {
+                    console.log("Library scanned");
+                    location.reload();
+                });
+
+            });
 
 
-		block scripts
+        block scripts

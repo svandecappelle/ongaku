@@ -48,6 +48,7 @@ nav .menu{
 nav a{
 	color: white;
 	text-decoration: none;
+	overflow: hidden;
 }
 
 nav a:hover{
@@ -64,7 +65,7 @@ nav a i{
 
 nav a span{
 	position: absolute;
-	padding-left: 12px;
+	padding-left: 15px;
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;
@@ -876,4 +877,175 @@ ul.group.open>li{
 }
 .icon.on.green .handle {
   color: #B1CA39;
+}
+
+#header a.header-link{
+	color: white;
+}
+
+#header a.header-link:hover{
+	color: grey;
+	text-decoration: none;
+}
+
+#header ul li i{
+	font-size: 16px;
+	padding-top: 0.3em;
+	padding-left: 2px;
+}
+
+
+.main-content{
+	margin: 1em;
+	margin-top: 50px;
+}
+
+.open > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0px;
+    margin: 2px 0px 0px;
+    list-style: none outside none;
+    font-size: 14px;
+    background-color: #FFF;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
+    background-clip: padding-box;
+}
+
+#header .navbar-right .dropdown-menu {
+    left: auto;
+    right: 0px;
+}
+
+#header .nav.navbar-nav{
+	padding-top: 8px;
+}
+
+#header .navbar-nav > li > .dropdown-menu {
+    margin-top: 0px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.dropdown-toggle{
+	cursor: pointer;
+}
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+	background-color: inherit !important;
+}
+
+#header{
+	height: 51px;
+	color: #cacaca;
+    background: url('//nodebb.org/images/splash-bg.jpg') repeat scroll 0px 0px #000;
+    border-right: 1px solid #000;
+    border-width: 0px 1px 1px;
+    border-style: solid;
+    border-color: #000;
+    -moz-border-top-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    border-image: none;
+    box-shadow: 0px -3px 12px rgba(0, 0, 0, 0.5);
+}
+
+h1{
+	color: #4a5a5a;
+	font-size: 1.5em;
+}
+
+h2{
+	color: #4a5a5a;
+	font-size: 1.3em;
+}
+
+#header h1 {
+	color: #cacaca;
+	padding-top: 15px;
+} 
+#header .mini-title{
+	padding-top: 15px;
+}
+
+#header nav.hidden-text{
+	height: 100%;
+}
+
+
+#header h2 {
+	color: #cacaca;
+} 
+
+
+.btn.btn-danger, .btn.btn-close, .btn.btn-remove {
+    color: #FFF;
+    text-shadow: 0px 1px 1px #811;
+    border-color: #BD362F;
+    background-image: linear-gradient(#EE5F5B, #BD362F);
+}
+
+.btn.btn-primary, .btn.btn-save, .btn.reply-btn {
+    color: #FFF;
+    border-color: #189;
+    text-shadow: 0px 1px 1px #189;
+    background-image: linear-gradient(#4AC, #289);
+}
+
+.status{
+	margin-right: 5px;
+}
+
+.status.online {
+    color: #060;
+}
+
+.status.away {
+	color: #CC0;
+}
+
+.status.busy {
+	color: #900;
+}
+
+.status.offline {
+	color: #808080;
+}
+
+.navbar-default .navbar-nav .dropdown-menu a:hover, .navbar-default .navbar-nav .dropdown-menu a:focus {
+    background-color: #111;
+    color: white;
+}
+
+.navbar-default .navbar-nav .dropdown-menu a:hover, .navbar-default .navbar-nav .dropdown-menu a:focus {
+    background-color: #111 !important;
+}
+
+.small-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.separated{
+	margin-bottom: 10px;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+	background-color: rgba(70, 186, 41, 0.81);
+	color: #F2F2F2;
+}
+
+.navbar{
+	border: 0px;
 }

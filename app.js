@@ -1,73 +1,74 @@
 var application_root = __dirname,
-        express = require('express'),
-        path = require('path'),
-        http = require('http');
-var log4js = require("log4js");
-var app = express();
-
-var fs = require('fs'),
+    express = require('express'),
+    path = require('path'),
+    http = require('http'),
+    log4js = require("log4js"),
+    app = express(),
+    fs = require('fs'),
     os = require('os'),
     logger = require('log4js').getLogger('Server'),
     path = require('path'),
     pkg = require('./package.json'),
     nconf = require('nconf');
 
-function preload(){
-    nconf.argv().env();
+/*jslint node: true */
+(function (ApplicationRoot) {
+    "use strict";
+    ApplicationRoot.preload = function () {
+        nconf.argv().env();
 
-    // Alternate configuration file support
-    var configFile = __dirname + '/config.json',
-        configExists;
-    if (nconf.get('config')) {
-        configFile = path.resolve(__dirname, nconf.get('config'));
-    }
-    configExists = fs.existsSync(configFile);
+        // Alternate configuration file support
+        var configFile = __dirname + '/config.json',
+            configExists;
+        if (nconf.get('config')) {
+            configFile = path.resolve(__dirname, nconf.get('config'));
+        }
+        configExists = fs.existsSync(configFile);
 
-    if (!configExists){
-        logger.error("configuration file doesn't exists");
-    }else{
-        nconf.file({
-            file: configFile
-        });
+        if (!configExists){
+            logger.error("configuration file doesn't exists");
+            process.exit(code = 0);
+        } else {
+            nconf.file({
+                file: configFile
+            });
 
-        nconf.defaults({
-            base_dir: __dirname,
-            upload_url: '/uploads/'
-        });
-    }
-    return configExists;
-}
+            nconf.defaults({
+                base_dir: __dirname,
+                upload_url: '/uploads/'
+            });
+        }
 
-function start(){
-    var bodyParser = require('body-parser');
-    var session = require('express-session');
-    var cookieParser = require('cookie-parser');
-    var passport = require('passport');
-    var morgan  = require('morgan');
+        return this;
+    };
 
-    // public PATHS
-    app.set('views', __dirname + '/src/views');
-    app.set('view engine', 'jade');
-    app.use(express.static(__dirname + '/public'));
-    app.use(bodyParser());
-    app.use(cookieParser()); // required before session.
-    app.use(session({
-        secret: 'keyboard cat',
-        proxy: true // if you do SSL outside of node.
-    }));
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.use(morgan(':req[X-Forwarded-For] - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+    ApplicationRoot.start = function () {
+        var bodyParser = require('body-parser'),
+            session = require('express-session'),
+            cookieParser = require('cookie-parser'),
+            passport = require('passport'),
+            morgan  = require('morgan');
+
+        // public PATHS
+        app.set('views', __dirname + '/src/views');
+        app.set('view engine', 'jade');
+        app.use(express.static(__dirname + '/public'));
+        app.use(bodyParser());
+        app.use(cookieParser()); // required before session.
+        app.use(session({
+            secret: 'keyboard cat',
+            proxy: true // if you do SSL outside of node.
+        }));
+        app.use(passport.initialize());
+        app.use(passport.session());
+        app.use(morgan(':req[X-Forwarded-For] - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
 
-    // ROUTES
-    var application = require('./src/app/');
-    application.load(app);
-    application.start();
-}
+        // ROUTES
+        var application = require('./src/app/');
+        application.load(app);
+        application.start();
+    };
 
-var okToStart = preload();
-
-if (okToStart){
-    start();
-}
+    ApplicationRoot.preload().start();
+}(exports));

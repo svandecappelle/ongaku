@@ -15,10 +15,13 @@
 		"bcryptjs"			:	"~0.7.10",
 		"body-parser"		:	"~1.0.0",
 		"connect-busboy"	:	"*",
+		"connect-redis"	:		">1.4.x",
 		"cookie-parser"		:	"1.1.0",
 		"express"			:	">=4.0.0",
 		"express-session"	:	"1.2.1",
+		"gravatar"			: 	"1.0.6",
 		"groove"			:	"2.3.4",
+		"identicon"			: 	"*",
 		"jade"				:	"*",
 		"lame"				:	"*",
 		"log4js"			:	">=0.6.6",
@@ -29,13 +32,16 @@
 		"nodemailer"		:	"0.7.0",
 		"passport"			:	"~0.2.0",
 		"passport-local"	:	"0.1.6",
+		"reds"				:	">=0.2.4",
+		"redis"				: 	"~0.10",
 		"semver"			:	"~2.2.1",
 		"string"			:	"~1.7.0",
 		"uglify-js"			:	"1.2.x",
 		"underscore"		:	"*",
 		"uuid"				:	"*",
 		"vid-streamer"		:	"0.1.4",
-		"socket.io"			:	"1.3.5"
+		"socket.io"			:	"1.3.5",
+		"xregexp"			: 	"~2.0.0"
 	},
 	"scripts" : {
 		"start" : "node app.js"

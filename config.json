@@ -3,5 +3,14 @@
     "uploader": false,
     "library": "/home/bodhi/Music",
     "audio": ["mp3",  "wav", "wma", "ogg", "flac"],
-    "video": ["mp4", "webm", "flv"]
+    "video": ["mp4", "webm", "flv"],
+    "database": "redis",
+    "redis": {
+        "host": "127.0.0.1",
+        "port": "6379",
+        "password": "",
+        "database": "2"
+    },
+    "secret": "eba16c61-18db-471a-9406-6371d7e42f63",
+    "bcrypt_rounds": 12
 }

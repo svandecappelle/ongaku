@@ -1,119 +1,119 @@
-(function(Library) {
-	"use strict";
+(function (Library) {
+    "use strict";
 
-	var scan = require("./scanner");
-	var _ = require("underscore"),
-		logger = require("log4js").getLogger('Library'),
-		nconf = require("nconf");
+    var scan = require("./scanner"),
+        _ = require("underscore"),
+        logger = require("log4js").getLogger('Library'),
+        nconf = require("nconf");
 
-	Library.data  = {audio: [], video: []};
-	Library.flatten = {};
-	Library.scanProgress = false;
+    Library.data  = {audio: [], video: []};
+    Library.flatten = {};
+    Library.scanProgress = false;
 
-	Library.beginScan = function(callback){
-		var that = this;
-		scan.library(function(lib){
-			that.populate("audio", lib.audio, function(){
-				that.populate("video", lib.video, callback);				
-			});
-		});
-	};
+    Library.beginScan = function (callback) {
+        var that = this;
+        scan.library(function (lib) {
+            that.populate("audio", lib.audio, function () {
+                that.populate("video", lib.video, callback);
+            });
+        });
+    };
 
-	Library.populate = function(type, lib, callback){
-		Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
-			return _.extend(track[0], {uuid: uuid, type: type});
-		}));
-		
-		if (type === "audio"){
+    Library.populate = function (type, lib, callback) {
+        Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
+            return _.extend(track[0], {uuid: uuid, type: type});
+        }));
 
-			var grpByArtists = _.groupBy(lib, 'artist');
-			var groupByArtistsAndAlbum = [];
+        if (type === "audio") {
 
-			_.each(grpByArtists, function(tracks, artist){
+            var grpByArtists = _.groupBy(lib, 'artist'),
+                groupByArtistsAndAlbum = [];
 
-				var albums = _.map(_.groupBy(tracks, 'album'), function(tracks, title){
-					if (!title){
-						title = "Unknown album"
-					}
-					return {title: title, tracks: tracks};
-				});
-				
-				if (!artist){
-					artist = "Uknown artist";
-				}
+            _.each(grpByArtists, function (tracks, artist) {
 
-				var artist = {
-					artist: artist,
-					albums: albums
-				};
+                var albums = _.map(_.groupBy(tracks, 'album'), function (tracks, title) {
+                    if (!title) {
+                        title = "Unknown album";
+                    }
+                    return {title: title, tracks: tracks};
+                });
 
-				groupByArtistsAndAlbum.push(artist);
+                if (!artist) {
+                    artist = "Uknown artist";
+                }
 
-			});
-			Library.data[type] = groupByArtistsAndAlbum;
-		}else{
-			logger.info(_.map(_.groupBy(lib, 'uid'), function(track, uuid){
-				return {uuid: uuid, track: track, type: type};
-			}));
-			Library.data[type] = lib;
-		}
-		callback();
-	};
+                var artist = {
+                    artist: artist,
+                    albums: albums
+                };
 
-	Library.scanning = function(){
-		return this.scanProgress !== undefined ? this.scanProgress : false;
-	};
+                groupByArtistsAndAlbum.push(artist);
 
-	Library.scan = function(callback){
-		var that = this;
-		this.scanProgress = true;
-		this.beginScan(function(){
-			that.scanProgress = false;
-			callback();
-		});
-	};
+            });
+            Library.data[type] = groupByArtistsAndAlbum;
+        } else {
+            logger.info(_.map(_.groupBy(lib, 'uid'), function (track, uuid) {
+                return {uuid: uuid, track: track, type: type};
+            }));
+            Library.data[type] = lib;
+        }
+        callback();
+    };
 
-	Library.getRelativePath = function(uuid){
-		return this.getByUid(uuid).relativePath;
-	};
+    Library.scanning = function () {
+        return this.scanProgress !== undefined ? this.scanProgress : false;
+    };
 
-	Library.getAudio = function(){
-		return this.data.audio;
-	};
+    Library.scan = function (callback) {
+        var that = this;
+        this.scanProgress = true;
+        this.beginScan(function () {
+            that.scanProgress = false;
+            callback();
+        });
+    };
 
-	Library.getVideo = function(){
-		return this.data.video;
-	};
+    Library.getRelativePath = function (uuid) {
+        return this.getByUid(uuid).relativePath;
+    };
 
-	Library.getByUid = function(uuid){
-		logger.debug("get by uid: " + _.find(this.flatten, {uid: uuid}));	
-		return _.find(this.flatten, {uid: uuid});
-	};
+    Library.getAudio = function () {
+        return this.data.audio;
+    };
 
-	Library.search = function(filter, type){
-		return _.filter(this.flatten, function(obj){ 
-			
-			if (type === "video" && obj.type === type){
-				return obj.name.match(filter);
-			}else if (type === "audio" && obj.type === type){
-				var output = obj.title.match(filter) || obj.album.match(filter);
-				if (!output){
-					_.each(obj.metadatas, function(val, key){
-						if (val.match(filter)){
-							output = true;
-						}
-					});
-				}
+    Library.getVideo = function () {
+        return this.data.video;
+    };
 
-				if (output){
-					logger.debug("Search matches for: ", obj);
-				}
+    Library.getByUid = function (uuid) {
+        logger.debug("get by uid: " + _.find(this.flatten, {uid: uuid}));
+        return _.find(this.flatten, {uid: uuid});
+    };
 
-				return output;	
-			}
+    Library.search = function (filter, type) {
+        return _.filter(this.flatten, function (obj) {
 
-			return false;
-		});
-	};
+            if (type === "video" && obj.type === type) {
+                return obj.name.match(filter);
+            } else if (type === "audio" && obj.type === type) {
+                var output = obj.title.match(filter) || obj.album.match(filter);
+                if (!output) {
+                    _.each(obj.metadatas, function (val, key) {
+                        if (val.match(filter)) {
+                            output = true;
+                        }
+                    });
+                }
+
+                if (output) {
+                    logger.debug("Search matches for: ", obj);
+                }
+
+                return output;
+            }
+
+            return false;
+        });
+    };
 
 }(exports));
