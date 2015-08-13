@@ -53,13 +53,6 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/403', function (req, res) {
             middleware.render('403', req, res);
         });
-        /*
-        meta.settings.setOne("global", "require-authentication", "true", function (err) {
-            if (err) {
-                logger.debug("userauth error initialising");
-            }
-        });
-        */
 
         meta.settings.getOne("global", "require-authentication", function (err, curValue) {
             if (err) {

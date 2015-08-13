@@ -1,7 +1,8 @@
 /*jslint node: true */
 var logger = require('log4js').getLogger('Installer'),
     fs = require('fs'),
-    nconf = require('nconf');
+    nconf = require('nconf'),
+    meta = require('./src/app/meta');
 
 (function (Installation) {
     "use strict";
@@ -37,6 +38,13 @@ var logger = require('log4js').getLogger('Installer'),
     Installation.install = function () {
         logger.info("Installing");
         var user = require("./src/app/model/user");
+
+        meta.settings.setOne("global", "require-authentication", "false", function (err) {
+            if (err) {
+                logger.debug("userauth error initialising");
+            }
+            logger.info("Standard global settings initialised");
+        });
 
         user.create({email: "admin@domain.fr", username: "admin", password: "admin"}, function (err, uuid) {
             if (err) {
