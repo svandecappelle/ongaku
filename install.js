@@ -1,8 +1,7 @@
 /*jslint node: true */
 var logger = require('log4js').getLogger('Installer'),
     fs = require('fs'),
-    nconf = require('nconf'),
-    meta = require('./src/app/meta');
+    nconf = require('nconf');
 
 (function (Installation) {
     "use strict";
@@ -37,7 +36,8 @@ var logger = require('log4js').getLogger('Installer'),
 
     Installation.install = function () {
         logger.info("Installing");
-        var user = require("./src/app/model/user");
+        var user = require("./src/app/model/user"),
+            meta = require('./src/app/meta');
 
         meta.settings.setOne("global", "require-authentication", "false", function (err) {
             if (err) {
