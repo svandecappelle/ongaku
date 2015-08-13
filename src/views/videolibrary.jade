@@ -49,7 +49,7 @@ block scripts
 
 			});
 
-			$('.trackappend').on("click", function(){
+			$('.trackappend:not(.disabled)').on("click", function(){
 				var uidFile = $(this).data("uid");
 				$.ongaku.playlist.append(uidFile);
 			});

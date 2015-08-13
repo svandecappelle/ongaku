@@ -11,6 +11,7 @@
         logger = require('log4js').getLogger("Middleware"),
         library = require("./library"),
         transcoder = require("./transcoder"),
+        meta = require("./../meta"),
         gravatar = require("gravatar"),
         identicon;
 
@@ -167,32 +168,46 @@
             datas: ["test", "test2"]
         };
 
+        // config
+        middlewareObject.objs.meta = {
+            requireAuthentication: false
+        };
 
-        if (middlewareObject.req.isAuthenticated()) {
-            urlUser = gravatar.url(middlewareObject.req.user.uid, {s: '200', r: 'pg', d: '404'});
-            // generate a url through identicon if none found on gravatar
-            if (urlUser.lastIndexOf("404") !== -1) {
-                var avatarPathFile = __dirname + "/../../public" + nconf.get("upload_path") + '/users/icons/' + middlewareObject.req.user.username + '.png';
-                if (!fs.existsSync(avatarPathFile)) {
-                    if (identicon) {
-                        identicon.generate(middlewareObject.req.user.uid, 150, function(err, buffer) {
-                            if (err) throw err;
-                            fs.writeFileSync(avatarPathFile, buffer);
-                        });
-                    }
-                }
-                urlUser = nconf.get("upload_path") + '/users/icons/' + middlewareObject.req.user.username + '.png';
+        meta.settings.getOne("global", "require-authentication", function (err, curValue) {
+            if (err) {
+                logger.debug("userauth error checking");
+            } else {
+                middlewareObject.objs.meta.requireAuthentication = curValue === "true";
             }
-            middlewareObject.objs.session.user = middlewareObject.req.user;
-            middlewareObject.objs.session.user.isAnonymous = false;
 
-            // Retrieve role type
-            next(null, middlewareObject);
-        }else{
-            logger.debug("return middleware: " + middlewareObject);
-            next(null, middlewareObject);
-        }
+            if (middlewareObject.req.isAuthenticated()) {
+                urlUser = gravatar.url(middlewareObject.req.user.uid, {s: '200', r: 'pg', d: '404'});
+                // generate a url through identicon if none found on gravatar
+                if (urlUser.lastIndexOf("404") !== -1) {
+                    var avatarPathFile = __dirname + "/../../public" + nconf.get("upload_path") + '/users/icons/' + middlewareObject.req.user.username + '.png';
+                    if (!fs.existsSync(avatarPathFile)) {
+                        if (identicon) {
+                            identicon.generate(middlewareObject.req.user.uid, 150, function (err, buffer) {
+                                if (err) {
+                                    throw err;
+                                }
 
+                                fs.writeFileSync(avatarPathFile, buffer);
+                            });
+                        }
+                    }
+                    urlUser = nconf.get("upload_path") + '/users/icons/' + middlewareObject.req.user.username + '.png';
+                }
+                middlewareObject.objs.session.user = middlewareObject.req.user;
+                middlewareObject.objs.session.user.isAnonymous = false;
+
+                // Retrieve role type
+                next(null, middlewareObject);
+            } else {
+                logger.debug("return middleware: " + middlewareObject);
+                next(null, middlewareObject);
+            }
+        });
     };
 
     /*
@@ -225,5 +240,10 @@
         return false;
         //return !req.isAuthenticated();
     };
+
+    Middleware.isAuthenticated = function (req) {
+        return req.isAuthenticated();
+    };
+
 
 }(exports));

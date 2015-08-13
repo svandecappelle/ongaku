@@ -209,14 +209,14 @@
 		$("input.searchbox").on("change", function(){
 			that.search($(this).val());
 		});
-
-		$(".artistappend").on("click", function(event){
+		
+		$(".artistappend:not(.disabled)").on("click", function(event){
 			event.preventDefault();
 			event.stopPropagation();
 			$.ongaku.playlist.appendFromElement($(this));
 		});
 		
-		$(".albumappend").on("click", function(event){
+		$(".albumappend:not(.disabled)").on("click", function(event){
 			event.preventDefault();
 			event.stopPropagation();
 			$.ongaku.playlist.appendFromElement($(this));

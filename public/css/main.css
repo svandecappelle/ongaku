@@ -327,6 +327,13 @@ section.song-list > .list-container .songs-container .song .track-time, section.
 	z-index: 1000;
 }
 
+.player.empty{
+	background-color: black;
+	height: 30px;
+	color: white;
+	text-align: center;
+}
+
 .pending-list{
 	position: absolute;
 	left: 0px;
@@ -1073,4 +1080,5 @@ h2{
 
 #header .navbar-header{
 	margin-left: 15px;
+	width: auto;
 }

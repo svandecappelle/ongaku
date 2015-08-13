@@ -32,7 +32,7 @@ html
                 a.header-link(href="/") Ongaku
             span.mini-title(style="float:left", data-toggle="popover", data-trigger="hover", data-placement="bottom", data-content="The open-source media streaming application") v0.0.1-beta
             div.navbar-header
-                nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left")
+                nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left; width: auto;")
                     ul.nav.navbar.varbar-nav.pull-left
                         li.nav-home
                             a(href="/", title="Acceuil")
@@ -144,6 +144,7 @@ html
             videojs.options.flash.swf = "http://localhost:8000/video-js/video-js.swf";
             $(function () {
                 $('[data-toggle="popover"]').popover();
+                $('[data-toggle="tooltip"]').tooltip();
                 $('.scroll-pane').jScrollPane();
                 $.ongaku.build();
                 $.ongaku.controls.bind();

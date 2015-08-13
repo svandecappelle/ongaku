@@ -4,15 +4,36 @@ var nconf = require("nconf");
 var passport = require("passport");
 var _ = require("underscore");
 
-var authentication = require("./../../middleware/authentication");
-var library = require("./../../middleware/library");
-var middleware = require("./../../middleware/middleware");
+var authentication = require("./../../middleware/authentication"),
+    library = require("./../../middleware/library"),
+    middleware = require("./../../middleware/middleware"),
+    meta = require("./../../meta");
 
 logger.setLevel(nconf.get('logLevel'));
 
 
 (function (UsersRoutes) {
     "use strict";
+
+    UsersRoutes.checkingAuthorization = function (req, res, callback) {
+        meta.settings.getOne("global", "require-authentication", function (err, curValue) {
+            if (err) {
+                logger.debug("userauth error checking");
+                middleware.redirect('403', res);
+            } else if (curValue === "true") {
+                logger.debug("userauth is required to listen");
+                if (middleware.isAuthenticated(req)) {
+                    callback();
+                } else {
+                    logger.warn("Anonymous access forbidden: authentication required to stream");
+                    middleware.redirect('403', res);
+                }
+            } else {
+                logger.debug("userauth is not required to listen");
+                callback();
+            }
+        });
+    };
 
     UsersRoutes.load = function (app) {
 
@@ -32,6 +53,23 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/403', function (req, res) {
             middleware.render('403', req, res);
         });
+        /*
+        meta.settings.setOne("global", "require-authentication", "true", function (err) {
+            if (err) {
+                logger.debug("userauth error initialising");
+            }
+        });
+        */
+
+        meta.settings.getOne("global", "require-authentication", function (err, curValue) {
+            if (err) {
+                logger.debug("userauth error checking");
+            } else if (curValue === "true") {
+                logger.debug("userauth is required to listen");
+            } else {
+                logger.debug("userauth is not required to listen");
+            }
+        });
 
         app.get('/video', function (req, res) {
             logger.info("Client access to videos [" + req.ip + "]");
@@ -50,8 +88,14 @@ logger.setLevel(nconf.get('logLevel'));
             // To webm
             // ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -an -pass 1 -f webm /dev/null
             // ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -codec:a libvorbis -b:a 128k -pass 2 -f webm sortie.webm
-            logger.info("streaming video");
-            middleware.stream(req, res, req.params.media, "video");
+            var stream = function () {
+                logger.info("streaming video");
+                middleware.stream(req, res, req.params.media, "video");
+            };
+
+            UsersRoutes.checkingAuthorization(req, res, function () {
+                stream();
+            });
         });
 
         app.get('/video/library/filter/:search', function (req, res) {
@@ -67,8 +111,14 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
         app.get('/stream/:media', function (req, res) {
-            logger.info("streaming audio");
-            middleware.stream(req, res, req.params.media, "audio");
+            var stream = function () {
+                logger.info("streaming audio");
+                middleware.stream(req, res, req.params.media, "audio");
+            };
+
+            UsersRoutes.checkingAuthorization(req, res, function () {
+                stream();
+            });
         });
 
         if (nconf.get("uploader")) {

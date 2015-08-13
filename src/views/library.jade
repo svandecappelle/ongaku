@@ -27,22 +27,35 @@ section.sidebar.show
 						a.link
 							img.artist(src="/img/artist-tmp.jpg")
 							span.artistname= artistsGroup.artist
-						a.artistappend(data-toggle="tooltip" data-placement="left" title="Tooltip on left")
-							i.glyphicon.glyphicon-plus.trackaction
+						if meta.requireAuthentication && !session.user.isAnonymous
+							a.artistappend.disabled
+								i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")
+						else
+							a.artistappend.disabled
+								i.glyphicon.glyphicon-plus.trackaction.disabled(data-toggle="tooltip", data-placement="left", title="Login is required to start stream")
 						ul.group.album
 							for album in artistsGroup.albums
 								li
 									a.link
 										img.album(src="/img/album.jpg")
 										span.albumtitle= album.title
-									a.albumappend(data-toggle="tooltip" data-placement="left" title="Tooltip on left")
-										i.glyphicon.glyphicon-plus.trackaction
+									if meta.requireAuthentication && !session.user.isAnonymous
+										a.albumappend
+											i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")
+									else
+										a.albumappend.disabled
+											i.glyphicon.glyphicon-plus.trackaction.disabled(data-toggle="tooltip", data-placement="left", title="Login is required to start stream")
 									ul.group.tracklist
 										for track in album.tracks
 											li
-												.track.trackappend(data-uid="#{track.uid}")= track.title
-													i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
-													i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
+												if meta.requireAuthentication && !session.user.isAnonymous
+													.track.trackappend(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Add track current playlist")= track.title
+														i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
+														i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
+												else
+													.track.trackappend.disabled(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Login is required to start stream")= track.title
+														i.glyphicon.glyphicon-plus.trackaction.trackappend.disabled(data-uid="#{track.uid}")
+														i.glyphicon.glyphicon-heart.trackaction.tracklike.disabled(data-uid="#{track.uid}")
 	.pending-list
 			.list.scroll-pane
 				for track in data.playlist
@@ -68,7 +81,7 @@ block scripts
 
 			});
 
-			$('.trackappend').on("click", function(){
+			$('.trackappend:not(.disabled)').on("click", function(){
 				var uidFile = $(this).data("uid");
 				$.ongaku.playlist.append(uidFile);
 			});
