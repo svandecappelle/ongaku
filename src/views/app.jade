@@ -46,10 +46,7 @@ html
 
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
-                    if session.user.isAnonymous
-                        li
-                            a(href="/login") Connect
-                    else 
+                    unless session.user.isAnonymous
                         li.dropdown(style="float: left;")
                             a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
                                 i.fa.fa-fw.fa-bell-o(title="Notifications")
@@ -61,35 +58,42 @@ html
                                         each notif in session.notifications.datas
                                             li 
                                                 a(href="/notification")= notif
-                                    li.dropdown(style="float: left; margin-left: 5px;")
-                                        a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
-                                        img(src="#{session.gravatar}", width="24px")
-                                        ul.dropdown-menu(role="menu")
-                                            li
-                                                if session.user.isAnonymous
-                                                    a(href="/login") Connection
-                                                else
-                                                    a(href="/user/#{session.user.username}")
-                                                        i.fa.fa-circle.status.online
-                                                        span#username(style="margin-left:10px;") #{session.user.username}
-                                                        a(href="/logout") Deconnection
-                                                    li.divider
-                                                    li
-                                                      a(href="/user/#{session.user.username}/status/online")
-                                                        i.fa.fa-circle.status.online
-                                                        span(style="margin-left:10px;") En ligne
-                                                    li
-                                                      a(href="/user/#{session.user.username}/status/away")
-                                                        i.fa.fa-circle.status.away
-                                                        span(style="margin-left:10px;") Absent
-                                                    li
-                                                      a(href="/user/#{session.user.username}/status/busy")
-                                                        i.fa.fa-circle.status.busy
-                                                        span(style="margin-left:10px;") Occupé
-                                                    li
-                                                      a(href="/user/#{session.user.username}/status/offline")
-                                                        i.fa.fa-circle.status.offline
-                                                        span(style="margin-left:10px;") Hors ligne
+
+                    li.dropdown(style="float: left; margin-left: 5px;")
+                        a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
+                            if session.gravatar
+                                img(src="#{session.gravatar}", width="24px")
+                            else
+                                if session.user.isAnonymous
+                                    i.fa.fa-fw.fa-sign-in(title="Notifications", style="color: #fff;")
+                                else
+                                    i.fa.fa-fw.fa-user(title="Notifications")
+                        ul.dropdown-menu(role="menu")
+                            li
+                                if session.user.isAnonymous
+                                    a(href="/login") Connection
+                                else
+                                    a(href="/user/#{session.user.username}")
+                                        i.fa.fa-circle.status.online
+                                        span#username(style="margin-left:10px;") #{session.user.username}
+                                        a(href="/logout") Deconnection
+                                    li.divider
+                                    li
+                                      a(href="/user/#{session.user.username}/status/online")
+                                        i.fa.fa-circle.status.online
+                                        span(style="margin-left:10px;") En ligne
+                                    li
+                                      a(href="/user/#{session.user.username}/status/away")
+                                        i.fa.fa-circle.status.away
+                                        span(style="margin-left:10px;") Absent
+                                    li
+                                      a(href="/user/#{session.user.username}/status/busy")
+                                        i.fa.fa-circle.status.busy
+                                        span(style="margin-left:10px;") Occupé
+                                    li
+                                      a(href="/user/#{session.user.username}/status/offline")
+                                        i.fa.fa-circle.status.offline
+                                        span(style="margin-left:10px;") Hors ligne
 
         nav.menu.main-menu
             .menu.menu-discover
