@@ -1,5 +1,5 @@
 block player
-	if meta.requireAuthentication && !session.user.isAnonymous
+	if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
 		.player
 			audio#controls(controls="controls", width="100%")
 				if (data.playing)

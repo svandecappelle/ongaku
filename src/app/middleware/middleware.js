@@ -176,8 +176,8 @@
         meta.settings.getOne("global", "require-authentication", function (err, curValue) {
             if (err) {
                 logger.debug("userauth error checking");
-            } else {
-                middlewareObject.objs.meta.requireAuthentication = curValue === "true";
+            } else if (curValue === "true") {
+                middlewareObject.objs.meta.requireAuthentication = true;
             }
 
             if (middlewareObject.req.isAuthenticated()) {

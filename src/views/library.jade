@@ -27,7 +27,7 @@ section.sidebar.show
 						a.link
 							img.artist(src="/img/artist-tmp.jpg")
 							span.artistname= artistsGroup.artist
-						if meta.requireAuthentication && !session.user.isAnonymous
+						if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 							a.artistappend.disabled
 								i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")
 						else
@@ -39,7 +39,7 @@ section.sidebar.show
 									a.link
 										img.album(src="/img/album.jpg")
 										span.albumtitle= album.title
-									if meta.requireAuthentication && !session.user.isAnonymous
+									if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 										a.albumappend
 											i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")
 									else
@@ -48,7 +48,7 @@ section.sidebar.show
 									ul.group.tracklist
 										for track in album.tracks
 											li
-												if meta.requireAuthentication && !session.user.isAnonymous
+												if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 													.track.trackappend(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Add track current playlist")= track.title
 														i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
 														i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
