@@ -1082,3 +1082,11 @@ h2{
 	margin-left: 15px;
 	width: auto;
 }
+
+.login-screen{
+	margin: auto;
+	width: 50%;
+	left: 50%;
+	margin-left: -25%;
+	margin-top: 50px;
+}

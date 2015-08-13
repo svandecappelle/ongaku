@@ -38,7 +38,7 @@ html
                             a(href="/", title="Acceuil")
                                 i.fa.fa-home
                                 span.text Acceuil
-                        unless session.user.isAnonymous
+                        if !session.user.isAnonymous && session.user.isAdmin
                             li.nav-cog
                                 a(href="/admin", title="Administration")
                                   i.fa.fa-cog
@@ -65,9 +65,9 @@ html
                                 img(src="#{session.gravatar}", width="24px")
                             else
                                 if session.user.isAnonymous
-                                    i.fa.fa-fw.fa-sign-in(title="Notifications", style="color: #fff;")
+                                    i.fa.fa-fw.fa-sign-in
                                 else
-                                    i.fa.fa-fw.fa-user(title="Notifications")
+                                    i.fa.fa-fw.fa-user
                         ul.dropdown-menu(role="menu")
                             li
                                 if session.user.isAnonymous
