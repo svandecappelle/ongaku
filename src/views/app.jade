@@ -30,8 +30,7 @@ html
         #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 15px;",role="navigation")
             h1(style="padding-left: 5%;float:left;margin:0px;")
                 a.header-link(href="/") Ongaku
-            span.mini-title(style="float:left") v2.0-beta
-            span.mini-title(style="float:left") The RSA key replicator bastion.
+            span.mini-title(style="float:left", data-toggle="popover", data-trigger="hover", data-placement="bottom", data-content="The open-source media streaming application") v0.0.1-beta
             div.navbar-header
                 nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left")
                     ul.nav.navbar.varbar-nav.pull-left
@@ -39,11 +38,11 @@ html
                             a(href="/", title="Acceuil")
                                 i.fa.fa-home
                                 span.text Acceuil
-                    unless session.user.isAnonymous
-                        li.nav-keys
-                            a(href="/#{session.user.username}/keys", title="SSH Keys")
-                              i.fa.fa-key
-                              span.text session
+                        unless session.user.isAnonymous
+                            li.nav-cog
+                                a(href="/admin", title="Administration")
+                                  i.fa.fa-cog
+                                  span.text Admin
 
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
@@ -140,6 +139,7 @@ html
         script.
             videojs.options.flash.swf = "http://localhost:8000/video-js/video-js.swf";
             $(function () {
+                $('[data-toggle="popover"]').popover();
                 $('.scroll-pane').jScrollPane();
                 $.ongaku.build();
                 $.ongaku.controls.bind();

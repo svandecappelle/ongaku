@@ -49,10 +49,13 @@ nav a{
 	color: white;
 	text-decoration: none;
 	overflow: hidden;
+	transition: all 0.3s ease 0s;
+	-moz-transition: all 0.3s ease 0s;
+	-webkit-transition: all 0.3s ease 0s;
 }
 
 nav a:hover{
-	color: white;
+	color: #A0FC55;
 	text-decoration: none;
 	display: block;
 }
@@ -336,7 +339,7 @@ section.song-list > .list-container .songs-container .song .track-time, section.
 	transition: height 0.5s linear 0.1s;
 	border-top: 6px solid black;
 	font-size: 0.8em;
-	margin-right: 9px;
+	margin-right: -2px;
 }
 
 .pending-list:hover{
@@ -896,8 +899,13 @@ ul.group.open>li{
 
 
 .main-content{
-	margin: 1em;
-	margin-top: 50px;
+	margin-left: 1em;
+	margin-right: 1em;
+	padding-top: 50px;
+}
+
+.main-menu{
+	padding-top: 50px;
 }
 
 .open > .dropdown-menu {
@@ -948,7 +956,7 @@ ul.group.open>li{
 #header{
 	height: 51px;
 	color: #cacaca;
-    background: url('//nodebb.org/images/splash-bg.jpg') repeat scroll 0px 0px #000;
+    background: repeat scroll 0px 0px #000;
     border-right: 1px solid #000;
     border-width: 0px 1px 1px;
     border-style: solid;
@@ -973,10 +981,11 @@ h2{
 
 #header h1 {
 	color: #cacaca;
-	padding-top: 15px;
+	padding-top: 7px;
 } 
 #header .mini-title{
-	padding-top: 15px;
+	padding-top: 32px;
+	font-size: 9pt;
 }
 
 #header nav.hidden-text{
@@ -1048,4 +1057,16 @@ h2{
 
 .navbar{
 	border: 0px;
+}
+
+.popover-content{
+	color: black;
+}
+
+.mini-title{
+	cursor: default;
+}
+
+#header .navbar-header{
+	margin-left: 15px;
 }
