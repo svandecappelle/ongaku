@@ -172,6 +172,7 @@ section.song-list > .list-container .infos>.album>.title{
 section.song-list > .list-container{
 	min-width: 60%;
 	overflow: auto;
+	margin-top: 50px;
 }
 
 section.song-list > .list-container .playlist{
@@ -233,7 +234,7 @@ section.song-list > .list-container .songs-container .song:hover{
 
 section.song-list > .list-container .songs-container .song .track-info, section.song-list > .list-container .songs-container .playlist-columns .tracks-columns .track-info{
 	display: inline-block;
-	padding-left: 6px;
+	padding-left: 15px;
 	overflow: hidden;
 }
 
@@ -251,8 +252,8 @@ section.song-list > .list-container .songs-container .song .track-num, , section
 section.song-list > .list-container .songs-container .song:hover .track-num:before{
 	content: '\f04b';
 	font-family: "FontAwesome";
-	left: -16px;
-	position: relative;
+	left: 5px;
+	position: absolute;
 }
 
 section.song-list > .list-container .songs-container .song .track-num:after{
@@ -325,10 +326,10 @@ section.song-list > .list-container .songs-container .song .track-time, section.
 	right: 0;
 	width: 100%;
 	z-index: 1000;
+	background-color: black;
 }
 
 .player.empty{
-	background-color: black;
 	height: 30px;
 	color: white;
 	text-align: center;

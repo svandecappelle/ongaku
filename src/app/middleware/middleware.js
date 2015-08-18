@@ -181,10 +181,21 @@
             }
 
             if (middlewareObject.req.isAuthenticated()) {
-                urlUser = gravatar.url(middlewareObject.req.user.uid, {s: '200', r: 'pg', d: '404'});
+                middlewareObject.objs.session.user = middlewareObject.req.user;
+
                 // generate a url through identicon if none found on gravatar
-                if (urlUser.lastIndexOf("404") !== -1) {
-                    var avatarPathFile = __dirname + "/../../public" + nconf.get("upload_path") + '/users/icons/' + middlewareObject.req.user.username + '.png';
+                logger.info("gravatar " + middlewareObject.req.user.uid + " url: " + urlUser);
+                if (!nconf.get("gravatar")) {
+                    logger.info("no gravatar found for user.");
+                    var avatarDirectory = __dirname + "/../../../public/users",
+                        avatarPathFile = avatarDirectory + "/icons/" + middlewareObject.req.user.username + '.png';
+                    urlUser = "/users/icons/" + middlewareObject.req.user.username + '.png';
+
+                    if (!fs.existsSync(avatarDirectory)) {
+                        fs.mkdirSync(avatarDirectory);
+                        fs.mkdirSync(avatarDirectory + "/icons/");
+                    }
+
                     if (!fs.existsSync(avatarPathFile)) {
                         if (identicon) {
                             identicon.generate(middlewareObject.req.user.uid, 150, function (err, buffer) {
@@ -193,12 +204,16 @@
                                 }
 
                                 fs.writeFileSync(avatarPathFile, buffer);
+                                middlewareObject.objs.session.user.avatar = urlUser;
                             });
                         }
+                    } else {
+                        middlewareObject.objs.session.user.avatar = urlUser;
                     }
-                    urlUser = nconf.get("upload_path") + '/users/icons/' + middlewareObject.req.user.username + '.png';
+                } else {
+                    urlUser = gravatar.url(middlewareObject.req.user.uid, {s: '200', r: 'pg', d: 'identicon'});
+                    middlewareObject.objs.session.user.avatar = urlUser;
                 }
-                middlewareObject.objs.session.user = middlewareObject.req.user;
                 middlewareObject.objs.session.user.isAnonymous = false;
 
                 // Retrieve role type

@@ -141,6 +141,7 @@ logger.setLevel(nconf.get('logLevel'));
         // Posts
 
         app.post('/playlist/add/:uid', function (req, res) {
+            // TODO save playlist
             var uidFile = req.params.uid,
                 track = library.getByUid(uidFile);
             logger.info("Add file to playlist", uidFile);
@@ -163,6 +164,7 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/playlist/remove/:id', function (req, res) {
             var id = req.params.id;
             logger.info("Remove file index to playlist: ", id);
+            // TODO remove on saved playlist
             if (req.session.playlist !== undefined) {
                 req.session.playlist.slice(id, 1);
             }
@@ -173,6 +175,16 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
+        app.post('/playlist/clear', function (req, res) {
+            var id = req.params.id;
+            // TODO remove on saved playlist
+            logger.info("Remove file index to playlist: ", id);
+            req.session.playlist = [];
+            req.session.save(function () {
+                res.setHeader('Access-Control-Allow-Credentials', 'true');
+                res.send({all: req.session.playlist});
+            });
+        });
 
     };
 }(exports));

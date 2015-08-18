@@ -61,8 +61,8 @@ html
 
                     li.dropdown(style="float: left; margin-left: 5px;")
                         a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
-                            if session.gravatar
-                                img(src="#{session.gravatar}", width="24px")
+                            if session.user.avatar
+                                img(src="#{session.user.avatar}", width="36px")
                             else
                                 if session.user.isAnonymous
                                     i.fa.fa-fw.fa-sign-in
