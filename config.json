@@ -1,5 +1,6 @@
 {
     "port": "8000",
+    "hostname": "localhost",
     "uploader": false,
     "library": "/home/bodhi/Music",
     "audio": ["mp3",  "wav", "wma", "ogg", "flac"],

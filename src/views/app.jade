@@ -148,7 +148,7 @@ html
                 $('.scroll-pane').jScrollPane();
                 $.ongaku.build();
                 $.ongaku.controls.bind();
-                var socket = io.connect('http://localhost:8000/');
+                var socket = io.connect('http://#{hostname}:8000/');
                 socket.on('connect', function () {
                     console.log("Connected");
                 });

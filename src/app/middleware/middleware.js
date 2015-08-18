@@ -223,6 +223,8 @@
                 next(null, middlewareObject);
             }
         });
+
+        middlewareObject.objs.session.hostname = nconf.get("hostname");
     };
 
     /*
