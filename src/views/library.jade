@@ -27,8 +27,6 @@ section.sidebar.show
 						a.link
 							if artistsGroup.image
 								img.artist(src=artistsGroup.image)
-							else
-								img.artist(src="/img/artist-tmp.jpg")
 							span.artistname= artistsGroup.artist
 						if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 							a.artistappend.disabled

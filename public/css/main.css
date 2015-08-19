@@ -679,6 +679,7 @@ ul.group.artist>li.detail>a.link{
 	vertical-align: top;
 	width: 20%;
 	position: absolute;
+	height: 90%;
 }
 
 ul.group.details{
@@ -697,7 +698,19 @@ ul.group.artist.open>li{
 	cursor: pointer;
 	width: auto;
 	height: auto;
-	overflow: visible;
+	overflow: hidden;
+	position: relative;
+}
+
+ul.group.artist span.artistname{
+	vertical-align: top;
+}
+
+ul.group.artist img.artist{
+	margin-right: 10px;
+	position: absolute;
+	height: 200px;
+	margin-top: 27px;
 }
 
 .trackaction{
