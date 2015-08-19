@@ -700,6 +700,7 @@ ul.group.artist.open>li{
 	height: auto;
 	overflow: hidden;
 	position: relative;
+	min-height: 243px;
 }
 
 ul.group.artist span.artistname{
