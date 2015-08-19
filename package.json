@@ -41,7 +41,8 @@
 		"uuid"				:	"*",
 		"vid-streamer"		:	"0.1.4",
 		"socket.io"			:	"1.3.5",
-		"xregexp"			: 	"~2.0.0"
+		"xregexp"			: 	"~2.0.0",
+		"lastfmapi"			:	"0.0.6"
 	},
 	"scripts" : {
 		"start" : "node app.js"

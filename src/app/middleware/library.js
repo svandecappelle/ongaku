@@ -20,6 +20,12 @@
     };
 
     Library.populate = function (type, lib, callback) {
+        var LastfmAPI = require('lastfmapi');
+        var lfm = new LastfmAPI({
+            'api_key' : 'f21088bf9097b49ad4e7f487abab981e',
+            'secret' : '7ccaec2093e33cded282ec7bc81c6fca'
+        });
+
         Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
             return _.extend(track[0], {uuid: uuid, type: type});
         }));
@@ -30,7 +36,6 @@
                 groupByArtistsAndAlbum = [];
 
             _.each(grpByArtists, function (tracks, artist) {
-
                 var albums = _.map(_.groupBy(tracks, 'album'), function (tracks, title) {
                     if (!title) {
                         title = "Unknown album";
@@ -38,17 +43,53 @@
                     return {title: title, tracks: tracks};
                 });
 
-                if (!artist) {
-                    artist = "Uknown artist";
-                }
+
+                _.each(albums, function (album, index) {
+                    logger.debug("search " + artist + " ------ " + album.title);
+                    if (album !== "Unknown album") {
+
+                        lfm.album.getInfo({
+                            'artist' : artist,
+                            'album' : album.title
+                        }, function (err, alb) {
+                            if (err) {
+                                logger.warn("album not found");
+                            } else if (alb.image) {
+                                logger.info(alb.image);
+                                alb.image.forEach(function (img) {
+                                    if (img.size === "large") {
+                                        album.cover = img["#text"];
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
 
                 var artist = {
                     artist: artist,
                     albums: albums
                 };
 
-                groupByArtistsAndAlbum.push(artist);
+                /* Load some artist info. */
+                logger.warn("search artist: " + artist.artist);
+                lfm.artist.getInfo({
+                    'artist' : artist.artist,
+                }, function (err, art) {
+                    if (err) {
+                        logger.warn("artist not found");
+                    } else if (art.image) {
+                        logger.info(art.image);
+                        art.image.forEach(function (img) {
+                            if (img.size === "large") {
+                                artist.image = img["#text"];
+                                logger.debug(artist.image);
+                            }
+                        });
+                    }
+                });
 
+                groupByArtistsAndAlbum.push(artist);
             });
             Library.data[type] = groupByArtistsAndAlbum;
         } else {

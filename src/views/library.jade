@@ -25,7 +25,10 @@ section.sidebar.show
 				for artistsGroup in library
 					li
 						a.link
-							img.artist(src="/img/artist-tmp.jpg")
+							if artistsGroup.image
+								img.artist(src=artistsGroup.image)
+							else
+								img.artist(src="/img/artist-tmp.jpg")
 							span.artistname= artistsGroup.artist
 						if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 							a.artistappend.disabled
@@ -37,7 +40,10 @@ section.sidebar.show
 							for album in artistsGroup.albums
 								li
 									a.link
-										img.album(src="/img/album.jpg")
+										if album.cover
+											img.album(src=album.cover)
+										else
+											img.album(src="/img/album.jpg")
 										span.albumtitle= album.title
 									if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 										a.albumappend

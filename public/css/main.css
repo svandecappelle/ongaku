@@ -637,6 +637,14 @@ ul.group.artist>li{
 	/*display: inline-block;*/
 }
 
+ul.group.artist>li.detail{
+	position: relative;
+}
+
+ul.group.artist>li>link{
+	position: absolute;
+}
+
 ul.group.album>li{
 	box-shadow: 0px 0px 1px #AAA;
 }
@@ -648,6 +656,9 @@ ul.group.tracklist>li{
 ul.group.album{
 	width: auto;
 	padding: 3px;
+	position: relative;
+	width: 80%;
+	margin-left: 20%;
 }
 
 ul.group.tracklist{
@@ -664,11 +675,25 @@ ul.group>li.detail{
 	display: block;
 }
 
+ul.group.artist>li.detail>a.link{
+	vertical-align: top;
+	width: 20%;
+	position: absolute;
+}
+
 ul.group.details{
 	width: auto;
 }
 
-ul.group.open>li{
+
+ul.group.album>li, ul.group.tracklist>li{
+	cursor: pointer;
+	width: auto;
+	height: auto;
+	overflow: visible;
+}
+
+ul.group.artist.open>li{
 	cursor: pointer;
 	width: auto;
 	height: auto;
