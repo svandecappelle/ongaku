@@ -21,7 +21,6 @@
 		"express-session"	:	"1.2.1",
 		"gravatar"			: 	"1.0.6",
 		"groove"			:	"2.3.4",
-		"identicon"			: 	"*",
 		"jade"				:	"*",
 		"lame"				:	"*",
 		"log4js"			:	">=0.6.6",
@@ -49,6 +48,6 @@
 	},
 	"repository" : {
 		"type"	: 	"git",
-		"url"	:	"http://mizore.fr/mizore/site-sophie"
+		"url"	:	"git@github.com:svandecappelle/ongaku.git"
 	}
 }
