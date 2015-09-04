@@ -225,6 +225,7 @@
         });
 
         middlewareObject.objs.session.hostname = nconf.get("hostname");
+        middlewareObject.objs.session.host = nconf.get("hostname").concat(":").concat(nconf.get("port"));
     };
 
     /*

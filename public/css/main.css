@@ -448,31 +448,31 @@ section.song-list > .list-container .songs-container .song .track-time, section.
 }
 
 .pending-list .song .layer .bottom{
-	width: 0%; 
-	height: 16px; 
-	background: #f8f4e1; 
-	position: absolute; 
-	bottom: 0; 
+	width: 0%;
+	height: 16px;
+	background: #f8f4e1;
+	position: absolute;
+	bottom: 0;
 	left: 0;
 	transition: all 0.3s ease-in-out 0s;
 }
 
 .pending-list .song .layer .left{
-	width: 16px; 
-	height: 0%; 
+	width: 16px;
+	height: 0%;
 	background: #f8f4e1;
-	position: absolute; 
-	bottom: 0; 
+	position: absolute;
+	bottom: 0;
 	right: 0;
 	transition: all 0.3s ease-in-out 0s;
 }
 
 .pending-list .song .layer .right{
-	width: 16px; 
-	height: 0%; 
-	background: #f8f4e1; 
-	position: absolute; 
-	left: 0; 
+	width: 16px;
+	height: 0%;
+	background: #f8f4e1;
+	position: absolute;
+	left: 0;
 	right: 0;
 	transition: all 0.3s ease-in-out 0s;
 }
@@ -526,7 +526,7 @@ section.song-list > .list-container .songs-container .song .track-time, section.
 
 /* TREE VIEW */
 
-.tree {    
+.tree {
     min-height:20px;
     padding:19px;
     margin-bottom:20px;
@@ -651,6 +651,10 @@ ul.group.album>li{
 
 ul.group.artist.open a{
 	color: white;
+}
+
+.albumtitle {
+	color: #13CC00;
 }
 
 ul.group.tracklist>li{
@@ -829,7 +833,7 @@ ul.group.artist img.artist{
   top: 53px;
   left: 0;
   box-shadow: 4px -4px 2px -4px #AAA;
-  border-width: 1px; 
+  border-width: 1px;
   border-style: solid;
   border-color: #AAA;
   border-radius: 5px;
@@ -1038,7 +1042,7 @@ h2{
 #header h1 {
 	color: #cacaca;
 	padding-top: 7px;
-} 
+}
 #header .mini-title{
 	padding-top: 32px;
 	font-size: 9pt;
@@ -1051,7 +1055,7 @@ h2{
 
 #header h2 {
 	color: #cacaca;
-} 
+}
 
 
 .btn.btn-danger, .btn.btn-close, .btn.btn-remove {

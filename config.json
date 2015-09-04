@@ -1,8 +1,9 @@
 {
-    "port": "8000",
+    "port": "4000",
     "hostname": "localhost",
     "uploader": false,
-    "library": "/home/bodhi/Music",
+    "logLevel": "INFO",
+    "library": "/home/svandecappelle/Musique",
     "audio": ["mp3",  "wav", "wma", "ogg", "flac"],
     "video": ["mp4", "webm", "flv"],
     "database": "redis",

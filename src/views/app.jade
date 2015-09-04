@@ -141,14 +141,14 @@ html
             include player
 
         script.
-            videojs.options.flash.swf = "http://localhost:8000/video-js/video-js.swf";
+            videojs.options.flash.swf = "http://#{host}/video-js/video-js.swf";
             $(function () {
                 $('[data-toggle="popover"]').popover();
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.scroll-pane').jScrollPane();
                 $.ongaku.build();
                 $.ongaku.controls.bind();
-                var socket = io.connect('http://#{hostname}:8000/');
+                var socket = io.connect('http://#{host}/');
                 socket.on('connect', function () {
                     console.log("Connected");
                 });

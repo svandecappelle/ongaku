@@ -40,9 +40,10 @@ section.sidebar.show
 									a.link
 										if album.cover
 											img.album(src=album.cover)
+											span.albumtitle= album.title
 										else
 											img.album(src="/img/album.jpg")
-										span.albumtitle= album.title
+											span.albumtitle= album.title
 									if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 										a.albumappend
 											i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")

@@ -13,22 +13,32 @@
         groove = require('groove'),
         uuid = require('uuid');
 
-    logger.setLevel("INFO");
+    logger.setLevel(nconf.get('logLevel'));
+
     Scanner.library = function (callback) {
         var audio = [],
-            video = [],
-            that = this;
+            video = [];
 
-        this.scanAudio(nconf.get("library"), audio, function () {
-            that.scanVideo(nconf.get("library"), video, function () {
-                callback({audio: audio, video: video});
+        logger.info("loading new entries into library.");
+        async.parallel({
+          audio: function(){
+            Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
+              logger.info("loading '" + res.length + "' new entries into library.");
+              callback({audio: res, isFinishedAll: isFinishedAll});
             });
-        });
+          },
+          video: function(){
+            Scanner.scanVideo(nconf.get("library"), function (err, res, isFinishedAll) {
+              callback({video: res, isFinishedAll: isFinishedAll});
+            });
+          }
+        }, function(){
 
+        });
     };
 
-    Scanner.scanVideo = function (apath, results, callback) {
-        this.scan(apath, results, callback, function (filePath, cb) {
+    Scanner.scanVideo = function (apath, callback) {
+        this.scan(apath, callback, function (filePath, cb, results) {
             if (_.contains(nconf.get('video'), path.extname(filePath).replace(".", ""))) {
                 results.push({
                     encoding: path.extname(filePath).replace(".", ""),
@@ -43,11 +53,11 @@
             } else {
                 cb(null, results); // asynchronously call the loop
             }
-        });
+        }, callback);
     };
 
-    Scanner.scanAudio = function (apath, results, callback) {
-        this.scan(apath, results, callback, function (filePath, cb) {
+    Scanner.scanAudio = function (apath, callback) {
+        this.scan(apath, callback, function (filePath, cb, results) {
             if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
                 groove.open(filePath, function (err, file) {
                     if (err) {
@@ -67,11 +77,14 @@
             } else {
                 cb(null, results); // asynchronously call the loop
             }
-        });
+
+            //callback(null, results, false);
+        }, callback);
     };
 
-    Scanner.scan = function (apath, results, callback, appender) {
-        logger.info("Scanning directory: ".concat(apath));
+    Scanner.scan = function (apath, callback, appender, libraryCallBack) {
+        var results = [];
+        logger.debug("Scanning directory: ".concat(apath));
         fs.readdir(apath, function (err, files) {
             var counter = 0;
             async.whilst(function () {
@@ -90,16 +103,22 @@
                         var metadataParser = mm(fs.createReadStream(newpath));
 
                         if (appender) {
-                            appender(newpath, cb);
+                            appender(newpath, cb, results);
                         }
                     }
                     if (stat.isDirectory()) {
-                        Scanner.scan(newpath, results, cb, appender); // recursion loop
+                        Scanner.scan(newpath, cb, appender, libraryCallBack); // recursion loop
                     }
+
                 });
             }, function (err) {
-                logger.info("Scan " + apath + " finished");
-                callback(err); // loop over, come out
+                logger.debug("Scan " + apath + " finished");
+                if (callback !== libraryCallBack){
+                    callback(err, results); // loop over, come out
+                }
+                if (libraryCallBack){
+                  libraryCallBack(err, results, callback === libraryCallBack);
+                }
             });
         });
     };
