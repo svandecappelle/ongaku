@@ -16,6 +16,8 @@
         identicon;
 
     logger.setLevel(nconf.get("logLevel"));
+    var allowedStreamingAudioTypes = ["mp3", "ogg"];
+
     try {
         identicon = require('identicon');
     } catch (expect) {
@@ -96,8 +98,8 @@
             logger.info("Stream " + type);
             var fs = require("fs"),
                 src = library.getRelativePath(path.basename(uuid));
-
-            if (path.extname(src).replace(".", "") !== 'mp3' && type === 'audio'){
+            // logger.info("streaming type: "+ path.extname(src).replace(".", ""));
+            if (type === 'audio' && !_.contains(allowedStreamingAudioTypes, path.extname(src).replace(".", ""))){
                 var libraryEntry = library.getByUid(uuid),
                     audio = {
                         duration: libraryEntry.duration,

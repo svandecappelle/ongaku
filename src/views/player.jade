@@ -3,7 +3,7 @@ block player
 		.player
 			audio#controls(controls="controls", width="100%")
 				if (data.playing)
-					source#mp3src(type="audio/mp3", src="/stream/#{data.playing.uid}")
+					source#mp3src(type="audio/#{data.playing.encoding}", src="/stream/#{data.playing.uid}")
 	else
 		.player.empty
 			span Login is required to stream
