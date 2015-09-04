@@ -29,7 +29,9 @@
           },
           video: function(){
             Scanner.scanVideo(nconf.get("library"), function (err, res, isFinishedAll) {
-              callback({video: res, isFinishedAll: isFinishedAll});
+              if (res.length > 0){
+                callback({video: res, isFinishedAll: isFinishedAll});
+              }
             });
           }
         }, function(){

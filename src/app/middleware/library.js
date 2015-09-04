@@ -114,9 +114,6 @@
                 var index = _.findIndex(Library.data[type], {artist: artist.artist});
                 if (index !== -1){
                   logger.debug("found artist into index: " + index, Library.data[type][index]);
-                  //logger.error("found artist in index: ", Library.data[type][index]);
-                  //Library.data[type][index].albums.push(artist.albums);
-                  //logger.info("insert new album into existing artist: '" + artist.artist + "' - '" + artist.albums[0].title + "' ", _.extend(Library.data[type][index].artist.albums, artist.albums));
                   Library.data[type][index].albums = _.union(Library.data[type][index].albums, artist.albums);
                   logger.debug("added album into index: " + index, Library.data[type][index]);
 
@@ -129,7 +126,7 @@
             logger.debug("lib: ", Library.data[type]);
 
         } else {
-            Library.data[type] = lib;
+          Library.data[type] = _.union(Library.data[type], lib);
         }
         if (type === "audio" && libObject.isFinishedAll){
           this.audioScanned = true;

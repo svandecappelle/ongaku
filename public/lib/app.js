@@ -202,13 +202,6 @@
 
     Library.prototype.bind = function () {
         console.log("bind library");
-        $(".group>li").on("click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            $(this).toggleClass("detail");
-            $(this).children("ul.group").toggleClass("open");
-            $('.scroll-pane').jScrollPane();
-        });
 
         var that = this;
         $("input.searchbox").on("change", function () {

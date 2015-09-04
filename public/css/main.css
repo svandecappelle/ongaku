@@ -696,14 +696,12 @@ ul.group.details{
 
 
 ul.group.album>li, ul.group.tracklist>li{
-	cursor: pointer;
 	width: auto;
 	height: auto;
 	overflow: visible;
 }
 
 ul.group.artist.open>li{
-	cursor: pointer;
 	width: auto;
 	height: auto;
 	overflow: hidden;
