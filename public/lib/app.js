@@ -379,8 +379,8 @@
             </div>";
             $('.pending-list .list .jspPane').append(track);
 
-            var audioControls = "<audio id='controls' controls='controls' src='/stream/" + trackObj.uid + ".mp3' width='100%'></audio>";
-            var source = "<source id='mp3src' type='audio/mp3' src='/stream/" + trackObj.uid + ".mp3'></source>";
+            var audioControls = "<audio id='controls' controls='controls' width='100%'></audio>";
+            var source = "<source id='mp3src' type='audio/"+ trackObj.encoding +"' src='/stream/" + trackObj.uid + "."+ trackObj.encoding +"'></source>";
             if (!$.ongaku.isInitialised()) {
                 console.log("first song:: need to build controls");
                 $(".player").empty();
