@@ -6,6 +6,12 @@
         logger = require("log4js").getLogger('Library'),
         nconf = require("nconf");
 
+    var LastfmAPI = require('lastfmapi');
+    var lfm = new LastfmAPI({
+        'api_key' : 'f21088bf9097b49ad4e7f487abab981e',
+        'secret' : '7ccaec2093e33cded282ec7bc81c6fca'
+    });
+
     logger.setLevel(nconf.get('logLevel'));
     Library.data  = {audio: [], video: []};
     Library.flatten = {};
@@ -29,11 +35,7 @@
     };
 
     Library.populate = function (type, libObject, callback) {
-        var LastfmAPI = require('lastfmapi');
-        var lfm = new LastfmAPI({
-            'api_key' : 'f21088bf9097b49ad4e7f487abab981e',
-            'secret' : '7ccaec2093e33cded282ec7bc81c6fca'
-        });
+
         var lib = libObject[type];
 
         Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
@@ -71,13 +73,9 @@
                           logger.warn("artist '" + artist.artist + "' not found");
                           Library.loadingCoverArtists[artist.artist] = null;
                       } else if (art.image) {
-                          art.image.forEach(function (img) {
-                              if (img.size === "large") {
-                                  artist.image = img["#text"];
-                                  Library.loadingCoverArtists[artist.artist] = artist.image;
-                                  logger.debug("image artist '" + artist.artist + "': " + artist.image);
-                              }
-                          });
+                        artist.image = getBigImage(art.image);
+                        Library.loadingCoverArtists[artist.artist] = artist.image;
+                        logger.debug("image artist '" + artist.artist + "': " + artist.image);
                       }
                   });
                 } else {
@@ -96,13 +94,9 @@
                                 logger.warn("album '" + album.title + "'not found");
                                 Library.loadingCoverAlbums[artist.artist][album.title] = null;
                             } else if (alb.image) {
-                                alb.image.forEach(function (img) {
-                                    if (img.size === "large") {
-                                        album.cover = img["#text"];
-                                        Library.loadingCoverAlbums[artist.artist][album.title] = album.cover;
-                                        logger.debug("album cover '" + album.title + "': " + album.cover);
-                                    }
-                                });
+                                album.cover = getBigImage(alb.image);
+                                Library.loadingCoverAlbums[artist.artist][album.title] = album.cover;
+                                logger.debug("album cover '" + album.title + "': " + album.cover);
                             }
                         });
                     } else {
@@ -134,6 +128,16 @@
           this.videoScanned = true;
         }
         callback();
+    };
+
+    function getBigImage (imageList) {
+      var imageSource;
+      imageList.forEach(function (img) {
+          if (img.size === "large") {
+              imageSource = img["#text"];
+          }
+      });
+      return imageSource;
     };
 
     Library.scanning = function () {
@@ -171,7 +175,19 @@
     };
 
     Library.search = function (filter, type) {
-        return _.filter(this.flatten, function (obj) {
+
+      _.mixin({groupByMulti: function (obj, values, context) {
+        if (!values.length)
+            return obj;
+        var byFirst = _.groupBy(obj, values[0], context),
+            rest = values.slice(1);
+        for (var prop in byFirst) {
+            byFirst[prop] = _.groupByMulti(byFirst[prop], rest, context);
+        }
+        return byFirst;
+      }});
+
+        var searchResultList =  _.filter(this.flatten, function (obj) {
 
             if (type === "video" && obj.type === type) {
                 return obj.name.match(filter);
@@ -190,6 +206,31 @@
 
             return false;
         });
+
+        searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
+        var arrayResults = [];
+        arrayResults = _.map(searchResultList, function(val, artist){
+          logger.info("image: ", Library.loadingCoverArtists[artist]);
+          var artistObject = {
+            artist: artist,
+            image: Library.loadingCoverArtists[artist],
+            albums: _.map(val, function(album, title){
+              var albumObject = {
+                title: title,
+                image: Library.loadingCoverAlbums[artist][title],
+                tracks: _.map(album, function(tracks, index){
+                  return tracks;
+                })
+              };
+              logger.info(albumObject);
+              return albumObject;
+            })
+          };
+
+          return artistObject;
+        });
+        logger.info(arrayResults);
+        return arrayResults;
     };
 
 }(exports));

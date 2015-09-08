@@ -103,6 +103,13 @@ logger.setLevel(nconf.get('logLevel'));
             middleware.json(req, res, libraryDatas);
         });
 
+        app.get('/library', function (req, res) {
+            logger.info("Get all audio library");
+            var libraryDatas = library.getAudio();
+            middleware.json(req, res, libraryDatas);
+        });
+
+
         app.get('/stream/:media', function (req, res) {
             var stream = function () {
                 logger.info("streaming audio");

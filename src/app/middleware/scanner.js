@@ -131,6 +131,11 @@
         if (durationSec < 10) {
             durationSec = "0".concat(durationSec);
         }
+
+        var originalEncoding = path.extname(file.replace(nconf.get("library"), "")).replace(".", "");
+        if (!_.contains(["mp3", "ogg"], originalEncoding)){
+          originalEncoding = "mp3";
+        }
         return {
             artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : "Unknown artist",
             file: file,
@@ -140,7 +145,7 @@
             metadatas: metadatas,
             duration: durationMin.toString().concat(":").concat(durationSec),
             uid: uuid.v1(),
-            encoding: path.extname(file.replace(nconf.get("library"), "")).replace(".", "")
+            encoding: originalEncoding
         };
     };
 

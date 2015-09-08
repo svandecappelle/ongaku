@@ -231,49 +231,79 @@
     Library.prototype.search = function (pattern) {
         console.log("search for: ", pattern);
         var that = this;
-        $.get("library/filter/".concat(pattern), function (output) {
-            that.rebuild(output);
-        });
+        if (pattern) {
+          $.get("/library/filter/".concat(pattern), function (output) {
+              that.buildSearch(output);
+          });
+        } else {
+          $.get("/library", function (output) {
+              that.rebuild(output);
+          });
+        }
+    };
 
+    Library.prototype.buildSearch = function (library) {
+      $(".lib.group.artist.open").empty();
+      $(".lib.group.artist.open").addClass("search-results");
+      this.rebuild(library);
     };
 
     Library.prototype.rebuild = function (library) {
         console.log(library);
         $(".lib.group.artist.open").empty();
-        $(".lib.group.artist.open").addClass("search-results");
         var tracknumber = 0;
-        $.each(library, function (index, val) {
+        $.each(library, function (index, artist) {
             tracknumber += 1;
-            var element = "<li>\
-                <a class='song search-result-track'>\
-                    <div data-uid='{{uid}}' class='track trackappend track-info track-px'>\
-                        <div class='track-info track-num'>\
-                            {{num}}\
-                        </div>\
-                        <div class='track-info track-time'>\
-                            {{time}}\
-                        </div>\
-                    </div>\
-                    <div class='track-info track'>\
-                        <div class='track-info track-title'>\
-                            {{title}}\
-                        </div>\
-                        <div class='track-info track-artist'>\
-                            {{artist}}\
-                        </div>\
-                    </div>\
-                </a>\
-            </li>";
-            element = element.replace("{{uid}}", val.uid);
-            element = element.replace("{{num}}", tracknumber);
-            element = element.replace("{{time}}", val.duration);
-            element = element.replace("{{title}}", val.title);
-            element = element.replace("{{artist}}", val.artist);
-            $(".search-results").append(element);
+            console.log("Artist: " + artist.artist);
+            var artistElement = $('<li>');
+            var artistAlbums = $('<ul>', {class: "group album"});
+            var artistDetailElement = $("<a>", {
+              class: 'link'
+            });
+            var artistImage = $('<img>', {class: 'artist', src: artist.image});
+            var artistName = $('<span>', {class: 'artistname'});
+            artistName.html(artist.artist);
+            artistDetailElement.append(artistImage);
+            artistDetailElement.append(artistName);
+            artistElement.append(artistDetailElement);
+            artistElement.append(artistAlbums);
+
+            $.each(artist.albums, function(title, album){
+              console.log("Album title: " + album.title);
+              var albumElement = $('<li>');
+              var tracks = $('<ul>', {class: "group tracklist"});
+              var albumDetailElement = $("<a>", {class: 'link'});
+              var albumImage = $('<img>', {class: 'album', src: album.image});
+              var albumTitle = $('<span>', {class: 'albumtitle'});
+              albumTitle.html(album.title);
+              albumDetailElement.append(albumImage);
+              albumDetailElement.append(albumTitle);
+              albumElement.append(albumDetailElement);
+              artistAlbums.append(albumElement);
+              albumElement.append(tracks);
+
+              $.each(album.tracks, function(index, track){
+                var trackElement = $('<li>');
+                var trackDetailElement = $('<div>', {
+                  class: 'track trackappend',
+                  "data-uid": track.uid
+                });
+                trackDetailElement.html(track.title);
+                trackElement.append(trackDetailElement);
+                tracks.append(trackElement);
+              });
+            });
+
+            $(".search-results").append(artistElement);
         });
         $('.scroll-pane').jScrollPane();
 
-        $(".search-result-track").on("click", function (event) {
+        /*$(".search-result-track").on("click", function (event) {
+            $.ongaku.playlist.appendFromElement($(this));
+        });*/
+        $(".trackappend:not(.disabled)").on("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
             $.ongaku.playlist.appendFromElement($(this));
         });
 
@@ -380,6 +410,7 @@
             $('.pending-list .list .jspPane').append(track);
 
             var audioControls = "<audio id='controls' controls='controls' width='100%'></audio>";
+
             var source = "<source id='mp3src' type='audio/"+ trackObj.encoding +"' src='/stream/" + trackObj.uid + "."+ trackObj.encoding +"'></source>";
             if (!$.ongaku.isInitialised()) {
                 console.log("first song:: need to build controls");
