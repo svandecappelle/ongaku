@@ -422,10 +422,10 @@
                     $.ongaku.next();
                 });
             }
-            $('.scroll-pane').jScrollPane();
         }
 
         $.ongaku.controls.bind();
+        $('.scroll-pane').jScrollPane();
     };
 
     $.ongaku.playlist = new Playlist();
