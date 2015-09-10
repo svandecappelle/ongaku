@@ -273,7 +273,7 @@
               var albumElement = $('<li>');
               var tracks = $('<ul>', {class: "group tracklist"});
               var albumDetailElement = $("<a>", {class: 'link'});
-              var albumImage = $('<img>', {class: 'album', src: album.image});
+              var albumImage = $('<img>', {class: 'album', src: album.cover});
               var albumTitle = $('<span>', {class: 'albumtitle'});
               albumTitle.html(album.title);
               albumDetailElement.append(albumImage);
