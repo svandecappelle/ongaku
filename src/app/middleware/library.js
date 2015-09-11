@@ -79,7 +79,7 @@
                       }
                   });
                 } else {
-                  logger.info("already scanned artist '" + artist.artist + "': " + Library.loadingCoverArtists[artist.artist]);
+                  logger.debug("already scanned artist '" + artist.artist + "': " + Library.loadingCoverArtists[artist.artist]);
                   artist.image = Library.loadingCoverArtists[artist.artist] = artist.image;
                 }
                 _.each(albums, function (album, index) {
@@ -91,7 +91,7 @@
                             'album' : album.title
                         }, function (err, alb) {
                             if (err) {
-                                logger.warn("album '" + album.title + "'not found");
+                                logger.warn("[" + artist.artist + "] -> album:: '" + album.title + "' not found");
                                 Library.loadingCoverAlbums[artist.artist][album.title] = null;
                             } else if (alb.image) {
                                 album.cover = getBigImage(alb.image);
@@ -210,7 +210,7 @@
         searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
         var arrayResults = [];
         arrayResults = _.map(searchResultList, function(val, artist){
-          logger.info("image: ", Library.loadingCoverArtists[artist]);
+          logger.debug("image: ", Library.loadingCoverArtists[artist]);
           var artistObject = {
             artist: artist,
             image: Library.loadingCoverArtists[artist],
@@ -222,14 +222,14 @@
                   return tracks;
                 })
               };
-              logger.info(albumObject);
+              logger.debug(albumObject);
               return albumObject;
             })
           };
 
           return artistObject;
         });
-        logger.info(arrayResults);
+        logger.debug(arrayResults);
         return arrayResults;
     };
 

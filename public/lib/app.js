@@ -249,12 +249,10 @@
     };
 
     Library.prototype.rebuild = function (library) {
-        console.log(library);
         $(".lib.group.artist.open").empty();
         var tracknumber = 0;
         $.each(library, function (index, artist) {
             tracknumber += 1;
-            console.log("Artist: " + artist.artist);
             var artistElement = $('<li>');
             var artistAlbums = $('<ul>', {class: "group album"});
             var artistDetailElement = $("<a>", {
@@ -269,7 +267,6 @@
             artistElement.append(artistAlbums);
 
             $.each(artist.albums, function(title, album){
-              console.log("Album title: " + album.title);
               var albumElement = $('<li>');
               var tracks = $('<ul>', {class: "group tracklist"});
               var albumDetailElement = $("<a>", {class: 'link'});

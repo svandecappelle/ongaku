@@ -21,7 +21,7 @@
     try {
         identicon = require('identicon');
     } catch (expect) {
-        logger.warn("Not compatible optional extension: identicon.");
+        logger.warn("Not installed optional extension: identicon it will not be used.");
     }
 
     /*
@@ -70,7 +70,7 @@
                 }
             });
 
-            logger.info(middlewareObject.objs.session);
+            logger.debug(middlewareObject.objs.session);
             res.render(view, middlewareObject.objs);
         });
     };
@@ -107,7 +107,7 @@
                         uid: libraryEntry.uid,
                         sessionId: req.sessionID
                     };
-                logger.info(audio);
+                logger.debug(audio);
                 transcoder.transcode(audio, req, res);
             } else {
                 logger.debug(src);
@@ -131,7 +131,7 @@
      * Add session objs in view params
      */
     Middleware.session = function (middlewareObject, next) {
-        logger.warn(middlewareObject.objs);
+        logger.debug(middlewareObject.objs);
 
         var urlUser = '/img/anonymous.jpg',
             urlServer = null;
@@ -187,7 +187,7 @@
                 middlewareObject.objs.session.user = middlewareObject.req.user;
 
                 // generate a url through identicon if none found on gravatar
-                logger.info("gravatar " + middlewareObject.req.user.uid + " url: " + urlUser);
+                logger.debug("gravatar " + middlewareObject.req.user.uid + " url: " + urlUser);
                 if (!nconf.get("gravatar")) {
                     logger.info("no gravatar found for user.");
                     var avatarDirectory = __dirname + "/../../../public/users",

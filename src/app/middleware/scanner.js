@@ -23,8 +23,10 @@
         async.parallel({
           audio: function(){
             Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
-              logger.info("loading '" + res.length + "' new entries into library.");
-              callback({audio: res, isFinishedAll: isFinishedAll});
+              if (res.length){
+                logger.info("Adding " + res.length + " new scanned entries into library.");
+                callback({audio: res, isFinishedAll: isFinishedAll});
+              }
             });
           },
           video: function(){
