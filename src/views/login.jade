@@ -2,19 +2,19 @@ extends app
 block append headpage
 	title Ongaku administration panel
 block append library
-		.col-md-10.panel.panel-default.col-md-offset-1.login-screen
+		.col-md-8.panel.panel-default.col-md-offset-1.login-screen
 			h1 Be connected:
 			hr
 			form.form-horizontal(method='post')
 				.form-group.form-group-sm
-					label.col-sm-2.control-label(for="username")= username
-					.col-sm-10
+					label.col-sm-2.control-label(for="username") Username
+					.col-sm-8
 						input.form-control(type="text", id="username", name="username", placeholder="Nom d'utilisateur")
 				.form-group.form-group-sm
-					label.col-sm-2.control-label(for="password")= password
-					.col-sm-10
+					label.col-sm-2.control-label(for="password") Password
+					.col-sm-8
 						input.form-control(type="password", id="password", name="password", placeholder="Mot de passe")
-				button.btn.btn-success.btn-lg.btn-block(id="login") Connect
+				button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;") Connect
 				a#reset-link(href="/reset")
 	
 block post-script
