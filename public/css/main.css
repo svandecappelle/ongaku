@@ -965,10 +965,9 @@ ul.group.artist img.artist{
 .main-content{
 	margin-left: 1em;
 	padding-top: 50px;
-	background-size: cover;
-	background-color: black;
 	/*background: url('http://images4.fanpop.com/image/photos/17500000/cool-background-random-17506457-2299-1437.jpg') no-repeat center center fixed;*/
 	background: url('/background.jpg') repeat center center fixed;
+	background-size: cover;
 }
 
 .main-menu{
