@@ -1,5 +1,5 @@
 section.sidebar.show
-	h1 Library
+	h1(style="margin: 0px;") Library
 	.search
 		.col-lg-8
 			.input-group
@@ -19,7 +19,7 @@ section.sidebar.show
 		h1.message
 			i.fa.fa-circle-o-notch.fa-spin 
 			span.text= data.message
-	.user-sidebar.scroll-pane(style="position: absolute; top: 185px; bottom: 70px; left: 0px; right: 25%; overflow-y: auto;")
+	.user-sidebar.scroll-pane(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 25%; overflow-y: auto;")
 		.library
 			ul.lib.group.artist.open
 				for artistsGroup in library

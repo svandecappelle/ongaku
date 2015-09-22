@@ -125,9 +125,8 @@ section.song-list  .list-actions {
 }
 
 section.sidebar.show {
-	width: 77%;
-    padding-left: 30px;
-    top: 15px;
+  padding-left: 30px;
+	background-color: rgba(53, 44, 44, 0.53);
 }
 
 section.sidebar .user-sidebar{
