@@ -18,7 +18,7 @@ section.sidebar.show
 						a.link.video #{video.name}
 							video.player-video.video-js.vjs-default-skin(height="270", width="480", id="#{video.uid}", controls preload="auto")
 								source(src="/video/stream/#{video.uid}", type="video/#{video.extension}")
-	.pending-list
+	.pending-list.video
 			.list.scroll-pane
 				for track in data.playlist
 					.song

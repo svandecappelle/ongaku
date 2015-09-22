@@ -101,6 +101,10 @@ section.song-list > .list-container {
 	z-index: 1000;
 }
 
+section.song-list > .list-container.video {
+	left: 90%;
+}
+
 section.song-list > .list-container:hover {
 	left: 40%;
 }
@@ -350,6 +354,10 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	border-top: 6px solid black;
 	font-size: 0.8em;
 	margin-right: -2px;
+}
+
+.pending-list.video{
+	right: 10%;
 }
 
 .pending-list:hover{
