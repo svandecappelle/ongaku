@@ -1,26 +1,26 @@
 section.sidebar.show
-	.user-sidebar.scroll-pane(style="height: 100%; overflow-y: auto;")
-		h1 Library
-		.search
-			.col-lg-8
-				.input-group
-					span.input-group-addon
-						i.glyphicon.glyphicon-search
-					input.searchbox.form-control(type="text", placeholder="Search", style="height:39px")
-			.btn-group.col-lg-4
-				button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Group by
-					span.caret(style="margin-left: 5px;")
-				ul.dropdown-menu(role="menu", style="margin-left: 15px;")
-					li
-						a Songs
-						a Artists
-						a Albums
-						a Genre
+	h1 Library
+	.search
+		.col-lg-8
+			.input-group
+				span.input-group-addon
+					i.glyphicon.glyphicon-search
+				input.searchbox.form-control(type="text", placeholder="Search", style="height:39px")
+		.btn-group.col-lg-4
+			button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Group by
+				span.caret(style="margin-left: 5px;")
+			ul.dropdown-menu(role="menu", style="margin-left: 15px;")
+				li
+					a Songs
+					a Artists
+					a Albums
+					a Genre
+	if (data.message !== null)
+		h1.message
+			i.fa.fa-circle-o-notch.fa-spin 
+			span.text= data.message
+	.user-sidebar.scroll-pane(style="position: absolute; top: 185px; bottom: 70px; left: 0px; right: 25%; overflow-y: auto;")
 		.library
-			if (data.message !== null)
-				h1.message
-					i.fa.fa-circle-o-notch.fa-spin 
-					span.text= data.message
 			ul.lib.group.artist.open
 				for artistsGroup in library
 					li
