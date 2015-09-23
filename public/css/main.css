@@ -617,7 +617,8 @@ img.album{
 }
 
 img.artist{
-	height: 50px;
+	width: 150px;
+	height: auto;
 	margin-right: 10px;
 }
 
@@ -679,8 +680,7 @@ ul.group.album{
 	width: auto;
 	padding: 3px;
 	position: relative;
-	width: 80%;
-	margin-left: 20%;
+	margin-left: 200px;
 }
 
 ul.group.tracklist{
@@ -731,7 +731,6 @@ ul.group.artist span.artistname{
 ul.group.artist img.artist{
 	margin-right: 10px;
 	position: absolute;
-	height: 200px;
 	margin-top: 27px;
 	border: 1px solid transparent;
 	border-radius: 13px;
@@ -779,7 +778,11 @@ ul.group.artist img.artist{
 
 .message {
 	text-align: center;
-	margin-top: 10%;
+	position: absolute;
+	top: 0px;
+	z-index: 10000000;
+	left: 50%;
+	margin-left: -25%;
 }
 
 .message span.text{

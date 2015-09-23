@@ -197,7 +197,7 @@
     $.ongaku.controls = new Controls();
 
     function Library() {
-
+      this.videos = [];
     }
 
     Library.prototype.bind = function () {
@@ -205,7 +205,7 @@
 
         var that = this;
         $("input.searchbox").on("change", function () {
-            that.search($(this).val());
+            that.search($(this).val(), $(this).data("type"));
         });
 
         $(".artistappend:not(.disabled)").on("click", function (event) {
@@ -228,12 +228,12 @@
         });
     };
 
-    Library.prototype.search = function (pattern) {
+    Library.prototype.search = function (pattern, type) {
         console.log("search for: ", pattern);
         var that = this;
         if (pattern) {
-          $.get("/library/filter/".concat(pattern), function (output) {
-              that.buildSearch(output);
+          $.get(type.concat("/library/filter/").concat(pattern), function (output) {
+              that.buildSearch(output, type);
           });
         } else {
           $.get("/library", function (output) {
@@ -242,57 +242,74 @@
         }
     };
 
-    Library.prototype.buildSearch = function (library) {
+    Library.prototype.buildSearch = function (library, type) {
       $(".lib.group.artist.open").empty();
       $(".lib.group.artist.open").addClass("search-results");
-      this.rebuild(library);
+      this.rebuild(library, type);
     };
 
-    Library.prototype.rebuild = function (library) {
+    Library.prototype.rebuild = function (library, type) {
         $(".lib.group.artist.open").empty();
         var tracknumber = 0;
-        $.each(library, function (index, artist) {
-            tracknumber += 1;
-            var artistElement = $('<li>');
-            var artistAlbums = $('<ul>', {class: "group album"});
-            var artistDetailElement = $("<a>", {
-              class: 'link'
-            });
-            var artistImage = $('<img>', {class: 'artist', src: artist.image});
-            var artistName = $('<span>', {class: 'artistname'});
-            artistName.html(artist.artist);
-            artistDetailElement.append(artistImage);
-            artistDetailElement.append(artistName);
-            artistElement.append(artistDetailElement);
-            artistElement.append(artistAlbums);
 
-            $.each(artist.albums, function(title, album){
-              var albumElement = $('<li>');
-              var tracks = $('<ul>', {class: "group tracklist"});
-              var albumDetailElement = $("<a>", {class: 'link'});
-              var albumImage = $('<img>', {class: 'album', src: album.cover});
-              var albumTitle = $('<span>', {class: 'albumtitle'});
-              albumTitle.html(album.title);
-              albumDetailElement.append(albumImage);
-              albumDetailElement.append(albumTitle);
-              albumElement.append(albumDetailElement);
-              artistAlbums.append(albumElement);
-              albumElement.append(tracks);
-
-              $.each(album.tracks, function(index, track){
-                var trackElement = $('<li>');
-                var trackDetailElement = $('<div>', {
-                  class: 'track trackappend',
-                  "data-uid": track.uid
-                });
-                trackDetailElement.html(track.title);
-                trackElement.append(trackDetailElement);
-                tracks.append(trackElement);
+        if (type === 'audio'){
+          $.each(library, function (index, artist) {
+              tracknumber += 1;
+              var artistElement = $('<li>');
+              var artistAlbums = $('<ul>', {class: "group album"});
+              var artistDetailElement = $("<a>", {
+                class: 'link'
               });
-            });
+              var artistImage = $('<img>', {class: 'artist', src: artist.image});
+              var artistName = $('<span>', {class: 'artistname'});
+              artistName.html(artist.artist);
+              artistDetailElement.append(artistImage);
+              artistDetailElement.append(artistName);
+              artistElement.append(artistDetailElement);
+              artistElement.append(artistAlbums);
 
-            $(".search-results").append(artistElement);
-        });
+              $.each(artist.albums, function(title, album){
+                var albumElement = $('<li>');
+                var tracks = $('<ul>', {class: "group tracklist"});
+                var albumDetailElement = $("<a>", {class: 'link'});
+                var albumImage = $('<img>', {class: 'album', src: album.cover});
+                var albumTitle = $('<span>', {class: 'albumtitle'});
+                albumTitle.html(album.title);
+                albumDetailElement.append(albumImage);
+                albumDetailElement.append(albumTitle);
+                albumElement.append(albumDetailElement);
+                artistAlbums.append(albumElement);
+                albumElement.append(tracks);
+
+                $.each(album.tracks, function(index, track){
+                  var trackElement = $('<li>');
+                  var trackDetailElement = $('<div>', {
+                    class: 'track trackappend',
+                    "data-uid": track.uid
+                  });
+                  trackDetailElement.html(track.title);
+                  trackElement.append(trackDetailElement);
+                  tracks.append(trackElement);
+                });
+              });
+
+              $(".search-results").append(artistElement);
+          });
+        } else if (type === 'video'){
+          this.videoDispose();
+          $.each(library, function (index, video) {
+            var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
+            var videoLink = $('<a>', {class: "link video"});
+            var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin', height: "270", width: "480", id : video.uid, preload: "auto", controls });
+            var videoSource = $('<source>', {src : "/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
+            videoHtml5.append(videoSource);
+            videoLink.append(videoHtml5)
+            videoElement.append(videoLink);
+
+            $(".search-results").append(videoElement);
+          });
+          this.loadVideo();
+        }
         $('.scroll-pane').jScrollPane();
 
         /*$(".search-result-track").on("click", function (event) {
@@ -304,6 +321,29 @@
             $.ongaku.playlist.appendFromElement($(this));
         });
 
+    };
+
+    Library.prototype.loadVideo = function () {
+      if (this.videos === null){
+        this.videos = [];
+      }
+
+      var that = this;
+      $("video").each(function(){
+				console.log($( this ).attr('id'));
+				that.videos.push(videojs($( this ).attr('id'), {width: "480", height: "270"}, function(){
+					// Player (this) is initialized and ready.
+				}));
+			})
+    };
+
+    Library.prototype.videoDispose = function () {
+      if (this.videos !== null){
+        $.each(this.videos, function(index, player){
+  				player.dispose();
+  			})
+      }
+      this.videos = [];
     };
 
     $.ongaku.library = new Library();

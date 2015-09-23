@@ -5,17 +5,13 @@ section.sidebar.show
 			.input-group
 				span.input-group-addon
 					i.glyphicon.glyphicon-search
-				input.searchbox.form-control(type="text", placeholder="Search", style="height:39px")
+				input.searchbox.form-control(type="text", placeholder="Search", style="height:39px", data-type="video")
 	if (data.message !== null)
 		h1.message
 			i.fa.fa-circle-o-notch.fa-spin 
 			span.text= data.message
 	.user-sidebar.scroll-pane(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 10%; overflow-y: auto;")
 		.library
-			if (data.message !== null)
-				h1.message
-					i.fa.fa-circle-o-notch.fa-spin 
-					span.text= data.message
 			ul.lib.group.artist.open
 				for video in library
 					li(style="width: 494px; display: inline-block;")
@@ -42,12 +38,7 @@ block scripts
 	script.
 		$(function(){
 			$.ongaku.library.bind();
-			$("video").each(function(){
-				console.log($( this ).attr('id'));
-				videojs($( this ).attr('id'), {}, function(){
-					// Player (this) is initialized and ready.
-				});
-			})
+			$.ongaku.library.loadVideo();
 			
 			$('.parent_li').on("dblclick", function(){
 

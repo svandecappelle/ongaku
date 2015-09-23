@@ -206,31 +206,38 @@
 
             return false;
         });
-
-        searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
         var arrayResults = [];
-        arrayResults = _.map(searchResultList, function(val, artist){
-          logger.debug("image: ", Library.loadingCoverArtists[artist]);
-          var artistObject = {
-            artist: artist,
-            image: Library.loadingCoverArtists[artist],
-            albums: _.map(val, function(album, title){
-              var albumObject = {
-                title: title,
-                cover: Library.loadingCoverAlbums[artist][title],
-                tracks: _.map(album, function(tracks, index){
-                  return tracks;
-                })
-              };
-              logger.debug(albumObject);
-              return albumObject;
-            })
-          };
 
-          return artistObject;
-        });
+        if (type === "audio"){
+          searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
+          arrayResults = _.map(searchResultList, function(val, artist){
+            logger.debug("image: ", Library.loadingCoverArtists[artist]);
+            var artistObject = {
+              artist: artist,
+              image: Library.loadingCoverArtists[artist],
+              albums: _.map(val, function(album, title){
+                var albumObject = {
+                  title: title,
+                  cover: Library.loadingCoverAlbums[artist][title],
+                  tracks: _.map(album, function(tracks, index){
+                    return tracks;
+                  })
+                };
+                logger.debug(albumObject);
+                return albumObject;
+              })
+            };
+
+            return artistObject;
+          });
+        } else {
+          arrayResults = searchResultList;
+        }
+
         logger.debug(arrayResults);
+
         return arrayResults;
+
     };
 
 }(exports));
