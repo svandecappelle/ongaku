@@ -300,7 +300,7 @@
           $.each(library, function (index, video) {
             var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
             var videoLink = $('<a>', {class: "link video"});
-            var videoName = $('<div>');
+            var videoName = $('<div>', {class: 'name'});
             videoName.html(video.name);
 
             var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin', height: "270", width: "480", id : video.uid, preload: "auto", controls });
