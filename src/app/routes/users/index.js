@@ -73,7 +73,7 @@ logger.setLevel(nconf.get('logLevel'));
             middleware.render('videolist', req, res, {library: libraryDatas});
         });
 
-        app.get('/video/stream/:media', function (req, res) {
+        app.get('/api/video/stream/:media', function (req, res) {
             // ".ogg": "video/ogg
             // to convert to ogv
             // ffmpeg -i demoreel.mp4 -c:v libtheora -c:a libvorbis demoreel.ogv
@@ -91,31 +91,31 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
-        app.get('/video/library/filter/:search', function (req, res) {
+        app.get('/api/video/library/filter/:search', function (req, res) {
             logger.info("Search filtering video library");
             var libraryDatas = library.search(req.params.search, "video");
             middleware.json(req, res, libraryDatas);
         });
 
-        app.get('/library/filter/:search', function (req, res) {
+        app.get('/api/audio/library/filter/:search', function (req, res) {
             logger.info("Search filtering audio library");
             var libraryDatas = library.search(req.params.search, "audio");
             middleware.json(req, res, libraryDatas);
         });
 
-        app.get('/library', function (req, res) {
+        app.get('/api/audio/library', function (req, res) {
             logger.info("Get all audio library");
             var libraryDatas = library.getAudio();
             middleware.json(req, res, libraryDatas);
         });
 
-        app.get('/video/library', function (req, res) {
+        app.get('/api/video/library', function (req, res) {
             logger.info("Get all video library");
             var libraryDatas = library.getVideo();
             middleware.json(req, res, libraryDatas);
         });
 
-        app.get('/stream/:media', function (req, res) {
+        app.get('/api/stream/:media', function (req, res) {
             var stream = function () {
                 logger.info("streaming audio");
                 middleware.stream(req, res, req.params.media, "audio");
@@ -132,11 +132,11 @@ logger.setLevel(nconf.get('logLevel'));
             //...
             app.use(busboy());
             //...
-            app.get('/upload', function (req, res) {
+            app.get('/api/upload', function (req, res) {
                 middleware.render('upload', req, res);
             });
 
-            app.post('/fileupload', function (req, res) {
+            app.post('/api/fileupload', function (req, res) {
                 var fstream;
                 req.pipe(req.busboy);
                 req.busboy.on('file', function (fieldname, file, filename) {
@@ -152,7 +152,7 @@ logger.setLevel(nconf.get('logLevel'));
 
         // Posts
 
-        app.post('/playlist/add/:uid', function (req, res) {
+        app.post('/api/playlist/add/:uid', function (req, res) {
             // TODO save playlist
             var uidFile = req.params.uid,
                 track = library.getByUid(uidFile);
@@ -173,7 +173,7 @@ logger.setLevel(nconf.get('logLevel'));
             }
         });
 
-        app.post('/playlist/remove/:id', function (req, res) {
+        app.post('/api/playlist/remove/:id', function (req, res) {
             var id = req.params.id;
             logger.info("Remove file index to playlist: ", id);
             // TODO remove on saved playlist
@@ -187,7 +187,7 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
-        app.post('/playlist/clear', function (req, res) {
+        app.post('/api/playlist/clear', function (req, res) {
             var id = req.params.id;
             // TODO remove on saved playlist
             logger.info("Remove file index to playlist: ", id);

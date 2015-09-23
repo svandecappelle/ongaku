@@ -58,9 +58,3 @@ block append songlist
                                     .track-info.track-artist
                                         span= track.artist
                 .song
-        script.
-            $(function () {
-                $(".fa-eraser").on("click", function(){
-                    $.ongaku.playlist.clear();
-                });
-            });

@@ -87,8 +87,8 @@
         this.current = uid;
         console.log("start playing: ", this.current);
 
-        $("#controls").attr("src", "/stream/".concat(uid));
-        $("#mp3src").attr("src", "/stream/".concat(uid)).remove().appendTo("#controls");
+        $("#controls").attr("src", "/api/stream/".concat(uid));
+        $("#mp3src").attr("src", "/api/stream/".concat(uid)).remove().appendTo("#controls");
 
         $("#controls")[0].pause();
         $("#controls")[0].load();
@@ -226,17 +226,21 @@
             $(".pending-list .list .jspPane").css({left : leftPos});
             event.preventDefault();
         });
+
+        $(".fa-eraser").on("click", function(){
+            $.ongaku.playlist.clear();
+        });
     };
 
     Library.prototype.search = function (pattern, type) {
         console.log("search for: ", pattern);
         var that = this;
         if (pattern) {
-          $.get(type.concat("/library/filter/").concat(pattern), function (output) {
+          $.get("/api/".concat(type).concat("/library/filter/").concat(pattern), function (output) {
               that.buildSearch(output, type);
           });
         } else {
-          $.get(type.concat("/library"), function (output) {
+          $.get("/api/".concat(type).concat("/library"), function (output) {
               that.rebuild(output, type);
           });
         }
@@ -304,7 +308,7 @@
             videoName.html(video.name);
 
             var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin', height: "270", width: "480", id : video.uid, preload: "auto", controls });
-            var videoSource = $('<source>', {src : "/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
+            var videoSource = $('<source>', {src : "/api/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
 
             videoHtml5.append(videoSource);
             videoLink.append(videoName);
@@ -358,19 +362,19 @@
     }
 
     Playlist.prototype.remove = function (uidFile) {
-        $.post("/playlist/remove/".concat(uidFile), function (playlist) {
+        $.post("/api/playlist/remove/".concat(uidFile), function (playlist) {
             $.ongaku.playlist.rebuild(playlist);
         });
     };
 
     Playlist.prototype.clear = function () {
-        $.post("/playlist/clear", function (playlist) {
+        $.post("/api/playlist/clear", function (playlist) {
             $.ongaku.playlist.rebuild(playlist);
         });
     };
 
     Playlist.prototype.append = function (uidFile) {
-        $.post("/playlist/add/".concat(uidFile), function (playlist) {
+        $.post("/api/playlist/add/".concat(uidFile), function (playlist) {
             $.ongaku.playlist.rebuild(playlist);
             console.log($(".pending-list .song"));
             if ($(".pending-list .song").length === 1) {
@@ -453,7 +457,7 @@
 
             var audioControls = "<audio id='controls' controls='controls' width='100%'></audio>";
 
-            var source = "<source id='mp3src' type='audio/"+ trackObj.encoding +"' src='/stream/" + trackObj.uid + "."+ trackObj.encoding +"'></source>";
+            var source = "<source id='mp3src' type='audio/"+ trackObj.encoding +"' src='/api/stream/" + trackObj.uid + "."+ trackObj.encoding +"'></source>";
             if (!$.ongaku.isInitialised()) {
                 console.log("first song:: need to build controls");
                 $(".player").empty();
