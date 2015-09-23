@@ -236,8 +236,8 @@
               that.buildSearch(output, type);
           });
         } else {
-          $.get("/library", function (output) {
-              that.rebuild(output);
+          $.get(type.concat("/library"), function (output) {
+              that.rebuild(output, type);
           });
         }
     };

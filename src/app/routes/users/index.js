@@ -109,6 +109,11 @@ logger.setLevel(nconf.get('logLevel'));
             middleware.json(req, res, libraryDatas);
         });
 
+        app.get('/video/library', function (req, res) {
+            logger.info("Get all video library");
+            var libraryDatas = library.getVideo();
+            middleware.json(req, res, libraryDatas);
+        });
 
         app.get('/stream/:media', function (req, res) {
             var stream = function () {
