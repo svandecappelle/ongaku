@@ -1179,3 +1179,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 .login-screen label{
 	color: white;
 }
+
+a.link.video>.name{
+	height: 41px;
+}

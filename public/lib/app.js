@@ -300,9 +300,14 @@
           $.each(library, function (index, video) {
             var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
             var videoLink = $('<a>', {class: "link video"});
+            var videoName = $('<div>');
+            videoName.html(video.name);
+
             var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin', height: "270", width: "480", id : video.uid, preload: "auto", controls });
             var videoSource = $('<source>', {src : "/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
+
             videoHtml5.append(videoSource);
+            videoLink.append(videoName);
             videoLink.append(videoHtml5)
             videoElement.append(videoLink);
 

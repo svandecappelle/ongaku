@@ -15,7 +15,8 @@ section.sidebar.show
 			ul.lib.group.artist.open
 				for video in library
 					li(style="width: 494px; display: inline-block;")
-						a.link.video #{video.name}
+						a.link.video
+							.name #{video.name}
 							video.player-video.video-js.vjs-default-skin(height="270", width="480", id="#{video.uid}", controls preload="auto")
 								source(src="/video/stream/#{video.uid}", type="video/#{video.extension}")
 	.pending-list.video
