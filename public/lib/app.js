@@ -88,14 +88,15 @@
         console.log("start playing: ", this.current);
 
         $("#controls").attr("src", "/api/stream/".concat(uid));
-        $("#mp3src").attr("src", "/api/stream/".concat(uid)).remove().appendTo("#controls");
+        $("#mp3src").attr("src", "/api/stream/".concat(uid).concat(".".concat(encoding))).remove().appendTo("#controls");
 
         $("#controls")[0].pause();
         $("#controls")[0].load();
         $("#controls")[0].play();
         $.ongaku.audiowave.rebuild();
 
-        if (encoding !== 'mp3') {
+        if (['mp3', 'ogg', 'wav'].indexOf(encoding) === -1) {
+            console.log(encoding);
             alertify.success('Transcoding...', 0);
         }
 
@@ -301,7 +302,8 @@
                   var trackElement = $('<li>');
                   var trackDetailElement = $('<div>', {
                     class: 'track trackappend',
-                    "data-uid": track.uid
+                    "data-uid": track.uid,
+                    "data-encoding": track.encoding
                   });
                   trackDetailElement.html(track.title);
                   trackElement.append(trackDetailElement);

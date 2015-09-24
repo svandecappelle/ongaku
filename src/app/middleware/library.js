@@ -160,6 +160,9 @@
 
     Library.getRelativePath = function (uuid) {
         uuid = uuid.replace(".mp3", "");
+        uuid = uuid.replace(".ogg", "");
+        uuid = uuid.replace(".wav", "");
+
         logger.warn("getRelativePath: " + uuid);
         var libElement = this.getByUid(uuid);
         return libElement.relativePath;
@@ -175,6 +178,9 @@
 
     Library.getByUid = function (uuid) {
         uuid = uuid.replace(".mp3", "");
+        uuid = uuid.replace(".ogg", "");
+        uuid = uuid.replace(".wav", "");
+        
         return _.find(this.flatten, {uid: uuid});
     };
 
