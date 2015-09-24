@@ -93,6 +93,7 @@
         $("#controls")[0].pause();
         $("#controls")[0].load();
         $("#controls")[0].play();
+        $.ongaku.audiowave.rebuild();
 
         if (encoding !== 'mp3') {
             alertify.success('Transcoding...', 0);
@@ -198,8 +199,6 @@
         $('a.song').click(function () {
             $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
         });
-
-        $.ongaku.audiowave.rebuild();
     };
 
     $.ongaku.controls = new Controls();

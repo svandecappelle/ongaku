@@ -1,16 +1,20 @@
 +function ($) {
-    'use strict';
 
     function Audiowave (){
-
+      this.binded = false;
     }
     $.ongaku.audiowave = new Audiowave();
 
     Audiowave.prototype.rebuild = function () {
+          console.log("rebuild analyser");
+          if (!this.binded){
+            this.binded = true;
+
           // Future-proofing...
           var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           var audioElement = document.getElementById('controls');
           var audioSrc = audioCtx.createMediaElementSource(audioElement);
+
           var analyser = audioCtx.createAnalyser();
 
           // Bind our analyser to the media element source.
@@ -66,6 +70,7 @@
 
           // Run the loop
           renderChart();
+        }
     };
 
 }(jQuery);
