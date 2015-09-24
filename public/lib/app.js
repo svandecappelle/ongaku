@@ -121,6 +121,7 @@
             this.initialised = true;
             console.log("build audio controls");
             this.player = new MediaElementPlayer("audio", {
+                volume: 0.1,
                 success: function (me) {
                     console.log("musique player builded: playing starting");
                     me.addEventListener('loadedmetadata', function () {
@@ -130,6 +131,7 @@
                         $.ongaku.next();
                     });
                     me.addEventListener('play', function () {
+                        //$.ongaku.getPlayer.volume = 1;
                         if ($.ongaku.isFirst()) {
                             alertify.warning('Add a track to play', 2);
                             $.ongaku.stop();
