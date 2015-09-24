@@ -52,11 +52,13 @@
           var visualisation = $("#visualisation");
           $("#visualisation").empty();
           $("#controls").bind('canplay', function() {
-              console.log('ready');
-          var source = context.createMediaElementSource(this);
-          source.connect(analyser);
-          analyser.connect(context.destination);
-        });
+            console.log('ready');
+            var source = context.createMediaElementSource(this);
+            source.connect(analyser);
+            analyser.connect(context.destination);
+            var volume = myAudioContext.createGainNode();
+            volume.connect(myAudioContext.destination);
+          });
 
           var frequencyData = new Uint8Array(200);
 
