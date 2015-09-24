@@ -62,6 +62,8 @@ section.sidebar.show
 														i.glyphicon.glyphicon-plus.trackaction.trackappend.disabled(data-uid="#{track.uid}")
 														i.glyphicon.glyphicon-heart.trackaction.tracklike.disabled(data-uid="#{track.uid}")
 	.pending-list
+			.controller.glyphicon.glyphicon-resize-full
+			#visualisation(style="height:50px;")
 			.list.scroll-pane
 				for track in data.playlist
 					.song

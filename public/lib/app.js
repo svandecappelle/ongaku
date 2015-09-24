@@ -112,11 +112,15 @@
         $("#controls")[0].stop();
     };
 
+    Player.prototype.getPlayer = function () {
+      return this.player;
+    };
+
     Player.prototype.build = function (callback) {
         if ($('.player > audio').children().length > 0 && !this.isInitialised()) {
             this.initialised = true;
             console.log("build audio controls");
-            $('audio').mediaelementplayer({
+            this.player = new MediaElementPlayer("audio", {
                 success: function (me) {
                     console.log("musique player builded: playing starting");
                     me.addEventListener('loadedmetadata', function () {
@@ -192,6 +196,8 @@
         $('a.song').click(function () {
             $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
         });
+
+        $.ongaku.audiowave.rebuild();
     };
 
     $.ongaku.controls = new Controls();
@@ -204,6 +210,11 @@
         console.log("bind library");
 
         var that = this;
+
+        $('.pending-list .controller').click( function () {
+          $('.pending-list').toggleClass("active");
+        });
+
         $("input.searchbox").on("change", function () {
             that.search($(this).val(), $(this).data("type"));
         });

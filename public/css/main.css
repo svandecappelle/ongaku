@@ -359,17 +359,35 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 .pending-list.video{
 	right: 10%;
 }
-
+/*
 .pending-list:hover{
 	height: 180px;
+}*/
+
+.pending-list.active{
+	height: 230px;
+}
+
+.pending-list .controller{
+	width: 10px;
+	height: 12px;
+	color: white;
+	position: absolute;
+	left: 0px;
+	cursor: pointer;
+}
+
+
+.pending-list .controller:hover{
+	color: #97EDA7;
 }
 
 .pending-list .list{
 	width: auto;
 	overflow-x: visible;
-    overflow-y: hidden;
-    white-space: nowrap;
-    height: 180px;
+  overflow-y: hidden;
+  white-space: nowrap;
+  height: 180px;
 }
 
 .pending-list .song{
@@ -383,7 +401,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	width: 150px;
 	height: 150px;
 	display: inline-block;
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .pending-list .song:after{
@@ -1183,3 +1201,8 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 a.link.video>.name{
 	height: 41px;
 }
+
+#statusbar-display[label^="Looking"] {display:none !important;}
+#statusbar-display[label^="Connect"] {display:none !important;}
+#statusbar-display[label^="Waiting"] {display:none !important;}
+#statusbar-display[label^="Transfer"] {display:none !important;}

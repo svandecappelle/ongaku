@@ -1,14 +1,17 @@
 block player
+	#wave
 	if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
 		.player
 			audio#controls(controls="controls", width="100%")
 				if (data.playing)
-					source#mp3src(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")
+					source(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")
 	else
 		.player.empty
 			span Login is required to stream
-		if (data.playing)
-			script.
-				$(function(){
-					$.ongaku.setCurrent("#{data.playing.uid}");
-				});
+			
+	if (data.playing)
+		script.
+			$(function(){
+				console.log("set current track: #{data.playing.uid}");
+				$.ongaku.setCurrent("#{data.playing.uid}");
+			});
