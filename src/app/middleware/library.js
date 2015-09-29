@@ -180,7 +180,7 @@
         uuid = uuid.replace(".mp3", "");
         uuid = uuid.replace(".ogg", "");
         uuid = uuid.replace(".wav", "");
-        
+
         return _.find(this.flatten, {uid: uuid});
     };
 
@@ -200,12 +200,12 @@
         var searchResultList =  _.filter(this.flatten, function (obj) {
 
             if (type === "video" && obj.type === type) {
-                return obj.name.match(filter);
+                return obj.name.toLowerCase().match(filter.toLowerCase());
             } else if (type === "audio" && obj.type === type) {
-                var output = obj.title.match(filter) || obj.album.match(filter);
+                var output = obj.title.toLowerCase().match(filter.toLowerCase()) || obj.album.toLowerCase().match(filter.toLowerCase());
                 if (!output) {
                     _.each(obj.metadatas, function (val, key) {
-                        if (val.match(filter)) {
+                        if (val.toLowerCase().match(filter.toLowerCase())) {
                             output = true;
                         }
                     });
