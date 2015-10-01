@@ -1,0 +1,116 @@
+#!/usr/bin/env node
+
+
+var colors = require('colors'),
+	cproc = require('child_process'),
+	_ = require('underscore'),
+	forever = require('forever'),
+	argv = require('minimist')(process.argv.slice(2)),
+	fs = require('fs'),
+	async = require('async');
+
+var getRunningPid = function(callback) {
+		forever.list(false, function(err, processes){
+			var groupedByUid, ongaku;
+			if (processes){
+				ongaku = _.findWhere(processes, {uid: 'ongaku'});
+				ongaku.index = _.indexOf(processes, ongaku);
+				var pid = ongaku.pid;
+				callback(err, pid, ongaku);
+			}else{
+				callback(err, null);
+			}
+		});
+};
+
+switch(process.argv[2]) {
+	case 'status':
+		getRunningPid(function(err, pid) {
+			if (!err && pid) {
+				process.stdout.write('\nongaku Running '.bold + '(pid '.cyan + pid.toString().cyan + ')\n'.cyan);
+				process.stdout.write('\t"' + './ongaku stop'.yellow + '" to stop the ongaku server\n');
+				process.stdout.write('\t"' + './ongaku log'.yellow + '" to view server output\n');
+				process.stdout.write('\t"' + './ongaku restart'.yellow + '" to restart ongaku\n\n');
+			} else {
+				process.stdout.write('\nongaku is not running\n'.bold);
+				process.stdout.write('\t"' + './ongaku start'.yellow + '" to launch the ongaku server\n\n'.reset);
+			}
+		});
+		break;
+
+	case 'start':
+		process.stdout.write('\nStarting ongaku\n'.bold);
+		process.stdout.write('  "' + './ongaku stop'.yellow + '" to stop the ongaku server\n');
+		process.stdout.write('  "' + './ongaku log'.yellow + '" to view server output\n');
+		process.stdout.write('  "' + './ongaku restart'.yellow + '" to restart ongaku\n\n'.reset);
+
+		// Spawn a new ongaku process
+		forever.startDaemon(__dirname + '/app.js', {uid: "ongaku"});
+		break;
+
+	case 'stop':
+		getRunningPid(function(err, pid) {
+			if (!err) {
+				forever.stopAll(true);
+				process.stdout.write('Stopping ongaku. Goodbye!\n')
+			} else {
+				process.stdout.write('ongaku is already stopped.\n');
+			}
+		});
+		break;
+
+	case 'restart':
+		getRunningPid(function(err, pid, ongaku) {
+			if (!err) {
+				var eventEmitter = forever.stop(ongaku.index);
+				eventEmitter.on('stop', function(){
+					process.stdout.write('ongaku stopped.'.red.bold + '\n');
+					process.stdout.write('Restarting ongaku.'.yellow.bold + '\n');
+					forever.startDaemon(__dirname + '/app.js', {uid: "ongaku"});
+				});
+			} else {
+				process.stdout.write('ongaku could not be restarted, as a running instance could not be found.');
+			}
+		});
+		break;
+
+	case 'dev':
+		process.env.NODE_ENV = 'development';
+		forever.start(__dirname + '/app.js', {uid: 'ongaku', args: ["dev"]});
+		break;
+
+	case 'log':
+		process.stdout.write('\nType '.red + 'Ctrl-C '.bold + 'to exit'.red);
+		process.stdout.write('\n\n'.reset);
+		cproc.spawn('tail', ['-F', './logs/output.log'], {
+			cwd: __dirname,
+			stdio: 'inherit'
+		});
+		break;
+
+	case 'setup':
+		/*cproc.fork('setup.js', ['--setup'], {
+			cwd: __dirname,
+			silent: false
+		});*/
+		process.stdout.write('\nNot yet implemented\n'.red);
+		break;
+
+	case 'upgrade':
+			process.stdout.write('\nNot yet implemented\n'.red);
+		break;
+
+	default:
+		process.stdout.write('\nWelcome to ongaku\n\n'.bold);
+		process.stdout.write('Usage: ./ongaku {start|stop|reload|restart|log|setup|reset|upgrade|dev}\n\n');
+		process.stdout.write('\t' + 'start'.yellow + '\tStart the ongaku server\n');
+		process.stdout.write('\t' + 'stop'.yellow + '\tStops the ongaku server\n');
+		process.stdout.write('\t' + 'restart'.yellow + '\tRestarts ongaku\n');
+		process.stdout.write('\t' + 'log'.yellow + '\tOpens the logging interface (useful for debugging)\n');
+		process.stdout.write('\t' + 'setup'.yellow + '\tRuns the ongaku setup script\n');
+		process.stdout.write('\t' + 'upgrade'.yellow + '\tRun ongaku upgrade scripts, ensure packages are up-to-date\n');
+		process.stdout.write('\t' + 'dev'.yellow + '\tStart ongaku in interactive development mode\n');
+		process.stdout.write('\t' + 'watch'.yellow + '\tStart ongaku in development mode and watch for changes\n');
+		process.stdout.write('\n'.reset);
+		break;
+}
