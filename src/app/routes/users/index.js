@@ -42,8 +42,8 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/', function (req, res) {
             logger.info("Client access to index [" + req.ip + "]");
-
-            var libraryDatas = library.getAudio();
+            // Get first datas fetch is defined into client side.
+            var libraryDatas = library.getAudio(0, 3);
 
             logger.debug(libraryDatas);
             middleware.render('songlist', req, res, {library: libraryDatas});
@@ -67,7 +67,7 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/video', function (req, res) {
             logger.info("Client access to videos [" + req.ip + "]");
 
-            var libraryDatas = library.getVideo();
+            var libraryDatas = library.getVideo(0, 6);
 
             logger.debug(libraryDatas);
             middleware.render('videolist', req, res, {library: libraryDatas});
@@ -106,6 +106,20 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/api/audio/library', function (req, res) {
             logger.info("Get all audio library");
             var libraryDatas = library.getAudio();
+            middleware.json(req, res, libraryDatas);
+        });
+
+        app.get('/api/audio/library/:page', function (req, res) {
+            // load by page of 3 artists.
+            logger.info("Get all one page of library ".concat(req.params.page));
+            var libraryDatas = library.getAudio(req.params.page, 3);
+            middleware.json(req, res, libraryDatas);
+        });
+
+        app.get('/api/video/library/:page', function (req, res) {
+            // load by page of 3 artists.
+            logger.info("Get all one page of library ".concat(req.params.page));
+            var libraryDatas = library.getVideo(req.params.page, 3);
             middleware.json(req, res, libraryDatas);
         });
 

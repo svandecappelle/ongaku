@@ -147,6 +147,8 @@
     Library.scan = function (callback) {
         var that = this;
         this.scanProgress = true;
+        this.videoScanned = false;
+        this.audioScanned = false
 
         // Rescan full library.
         Library.flatten = null;
@@ -172,8 +174,17 @@
         return this.data.audio;
     };
 
+    Library.getAudio = function (page, lenght) {
+        return _.first(_.rest(this.data.audio, page * lenght), lenght);
+    };
+
     Library.getVideo = function () {
         return this.data.video;
+    };
+
+    Library.getVideo = function (page, lenght) {
+      logger.info(_.first(_.rest(this.data.video, page * lenght), lenght));
+      return _.first(_.rest(this.data.video, page * lenght), lenght);
     };
 
     Library.getByUid = function (uuid) {

@@ -206,19 +206,21 @@
 
     function Library() {
       this.videos = [];
+      this.page = 0;
+      this.type = "audio";
     }
 
     Library.prototype.bind = function () {
         console.log("bind library");
-
-        var that = this;
+        this.type = $("input.searchbox").data("type");
 
         $('.pending-list .controller').click( function () {
           $('.pending-list').toggleClass("active");
         });
 
+
         $("input.searchbox").on("change", function () {
-            that.search($(this).val(), $(this).data("type"));
+            $.ongaku.library.search($(this).val());
         });
 
         $(".artistappend:not(.disabled)").on("click", function (event) {
@@ -243,35 +245,38 @@
         $(".fa-eraser").on("click", function(){
             $.ongaku.playlist.clear();
         });
+        this.scrollingLoader();
     };
 
-    Library.prototype.search = function (pattern, type) {
+    Library.prototype.search = function (pattern) {
         console.log("search for: ", pattern);
-        var that = this;
         if (pattern) {
-          $.get("/api/".concat(type).concat("/library/filter/").concat(pattern), function (output) {
-              that.buildSearch(output, type);
+          this.searching = true;
+          $.get("/api/".concat(this.type).concat("/library/filter/").concat(pattern), function (output) {
+              $.ongaku.library.buildSearch(output);
           });
         } else {
-          $.get("/api/".concat(type).concat("/library"), function (output) {
-              that.rebuild(output, type);
-          });
+          this.searching = false;
+          this.page = -1;
+          $.ongaku.library.clear();
+          $.ongaku.library.fetch();
         }
     };
 
-    Library.prototype.buildSearch = function (library, type) {
-      $(".lib.group.artist.open").empty();
+    Library.prototype.buildSearch = function (library) {
+      this.clear();
       $(".lib.group.artist.open").addClass("search-results");
-      this.rebuild(library, type);
+      this.append(library);
     };
 
-    Library.prototype.rebuild = function (library, type) {
-        $(".lib.group.artist.open").empty();
-        var tracknumber = 0;
+    Library.prototype.clear = function(){
+      $(".lib.group.artist.open").empty();
+    };
 
-        if (type === 'audio'){
+    Library.prototype.append = function (library) {
+        if (this.type === 'audio'){
           $.each(library, function (index, artist) {
-              tracknumber += 1;
+              console.log("audio: " + index);
               var artistElement = $('<li>');
               var artistAlbums = $('<ul>', {class: "group album"});
               var artistDetailElement = $("<a>", {
@@ -311,9 +316,10 @@
                 });
               });
 
-              $(".search-results").append(artistElement);
+              $(".lib.group.artist.open").append(artistElement);
           });
-        } else if (type === 'video'){
+        } else if (this.type === 'video'){
+          //this.clear();
           this.videoDispose();
           $.each(library, function (index, video) {
             var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
@@ -329,11 +335,12 @@
             videoLink.append(videoHtml5)
             videoElement.append(videoLink);
 
-            $(".search-results").append(videoElement);
+            $(".lib.group.artist.open").append(videoElement);
           });
           this.loadVideo();
         }
-        $('.scroll-pane').jScrollPane();
+        //$('').jScrollPane();
+        this.scrollingLoader();
 
         /*$(".search-result-track").on("click", function (event) {
             $.ongaku.playlist.appendFromElement($(this));
@@ -344,6 +351,29 @@
             $.ongaku.playlist.appendFromElement($(this));
         });
 
+    };
+
+    Library.prototype.scrollingLoader = function () {
+      $('.library-view').jScrollPane().bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
+				console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
+        if (isAtBottom){
+          $.ongaku.library.fetch();
+        }
+			});
+    };
+
+    Library.prototype.fetch = function () {
+      var that = this;
+      if (!this.isFetchPending && !this.searching){
+        this.page += 1;
+        this.isFetchPending = true;
+        console.log("Getting new page: " + this.page);
+        $.get("/api/".concat(this.type).concat("/library/").concat(this.page), function(output){
+          console.log("append lib: "+ output);
+          $.ongaku.library.append(output);
+          that.isFetchPending = false;
+        });
+      }
     };
 
     Library.prototype.loadVideo = function () {

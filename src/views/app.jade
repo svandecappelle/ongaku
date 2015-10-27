@@ -40,11 +40,16 @@ html
                             a(href="/", title="Acceuil")
                                 i.fa.fa-home
                                 span.text Acceuil
-                        if !session.user.isAnonymous && session.user.isAdmin
+                        if !session.user.isAnonymous 
+                            //&& session.user.isAdmin
                             li.nav-cog
                                 a(href="/admin", title="Administration")
                                   i.fa.fa-cog
                                   span.text Admin
+                            li.nav-reload
+                                a(href="#reload", title="Reload library")
+                                  i.fa.fa-book
+                                  span.text Reload lib
 
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
@@ -158,7 +163,28 @@ html
                     console.log("Library scanned");
                     location.reload();
                 });
-
+                
+                $(".nav-reload>a").on("click", function(){
+                  
+                  var message = $("<h1>", {
+                    class: "message"
+                  });
+                  message.append($("<i>", {
+                    class: "fa fa-circle-o-notch fa-spin"
+                  }));
+                  var loadingText = $("<span>", {
+                    class: "text"
+                  });
+                  message.append(loadingText);
+                  loadingText.html("Reloading library");
+                  $(".sidebar.show").append(message);
+                  
+                  $.get("/api/reload/audio/library", function(output){
+                    $(".sidebar.show>.message").remove();
+                    $.ongaku.library.rebuild(output, "audio");
+                    //$.ongaku.library.search("", "audio");
+                  });
+                });
             });
 
         block scripts
