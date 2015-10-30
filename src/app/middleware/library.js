@@ -151,6 +151,8 @@
         this.audioScanned = false
         // Clear all datas.
         this.data  = {audio: [], video: []};
+        this.loadingCoverAlbums = [];
+        this.loadingCoverArtists = [];
 
         // Rescan full library.
         Library.flatten = null;
