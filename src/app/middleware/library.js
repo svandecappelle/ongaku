@@ -149,6 +149,8 @@
         this.scanProgress = true;
         this.videoScanned = false;
         this.audioScanned = false
+        // Clear all datas.
+        this.data  = {audio: [], video: []};
 
         // Rescan full library.
         Library.flatten = null;
