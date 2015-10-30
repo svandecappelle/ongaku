@@ -168,7 +168,7 @@
 
         middlewareObject.objs.session.notifications = {
             count: 2,
-            datas: ["test", "test2"]
+            datas: ["Application is still in beta access.", "Songs rights are free licenced."]
         };
 
         // config

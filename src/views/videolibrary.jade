@@ -17,7 +17,7 @@ section.sidebar.show
 					li(style="width: 494px; display: inline-block;")
 						a.link.video
 							.name #{video.name}
-							video.player-video.video-js.vjs-default-skin(height="270", width="480", id="#{video.uid}", controls preload="auto")
+							video.player-video.video-js.vjs-default-skin.not-initialized(height="270", width="480", id="#{video.uid}", controls preload="auto")
 								source(src="/api/video/stream/#{video.uid}", type="video/#{video.extension}")
 	.pending-list.video
 			.list.scroll-pane

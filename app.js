@@ -74,7 +74,6 @@ if (process.argv[2] === "dev"){
         app.use(passport.session());
         app.use(morgan(':req[X-Forwarded-For] - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
-
         // ROUTES
         var application = require('./src/app/');
         application.load(app);

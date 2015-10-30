@@ -67,7 +67,7 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/video', function (req, res) {
             logger.info("Client access to videos [" + req.ip + "]");
 
-            var libraryDatas = library.getVideo(0, 6);
+            var libraryDatas = library.getVideo(0, 9);
 
             logger.debug(libraryDatas);
             middleware.render('videolist', req, res, {library: libraryDatas});
@@ -119,7 +119,7 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/api/video/library/:page', function (req, res) {
             // load by page of 3 artists.
             logger.info("Get all one page of library ".concat(req.params.page));
-            var libraryDatas = library.getVideo(req.params.page, 3);
+            var libraryDatas = library.getVideo(req.params.page, 9);
             middleware.json(req, res, libraryDatas);
         });
 

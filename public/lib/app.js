@@ -320,14 +320,17 @@
           });
         } else if (this.type === 'video'){
           //this.clear();
-          this.videoDispose();
+          if (this.searching){
+            this.videoDispose();
+          }
+
           $.each(library, function (index, video) {
             var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
             var videoLink = $('<a>', {class: "link video"});
             var videoName = $('<div>', {class: 'name'});
             videoName.html(video.name);
 
-            var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin', height: "270", width: "480", id : video.uid, preload: "auto", controls });
+            var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin not-initialized', height: "270", width: "480", id : video.uid, preload: "auto", controls });
             var videoSource = $('<source>', {src : "/api/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
 
             videoHtml5.append(videoSource);
@@ -382,9 +385,10 @@
       }
 
       var that = this;
-      $("video").each(function(){
+      $("video.not-initialized").each(function(){
 				console.log($( this ).attr('id'));
-				that.videos.push(videojs($( this ).attr('id'), {width: "480", height: "270"}, function(){
+				$(this).removeClass(".not-initialized");
+        that.videos.push(videojs($( this ).attr('id'), {width: "480", height: "270"}, function(){
 					// Player (this) is initialized and ready.
 				}));
 			})
