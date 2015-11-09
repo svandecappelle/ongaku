@@ -188,19 +188,57 @@
         }
     };
 
+    function HandlerRegisteration(target, eventType, handle){
+      this.target = target;
+      this.eventType = eventType;
+      this.handle = handle;
+      return this;
+    };
+
+    HandlerRegisteration.prototype.unbind = function () {
+      $(this.target).unbind(this.eventType);
+    };
+
+    HandlerRegisteration.prototype.bind = function () {
+      $(this.target).on(this.eventType, this.handle);
+    };
+
     function Controls() {
 
     }
 
-    Controls.prototype.bind = function () {
-        $(".pending-list .list .song").click(function () {
+    Controls.prototype.handlers = function () {
+      this.handles = {
+        "pending-song": new HandlerRegisteration(".pending-list .list .song", "click", function () {
             $.ongaku.play($(this).find(".button").data("uid"), $(this).find(".button").data("encoding"));
-        });
-
-        $('a.song').click(function () {
+        }),
+        "song": new HandlerRegisteration("a.song", "click", function () {
             $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
-        });
+        })
+      };
+      return this.handles;
     };
+
+    Controls.prototype.bind = function () {
+        console.log("Controls.bind");
+        this.unbind();
+
+        $.each(this.handlers(), function (eventName, handler){
+          handler.bind();
+        });
+        //this.currentHandlers["pending-song"].bind(".pending-list .list .song");
+        //$('a.song').click(this.currentHandlers["song"]);
+    };
+
+    Controls.prototype.unbind = function () {
+      if (this.handles){
+        console.log("Controls.unbind");
+        $.each(this.handles, function (index, value){
+          console.log("Controls.unbind(".concat(index).concat(")"), value);
+          value.unbind();
+        });
+      }
+    }
 
     $.ongaku.controls = new Controls();
 
@@ -210,42 +248,82 @@
       this.type = "audio";
     }
 
-    Library.prototype.bind = function () {
-        console.log("bind library");
-        this.type = $("input.searchbox").data("type");
-
-        $('.pending-list .controller').click( function () {
+    Library.prototype.handlers = function () {
+      this.handles = {
+        "controller" : new HandlerRegisteration(".pending-list .controller", "click", function () {
           $('.pending-list').toggleClass("active");
-        });
-
-
-        $("input.searchbox").on("change", function () {
+        }),
+        "searchbox" : new HandlerRegisteration("input.searchbox", "change", function () {
             $.ongaku.library.search($(this).val());
-        });
-
-        $(".artistappend:not(.disabled)").on("click", function (event) {
+        }),
+        "artist" : new HandlerRegisteration(".artistappend:not(.disabled)", "click", function (event) {
             event.preventDefault();
             event.stopPropagation();
             $.ongaku.playlist.appendFromElement($(this));
-        });
-
-        $(".albumappend:not(.disabled)").on("click", function (event) {
+        }),
+        "album" : new HandlerRegisteration(".albumappend:not(.disabled)", "click", function (event) {
             event.preventDefault();
             event.stopPropagation();
             $.ongaku.playlist.appendFromElement($(this));
-        });
-
-        $(".pending-list .list").bind("mousewheel", ".jspContainer", function (event, delta) {
+        }),
+        "pending-list": new HandlerRegisteration(".pending-list .list", "mousewheel", function (event, delta) {
             var leftPos = $('.pending-list .list .jspPane').position().left;
             leftPos += (delta * 70);
             $(".pending-list .list .jspPane").css({left : leftPos});
             event.preventDefault();
+        }),
+        "eraser": new HandlerRegisteration(".fa-eraser", "click", function(){
+            $.ongaku.playlist.clear();
+        }),
+        "track" : new HandlerRegisteration(".trackappend:not(.disabled)", "click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $.ongaku.playlist.appendFromElement($(this));
+        })
+      };
+
+      return this.handles;
+    };
+
+    Library.prototype.bind = function () {
+        console.log("Library.bind");
+        this.unbind();
+        $.each(this.handlers(), function (type, handler){
+          handler.bind();
         });
 
-        $(".fa-eraser").on("click", function(){
-            $.ongaku.playlist.clear();
-        });
+        this.type = $("input.searchbox").data("type");
+        /*
+        $('.pending-list .controller').click(this.currentHandlers["controller"]);
+        $("input.searchbox").on("change", this.currentHandlers["searchbox"]);
+        $(".artistappend:not(.disabled)").on("click", this.currentHandlers["artist"]);
+        $(".albumappend:not(.disabled)").on("click", this.currentHandlers["album"]);
+        $(".pending-list .list").bind("mousewheel", ".jspContainer", this.currentHandlers["pending-list"]);
+        $(".fa-eraser").on("click", this.currentHandlers["eraser"]);*/
         this.scrollingLoader();
+    };
+
+    Library.prototype.scrollingLoader = function () {
+      if (this.libraryScrollPane){
+        this.libraryScrollPane.unbind('jsp-scroll-y');
+      }
+      this.libraryScrollPane = $('.library-view').jScrollPane();
+      this.libraryScrollPane.bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
+        console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
+        if (isAtBottom){
+          $.ongaku.library.fetch();
+        }
+      });
+    };
+
+    Library.prototype.unbind = function () {
+      if (this.handles){
+        console.log("Library.unbind")
+        $.each(this.handles, function (index, value){
+          console.log("Library.unbind(".concat(index).concat(")"));
+          value.unbind();
+        });
+      }
     };
 
     Library.prototype.search = function (pattern) {
@@ -313,7 +391,22 @@
                   trackDetailElement.html(track.title);
                   trackElement.append(trackDetailElement);
                   tracks.append(trackElement);
+
+                  trackDetailElement.on("click", function (event) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      $.ongaku.playlist.appendFromElement($(this));
+                  });
+
                 });
+
+                // append all songs on album
+                /*tracks.on("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $.ongaku.playlist.appendFromElement($(this));
+                });*/
+
               });
 
               $(".lib.group.artist.open").append(artistElement);
@@ -348,21 +441,12 @@
         /*$(".search-result-track").on("click", function (event) {
             $.ongaku.playlist.appendFromElement($(this));
         });*/
-        $(".trackappend:not(.disabled)").on("click", function (event) {
+        /*$(".trackappend:not(.disabled)").on("click", function (event) {
             event.preventDefault();
             event.stopPropagation();
             $.ongaku.playlist.appendFromElement($(this));
-        });
+        });*/
 
-    };
-
-    Library.prototype.scrollingLoader = function () {
-      $('.library-view').jScrollPane().bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
-				console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
-        if (isAtBottom){
-          $.ongaku.library.fetch();
-        }
-			});
     };
 
     Library.prototype.fetch = function () {
