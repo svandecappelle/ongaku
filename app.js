@@ -65,6 +65,10 @@ if (process.argv[2] === "dev"){
         app.set('view engine', 'jade');
         app.use(express.static(__dirname + '/public'));
         app.use(bodyParser());
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+          extended: true
+        })); 
         app.use(cookieParser()); // required before session.
         app.use(session({
             secret: 'keyboard cat',

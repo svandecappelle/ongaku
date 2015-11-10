@@ -356,7 +356,9 @@
           $.each(library, function (index, artist) {
               console.log("audio: " + index);
               var artistElement = $('<li>');
-              var artistAlbums = $('<ul>', {class: "group album"});
+
+              $(".lib.group.artist.open").append(artistElement);
+
               var artistDetailElement = $("<a>", {
                 class: 'link'
               });
@@ -366,6 +368,25 @@
               artistDetailElement.append(artistImage);
               artistDetailElement.append(artistName);
               artistElement.append(artistDetailElement);
+
+              var artistAppender = $('<a>', {class: 'artistappend'});
+              var glyficonArtistAppender = $('<i>', {
+                class: 'glyphicon glyphicon-plus trackaction',
+                "data-placement": "left",
+                "data-toggle": "tooltip",
+                "data-original-title": "Add all tracks to current playlist"
+              });
+              artistAppender.append(glyficonArtistAppender);
+              artistElement.append(artistAppender);
+              $(glyficonArtistAppender).tooltip();
+
+              artistAppender.on("click", function (event) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  $.ongaku.playlist.appendFromElement($(this));
+              });
+
+              var artistAlbums = $('<ul>', {class: "group album"});
               artistElement.append(artistAlbums);
 
               $.each(artist.albums, function(title, album){
@@ -374,6 +395,24 @@
                 var albumDetailElement = $("<a>", {class: 'link'});
                 var albumImage = $('<img>', {class: 'album', src: album.cover});
                 var albumTitle = $('<span>', {class: 'albumtitle'});
+
+                var albumAppender = $('<a>', {class: 'albumappend'});
+                var glyficonAlbumAppender = $('<i>', {
+                  class: 'glyphicon glyphicon-plus trackaction',
+                  "data-placement": "left",
+                  "data-toggle": "tooltip",
+                  "data-original-title": "Add all tracks to current playlist"
+                });
+                albumAppender.append(glyficonAlbumAppender);
+                albumElement.append(albumAppender);
+                $(glyficonAlbumAppender).tooltip();
+
+                albumAppender.on("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $.ongaku.playlist.appendFromElement($(this));
+                });
+
                 albumTitle.html(album.title);
                 albumDetailElement.append(albumImage);
                 albumDetailElement.append(albumTitle);
@@ -386,11 +425,33 @@
                   var trackDetailElement = $('<div>', {
                     class: 'track trackappend',
                     "data-uid": track.uid,
+                    "data-encoding": track.encoding,
+                    "data-placement": "bottom",
+                    "data-toggle": "tooltip",
+                    "data-original-title": "Add track to current playlist"
+                  });
+                  var glyficonAddLibraryAppender = $('<i>', {
+                    class: 'glyphicon glyphicon-plus trackaction trackappend',
+                    "data-uid": track.uid,
+                    "data-encoding": track.encoding
+                  });
+                  var glyficonLikeAppender = $('<i>', {
+                    class: 'glyphicon glyphicon-heart trackaction tracklike',
+                    "data-uid": track.uid,
                     "data-encoding": track.encoding
                   });
                   trackDetailElement.html(track.title);
+                  trackDetailElement.append(glyficonAddLibraryAppender);
+                  trackDetailElement.append(glyficonAddLibraryAppender);
+
                   trackElement.append(trackDetailElement);
                   tracks.append(trackElement);
+
+                  glyficonAddLibraryAppender.on("click", function (event) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      $.ongaku.playlist.appendFromElement($(this));
+                  });
 
                   trackDetailElement.on("click", function (event) {
                       event.preventDefault();
@@ -409,7 +470,6 @@
 
               });
 
-              $(".lib.group.artist.open").append(artistElement);
           });
         } else if (this.type === 'video'){
           //this.clear();
@@ -508,7 +568,6 @@
     Playlist.prototype.append = function (uidFile) {
         $.post("/api/playlist/add/".concat(uidFile), function (playlist) {
             $.ongaku.playlist.rebuild(playlist);
-            console.log($(".pending-list .song"));
             if ($(".pending-list .song").length === 1) {
                 $.ongaku.next();
             }
@@ -517,10 +576,34 @@
 
 
     Playlist.prototype.appendFromElement = function (element) {
-        $(element).parent().find(".track").each(function (id, track) {
-            console.log(track);
-            $.ongaku.playlist.append($(track).data("uid"));
-        });
+        console.log("append from element");
+        var elementsToAppend = $(element).parent().find(".track");
+        if (elementsToAppend.length > 1){
+          var jsonElementsAppend = [];
+          $.each(elementsToAppend, function (index, value){
+            jsonElementsAppend.push($(value).data("uid"));
+          });
+          console.log(jsonElementsAppend);
+          $.ajax({
+              url: '/api/playlist/addgroup',
+              type: 'POST',
+              data: JSON.stringify({elements: jsonElementsAppend}),
+              contentType: 'application/json; charset=utf-8',
+              dataType: 'json',
+              async: false,
+              success: function(playlist) {
+                  $.ongaku.playlist.rebuild(playlist);
+
+                  if ($(".pending-list .song").length === 1) {
+                      $.ongaku.next();
+                  }
+              }
+          });
+        } else {
+          $(element).parent().find(".track").each(function (id, track) {
+              $.ongaku.playlist.append($(track).data("uid"));
+          });
+        }
     };
 
     Playlist.prototype.rebuild = function (playlist) {

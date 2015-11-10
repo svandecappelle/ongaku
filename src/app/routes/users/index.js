@@ -187,6 +187,26 @@ logger.setLevel(nconf.get('logLevel'));
             }
         });
 
+        app.post('/api/playlist/addgroup', function (req, res) {
+          var track;
+          logger.info("Add group of file to playlist", req.body.elements);
+          if (req.session.playlist === undefined) {
+              req.session.playlist = [];
+          }
+
+          _.each(req.body.elements, function (uid){
+            track = library.getByUid(uid);
+            if (track !== undefined) {
+              req.session.playlist.push(track);
+            }
+          });
+
+          req.session.save(function () {
+              res.setHeader('Access-Control-Allow-Credentials', 'true');
+              res.send({all: req.session.playlist, lastAdded: track});
+          });
+        });
+
         app.post('/api/playlist/remove/:id', function (req, res) {
             var id = req.params.id;
             logger.info("Remove file index to playlist: ", id);
