@@ -1,6 +1,6 @@
 extends app
 block append headpage
-	title Ongaku administration panel
+	title Ongaku authentication
 block append library
 		.col-md-8.panel.panel-default.col-md-offset-1.login-screen
 			h1 Be connected:
@@ -14,11 +14,33 @@ block append library
 					label.col-sm-2.control-label(for="password") Password
 					.col-sm-8
 						input.form-control(type="password", id="password", name="password", placeholder="Mot de passe")
+				.form-group.form-group-sm
+					label.col-sm2.control-label(for="remember") Remember me
+					.col-sm-8
+						input.form-control(type="checkbox", name="remember")
 				button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;") Connect
 				a#reset-link(href="/reset")
-	
-block post-script
+block append scripts
 	script.
 		$(function() {
-			$("#username").focus();
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('&'),
+				sParameterName,
+				code,
+				i;
+				$("#username").focus();
+			for (i = 0; i < sURLVariables.length; i++) {
+			  sParameterName = sURLVariables[i].split('=');
+			  if (sParameterName[0] === "error") {
+			  	code = sParameterName[1] === undefined ? true : sParameterName[1];
+					console.log(code);
+					if (code === '407'){
+						alertify.error("Page need an authentication.");
+					} else if (code === '401'){
+						alertify.error("Invalid username / password combinaison.");
+					} else if (code === '417'){
+						alertify.error("Account is locked due to too many attempts login.");
+					}
+			  }
+			}
 		});

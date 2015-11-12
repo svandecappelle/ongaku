@@ -39,7 +39,10 @@
             }
 
             if (!userData) {
-                return res.json(403, info);
+              logger.warn("login attempt fails: ", info);
+              middleware.redirect('/login?error='.concat(info.code), res);
+              // return res.json(403, info);
+              return;
             }
 
             // Alter user cookie depending on passed-in option
@@ -66,6 +69,7 @@
                     req.session.redirectTo = undefined;
                 }
             });
+
         })(req, res, next);
     }
 
@@ -164,7 +168,14 @@
 
             user.auth.logAttempt(uid, function (err) {
                 if (err) {
+                  if ("[[error:account-locked]]" === err.message){
+                    return done(null, false, {
+                      code: '417',
+                      message: err.message
+                    })
+                  } else {
                     return done(null, false, err.message);
+                  }
                 }
 
                 db.getObjectFields('user:' + uid, ['password', 'banned'], function (err, userData) {
@@ -177,7 +188,10 @@
                     }
 
                     if (userData.banned && parseInt(userData.banned, 10) === 1) {
-                        return done(null, false, '[[error:user-banned]]');
+                        return done(null, false, {
+                          code: 403,
+                          message: '[[error:user-banned]]'
+                        });
                     }
 
                     bcrypt.compare(password, userData.password, function (err, res) {
@@ -185,7 +199,9 @@
                             return done(new Error('bcrypt compare error'));
                         }
                         if (!res) {
-                            return done(null, false, '[[error:invalid-password]]');
+                            return done(null, false, {
+                              code: 401,
+                              message: '[[error:invalid-password]]'});
                         }
 
                         user.auth.clearLoginAttempts(uid);
