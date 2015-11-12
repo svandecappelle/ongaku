@@ -255,11 +255,15 @@ section.song-list > .list-container .song .track-num, , section.song-list > .lis
 	transition: all 0.4s linear 0.4s;
 }
 
-section.song-list > .list-container .song:hover .track-num:before{
+section.song-list > .list-container .song:hover .track-num:before, section.song-list > .list-container .song.playing .track-num:before{
 	content: '\f04b';
 	font-family: "FontAwesome";
 	left: 5px;
 	position: absolute;
+}
+
+section.song-list > .list-container .songs-container ul li a.playing{
+	color: rgba(254, 255, 253, 0.9);
 }
 
 section.song-list > .list-container .song .track-num:after{

@@ -188,14 +188,17 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
         app.post('/api/playlist/addgroup', function (req, res) {
-          var track;
+          var firstTrack;
           logger.info("Add group of file to playlist", req.body.elements);
           if (req.session.playlist === undefined) {
               req.session.playlist = [];
           }
 
           _.each(req.body.elements, function (uid){
-            track = library.getByUid(uid);
+            var track = library.getByUid(uid);
+            if (firstTrack === undefined){
+              firstTrack = track;
+            }
             if (track !== undefined) {
               req.session.playlist.push(track);
             }
@@ -203,7 +206,7 @@ logger.setLevel(nconf.get('logLevel'));
 
           req.session.save(function () {
               res.setHeader('Access-Control-Allow-Credentials', 'true');
-              res.send({all: req.session.playlist, lastAdded: track});
+              res.send({all: req.session.playlist, lastAdded: firstTrack});
           });
         });
 

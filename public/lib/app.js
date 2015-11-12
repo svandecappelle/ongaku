@@ -101,6 +101,9 @@
         }
 
         $(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
+        console.log($(".list-container").find("[data-uid='" + this.current + "']"));
+        $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing');
+
         var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text() + " ";
         console.log("play: " + title);
         this.titleScroller.configure({
@@ -613,7 +616,9 @@
     };
 
     Playlist.prototype.rebuild = function (playlist) {
-        $("ul.playlist").empty();
+      $("ul.playlist").empty();
+
+        $('.pending-list .list .jspPane').empty();
         if (playlist.all.length === 0) {
             $('.pending-list .list .jspPane').empty();
             $(".player").empty();
@@ -624,76 +629,126 @@
 
         $.each(playlist.all, function (index, val) {
             tracknumber += 1;
-            var track = "\
-                <li>\
-                    <a class='song' data-uid='{{uid}}'>\
-                        <div class='track-info track-px'>\
-                            <div class='track-info track-num'>\
-                                {{num}}\
-                            </div>\
-                            <div class='track-info track-time'>\
-                                {{time}}\
-                            </div>\
-                        </div>\
-                        <div class='track-info track'>\
-                            <div class='track-info track-title'>\
-                                {{title}}\
-                            </div>\
-                            <div class='track-info track-artist'>\
-                                {{artist}}\
-                            </div>\
-                        </div>\
-                    </a>\
-                </li>";
-
-            track = track.replace("{{uid}}", val.uid);
-            track = track.replace("{{num}}", tracknumber);
-            track = track.replace("{{time}}", val.duration);
-            track = track.replace("{{title}}", val.title);
-            track = track.replace("{{artist}}", val.artist);
-
-            var track = $("ul.playlist").append(track);
+            $("ul.playlist").append(new Track(tracknumber, val));
+            $('.pending-list .list .jspPane').append(new PendingTrack(val));
         });
 
         var trackObj = playlist.lastAdded;
-        if (trackObj !== undefined) {
-            var track ="\
-            <div class='song'>\
-                <div class='layer'>\
-                    <div class='top'></div>\
-                    <div class='left'></div>\
-                    <div class='right'></div>\
-                    <div class='bottom'></div>\
-                </div>\
-                <div class='info'>\
-                    <div class='song-title'> " + trackObj.title + "</div>\
-                    <div class='song-artist'> " + trackObj.artist + "</div>\
-                    <div class='song-infos'> " + trackObj.duration + "</div>\
-                </div>\
-                <div class='play'>\
-                    <div class='button' data-uid='" + trackObj.uid + "'> Play</div>\
-                </div>\
-            </div>";
-            $('.pending-list .list .jspPane').append(track);
-
-            var audioControls = "<audio id='controls' controls='controls' width='100%'></audio>";
-
-            var source = "<source id='mp3src' type='audio/"+ trackObj.encoding +"' src='/api/stream/" + trackObj.uid + "."+ trackObj.encoding +"'></source>";
-            if (!$.ongaku.isInitialised()) {
-                console.log("Build controls for first init plays");
-                $(".player").empty();
-                $(".player").show();
-                $(".player").html(audioControls);
-                $(".player > audio").html(source);
-                $.ongaku.build(function () {
-                    $.ongaku.next();
-                });
-            }
-        }
+        var audioControls = $("<audio>", {
+          id: 'controls',
+          controls: 'controls',
+          width: '100%'
+        });
+        var source = $("<source>",{
+          id: 'mp3src',
+          type: 'audio/'.concat(trackObj.encoding),
+          src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
+        });
 
         $.ongaku.controls.bind();
         $('.scroll-pane').jScrollPane();
+
+        if (!$.ongaku.isInitialised()) {
+            console.log("Build controls for first init plays");
+            $(".player").empty();
+            $(".player").show();
+            $(".player").html(audioControls);
+            $(".player > audio").html(source);
+            $.ongaku.build(function () {
+                $.ongaku.next();
+            });
+        }
     };
+
+    var PendingTrack = function (val){
+      var track = $("<div>", {
+        class: 'song'
+      });
+      var animationLayer = $("<div>", {
+        class: 'layer'
+      });
+      var topAnimateBorder = $("<div>", {class: 'top'});
+      var bottomAnimateBorder = $("<div>", {class: 'bottom'});
+      var leftAnimateBorder = $("<div>", {class: 'left'});
+      var rightAnimateBorder = $("<div>", {class: 'right'});
+      animationLayer.append(topAnimateBorder);
+      animationLayer.append(leftAnimateBorder);
+      animationLayer.append(rightAnimateBorder);
+      animationLayer.append(bottomAnimateBorder);
+
+      var trackInfos = $("<div>", {
+        class: 'info'
+      });
+      var trackTitle = $("<div>", {class: "song-title"});
+      trackTitle.html(val.title);
+      trackInfos.append(trackTitle);
+      var trackArtist = $("<div>", {class: "song-artist"});
+      trackArtist.html(val.artist);
+      trackInfos.append(trackArtist);
+      var trackDuration = $("<div>", {class: "song-infos"});
+      trackDuration.html(val.duration);
+      trackInfos.append(trackDuration);
+
+      var trackPlay = $("<div>", {
+        class: "play"
+      })
+      var playButton = $("<div>", {
+        class: 'button',
+        "data-uid": val.uid
+      });
+      playButton.html("Play");
+      trackPlay.append(playButton);
+
+      track.append(animationLayer);
+      track.append(trackInfos);
+      track.append(trackPlay);
+      return track;
+    };
+
+    var Track = function (tracknumber, val){
+      var track = $("<li>");
+      var trackSong = $("<a>", {
+        class: "song",
+        "data-uid": val.uid
+      });
+      track.append(trackSong);
+
+      var trackInfoNums = $("<div>", {
+        class: 'track-info track-px'
+      });
+      var trackNumber = $("<div>", {
+        class: 'track-info track-num'
+      });
+      var trackDuration = $("<div>", {
+        class: 'track-info track-time'
+      });
+      trackDuration.html(val.duration);
+      trackNumber.html(tracknumber);
+
+      trackInfoNums.append(trackNumber);
+      trackInfoNums.append(trackDuration);
+
+      var trackLabels = $("<div>", {
+        class: 'track-info track'
+      });
+      var trackTitle = $("<div>", {
+        class: 'track-info track-title'
+      });
+      trackTitle.html(val.title);
+
+      var trackArtist = $("<div>", {
+        class: 'track-info track-artist'
+      });
+      trackArtist.html(val.artist);
+
+      trackLabels.append(trackTitle);
+      trackLabels.append(trackArtist);
+
+      trackSong.append(trackInfoNums);
+      trackSong.append(trackLabels);
+      return track;
+    };
+
 
     $.ongaku.playlist = new Playlist();
 
