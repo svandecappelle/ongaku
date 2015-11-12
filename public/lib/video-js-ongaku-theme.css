@@ -1,15 +1,8 @@
 /*!
-Video.js Default Styles (http://videojs.com)
-Version 4.1.0
-Create your own skin at http://designer.videojs.com
+Video.js Ongaku Styles forked from 'Video.js Default Styles Version 4.1.0' (http://videojs.com)
+Version 0.0.1
 */
-/* SKIN
-================================================================================
-The main class name for all skin-specific styles. To make your own skin, 
-replace all occurances of 'vjs-default-skin' with a new name. Then add your new 
-skin name to your video tag instead of the default skin. 
-e.g. <video class="video-js my-skin-name">
-*/
+
 .vjs-default-skin {
   color: #888888;
 }
@@ -20,13 +13,13 @@ The control icons are from a custom font. Each icon corresponds to a character
 */
 @font-face {
   font-family: 'VideoJS';
-  src: url('font/vjs.eot');
-  src: url('font/vjs.eot?#iefix') format('embedded-opentype'), url('font/vjs.woff') format('woff'), url('font/vjs.ttf') format('truetype');
+  src: url('/dependencies/video-js/font/vjs.eot');
+  src: url('/dependencies/video-js/font/vjs.eot?#iefix') format('embedded-opentype'), url('/dependencies/video-js/font/vjs.woff') format('woff'), url('/dependencies/video-js/font/vjs.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 /* Base UI Component Classes
--------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------
 */
 /* Slider - used for Volume bar and Seek bar */
 .vjs-default-skin .vjs-slider {
@@ -72,13 +65,13 @@ The control icons are from a custom font. Each icon corresponds to a character
 }
 /* Control Bar
 --------------------------------------------------------------------------------
-The default control bar that is a container for most of the controls. 
+The default control bar that is a container for most of the controls.
 */
 .vjs-default-skin .vjs-control-bar {
   /* Start hidden */
   display: none;
   position: absolute;
-  /* Place control bar at the bottom of the player box/video. 
+  /* Place control bar at the bottom of the player box/video.
      If you want more margin below the control bar, add more height. */
   bottom: 0;
   /* Use left/right to stretch to 100% width of player div */
@@ -316,7 +309,7 @@ The default control bar that is a container for most of the controls.
 }
 /* Big Play Button (play button at start)
 --------------------------------------------------------------------------------
-Positioning of the play button in the center or other corners can be done more 
+Positioning of the play button in the center or other corners can be done more
 easily in the skin designer. http://designer.videojs.com/
 */
 .vjs-default-skin .vjs-big-play-button {
@@ -565,18 +558,18 @@ REQUIRED STYLES (be careful overriding)
 ================================================================================
 When loading the player, the video tag is replaced with a DIV,
 that will hold the video tag or object tag for other playback methods.
-The div contains the video playback element (Flash or HTML5) and controls, 
+The div contains the video playback element (Flash or HTML5) and controls,
 and sets the width and height of the video.
 
-** If you want to add some kind of border/padding (e.g. a frame), or special 
-positioning, use another containing element. Otherwise you risk messing up 
+** If you want to add some kind of border/padding (e.g. a frame), or special
+positioning, use another containing element. Otherwise you risk messing up
 control positioning and full window mode. **
 */
 .video-js {
   background-color: #000;
   position: relative;
   padding: 0;
-  /* Start with 10px for base font size so other dimensions can be em based and 
+  /* Start with 10px for base font size so other dimensions can be em based and
      easily calculable. */
   font-size: 10px;
   /* Allow poster to be vertially aligned. */
@@ -606,7 +599,7 @@ control positioning and full window mode. **
   width: 100%;
   height: 100%;
 }
-/* Fix for Firefox 9 fullscreen (only if it is enabled). Not needed when 
+/* Fix for Firefox 9 fullscreen (only if it is enabled). Not needed when
    checking fullScreenEnabled. */
 .video-js:-moz-full-screen {
   position: absolute;
@@ -722,6 +715,6 @@ body.vjs-full-window {
   opacity: 1;
   visibility: visible;
 }
-/* ----------------------------------------------------------------------------- 
-The original source of this file lives at 
+/* -----------------------------------------------------------------------------
+The original source of this file lives at
 https://github.com/videojs/video.js/blob/master/src/css/video-js.less */

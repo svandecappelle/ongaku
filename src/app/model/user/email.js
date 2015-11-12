@@ -5,7 +5,7 @@ var async = require('async'),
     nconf = require('nconf'),
     logger = require('log4js').getLogger("User:email"),
     user = require('./../user'),
-    utils = require('./../../../../public/utils'),
+    utils = require('./../../../../public/lib/utils'),
     db = require('./../database'),
     emailer = require('./../emailer');
 

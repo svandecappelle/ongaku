@@ -111,8 +111,8 @@
         "groove": "2.3.4"
     },
     "scripts": {
-        "start": "node app.js",
-        "client": "nw"
+        "start": "node app.js dev",
+        "dev-start": "node app.js dev"
     },
     "node-remote": "",
     "js-flags": "",

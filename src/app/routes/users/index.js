@@ -232,5 +232,10 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
+        app.post('/api/metadata/set/:id', function (req, res) {
+          var id = req.params.id;
+          var metadata = req.body.metadatas;
+          console.log("Set song metadata: ".concat(id), metadata);
+        });
     };
 }(exports));

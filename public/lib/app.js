@@ -309,7 +309,8 @@
       }
       this.libraryScrollPane = $('.library-view').jScrollPane();
       this.libraryScrollPane.bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
-        console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
+        // For asynchronous loading debug
+        // console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
         if (isAtBottom){
           $.ongaku.library.fetch();
         }
@@ -354,7 +355,8 @@
     Library.prototype.append = function (library) {
         if (this.type === 'audio'){
           $.each(library, function (index, artist) {
-              console.log("audio: " + index);
+              // For asynchronous loading debug
+              // console.log("audio: " + index);
               var artistElement = $('<li>');
 
               $(".lib.group.artist.open").append(artistElement);
@@ -514,9 +516,11 @@
       if (!this.isFetchPending && !this.searching){
         this.page += 1;
         this.isFetchPending = true;
-        console.log("Getting new page: " + this.page);
+        // For asynchronous loading debug
+        // console.log("Getting new page: " + this.page);
         $.get("/api/".concat(this.type).concat("/library/").concat(this.page), function(output){
-          console.log("append lib: "+ output);
+          // For asynchronous loading debug
+          // console.log("append lib: "+ output);
           $.ongaku.library.append(output);
           that.isFetchPending = false;
         });
@@ -530,7 +534,8 @@
 
       var that = this;
       $("video.not-initialized").each(function(){
-				console.log($( this ).attr('id'));
+				// For asynchronous loading debug
+        // console.log($( this ).attr('id'));
 				$(this).removeClass(".not-initialized");
         that.videos.push(videojs($( this ).attr('id'), {width: "480", height: "270"}, function(){
 					// Player (this) is initialized and ready.
@@ -576,14 +581,15 @@
 
 
     Playlist.prototype.appendFromElement = function (element) {
-        console.log("append from element");
+        // TODO check if test on lenght is necessary or not.
+        // For asynchronous lib append debug
+        // console.log("append from element");
         var elementsToAppend = $(element).parent().find(".track");
         if (elementsToAppend.length > 1){
           var jsonElementsAppend = [];
           $.each(elementsToAppend, function (index, value){
             jsonElementsAppend.push($(value).data("uid"));
           });
-          console.log(jsonElementsAppend);
           $.ajax({
               url: '/api/playlist/addgroup',
               type: 'POST',
@@ -674,7 +680,7 @@
 
             var source = "<source id='mp3src' type='audio/"+ trackObj.encoding +"' src='/api/stream/" + trackObj.uid + "."+ trackObj.encoding +"'></source>";
             if (!$.ongaku.isInitialised()) {
-                console.log("first song:: need to build controls");
+                console.log("Build controls for first init plays");
                 $(".player").empty();
                 $(".player").show();
                 $(".player").html(audioControls);

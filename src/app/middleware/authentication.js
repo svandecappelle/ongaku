@@ -9,7 +9,7 @@
         meta = require('./../meta'),
         user = require('./../model/user'),
         db = require('../model/database'),
-        utils = require('./../../../public/utils'),
+        utils = require('./../../../public/lib/utils'),
         middleware = require('./../middleware/middleware');
 
 

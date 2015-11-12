@@ -10,7 +10,7 @@ var fs = require('fs'),
     //rimraf = require('rimraf'),
     //mkdirp = require('mkdirp'),
 
-    utils = require('./../../public/utils'),
+    utils = require('./../../public/lib/utils'),
     //translator = require('./../public/translator'),
     db = require('./model/database'),
     user = require('./model/user');
