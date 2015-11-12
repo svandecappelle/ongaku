@@ -11,7 +11,8 @@
         mm = require('musicmetadata'),
         // groove seems to be better than mm
         groove = require('groove'),
-        uuid = require('uuid');
+        uuid = require('uuid'),
+        crypto = require('crypto');
 
     logger.setLevel(nconf.get('logLevel'));
 
@@ -43,10 +44,14 @@
 
     Scanner.scanVideo = function (apath, callback) {
         this.scan(apath, callback, function (filePath, cb, results) {
+            var uuid,
+              shasum = crypto.createHash('sha1');
             if (_.contains(nconf.get('video'), path.extname(filePath).replace(".", ""))) {
+                shasum.update(filePath);
+                uuid = shasum.digest('hex');
                 results.push({
                     encoding: path.extname(filePath).replace(".", ""),
-                    uid: uuid.v1().concat(".").concat(path.extname(filePath).replace(".", "")),
+                    uid: uuid.concat(".").concat(path.extname(filePath).replace(".", "")),  /*uuid.v1().concat(".").concat(path.extname(filePath).replace(".", "")),*/
                     file: "/video/stream".concat(filePath.replace(nconf.get("library"), "")),
                     type: "video",
                     name: path.basename(filePath),
@@ -129,7 +134,10 @@
 
     Scanner.song = function (file, metadatas, duration) {
         var durationMin = Math.floor(duration / 60),
-            durationSec = Math.floor(duration % 60);
+            durationSec = Math.floor(duration % 60),
+            uuid,
+            shasum = crypto.createHash('sha1');
+        shasum.update(file);
         if (durationSec < 10) {
             durationSec = "0".concat(durationSec);
         }
@@ -146,7 +154,7 @@
             album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
             metadatas: metadatas,
             duration: durationMin.toString().concat(":").concat(durationSec),
-            uid: uuid.v1(),
+            uid: shasum.digest('hex'),
             encoding: originalEncoding
         };
     };
@@ -154,7 +162,13 @@
 
     Scanner.video = function (file, metadatas, duration) {
         var durationMin = Math.floor(duration / 60),
-            durationSec = Math.floor(duration % 60);
+            durationSec = Math.floor(duration % 60),
+            uuid,
+            shasum = crypto.createHash('sha1');
+
+        shasum.update(file);
+
+        uuid = shasum.digest('hex');
         if (durationSec < 10) {
             durationSec = "0".concat(durationSec);
         }
@@ -166,7 +180,7 @@
             album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
             metadatas: metadatas,
             duration: durationMin.toString().concat(":").concat(durationSec),
-            uid: uuid.v1(),
+            uid: shasum.digest('hex'),
             encoding: path.extname(file.replace(nconf.get("library"), "")).replace(".", "")
         };
     };
