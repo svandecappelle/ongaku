@@ -41,19 +41,22 @@ logger.setLevel(nconf.get('logLevel'));
 	Application.start = function (){
 		var that = this;
 
-		async.parallel([
-			function(){
-				// LISTEN PORT APP
+		logger.info("Ready to serve on " + nconf.get('port') + " port");
+		that.on('connection', function(socket){
+			logger.info("User connected to socket.io");
+		});
 
-				logger.info("Ready to serve on " + nconf.get('port') + " port");
-				that.on('connection', function(socket){
-					logger.info("User connected to socket.io");
-				});
-			},
-			function(){
-				logger.info("Please wait for scan library");
-				that.reload();
-			}
-		]);
+		var q = async.queue(function (task, callback){
+			logger.info("Launch task: ".concat(task.name));
+			callback();
+		});
+
+		q.drain = function (){
+			logger.info("All tasks have been processed.");
+		};
+
+		q.push({name: 'scan'}, function (err){
+			that.reload();
+		});
 	};
 })(exports);
