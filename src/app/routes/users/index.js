@@ -7,7 +7,9 @@ var _ = require("underscore");
 var authentication = require("./../../middleware/authentication"),
     library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
-    meta = require("./../../meta");
+    meta = require("./../../meta"),
+    user = require("./../../model/user"),
+    async = require("async");
 
 logger.setLevel(nconf.get('logLevel'));
 
@@ -164,6 +166,34 @@ logger.setLevel(nconf.get('logLevel'));
             });
         }
 
+        app.get("/user/info/:username", function (req, res){
+          var username = req.params.username;
+
+          if (username !== undefined) {
+            logger.info("get user: ", username);
+            user.getUserDataByUsername(username, function (err, userData){
+              user.getGroupsByUsername(username, function (groups){
+                userData = _.extend(userData, { groups: groups });
+                logger.info("Check user: ", username, userData);
+                middleware.render('user', req, res, {user: userData});
+              });
+            });
+          }
+        });
+
+        app.get("/users", function (req, res){
+          user.getAllUsers(function (err, usersDatas){
+            async.map(usersDatas.users, function (userData, next){
+              user.getGroupsByUsername(userData.username, function (groups){
+                userData = _.extend(userData, {groups: groups});
+                next(null, userData);
+              });
+            }, function (err, usersDatas){
+              middleware.render('users', req, res, {users: usersDatas});
+            });
+          });
+        });
+
         // Posts
 
         app.post('/api/playlist/add/:uid', function (req, res) {
@@ -240,5 +270,11 @@ logger.setLevel(nconf.get('logLevel'));
           var metadata = req.body.metadatas;
           console.log("Set song metadata: ".concat(id), metadata);
         });
+
+        app.get("/api/users", function (req, res){
+
+          res.json();
+        });
+
     };
 }(exports));

@@ -25,6 +25,7 @@ html
         script(src="/dependencies/socket.io/socket.io.js")
         script(src="/dependencies/video-js/video.js")
         script(src="/dependencies/d3.js")
+
         script(src="/lib/app.js")
         script(src="/lib/audiowave.js")
 
@@ -80,7 +81,7 @@ html
                                 if session.user.isAnonymous
                                     a(href="/login") Connection
                                 else
-                                    a(href="/user/#{session.user.username}")
+                                    a(href="/user/info/#{session.user.username}")
                                         i.fa.fa-circle.status.online
                                         span#username(style="margin-left:10px;") #{session.user.username}
                                         a(href="/logout") Deconnection
@@ -118,7 +119,7 @@ html
                             i.glyphicon.glyphicon-facetime-video
                             span Videos
                     li
-                        a 
+                        a(href="/users") 
                             i.glyphicon.glyphicon-user
                             span Users
                     li
@@ -148,14 +149,14 @@ html
             include player
 
         script.
-            videojs.options.flash.swf = "http://#{host}/video-js/video-js.swf";
+            videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
             $(function () {
                 $('[data-toggle="popover"]').popover();
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.scroll-pane').jScrollPane();
                 $.ongaku.build();
                 $.ongaku.controls.bind();
-                var socket = io.connect('http://#{host}/');
+                var socket = io.connect('http://#{session.host}/');
                 socket.on('connect', function () {
                     console.log("Connected");
                 });

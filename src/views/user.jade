@@ -1,0 +1,29 @@
+extends app
+block append headpage
+  title Ongaku user
+block append library
+  if !session.user.isAnonymous && session.user.username === user.username
+    .col-md-12
+      .navbar.navbar-default.pull-right.navbar-actions
+        ul
+          li.inline-menu-item
+            a(href="/user/#{user.username}/edit") Editer
+          li.inline-menu-item
+            a(href="/user/#{user.username}") Profil
+  .col-md-5
+    .panel.panel-default
+      div.separated
+        img(src="#{session.user.avatar}", height="150px")
+      div.separated
+        i.fa.fa-circle.status.online
+        span.small-title(style="margin-left:10px;") #{session.user.username}
+      hr
+      div.separated
+        div.small-title groups
+        each group in user.groups
+          div #{group}
+  .col-md-7
+    .panel.panel-default
+      div.small-title Playlists
+      hr
+      .playlist

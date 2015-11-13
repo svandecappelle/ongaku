@@ -241,7 +241,7 @@
           value.unbind();
         });
       }
-    }
+    };
 
     $.ongaku.controls = new Controls();
 

@@ -1152,6 +1152,16 @@ h2{
     font-weight: 700;
 }
 
+.panel.panel-default .small-title {
+    text-align: center;
+		color: #fff;
+}
+
+.panel.panel-default .separated{
+	text-align: center;
+	color: #fff;
+}
+
 .separated{
 	margin-bottom: 10px;
 }
@@ -1163,6 +1173,17 @@ h2{
 
 .navbar{
 	border: 0px;
+}
+
+.navbar-actions ul li{
+	border-radius: 5px;
+	font-weight: bold;
+	padding: 5px;
+}
+
+.inline-menu-item{
+	float: left;
+	margin-top: 10px;
 }
 
 .popover-content{
