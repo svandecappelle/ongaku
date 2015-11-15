@@ -229,8 +229,7 @@
         $.each(this.handlers(), function (eventName, handler){
           handler.bind();
         });
-        //this.currentHandlers["pending-song"].bind(".pending-list .list .song");
-        //$('a.song').click(this.currentHandlers["song"]);
+
     };
 
     Controls.prototype.unbind = function () {
@@ -241,6 +240,30 @@
           value.unbind();
         });
       }
+    };
+
+
+    function UserLib(){
+
+    }
+
+    UserLib.prototype.append = function (element) {
+      var elementsToAppend = $(element).parent().find(".tracklibappend");
+      var jsonElementsAppend = [];
+      $.each(elementsToAppend, function (index, value){
+        jsonElementsAppend.push($(value).data("uid"));
+      });
+      $.ajax({
+          url: '/api/user/library/add',
+          type: 'POST',
+          data: JSON.stringify({elements: jsonElementsAppend}),
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          async: false,
+          success: function() {
+            console.log("added");
+          }
+      });
     };
 
     $.ongaku.controls = new Controls();
@@ -282,7 +305,14 @@
             event.preventDefault();
             event.stopPropagation();
             $.ongaku.playlist.appendFromElement($(this));
+        }),
+        "libappend": new HandlerRegisteration(".tracklibappend:not(.disabled)", "click", function (event){
+          event.preventDefault();
+          event.stopPropagation();
+          console.log("append to lib.");
+          new UserLib().append($(this));
         })
+
       };
 
       return this.handles;
@@ -296,13 +326,6 @@
         });
 
         this.type = $("input.searchbox").data("type");
-        /*
-        $('.pending-list .controller').click(this.currentHandlers["controller"]);
-        $("input.searchbox").on("change", this.currentHandlers["searchbox"]);
-        $(".artistappend:not(.disabled)").on("click", this.currentHandlers["artist"]);
-        $(".albumappend:not(.disabled)").on("click", this.currentHandlers["album"]);
-        $(".pending-list .list").bind("mousewheel", ".jspContainer", this.currentHandlers["pending-list"]);
-        $(".fa-eraser").on("click", this.currentHandlers["eraser"]);*/
         this.scrollingLoader();
     };
 
@@ -436,7 +459,7 @@
                     "data-original-title": "Add track to current playlist"
                   });
                   var glyficonAddLibraryAppender = $('<i>', {
-                    class: 'glyphicon glyphicon-plus trackaction trackappend',
+                    class: 'glyphicon glyphicon-book trackaction tracklibappend',
                     "data-uid": track.uid,
                     "data-encoding": track.encoding
                   });
@@ -463,16 +486,7 @@
                       event.stopPropagation();
                       $.ongaku.playlist.appendFromElement($(this));
                   });
-
                 });
-
-                // append all songs on album
-                /*tracks.on("click", function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    $.ongaku.playlist.appendFromElement($(this));
-                });*/
-
               });
 
           });
@@ -500,18 +514,7 @@
           });
           this.loadVideo();
         }
-        //$('').jScrollPane();
         this.scrollingLoader();
-
-        /*$(".search-result-track").on("click", function (event) {
-            $.ongaku.playlist.appendFromElement($(this));
-        });*/
-        /*$(".trackappend:not(.disabled)").on("click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            $.ongaku.playlist.appendFromElement($(this));
-        });*/
-
     };
 
     Library.prototype.fetch = function () {

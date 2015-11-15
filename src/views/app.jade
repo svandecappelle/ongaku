@@ -1,5 +1,5 @@
 html
-    head 
+    head
         block headpage
         meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
         link(rel="stylesheet", type="text/css", href="/dependencies/font-awesome-4.2.0/css/font-awesome.min.css")
@@ -11,10 +11,10 @@ html
         link(rel="stylesheet", type="text/css", href="/dependencies/alertifyjs-0.10.2/css/themes/default.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/jScrollPane/jquery.jscrollpane.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/video-js/video-js.css")
-        
+
         link(rel="stylesheet", type="text/css", href="/lib/video-js-ongaku-theme.css")
         link(rel="stylesheet", type="text/css", href="/lib/main.css")
-        
+
         script(src="/dependencies/jquery/jquery-2.1.1.min.js")
         script(src="/dependencies/mediaelement/mediaelement-and-player.js")
         script(src="/dependencies/bootstrap/js/bootstrap.js")
@@ -41,7 +41,7 @@ html
                             a(href="/", title="Acceuil")
                                 i.fa.fa-home
                                 span.text Acceuil
-                        if !session.user.isAnonymous 
+                        if !session.user.isAnonymous
                             //&& session.user.isAdmin
                             li.nav-cog
                                 a(href="/admin", title="Administration")
@@ -60,11 +60,11 @@ html
                                 i.fa.fa-fw.fa-bell-o(title="Notifications")
                             ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
                                 if session.notifications.count > 0
-                                    li 
+                                    li
                                         a(href="all") Tous
                                     li.divider
                                         each notif in session.notifications.datas
-                                            li 
+                                            li
                                                 a(href="/notification")= notif
 
                     li.dropdown(style="float: left; margin-left: 5px;")
@@ -119,23 +119,24 @@ html
                             i.glyphicon.glyphicon-facetime-video
                             span Videos
                     li
-                        a(href="/users") 
+                        a(href="/users")
                             i.glyphicon.glyphicon-user
                             span Users
                     li
-                        a 
+                        a
                             i.glyphicon.glyphicon-tasks
                             span Radios
-            .menu.me
-                ul
-                    li
-                        a 
-                            i.glyphicon.glyphicon-book
-                            span Library
-                    li
-                        a 
-                            i.glyphicon.glyphicon-upload
-                            span Upload
+            if !session.user.isAnonymous
+              .menu.me
+                  ul
+                      li
+                          a(href="/library")
+                              i.glyphicon.glyphicon-book
+                              span Library
+                      li
+                          a
+                              i.glyphicon.glyphicon-upload
+                              span Upload
             .menu.project
                 ul
                     li
@@ -164,9 +165,9 @@ html
                     console.log("Library scanned");
                     location.reload();
                 });
-                
+
                 $(".nav-reload>a").on("click", function(){
-                  
+
                   var message = $("<h1>", {
                     class: "message"
                   });
@@ -179,7 +180,7 @@ html
                   message.append(loadingText);
                   loadingText.html("Reloading library");
                   $(".sidebar.show").append(message);
-                  
+
                   $.get("/api/reload/audio/library", function(output){
                     $(".sidebar.show>.message").remove();
                     $.ongaku.library.rebuild(output, "audio");

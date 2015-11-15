@@ -9,6 +9,7 @@ var authentication = require("./../../middleware/authentication"),
     middleware = require("./../../middleware/middleware"),
     meta = require("./../../meta"),
     user = require("./../../model/user"),
+    userlib = require("./../../model/library"),
     async = require("async");
 
 logger.setLevel(nconf.get('logLevel'));
@@ -142,6 +143,26 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
+        app.get('/library', function (req, res){
+          var username = req.session.passport.user.username;
+
+          userlib.get(username, function (err, uids){
+            var libraryDatas = library.getAudioById(uids);
+            logger.info(uids);
+            middleware.render('library', req, res, {library: libraryDatas});
+          });
+        });
+
+        app.get('/api/library', function (req, res){
+          var username = req.session.passport.user.username;
+
+          userlib.get(username, function (err, uids){
+            var libraryDatas = library.getAudioById(uids);
+            logger.info(uids);
+            res.json({library: libraryDatas});
+          });
+        });
+
         if (nconf.get("uploader")) {
             var fs = require('fs'),
                 busboy = require('connect-busboy');
@@ -215,6 +236,22 @@ logger.setLevel(nconf.get('logLevel'));
                 logger.warn("A playlist add request returns unknown track for: " + uidFile);
                 res.send({all: req.session.playlist, lastAdded: track});
             }
+        });
+
+        app.post('/api/user/library/add', function (req, res) {
+          var username = req.session.passport.user.username,
+            uids = req.body.elements;
+          logger.info("append to user lib: ".concat(username).concat(" -> ").concat(uids));
+
+          async.each(uids, function(uid, next){
+            userlib.append(username, uid, function (){
+              logger.info("Appended to list: " + uid);
+              next();
+            });
+          }, function(){
+            logger.info("All elements added");
+          });
+          res.send({message: "ok"});
         });
 
         app.post('/api/playlist/addgroup', function (req, res) {

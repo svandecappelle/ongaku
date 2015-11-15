@@ -262,7 +262,11 @@
         logger.debug(arrayResults);
 
         return arrayResults;
-
     };
 
+    Library.getAudioById = function (ids){
+      return _.find(this.flatten, function(obj){
+        return _.contains(ids, obj.uid); 
+      });
+    };
 }(exports));

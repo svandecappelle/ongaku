@@ -17,7 +17,7 @@ section.sidebar.show
 					a Genre
 	if (data.message !== null)
 		h1.message
-			i.fa.fa-circle-o-notch.fa-spin 
+			i.fa.fa-circle-o-notch.fa-spin
 			span.text= data.message
 	.user-sidebar.library-view(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 25%; overflow-y: auto;")
 		.library
@@ -55,12 +55,11 @@ section.sidebar.show
 											li
 												if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
 													.track.trackappend(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Add track current playlist")= track.title
-														i.glyphicon.glyphicon-plus.trackaction.trackappend(data-uid="#{track.uid}")
-														i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
+														if !session.user.isAnonymous
+															i.glyphicon.glyphicon-book.trackaction.tracklibappend(data-uid="#{track.uid}")
+															i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
 												else
 													.track.trackappend.disabled(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Login is required to start stream")= track.title
-														i.glyphicon.glyphicon-plus.trackaction.trackappend.disabled(data-uid="#{track.uid}")
-														i.glyphicon.glyphicon-heart.trackaction.tracklike.disabled(data-uid="#{track.uid}")
 	.pending-list
 			.controller.glyphicon.glyphicon-resize-full
 			#visualisation(style="height:50px;")
