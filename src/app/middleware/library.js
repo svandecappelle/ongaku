@@ -23,6 +23,17 @@
     Library.loadingCoverAlbums = [];
     Library.loadingCoverArtists = [];
 
+    _.mixin({groupByMulti: function (obj, values, context) {
+      if (!values.length)
+          return obj;
+      var byFirst = _.groupBy(obj, values[0], context),
+          rest = values.slice(1);
+      for (var prop in byFirst) {
+          byFirst[prop] = _.groupByMulti(byFirst[prop], rest, context);
+      }
+      return byFirst;
+    }});
+
     Library.beginScan = function (callback) {
         var that = this;
         scan.library(function (lib) {
@@ -200,18 +211,6 @@
     };
 
     Library.search = function (filter, type) {
-
-      _.mixin({groupByMulti: function (obj, values, context) {
-        if (!values.length)
-            return obj;
-        var byFirst = _.groupBy(obj, values[0], context),
-            rest = values.slice(1);
-        for (var prop in byFirst) {
-            byFirst[prop] = _.groupByMulti(byFirst[prop], rest, context);
-        }
-        return byFirst;
-      }});
-
         var searchResultList =  _.filter(this.flatten, function (obj) {
 
             if (type === "video" && obj.type === type) {
@@ -265,8 +264,35 @@
     };
 
     Library.getAudioById = function (ids){
-      return _.find(this.flatten, function(obj){
-        return _.contains(ids, obj.uid); 
+      var searchResultList =  _.filter(this.flatten, function (obj) {
+        return _.contains(ids, obj.uid);
       });
+
+      logger.warn(searchResultList);
+      searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
+
+      var arrayResults = [];
+      arrayResults = _.map(searchResultList, function(val, artist){
+        logger.info("image: ", artist);
+        var artistObject = {
+          artist: artist,
+          image: Library.loadingCoverArtists[artist],
+          albums: _.map(val, function(album, title){
+            var albumObject = {
+              title: title,
+              cover: Library.loadingCoverAlbums[artist][title],
+              tracks: _.map(album, function(tracks, index){
+                return tracks;
+              })
+            };
+            logger.debug(albumObject);
+            return albumObject;
+          })
+        };
+
+        return artistObject;
+      });
+
+      return arrayResults;
     };
 }(exports));

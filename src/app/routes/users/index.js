@@ -149,7 +149,7 @@ logger.setLevel(nconf.get('logLevel'));
           userlib.get(username, function (err, uids){
             var libraryDatas = library.getAudioById(uids);
             logger.info(uids);
-            middleware.render('library', req, res, {library: libraryDatas});
+            middleware.render('userlist', req, res, {library: libraryDatas});
           });
         });
 
