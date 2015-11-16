@@ -9,18 +9,22 @@ block append songlist
             .infos
                 .artist
                     span Playlist
-                .album
-                    img(url="https://a4-images.myspacecdn.com/images04/3/66428a7344ef45cab06b730823baf13a/full.jpg")
-                    span.title Unsaved Playlist
+                    if data.playlistname
+                      input.form-control(type="text", style="height: 39px", value="#{data.playlistname}")
+                    else
+                      input.form-control(type="text", style="height: 39px", value="Unsaved Playlist")
                 .playlists
-                    button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
-                        span.caret(style="margin-left: 5px;")
-                    ul.dropdown-menu(role="menu", style="margin-left: 15px;")
-                        li
-                            a Playlist1
-                            a Playlist2
-                            a Playlist3
-                            a Playlist4
+                    .form-group.form-group-sm
+                      label.col-md-8.control-label(style="display: inline-block; vertical-align: middle; line-height: 39px;") Saved Playlists:
+                      .col-md-2
+                        button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
+                            span.caret(style="margin-left: 5px;")
+                        ul.dropdown-menu(role="menu", style="margin-left: 15px;")
+                            li
+                                a Playlist1
+                                a Playlist2
+                                a Playlist3
+                                a Playlist4
             .list-actions
                 span.button
                     i.fa.fa-heart
@@ -41,7 +45,7 @@ block append songlist
                         .track-info.track-artist
                             span Artist
             .songs-container.scroll-pane
-                // TODO retrieve this list from server side 
+                // TODO retrieve this list from server side
                 ul.playlist
                     - var trackNum = 0
                     for track in data.playlist

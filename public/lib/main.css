@@ -157,10 +157,14 @@ span.button:hover{
 section.song-list > .list-container .infos{
 	position: absolute;
 	font-size: 15pt;
+	right: 90px;
+	left: 0px;
 }
 
 section.song-list > .list-container .infos>.artist{
 	font-weight: bold;
+	width: 40%;
+	margin-left: 10px;
 }
 
 section.song-list > .list-container .infos>.album>img{
@@ -795,7 +799,7 @@ ul.group.artist img.artist{
 .playlists{
 	position: absolute;
 	top: 0;
-	left: 130%;
+	left: 40%;
 }
 
 .menu.project{
