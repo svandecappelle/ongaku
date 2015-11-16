@@ -262,7 +262,14 @@
     };
 
     UserLib.prototype.getElements = function (element) {
-      var elementsToAppend = $(element).parent().find(".track");
+      var elementsToAppend;
+      if ($(element).parent().data("uid") !== undefined && $(element).parent().data("uid") !== null){
+        elementsToAppend = [];
+        elementsToAppend.push($(element).parent());
+      }else{
+        elementsToAppend = $(element).parent().find(".track");
+      }
+
       var jsonElementsAppend = [];
       $.each(elementsToAppend, function (index, value){
         jsonElementsAppend.push($(value).data("uid"));
@@ -484,40 +491,22 @@
             var glyficonArtistAppender = $('<i>', {
               class: 'glyphicon glyphicon-plus',
             });
-            var artistLibAppender = $('<a>', {
-              class: 'trackaction tracklibappend',
-              "data-placement": "left",
-              "data-toggle": "tooltip",
-              "data-original-title": "Add all tracks to my library"
-            });
-            var glyficonArtistLibAppender = $('<i>', {
-              class: 'glyphicon glyphicon-book',
-            });
-            artistLibAppender.append(glyficonArtistLibAppender);
 
             artistAppender.append(glyficonArtistAppender);
 
+            artistElement.append(artistAppender);
             if (that.view){
               new UserLib().remover(artistElement);
             } else {
               new UserLib().appender(artistElement);
             }
-            artistElement.append(artistAppender);
-
 
             $(artistAppender).tooltip();
-            $(artistLibAppender).tooltip();
 
             artistAppender.on("click", function (event) {
                 event.preventDefault();
                 event.stopPropagation();
                 $.ongaku.playlist.appendFromElement($(this));
-            });
-
-            artistLibAppender.on("click", function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                new UserLib().append($(this));
             });
 
             var artistAlbums = $('<ul>', {class: "group album"});
@@ -574,12 +563,7 @@
                   "data-toggle": "tooltip",
                   "data-original-title": "Add track to current playlist"
                 });
-                var glyficonAddLibraryAppender = $('<i>', {
-                  class: 'glyphicon glyphicon-book trackaction tracklibappend',
-                  "data-placement": "left",
-                  "data-toggle": "tooltip",
-                  "data-original-title": "Add track to my library"
-                });
+
                 var glyficonLikeAppender = $('<i>', {
                   class: 'glyphicon glyphicon-heart trackaction tracklike'
                 });
@@ -598,13 +582,6 @@
                 tracks.append(trackElement);
 
                 $(trackDetailElement).tooltip();
-                $(glyficonAddLibraryAppender).tooltip();
-
-                glyficonAddLibraryAppender.on("click", function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    new UserLib().append($(this));
-                });
 
                 trackDetailElement.on("click", function (event) {
                     event.preventDefault();
