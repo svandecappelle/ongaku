@@ -543,9 +543,9 @@
               albumAppender.append(glyficonAlbumAppender);
               albumElement.append(albumAppender);
               if (that.view){
-                new UserLib().remover(albumAppender);
+                new UserLib().remover(albumElement);
               } else {
-                new UserLib().appender(albumAppender);
+                new UserLib().appender(albumElement);
               }
               $(albumAppender).tooltip();
 
