@@ -210,57 +210,59 @@
         return _.find(this.flatten, {uid: uuid});
     };
 
-    Library.search = function (filter, type) {
-        var searchResultList =  _.filter(this.flatten, function (obj) {
+    Library.search = function (filter, type, fromList) {
+      if (!fromList){
+        fromList = this.flatten;
+      }
 
-            if (type === "video" && obj.type === type) {
-                return obj.name.toLowerCase().match(filter.toLowerCase());
-            } else if (type === "audio" && obj.type === type) {
-                var output = obj.title.toLowerCase().match(filter.toLowerCase()) || obj.album.toLowerCase().match(filter.toLowerCase());
-                if (!output) {
-                    _.each(obj.metadatas, function (val, key) {
-                        if (val.toLowerCase().match(filter.toLowerCase())) {
-                            output = true;
-                        }
-                    });
-                }
-
-                return output;
-            }
-
-            return false;
-        });
-        var arrayResults = [];
-
-        if (type === "audio"){
-          searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
-          arrayResults = _.map(searchResultList, function(val, artist){
-            logger.debug("image: ", Library.loadingCoverArtists[artist]);
-            var artistObject = {
-              artist: artist,
-              image: Library.loadingCoverArtists[artist],
-              albums: _.map(val, function(album, title){
-                var albumObject = {
-                  title: title,
-                  cover: Library.loadingCoverAlbums[artist][title],
-                  tracks: _.map(album, function(tracks, index){
-                    return tracks;
-                  })
-                };
-                logger.debug(albumObject);
-                return albumObject;
-              })
-            };
-
-            return artistObject;
-          });
-        } else {
-          arrayResults = searchResultList;
+      var searchResultList =  _.filter(fromList, function (obj) {
+        if (type === "video" && obj.type === type) {
+            return obj.name.toLowerCase().match(filter.toLowerCase());
+        } else if (type === "audio" && obj.type === type) {
+          var output = obj.title.toLowerCase().match(filter.toLowerCase()) || obj.album.toLowerCase().match(filter.toLowerCase());
+          if (!output) {
+            _.each(obj.metadatas, function (val, key) {
+              if (val.toLowerCase().match(filter.toLowerCase())) {
+                output = true;
+              }
+            });
+          }
+          return output;
         }
 
-        logger.debug(arrayResults);
+        return false;
+      });
 
-        return arrayResults;
+      var arrayResults = [];
+
+      if (type === "audio"){
+        searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
+        arrayResults = _.map(searchResultList, function(val, artist){
+          var artistObject = {
+            artist: artist,
+            image: Library.loadingCoverArtists[artist],
+            albums: _.map(val, function(album, title){
+              var albumObject = {
+                title: title,
+                cover: Library.loadingCoverAlbums[artist][title],
+                tracks: _.map(album, function(tracks, index){
+                  return tracks;
+                })
+              };
+              logger.debug(albumObject);
+              return albumObject;
+            })
+          };
+
+          return artistObject;
+        });
+      } else {
+        arrayResults = searchResultList;
+      }
+
+      logger.debug(arrayResults);
+
+      return arrayResults;
     };
 
     Library.getAudioById = function (ids, page, length){
@@ -292,7 +294,16 @@
 
         return artistObject;
       });
+      if (page){
+        return _.first(_.rest(arrayResults, page * length), length);
+      }
+      return arrayResults;
+    };
 
-      return _.first(_.rest(arrayResults, page * length), length)
+    Library.getAudioFlattenById = function (ids){
+      var searchResultList =  _.filter(this.flatten, function (obj) {
+        return _.contains(ids, obj.uid);
+      });
+      return searchResultList;
     };
 }(exports));

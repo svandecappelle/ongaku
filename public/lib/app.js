@@ -441,7 +441,16 @@
         console.log("search for: ", pattern);
         if (pattern) {
           this.searching = true;
-          $.get("/api/".concat(this.type).concat("/library/filter/").concat(pattern), function (output) {
+          var searchUrl;
+          if (this.view){
+            searchUrl = "/api/".concat(this.view);
+          } else {
+            searchUrl = "/api/".concat(this.type);
+          }
+
+          searchUrl = searchUrl.concat("/library/filter/").concat(pattern);
+
+          $.get(searchUrl, function (output) {
               $.ongaku.library.buildSearch(output);
           });
         } else {

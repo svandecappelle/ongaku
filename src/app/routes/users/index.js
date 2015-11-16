@@ -162,6 +162,19 @@ logger.setLevel(nconf.get('logLevel'));
           });
         });
 
+        app.get('/api/user/library/filter/:search', function (req, res) {
+          logger.info("Search filtering audio library");
+
+          var username = req.session.passport.user.username;
+
+          userlib.get(username, function (err, uids){
+            var libraryDatas = library.getAudioFlattenById(uids);
+
+            var filteredDatas = library.search(req.params.search, "audio", libraryDatas);
+            middleware.json(req, res, filteredDatas);
+          });
+        });
+
         if (nconf.get("uploader")) {
             var fs = require('fs'),
                 busboy = require('connect-busboy');
