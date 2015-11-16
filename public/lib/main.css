@@ -690,7 +690,11 @@ ul.group.album>li{
 	box-shadow: 0px -4px 0px 0px rgba(72, 212, 63, 0.3) inset;
 }
 
-ul.group.artist.open a{
+ul.group .album, ul.group .album a, ul.group .tracklist .track{
+	color: black;
+}
+
+ul.group.artist.open>li>a.trackaction{
 	color: white;
 }
 
@@ -775,6 +779,7 @@ ul.group.artist img.artist{
 
 .lib .group .track{
 	cursor: pointer;
+	color: white;
 }
 
 .lib .group .tracklist>li:hover{

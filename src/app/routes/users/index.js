@@ -147,19 +147,18 @@ logger.setLevel(nconf.get('logLevel'));
           var username = req.session.passport.user.username;
 
           userlib.get(username, function (err, uids){
-            var libraryDatas = library.getAudioById(uids);
+            var libraryDatas = library.getAudioById(uids, 0, 3);
             logger.info(uids);
             middleware.render('userlist', req, res, {library: libraryDatas});
           });
         });
 
-        app.get('/api/library', function (req, res){
+        app.get('/api/user/library/:page', function (req, res){
           var username = req.session.passport.user.username;
 
           userlib.get(username, function (err, uids){
-            var libraryDatas = library.getAudioById(uids);
-            logger.info(uids);
-            res.json({library: libraryDatas});
+            var libraryDatas = library.getAudioById(uids, req.params.page, 3);
+            middleware.json(req, res, libraryDatas);
           });
         });
 
@@ -250,6 +249,22 @@ logger.setLevel(nconf.get('logLevel'));
             });
           }, function(){
             logger.info("All elements added");
+          });
+          res.send({message: "ok"});
+        });
+
+        app.post('/api/user/library/remove', function (req, res) {
+          var username = req.session.passport.user.username,
+            uids = req.body.elements;
+          logger.info("remove to user lib: ".concat(username).concat(" -> ").concat(uids));
+
+          async.each(uids, function(uid, next){
+            userlib.remove(username, uid, function (){
+              logger.info("Remove from list: " + uid);
+              next();
+            });
+          }, function(){
+            logger.info("All elements removed");
           });
           res.send({message: "ok"});
         });

@@ -22,44 +22,7 @@ section.sidebar.show
 	.user-sidebar.library-view(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 25%; overflow-y: auto;")
 		.library
 			ul.lib.group.artist.open
-				for artistsGroup in library
-					li
-						a.link
-							if artistsGroup.image
-								img.artist(src=artistsGroup.image)
-							span.artistname= artistsGroup.artist
-						if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
-							a.artistappend.disabled
-								i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")
-						else
-							a.artistappend.disabled
-								i.glyphicon.glyphicon-plus.trackaction.disabled(data-toggle="tooltip", data-placement="left", title="Login is required to start stream")
-						ul.group.album
-							for album in artistsGroup.albums
-								li
-									a.link
-										if album.cover
-											img.album(src=album.cover)
-											span.albumtitle= album.title
-										else
-											img.album(src="/img/album.jpg")
-											span.albumtitle= album.title
-									if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
-										a.albumappend
-											i.glyphicon.glyphicon-plus.trackaction(data-toggle="tooltip", data-placement="left", title="Add all tracks to current playlist")
-									else
-										a.albumappend.disabled
-											i.glyphicon.glyphicon-plus.trackaction.disabled(data-toggle="tooltip", data-placement="left", title="Login is required to start stream")
-									ul.group.tracklist
-										for track in album.tracks
-											li
-												if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous)
-													.track.trackappend(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Add track current playlist")= track.title
-														if !session.user.isAnonymous
-															i.glyphicon.glyphicon-book.trackaction.tracklibappend(data-uid="#{track.uid}")
-															i.glyphicon.glyphicon-heart.trackaction.tracklike(data-uid="#{track.uid}")
-												else
-													.track.trackappend.disabled(data-uid="#{track.uid}", data-toggle="tooltip", data-placement="bottom", title="Login is required to start stream")= track.title
+				
 	.pending-list
 			.controller.glyphicon.glyphicon-resize-full
 			#visualisation(style="height:50px;")
@@ -77,13 +40,3 @@ section.sidebar.show
 							.song-infos= track.duration
 						.play
 							.button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
-
-block scripts
-	script.
-		$(function(){
-			$.ongaku.library.bind();
-
-			$('.parent_li').on("dblclick", function(){
-
-			});
-		});

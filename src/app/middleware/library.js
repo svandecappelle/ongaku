@@ -263,7 +263,7 @@
         return arrayResults;
     };
 
-    Library.getAudioById = function (ids){
+    Library.getAudioById = function (ids, page, length){
       var searchResultList =  _.filter(this.flatten, function (obj) {
         return _.contains(ids, obj.uid);
       });
@@ -293,6 +293,6 @@
         return artistObject;
       });
 
-      return arrayResults;
+      return _.first(_.rest(arrayResults, page * length), length)
     };
 }(exports));

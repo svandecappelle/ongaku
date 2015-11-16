@@ -58,3 +58,12 @@ block append songlist
                                     .track-info.track-artist
                                         span= track.artist
                 .song
+                
+                
+block append scripts
+  script.
+    $(function (){
+      $.ongaku.library.setView("user");
+      $.ongaku.library.bind();
+      $.ongaku.library.fetch();
+    });

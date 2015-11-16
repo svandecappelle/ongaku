@@ -29,4 +29,8 @@ var bcrypt = require('bcryptjs'),
     db.setAdd(username + ':library', uid, callback);
   };
 
+  Library.remove = function (username, uid, callback){
+    db.setRemove(username + ':library', uid, callback);
+  };
+
 }(exports));

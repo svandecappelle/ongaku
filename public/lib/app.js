@@ -248,15 +248,10 @@
     }
 
     UserLib.prototype.append = function (element) {
-      var elementsToAppend = $(element).parent().find(".tracklibappend");
-      var jsonElementsAppend = [];
-      $.each(elementsToAppend, function (index, value){
-        jsonElementsAppend.push($(value).data("uid"));
-      });
       $.ajax({
           url: '/api/user/library/add',
           type: 'POST',
-          data: JSON.stringify({elements: jsonElementsAppend}),
+          data: JSON.stringify(this.getElements(element)),
           contentType: 'application/json; charset=utf-8',
           dataType: 'json',
           async: false,
@@ -264,6 +259,80 @@
             console.log("added");
           }
       });
+    };
+
+    UserLib.prototype.getElements = function (element) {
+      var elementsToAppend = $(element).parent().find(".track");
+      var jsonElementsAppend = [];
+      $.each(elementsToAppend, function (index, value){
+        jsonElementsAppend.push($(value).data("uid"));
+      });
+      return {elements: jsonElementsAppend};
+    };
+
+    UserLib.prototype.remove = function (element) {
+      $.ajax({
+          url: '/api/user/library/remove',
+          type: 'POST',
+          data: JSON.stringify(this.getElements(element)),
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          async: false,
+          success: function() {
+            console.log("removed");
+            $.ongaku.library.reset();
+            $.ongaku.library.setPage(0);
+            $.ongaku.library.fetch();
+          }
+      });
+    };
+
+    UserLib.prototype.appender = function (fromElement){
+      var albumLibAppender = $('<a>', {
+        class: 'trackaction tracklibappend',
+        "data-placement": "left",
+        "data-toggle": "tooltip",
+        "data-original-title": "Add all tracks to my library"
+      });
+      var glyficonAlbumLibAppender = $('<i>', {
+        class: 'glyphicon glyphicon-book'
+      });
+
+      albumLibAppender.append(glyficonAlbumLibAppender);
+      fromElement.append(albumLibAppender);
+
+      albumLibAppender.on("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          new UserLib().append($(this));
+      });
+      $(albumLibAppender).tooltip();
+
+      return albumLibAppender;
+    };
+
+    UserLib.prototype.remover = function (fromElement){
+      var albumLibRemover = $('<a>', {
+        class: 'trackaction tracklibremove',
+        "data-placement": "left",
+        "data-toggle": "tooltip",
+        "data-original-title": "Remove all tracks from my library"
+      });
+      var glyficonAlbumLibRemover = $('<i>', {
+        class: 'glyphicon glyphicon-minus'
+      });
+
+      albumLibRemover.append(glyficonAlbumLibRemover);
+      fromElement.append(albumLibRemover);
+
+      albumLibRemover.on("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          new UserLib().remove($(this));
+      });
+      $(albumLibRemover).tooltip();
+
+      return albumLibRemover;
     };
 
     $.ongaku.controls = new Controls();
@@ -274,6 +343,14 @@
       this.type = "audio";
     }
 
+    Library.prototype.setPage = function (page) {
+      this.page = page;
+    };
+
+    Library.prototype.reset = function (page) {
+      $(".lib.group.artist.open").empty();
+    };
+
     Library.prototype.handlers = function () {
       this.handles = {
         "controller" : new HandlerRegisteration(".pending-list .controller", "click", function () {
@@ -282,14 +359,10 @@
         "searchbox" : new HandlerRegisteration("input.searchbox", "change", function () {
             $.ongaku.library.search($(this).val());
         }),
-        "artist" : new HandlerRegisteration(".artistappend:not(.disabled)", "click", function (event) {
+        "album" : new HandlerRegisteration(".appendplaylist:not(.disabled)", "click", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            $.ongaku.playlist.appendFromElement($(this));
-        }),
-        "album" : new HandlerRegisteration(".albumappend:not(.disabled)", "click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
+            console.log("album append")
             $.ongaku.playlist.appendFromElement($(this));
         }),
         "pending-list": new HandlerRegisteration(".pending-list .list", "mousewheel", function (event, delta) {
@@ -309,8 +382,12 @@
         "libappend": new HandlerRegisteration(".tracklibappend:not(.disabled)", "click", function (event){
           event.preventDefault();
           event.stopPropagation();
-          console.log("append to lib.");
           new UserLib().append($(this));
+        }),
+        "libremove": new HandlerRegisteration(".tracklibremove:not(.disabled)", "click", function (event){
+          event.preventDefault();
+          event.stopPropagation();
+          new UserLib().remove($(this));
         })
 
       };
@@ -379,152 +456,213 @@
     };
 
     Library.prototype.append = function (library) {
-        if (this.type === 'audio'){
-          $.each(library, function (index, artist) {
-              // For asynchronous loading debug
-              // console.log("audio: " + index);
-              var artistElement = $('<li>');
+      var that = this;
+      if (this.type === 'audio'){
+        $.each(library, function (index, artist) {
+            // For asynchronous loading debug
+            // console.log("audio: " + index);
+            var artistElement = $('<li>');
 
-              $(".lib.group.artist.open").append(artistElement);
+            $(".lib.group.artist.open").append(artistElement);
 
-              var artistDetailElement = $("<a>", {
-                class: 'link'
-              });
-              var artistImage = $('<img>', {class: 'artist', src: artist.image});
-              var artistName = $('<span>', {class: 'artistname'});
-              artistName.html(artist.artist);
-              artistDetailElement.append(artistImage);
-              artistDetailElement.append(artistName);
-              artistElement.append(artistDetailElement);
+            var artistDetailElement = $("<a>", {
+              class: 'link'
+            });
+            var artistImage = $('<img>', {class: 'artist', src: artist.image});
+            var artistName = $('<span>', {class: 'artistname'});
+            artistName.html(artist.artist);
+            artistDetailElement.append(artistImage);
+            artistDetailElement.append(artistName);
+            artistElement.append(artistDetailElement);
 
-              var artistAppender = $('<a>', {class: 'artistappend'});
-              var glyficonArtistAppender = $('<i>', {
-                class: 'glyphicon glyphicon-plus trackaction',
+            var artistAppender = $('<a>', {
+              class: 'trackaction',
+              "data-placement": "left",
+              "data-toggle": "tooltip",
+              "data-original-title": "Add all tracks to current playlist"
+            });
+            var glyficonArtistAppender = $('<i>', {
+              class: 'glyphicon glyphicon-plus',
+            });
+            var artistLibAppender = $('<a>', {
+              class: 'trackaction tracklibappend',
+              "data-placement": "left",
+              "data-toggle": "tooltip",
+              "data-original-title": "Add all tracks to my library"
+            });
+            var glyficonArtistLibAppender = $('<i>', {
+              class: 'glyphicon glyphicon-book',
+            });
+            artistLibAppender.append(glyficonArtistLibAppender);
+
+            artistAppender.append(glyficonArtistAppender);
+
+            if (that.view){
+              new UserLib().remover(artistElement);
+            } else {
+              new UserLib().appender(artistElement);
+            }
+            artistElement.append(artistAppender);
+
+
+            $(artistAppender).tooltip();
+            $(artistLibAppender).tooltip();
+
+            artistAppender.on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                $.ongaku.playlist.appendFromElement($(this));
+            });
+
+            artistLibAppender.on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                new UserLib().append($(this));
+            });
+
+            var artistAlbums = $('<ul>', {class: "group album"});
+            artistElement.append(artistAlbums);
+
+            $.each(artist.albums, function(title, album){
+              var albumElement = $('<li>');
+              var tracks = $('<ul>', {class: "group tracklist"});
+              var albumDetailElement = $("<a>", {class: 'link'});
+              var albumImage = $('<img>', {class: 'album', src: album.cover});
+              var albumTitle = $('<span>', {class: 'albumtitle'});
+
+              var albumAppender = $('<a>', {
+                class: 'trackaction',
                 "data-placement": "left",
                 "data-toggle": "tooltip",
                 "data-original-title": "Add all tracks to current playlist"
               });
-              artistAppender.append(glyficonArtistAppender);
-              artistElement.append(artistAppender);
-              $(glyficonArtistAppender).tooltip();
+              var glyficonAlbumAppender = $('<i>', {
+                class: 'glyphicon glyphicon-plus'
+              });
 
-              artistAppender.on("click", function (event) {
+              albumAppender.append(glyficonAlbumAppender);
+              albumElement.append(albumAppender);
+              if (that.view){
+                new UserLib().remover(albumAppender);
+              } else {
+                new UserLib().appender(albumAppender);
+              }
+              $(albumAppender).tooltip();
+
+              albumAppender.on("click", function (event) {
                   event.preventDefault();
                   event.stopPropagation();
                   $.ongaku.playlist.appendFromElement($(this));
               });
 
-              var artistAlbums = $('<ul>', {class: "group album"});
-              artistElement.append(artistAlbums);
 
-              $.each(artist.albums, function(title, album){
-                var albumElement = $('<li>');
-                var tracks = $('<ul>', {class: "group tracklist"});
-                var albumDetailElement = $("<a>", {class: 'link'});
-                var albumImage = $('<img>', {class: 'album', src: album.cover});
-                var albumTitle = $('<span>', {class: 'albumtitle'});
 
-                var albumAppender = $('<a>', {class: 'albumappend'});
-                var glyficonAlbumAppender = $('<i>', {
-                  class: 'glyphicon glyphicon-plus trackaction',
+              albumTitle.html(album.title);
+              albumDetailElement.append(albumImage);
+              albumDetailElement.append(albumTitle);
+              albumElement.append(albumDetailElement);
+              artistAlbums.append(albumElement);
+              albumElement.append(tracks);
+
+              $.each(album.tracks, function(index, track){
+                var trackElement = $('<li>');
+                var trackDetailElement = $('<div>', {
+                  class: 'track trackappend',
+                  "data-uid": track.uid,
+                  "data-encoding": track.encoding,
+                  "data-placement": "bottom",
+                  "data-toggle": "tooltip",
+                  "data-original-title": "Add track to current playlist"
+                });
+                var glyficonAddLibraryAppender = $('<i>', {
+                  class: 'glyphicon glyphicon-book trackaction tracklibappend',
                   "data-placement": "left",
                   "data-toggle": "tooltip",
-                  "data-original-title": "Add all tracks to current playlist"
+                  "data-original-title": "Add track to my library"
                 });
-                albumAppender.append(glyficonAlbumAppender);
-                albumElement.append(albumAppender);
-                $(glyficonAlbumAppender).tooltip();
+                var glyficonLikeAppender = $('<i>', {
+                  class: 'glyphicon glyphicon-heart trackaction tracklike'
+                });
+                trackDetailElement.html(track.title);
+                //trackDetailElement.append(glyficonAddLibraryAppender);
 
-                albumAppender.on("click", function (event) {
+                if (that.view){
+                  new UserLib().remover(trackDetailElement);
+                } else {
+                  new UserLib().appender(trackDetailElement);
+                }
+
+                trackDetailElement.append(glyficonLikeAppender);
+
+                trackElement.append(trackDetailElement);
+                tracks.append(trackElement);
+
+                $(trackDetailElement).tooltip();
+                $(glyficonAddLibraryAppender).tooltip();
+
+                glyficonAddLibraryAppender.on("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    new UserLib().append($(this));
+                });
+
+                trackDetailElement.on("click", function (event) {
                     event.preventDefault();
                     event.stopPropagation();
                     $.ongaku.playlist.appendFromElement($(this));
                 });
-
-                albumTitle.html(album.title);
-                albumDetailElement.append(albumImage);
-                albumDetailElement.append(albumTitle);
-                albumElement.append(albumDetailElement);
-                artistAlbums.append(albumElement);
-                albumElement.append(tracks);
-
-                $.each(album.tracks, function(index, track){
-                  var trackElement = $('<li>');
-                  var trackDetailElement = $('<div>', {
-                    class: 'track trackappend',
-                    "data-uid": track.uid,
-                    "data-encoding": track.encoding,
-                    "data-placement": "bottom",
-                    "data-toggle": "tooltip",
-                    "data-original-title": "Add track to current playlist"
-                  });
-                  var glyficonAddLibraryAppender = $('<i>', {
-                    class: 'glyphicon glyphicon-book trackaction tracklibappend',
-                    "data-uid": track.uid,
-                    "data-encoding": track.encoding
-                  });
-                  var glyficonLikeAppender = $('<i>', {
-                    class: 'glyphicon glyphicon-heart trackaction tracklike',
-                    "data-uid": track.uid,
-                    "data-encoding": track.encoding
-                  });
-                  trackDetailElement.html(track.title);
-                  trackDetailElement.append(glyficonAddLibraryAppender);
-                  trackDetailElement.append(glyficonAddLibraryAppender);
-
-                  trackElement.append(trackDetailElement);
-                  tracks.append(trackElement);
-
-                  glyficonAddLibraryAppender.on("click", function (event) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      $.ongaku.playlist.appendFromElement($(this));
-                  });
-
-                  trackDetailElement.on("click", function (event) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      $.ongaku.playlist.appendFromElement($(this));
-                  });
-                });
               });
+            });
 
-          });
-        } else if (this.type === 'video'){
-          //this.clear();
-          if (this.searching){
-            this.videoDispose();
-          }
-
-          $.each(library, function (index, video) {
-            var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
-            var videoLink = $('<a>', {class: "link video"});
-            var videoName = $('<div>', {class: 'name'});
-            videoName.html(video.name);
-
-            var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin not-initialized', height: "270", width: "480", id : video.uid, preload: "auto", controls });
-            var videoSource = $('<source>', {src : "/api/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
-
-            videoHtml5.append(videoSource);
-            videoLink.append(videoName);
-            videoLink.append(videoHtml5)
-            videoElement.append(videoLink);
-
-            $(".lib.group.artist.open").append(videoElement);
-          });
-          this.loadVideo();
+        });
+      } else if (this.type === 'video'){
+        //this.clear();
+        if (this.searching){
+          this.videoDispose();
         }
-        this.scrollingLoader();
+
+        $.each(library, function (index, video) {
+          var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
+          var videoLink = $('<a>', {class: "link video"});
+          var videoName = $('<div>', {class: 'name'});
+          videoName.html(video.name);
+
+          var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin not-initialized', height: "270", width: "480", id : video.uid, preload: "auto", controls });
+          var videoSource = $('<source>', {src : "/api/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
+
+          videoHtml5.append(videoSource);
+          videoLink.append(videoName);
+          videoLink.append(videoHtml5)
+          videoElement.append(videoLink);
+
+          $(".lib.group.artist.open").append(videoElement);
+        });
+        this.loadVideo();
+      }
+      this.scrollingLoader();
+    };
+
+    Library.prototype.setView = function (view) {
+      this.view = view;
     };
 
     Library.prototype.fetch = function () {
-      var that = this;
+      var that = this,
+        genericUrl;
       if (!this.isFetchPending && !this.searching){
-        this.page += 1;
+
         this.isFetchPending = true;
         // For asynchronous loading debug
         // console.log("Getting new page: " + this.page);
-        $.get("/api/".concat(this.type).concat("/library/").concat(this.page), function(output){
+        if (this.view){
+          genericUrl = "/api/".concat(this.view)
+        }else{
+          genericUrl = "/api/".concat(this.type)
+        }
+        genericUrl = genericUrl.concat("/library/").concat(this.page);
+        this.page += 1;
+
+        $.get(genericUrl, function(output){
           // For asynchronous loading debug
           // console.log("append lib: "+ output);
           $.ongaku.library.append(output);
@@ -585,7 +723,6 @@
         });
     };
 
-
     Playlist.prototype.appendFromElement = function (element) {
         // TODO check if test on lenght is necessary or not.
         // For asynchronous lib append debug
@@ -621,46 +758,46 @@
     Playlist.prototype.rebuild = function (playlist) {
       $("ul.playlist").empty();
 
-        $('.pending-list .list .jspPane').empty();
-        if (playlist.all.length === 0) {
-            $('.pending-list .list .jspPane').empty();
-            $(".player").empty();
-            $.ongaku.setInitialized(false);
-        }
+      $('.pending-list .list .jspPane').empty();
+      if (playlist.all.length === 0) {
+          $('.pending-list .list .jspPane').empty();
+          $(".player").empty();
+          $.ongaku.setInitialized(false);
+      }
 
-        var tracknumber = 0;
+      var tracknumber = 0;
 
-        $.each(playlist.all, function (index, val) {
-            tracknumber += 1;
-            $("ul.playlist").append(new Track(tracknumber, val));
-            $('.pending-list .list .jspPane').append(new PendingTrack(val));
-        });
+      $.each(playlist.all, function (index, val) {
+          tracknumber += 1;
+          $("ul.playlist").append(new Track(tracknumber, val));
+          $('.pending-list .list .jspPane').append(new PendingTrack(val));
+      });
 
-        var trackObj = playlist.lastAdded;
-        var audioControls = $("<audio>", {
-          id: 'controls',
-          controls: 'controls',
-          width: '100%'
-        });
-        var source = $("<source>",{
-          id: 'mp3src',
-          type: 'audio/'.concat(trackObj.encoding),
-          src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
-        });
+      var trackObj = playlist.lastAdded;
+      var audioControls = $("<audio>", {
+        id: 'controls',
+        controls: 'controls',
+        width: '100%'
+      });
+      var source = $("<source>",{
+        id: 'mp3src',
+        type: 'audio/'.concat(trackObj.encoding),
+        src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
+      });
 
-        $.ongaku.controls.bind();
-        $('.scroll-pane').jScrollPane();
+      $.ongaku.controls.bind();
+      $('.scroll-pane').jScrollPane();
 
-        if (!$.ongaku.isInitialised()) {
-            console.log("Build controls for first init plays");
-            $(".player").empty();
-            $(".player").show();
-            $(".player").html(audioControls);
-            $(".player > audio").html(source);
-            $.ongaku.build(function () {
-                $.ongaku.next();
-            });
-        }
+      if (!$.ongaku.isInitialised()) {
+          console.log("Build controls for first init plays");
+          $(".player").empty();
+          $(".player").show();
+          $(".player").html(audioControls);
+          $(".player > audio").html(source);
+          $.ongaku.build(function () {
+              $.ongaku.next();
+          });
+      }
     };
 
     var PendingTrack = function (val){
