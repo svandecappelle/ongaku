@@ -69,6 +69,14 @@
 
     $.ongaku = new Player();
 
+    Player.prototype.setUser = function (user) {
+      this.user = user;
+    };
+
+    Player.prototype.isAnonymous = function () {
+      return this.user === undefined;
+    };
+
     Player.prototype.isFirst = function () {
         return this.current === undefined;
     };
@@ -504,10 +512,12 @@
             artistAppender.append(glyficonArtistAppender);
 
             artistElement.append(artistAppender);
-            if (that.view){
-              new UserLib().remover(artistElement);
-            } else {
-              new UserLib().appender(artistElement);
+            if (!$.ongaku.isAnonymous()){
+              if (that.view){
+                new UserLib().remover(artistElement);
+              } else {
+                new UserLib().appender(artistElement);
+              }
             }
 
             $(artistAppender).tooltip();
@@ -540,10 +550,12 @@
 
               albumAppender.append(glyficonAlbumAppender);
               albumElement.append(albumAppender);
-              if (that.view){
-                new UserLib().remover(albumElement);
-              } else {
-                new UserLib().appender(albumElement);
+              if (!$.ongaku.isAnonymous()){
+                if (that.view){
+                  new UserLib().remover(albumElement);
+                } else {
+                  new UserLib().appender(albumElement);
+                }
               }
               $(albumAppender).tooltip();
 
@@ -572,20 +584,22 @@
                   "data-toggle": "tooltip",
                   "data-original-title": "Add track to current playlist"
                 });
-
-                var glyficonLikeAppender = $('<i>', {
-                  class: 'glyphicon glyphicon-heart trackaction tracklike'
-                });
                 trackDetailElement.html(track.title);
-                //trackDetailElement.append(glyficonAddLibraryAppender);
 
-                if (that.view){
-                  new UserLib().remover(trackDetailElement);
-                } else {
-                  new UserLib().appender(trackDetailElement);
+                if (!$.ongaku.isAnonymous()){
+                  if (that.view){
+                    new UserLib().remover(trackDetailElement);
+                  } else {
+                    new UserLib().appender(trackDetailElement);
+                  }
                 }
 
-                trackDetailElement.append(glyficonLikeAppender);
+                if (!$.ongaku.isAnonymous()){
+                  var glyficonLikeAppender = $('<i>', {
+                    class: 'glyphicon glyphicon-heart trackaction tracklike'
+                  });
+                  trackDetailElement.append(glyficonLikeAppender);
+                }
 
                 trackElement.append(trackDetailElement);
                 tracks.append(trackElement);

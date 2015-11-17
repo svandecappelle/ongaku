@@ -149,7 +149,10 @@ html
             block songlist
             include player
 
-        script.
+        unless session.user.isAnonymous
+          script.
+            $.ongaku.setUser("#{session.user.username}");
+          script.
             videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
             $(function () {
                 $('[data-toggle="popover"]').popover();
