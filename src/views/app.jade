@@ -152,44 +152,44 @@ html
         unless session.user.isAnonymous
           script.
             $.ongaku.setUser("#{session.user.username}");
-          script.
-            videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
-            $(function () {
-                $('[data-toggle="popover"]').popover();
-                $('[data-toggle="tooltip"]').tooltip();
-                $('.scroll-pane').jScrollPane();
-                $.ongaku.build();
-                $.ongaku.controls.bind();
-                var socket = io.connect('http://#{session.host}/');
-                socket.on('connect', function () {
-                    console.log("Connected");
-                });
-                socket.on('library:scanned', function () {
-                    console.log("Library scanned");
-                    location.reload();
-                });
+        script.
+          videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
+          $(function () {
+              $('[data-toggle="popover"]').popover();
+              $('[data-toggle="tooltip"]').tooltip();
+              $('.scroll-pane').jScrollPane();
+              $.ongaku.build();
+              $.ongaku.controls.bind();
+              var socket = io.connect('http://#{session.host}/');
+              socket.on('connect', function () {
+                  console.log("Connected");
+              });
+              socket.on('library:scanned', function () {
+                  console.log("Library scanned");
+                  location.reload();
+              });
 
-                $(".nav-reload>a").on("click", function(){
+              $(".nav-reload>a").on("click", function(){
 
-                  var message = $("<h1>", {
-                    class: "message"
-                  });
-                  message.append($("<i>", {
-                    class: "fa fa-circle-o-notch fa-spin"
-                  }));
-                  var loadingText = $("<span>", {
-                    class: "text"
-                  });
-                  message.append(loadingText);
-                  loadingText.html("Reloading library");
-                  $(".sidebar.show").append(message);
-
-                  $.get("/api/reload/audio/library", function(output){
-                    $(".sidebar.show>.message").remove();
-                    $.ongaku.library.rebuild(output, "audio");
-                    //$.ongaku.library.search("", "audio");
-                  });
+                var message = $("<h1>", {
+                  class: "message"
                 });
-            });
+                message.append($("<i>", {
+                  class: "fa fa-circle-o-notch fa-spin"
+                }));
+                var loadingText = $("<span>", {
+                  class: "text"
+                });
+                message.append(loadingText);
+                loadingText.html("Reloading library");
+                $(".sidebar.show").append(message);
+
+                $.get("/api/reload/audio/library", function(output){
+                  $(".sidebar.show>.message").remove();
+                  $.ongaku.library.rebuild(output, "audio");
+                  //$.ongaku.library.search("", "audio");
+                });
+              });
+          });
 
         block scripts
