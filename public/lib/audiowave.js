@@ -49,6 +49,9 @@
 
           // Continuously loop and update chart with frequency data.
           function renderChart() {
+             // TO GET A FULL RENDER (USING ONLY COLOR SET MAX FREQ TO 100)
+             // Default value is 255
+             var maxFrenquency = 255;
              requestAnimationFrame(renderChart);
 
              // Copy frequency data to frequencyData array.
@@ -58,10 +61,10 @@
              svg.selectAll('rect')
                 .data(frequencyData)
                 .attr('y', function(d) {
-                   return  d === 0 ? svgHeight : svgHeight - ((d * 100) / svgHeight);
+                   return  d === 0 ? svgHeight : svgHeight - ((d * svgHeight) / maxFrenquency);
                 })
                 .attr('height', function(d) {
-                   return  d === 0 ? 0 : ((d * 100) / svgHeight);
+                   return  d === 0 ? 0 : ((d * svgHeight) / maxFrenquency);
                 })
                 .attr('fill', function(d) {
                    return 'rgba(0, ' + d + ', 0, ' + (0.3 + (d / 255)) + ')';
