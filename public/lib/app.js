@@ -797,7 +797,10 @@
           $.ongaku.build(function () {
               $.ongaku.next();
           });
+      } else {
+        $(".list-container").find("[data-uid='".concat($.ongaku.getCurrent()).concat("']")).addClass('playing');
       }
+
     };
 
     var PendingTrack = function (val){
