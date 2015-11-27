@@ -622,13 +622,29 @@
         }
 
         $.each(library, function (index, video) {
-          var videoElement = $('<li>', {style: "width: 494px; display: inline-block;"});
-          var videoLink = $('<a>', {class: "link video"});
-          var videoName = $('<div>', {class: 'name'});
+          var videoElement = $('<li>', {
+            style: "width: 494px; display: inline-block;"
+          });
+          var videoLink = $('<a>', {
+            class: "link video"
+          });
+          var videoName = $('<div>', {
+            class: 'name'
+          });
           videoName.html(video.name);
 
-          var videoHtml5 = $('<video>', {class : 'player-video video-js vjs-default-skin not-initialized', height: "270", width: "480", id : video.uid, preload: "auto", controls });
-          var videoSource = $('<source>', {src : "/api/video/stream/".concat(video.uid), type : "video/".concat(video.extension)});
+          var videoHtml5 = $('<video>', {
+            class : 'player-video video-js vjs-default-skin not-initialized',
+            height: "270",
+            width: "480",
+            id : video.uid,
+            preload: "auto",
+            controls: true
+          });
+          var videoSource = $('<source>', {
+            src : "/api/video/stream/".concat(video.uid),
+            type : "video/".concat(video.extension)
+          });
 
           videoHtml5.append(videoSource);
           videoLink.append(videoName);
