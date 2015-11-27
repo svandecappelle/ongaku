@@ -625,6 +625,12 @@ body.vjs-full-window {
   /* IE6 full-window (underscore hack) */
   _position: absolute;
 }
+/* Full screen bug fixes */
+.video-js.vjs-fullscreen .vjs-tech {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .video-js:-webkit-full-screen {
   width: 100% !important;
   height: 100% !important;
