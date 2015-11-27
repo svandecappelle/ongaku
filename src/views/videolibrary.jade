@@ -13,12 +13,7 @@ section.sidebar.show
 	.user-sidebar.library-view(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 10%; overflow-y: auto;")
 		.library
 			ul.lib.group.artist.open
-				for video in library
-					li(style="width: 494px; display: inline-block;")
-						a.link.video
-							.name #{video.name}
-							video.player-video.video-js.vjs-default-skin.not-initialized(height="270", width="480", id="#{video.uid}", controls preload="auto")
-								source(src="/api/video/stream/#{video.uid}", type="video/#{video.extension}")
+
 	.pending-list.video
 			.list.scroll-pane
 				for track in data.playlist
@@ -40,13 +35,5 @@ block scripts
 		$(function(){
 			$.ongaku.library.bind();
 			$.ongaku.library.loadVideo();
-			
-			$('.parent_li').on("dblclick", function(){
-
-			});
-
-			$('.trackappend:not(.disabled)').on("click", function(){
-				var uidFile = $(this).data("uid");
-				$.ongaku.playlist.append(uidFile);
-			});
+			$.ongaku.library.fetch();			
 		});

@@ -69,11 +69,7 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/video', function (req, res) {
             logger.info("Client access to videos [" + req.ip + "]");
-
-            var libraryDatas = library.getVideo(0, 9);
-
-            logger.debug(libraryDatas);
-            middleware.render('videolist', req, res, {library: libraryDatas});
+            middleware.render('videolist', req, res);
         });
 
         app.get('/api/video/stream/:media', function (req, res) {
