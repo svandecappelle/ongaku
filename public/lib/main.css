@@ -1274,3 +1274,13 @@ a.link.video>.name{
 .mt-value{
 	white-space: nowrap;
 }
+
+.popover{
+	margin-top: 30px !important;
+	margin-left: 8px;
+}
+
+.song-track .metadata-track{
+	float: left;
+	margin-right: 6px;
+}

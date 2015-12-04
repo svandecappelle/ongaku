@@ -604,7 +604,9 @@
               albumElement.append(tracks);
 
               $.each(album.tracks, function(index, track){
-                var trackElement = $('<li>');
+                var trackElement = $('<li>', {
+                  "class": "song-track"
+                });
                 var trackDetailElement = $('<div>', {
                   class: 'track trackappend',
                   "data-uid": track.uid,
@@ -632,25 +634,24 @@
                   trackDetailElement.append(glyficonLikeAppender);
                 }
 
-                var trackShowDetail = $('<i>', {
-                  "class": 'glyphicon glyphicon-info-sign trackaction',
-                  "data-placement": "bottom auto",
+                var trackShowDetail = $('<a>', {
+                  "role": "button",
+                  "tabindex": "0",
+                  "data-placement": "auto bottom",
                   "data-toggle": "popover",
-                  "title": "Add track to current playlist"
+                  "title": "Track metadatas"
                 });
+                var glyphShowDetail = $('<i>', {
+                  "class": 'glyphicon glyphicon-info-sign trackaction metadata-track',
+                });
+                trackShowDetail.append(glyphShowDetail);
                 $(trackShowDetail).popover({
-                  "trigger": "manual",
+                  "trigger": "focus",
                   "html": true,
                   "container": 'body',
                   "content": new MetadatasArray(track.metadatas).html()
                 });
-                trackShowDetail.on("click", function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    $(this).popover('toggle');
-                });
-                trackDetailElement.append(trackShowDetail);
+                trackElement.append(trackShowDetail);
 
 
                 trackElement.append(trackDetailElement);
