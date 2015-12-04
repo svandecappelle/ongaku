@@ -1250,3 +1250,27 @@ a.link.video>.name{
 #statusbar-display[label^="Connect"] {display:none !important;}
 #statusbar-display[label^="Waiting"] {display:none !important;}
 #statusbar-display[label^="Transfer"] {display:none !important;}
+
+.mt-array{
+	width: 245px;
+	overflow: hidden;
+}
+
+.metadata td:nth-child(2){
+	max-width: 165px;
+	overflow: auto;
+}
+
+.mt-title{
+	font-weight: bold;
+	width: 80px;
+  max-width: 80px;
+	overflow: hidden;
+  white-space: nowrap;
+	text-overflow: ellipsis;
+	hyphens: auto;
+}
+
+.mt-value{
+	white-space: nowrap;
+}

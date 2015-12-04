@@ -250,6 +250,37 @@
       }
     };
 
+    function MetadataLabel(title, value){
+      var label = $("<tr>", {
+        "class": "metadata"
+      }),
+        titleObj = $("<td>", {
+          "class": "mt-title"
+        }),
+        valueObj = $('<td>'),
+        valueLabel = $('<div>', {
+          "class": "mt-value"
+        });
+
+      titleObj.html(title);
+      valueObj.append(valueLabel);
+      valueLabel.html(value);
+      label.append(titleObj);
+      label.append(valueObj);
+      return label;
+    }
+
+    function MetadatasArray(metadatas){
+      var container = $('<div>', {
+        "class": "mt-array"
+      });
+      var array = $(document.createElement('table'));
+      $.each(metadatas, function(index, value){
+        array.append(new MetadataLabel(index, value));
+      });
+      container.append(array);
+      return $('<div>').append(container.clone());
+    }
 
     function UserLib(){
 
@@ -565,8 +596,6 @@
                   $.ongaku.playlist.appendFromElement($(this));
               });
 
-
-
               albumTitle.html(album.title);
               albumDetailElement.append(albumImage);
               albumDetailElement.append(albumTitle);
@@ -580,11 +609,13 @@
                   class: 'track trackappend',
                   "data-uid": track.uid,
                   "data-encoding": track.encoding,
-                  "data-placement": "bottom",
+                  "data-placement": "bottom auto",
                   "data-toggle": "tooltip",
-                  "data-original-title": "Add track to current playlist"
+                  "data-title": "Add track to current playlist"
                 });
+
                 trackDetailElement.html(track.title);
+
 
                 if (!$.ongaku.isAnonymous()){
                   if (that.view){
@@ -600,6 +631,27 @@
                   });
                   trackDetailElement.append(glyficonLikeAppender);
                 }
+
+                var trackShowDetail = $('<i>', {
+                  "class": 'glyphicon glyphicon-info-sign trackaction',
+                  "data-placement": "bottom auto",
+                  "data-toggle": "popover",
+                  "title": "Add track to current playlist"
+                });
+                $(trackShowDetail).popover({
+                  "trigger": "manual",
+                  "html": true,
+                  "container": 'body',
+                  "content": new MetadatasArray(track.metadatas).html()
+                });
+                trackShowDetail.on("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    $(this).popover('toggle');
+                });
+                trackDetailElement.append(trackShowDetail);
+
 
                 trackElement.append(trackDetailElement);
                 tracks.append(trackElement);
