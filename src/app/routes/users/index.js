@@ -22,14 +22,14 @@ logger.setLevel(nconf.get('logLevel'));
         meta.settings.getOne("global", "require-authentication", function (err, curValue) {
             if (err) {
                 logger.debug("userauth error checking");
-                middleware.redirect('403', res);
+                middleware.redirect('/login', res);
             } else if (curValue === "true") {
                 logger.debug("userauth is required to listen");
                 if (middleware.isAuthenticated(req)) {
                     callback();
                 } else {
                     logger.warn("Anonymous access forbidden: authentication required to stream");
-                    middleware.redirect('403', res);
+                    middleware.redirect('/login', res);
                 }
             } else {
                 logger.debug("userauth is not required to listen");
