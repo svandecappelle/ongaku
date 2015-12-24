@@ -1,1 +1,4 @@
-node_modules/npm-debug.loglogs/
+node_modules/
+npm-debug.log
+logs/
+output/
