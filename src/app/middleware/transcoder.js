@@ -5,7 +5,7 @@
         childProcess = require("child_process"),
         logger = require('log4js').getLogger("Transcoder"),
         fs = require("fs"),
-        lame = require("lame"),
+        //lame = require("lame"),
         assert = require('assert'),
         _ = require("underscore");
 
