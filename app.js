@@ -68,7 +68,7 @@ if (process.argv[2] === "dev"){
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
           extended: true
-        })); 
+        }));
         app.use(cookieParser()); // required before session.
         app.use(session({
             secret: 'keyboard cat',
@@ -76,7 +76,14 @@ if (process.argv[2] === "dev"){
         }));
         app.use(passport.initialize());
         app.use(passport.session());
-        app.use(morgan(':req[X-Forwarded-For] - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+        var httplog = morgan(':req[X-Forwarded-For] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+          "stream": {
+            write: function(str) {
+              logger.info(str);
+            }
+          }
+        });
+        app.use(httplog);
 
         // ROUTES
         var application = require('./src/app/');
