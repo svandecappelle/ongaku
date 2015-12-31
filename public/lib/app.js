@@ -530,7 +530,11 @@
 
           searchUrl = searchUrl.concat("/library/filter/").concat(pattern);
 
+          $.ongaku.library.clear();
+          this.loader.toggle();
+          var that = this;
           $.get(searchUrl, function (output) {
+              that.loader.toggle();
               $.ongaku.library.buildSearch(output);
           });
         } else {

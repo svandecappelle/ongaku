@@ -68,7 +68,7 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
         app.get('/video', function (req, res) {
-            logger.info("Client access to videos [" + req.ip + "]");
+            logger.debug("Client access to videos [" + req.ip + "]");
             middleware.render('videolist', req, res);
         });
 
@@ -81,7 +81,7 @@ logger.setLevel(nconf.get('logLevel'));
             // ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -an -pass 1 -f webm /dev/null
             // ffmpeg -i "fichier source" -codec:v libvpx -quality good -cpu-used 0 -b:v 500k -r 25 -qmin 10 -qmax 42 -maxrate 800k -bufsize 1600k -threads 4 -vf scale=-1:360 -codec:a libvorbis -b:a 128k -pass 2 -f webm sortie.webm
             var stream = function () {
-                logger.info("streaming video");
+                logger.debug("streaming video");
                 middleware.stream(req, res, req.params.media, "video");
             };
 
@@ -91,19 +91,21 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
         app.get('/api/video/library/filter/:search', function (req, res) {
-            logger.info("Search filtering video library");
+            logger.debug("Search filtering video library");
             var libraryDatas = library.search(req.params.search, "video");
             middleware.json(req, res, libraryDatas);
         });
 
         app.get('/api/audio/library/filter/:search', function (req, res) {
-            logger.info("Search filtering audio library");
+            logger.debug("Search filtering audio library");
+            setTimeout(function () {
             var libraryDatas = library.search(req.params.search, "audio");
             middleware.json(req, res, libraryDatas);
+            }, 10000);
         });
 
         app.get('/api/audio/library', function (req, res) {
-            logger.info("Get all audio library");
+            logger.debug("Get all audio library");
             var libraryDatas = library.getAudio();
             middleware.json(req, res, libraryDatas);
         });
@@ -113,7 +115,7 @@ logger.setLevel(nconf.get('logLevel'));
 
             // Time out for testing the defered loading
             //setTimeout(function () {
-            logger.info("Get all one page of library ".concat(req.params.page));
+            logger.debug("Get all one page of library ".concat(req.params.page));
             var libraryDatas = library.getAudio(req.params.page, 3);
             middleware.json(req, res, libraryDatas);
             //}, 10000);
@@ -122,20 +124,20 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/api/video/library/:page', function (req, res) {
             // load by page of 3 artists.
-            logger.info("Get all one page of library ".concat(req.params.page));
+            logger.debug("Get all one page of library ".concat(req.params.page));
             var libraryDatas = library.getVideo(req.params.page, 9);
             middleware.json(req, res, libraryDatas);
         });
 
         app.get('/api/video/library', function (req, res) {
-            logger.info("Get all video library");
+            logger.debug("Get all video library");
             var libraryDatas = library.getVideo();
             middleware.json(req, res, libraryDatas);
         });
 
         app.get('/api/stream/:media', function (req, res) {
             var stream = function () {
-                logger.info("streaming audio");
+                logger.debug("streaming audio");
                 middleware.stream(req, res, req.params.media, "audio");
             };
 
@@ -149,7 +151,6 @@ logger.setLevel(nconf.get('logLevel'));
 
           userlib.get(username, function (err, uids){
             var libraryDatas = library.getAudioById(uids, 0, 3);
-            logger.info(uids);
             middleware.render('userlist', req, res, {library: libraryDatas});
           });
         });
@@ -164,7 +165,7 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
         app.get('/api/user/library/filter/:search', function (req, res) {
-          logger.info("Search filtering audio library");
+          logger.debug("Search filtering audio library");
 
           var username = req.session.passport.user.username;
 
@@ -234,7 +235,7 @@ logger.setLevel(nconf.get('logLevel'));
             // TODO save playlist
             var uidFile = req.params.uid,
                 track = library.getByUid(uidFile);
-            logger.info("Add file to playlist", uidFile);
+            logger.debug("Add file to playlist", uidFile);
             if (req.session.playlist === undefined) {
                 req.session.playlist = [];
             }
@@ -254,15 +255,15 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/api/user/library/add', function (req, res) {
           var username = req.session.passport.user.username,
             uids = req.body.elements;
-          logger.info("append to user lib: ".concat(username).concat(" -> ").concat(uids));
+          logger.debug("append to user lib: ".concat(username).concat(" -> ").concat(uids));
 
           async.each(uids, function(uid, next){
             userlib.append(username, uid, function (){
-              logger.info("Appended to list: " + uid);
+              logger.debug("Appended to list: " + uid);
               next();
             });
           }, function(){
-            logger.info("All elements added");
+            logger.debug("All elements added");
           });
           res.send({message: "ok"});
         });
@@ -270,15 +271,15 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/api/user/library/remove', function (req, res) {
           var username = req.session.passport.user.username,
             uids = req.body.elements;
-          logger.info("remove to user lib: ".concat(username).concat(" -> ").concat(uids));
+          logger.debug("remove to user lib: ".concat(username).concat(" -> ").concat(uids));
 
           async.each(uids, function(uid, next){
             userlib.remove(username, uid, function (){
-              logger.info("Remove from list: " + uid);
+              logger.debug("Remove from list: " + uid);
               next();
             });
           }, function(){
-            logger.info("All elements removed");
+            logger.debug("All elements removed");
           });
           res.send({message: "ok"});
         });
@@ -308,7 +309,7 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.post('/api/playlist/remove/:id', function (req, res) {
             var id = req.params.id;
-            logger.info("Remove file index to playlist: ", id);
+            logger.debug("Remove file index to playlist: ", id);
             // TODO remove on saved playlist
             if (req.session.playlist !== undefined) {
                 req.session.playlist.slice(id, 1);
@@ -323,7 +324,7 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/api/playlist/clear', function (req, res) {
             var id = req.params.id;
             // TODO remove on saved playlist
-            logger.info("Remove file index to playlist: ", id);
+            logger.debug("Remove file index to playlist: ", id);
             req.session.playlist = [];
             req.session.save(function () {
                 res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -334,11 +335,9 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/api/metadata/set/:id', function (req, res) {
           var id = req.params.id;
           var metadata = req.body.metadatas;
-          console.log("Set song metadata: ".concat(id), metadata);
         });
 
         app.get("/api/users", function (req, res){
-
           res.json();
         });
 

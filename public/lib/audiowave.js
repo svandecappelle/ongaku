@@ -6,7 +6,6 @@
     $.ongaku.audiowave = new Audiowave();
 
     Audiowave.prototype.rebuild = function () {
-          console.log("rebuild analyser");
           if (!this.binded){
             this.binded = true;
 

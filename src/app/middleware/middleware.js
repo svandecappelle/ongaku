@@ -87,7 +87,7 @@
     };
 
     Middleware.stream = function (req, res, uuid, type) {
-        logger.info("start stream file: " + uuid);
+        logger.debug("start stream file: " + uuid);
         if (this.requireAuthentication(req)) {
             // need an auth
             logger.info("Client not connected: cannot acces to audio / video [" + req.ip + "]");
