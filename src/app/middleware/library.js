@@ -134,8 +134,10 @@
           Library.data[type] = _.union(Library.data[type], lib);
         }
         if (type === "audio" && libObject.isFinishedAll){
+          logger.warn("audio scanned");
           this.audioScanned = true;
-        } else {
+        } else if(libObject.isFinishedAll) {
+          logger.warn("video scanned");
           this.videoScanned = true;
         }
         callback();
@@ -167,7 +169,7 @@
 
         // Rescan full library.
         Library.flatten = null;
-        this.beginScan(function () {
+        this.beginScan(function (){
             if (that.videoScanned && that.audioScanned){
               that.scanProgress = false;
               callback();

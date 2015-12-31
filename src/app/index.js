@@ -21,7 +21,7 @@ logger.setLevel(nconf.get('logLevel'));
 		var that = this;
 		library.scan(function(){
 			library.scanProgress = false;
-			logger.info("Library scanned");
+			logger.info("Library fully scanned");
 			if (callback){
 				callback();
 			} else {
@@ -43,7 +43,7 @@ logger.setLevel(nconf.get('logLevel'));
 
 		logger.info("Ready to serve on " + nconf.get('port') + " port");
 		that.on('connection', function(socket){
-			logger.info("User connected to socket.io");
+			logger.debug("User connected to socket.io");
 		});
 
 		var q = async.queue(function (task, callback){
@@ -58,5 +58,7 @@ logger.setLevel(nconf.get('logLevel'));
 		q.push({name: 'scan'}, function (err){
 			that.reload();
 		});
+
+
 	};
 })(exports);

@@ -24,17 +24,24 @@
         async.parallel({
           audio: function(){
             Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
+              logger.debug("Callback scan audio folder");
               if (res.length){
-                logger.info("Adding " + res.length + " new scanned entries into library.");
-                callback({audio: res, isFinishedAll: isFinishedAll});
+                logger.info("Adding " + res.length + " audio entries into library. finished all: ");
+              } else if (isFinishedAll){
+                logger.info("Audio elements are all scanned into library folder ");
               }
+              callback({audio: res, isFinishedAll: isFinishedAll});
             });
           },
           video: function(){
             Scanner.scanVideo(nconf.get("library"), function (err, res, isFinishedAll) {
+              logger.debug("Callback scan video folder");
               if (res.length > 0){
-                callback({video: res, isFinishedAll: isFinishedAll});
+                logger.info("Adding " + res.length + " video entries into library.");
+              } else if (isFinishedAll){
+                  logger.info("Video elements are all scanned into library folder ");
               }
+              callback({video: res, isFinishedAll: isFinishedAll});
             });
           }
         }, function(){
@@ -42,53 +49,67 @@
         });
     };
 
+    Scanner.Appenders = function (){
+
+    };
+
+    Scanner.Appenders.video = {
+      type: "video",
+      append: function (filePath, cb, results) {
+          var uuid,
+            shasum = crypto.createHash('sha1');
+          if (_.contains(nconf.get('video'), path.extname(filePath).replace(".", ""))) {
+              shasum.update(filePath);
+              uuid = shasum.digest('hex');
+              results.push({
+                  encoding: path.extname(filePath).replace(".", ""),
+                  uid: uuid.concat(".").concat(path.extname(filePath).replace(".", "")),  /*uuid.v1().concat(".").concat(path.extname(filePath).replace(".", "")),*/
+                  file: "/video/stream".concat(filePath.replace(nconf.get("library"), "")),
+                  type: "video",
+                  name: path.basename(filePath),
+                  extension: path.extname(filePath).replace(".", ""),
+                  relativePath: filePath.replace(nconf.get("library"), ""),
+              });
+              cb(null, results); // asynchronously call the loop
+          } else {
+              cb(null, results); // asynchronously call the loop
+          }
+      }
+    };
+
+    Scanner.Appenders.audio = {
+      type: "audio",
+      append: function (filePath, cb, results) {
+          if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
+              groove.open(filePath, function (err, file) {
+                  if (err) {
+                      throw err;
+                  }
+                  var libElement = Scanner.song(filePath, file.metadata(), file.duration());
+                  results.push(libElement);
+                  logger.debug(libElement);
+
+                  file.close(function (err) {
+                      if (err) {
+                          throw err;
+                      }
+                  });
+                  cb(null, results); // asynchronously call the loop
+              });
+          } else {
+              cb(null, results); // asynchronously call the loop
+          }
+
+          // callback(null, results, false);
+      }
+    };
+
     Scanner.scanVideo = function (apath, callback) {
-        this.scan(apath, callback, function (filePath, cb, results) {
-            var uuid,
-              shasum = crypto.createHash('sha1');
-            if (_.contains(nconf.get('video'), path.extname(filePath).replace(".", ""))) {
-                shasum.update(filePath);
-                uuid = shasum.digest('hex');
-                results.push({
-                    encoding: path.extname(filePath).replace(".", ""),
-                    uid: uuid.concat(".").concat(path.extname(filePath).replace(".", "")),  /*uuid.v1().concat(".").concat(path.extname(filePath).replace(".", "")),*/
-                    file: "/video/stream".concat(filePath.replace(nconf.get("library"), "")),
-                    type: "video",
-                    name: path.basename(filePath),
-                    extension: path.extname(filePath).replace(".", ""),
-                    relativePath: filePath.replace(nconf.get("library"), ""),
-                });
-                cb(null, results); // asynchronously call the loop
-            } else {
-                cb(null, results); // asynchronously call the loop
-            }
-        }, callback);
+        this.scan(apath, callback, Scanner.Appenders.video, callback);
     };
 
     Scanner.scanAudio = function (apath, callback) {
-        this.scan(apath, callback, function (filePath, cb, results) {
-            if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
-                groove.open(filePath, function (err, file) {
-                    if (err) {
-                        throw err;
-                    }
-                    var libElement = Scanner.song(filePath, file.metadata(), file.duration());
-                    results.push(libElement);
-                    logger.debug(libElement);
-
-                    file.close(function (err) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                    cb(null, results); // asynchronously call the loop
-                });
-            } else {
-                cb(null, results); // asynchronously call the loop
-            }
-
-            //callback(null, results, false);
-        }, callback);
+        this.scan(apath, callback, Scanner.Appenders.audio, callback);
     };
 
     Scanner.scan = function (apath, callback, appender, libraryCallBack) {
@@ -112,7 +133,7 @@
                         var metadataParser = mm(fs.createReadStream(newpath));
 
                         if (appender) {
-                            appender(newpath, cb, results);
+                            appender.append(newpath, cb, results);
                         }
                     }
                     if (stat.isDirectory()) {
@@ -123,9 +144,10 @@
             }, function (err) {
                 logger.debug("Scan " + apath + " finished");
                 if (callback !== libraryCallBack){
-                    callback(err, results); // loop over, come out
-                }
-                if (libraryCallBack){
+                  callback(err, results);
+                  libraryCallBack(err, results, false);
+                }else{
+                  logger.debug("finish lib scan: " + apath + " type: " + appender.type, (callback !== libraryCallBack ? "Not": "") + "Finished");
                   libraryCallBack(err, results, callback === libraryCallBack);
                 }
             });

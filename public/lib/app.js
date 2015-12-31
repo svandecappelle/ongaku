@@ -480,6 +480,7 @@
         console.log("search for: ", pattern);
         if (pattern) {
           this.searching = true;
+          this.noOtherDataToLoad = false;
           var searchUrl;
           if (this.view){
             searchUrl = "/api/".concat(this.view);
@@ -494,6 +495,7 @@
           });
         } else {
           this.searching = false;
+          this.noOtherDataToLoad = false;
           this.page = -1;
           $.ongaku.library.clear();
           $.ongaku.library.fetch();
@@ -653,7 +655,6 @@
                 });
                 trackElement.append(trackShowDetail);
 
-
                 trackElement.append(trackDetailElement);
                 tracks.append(trackElement);
 
@@ -718,7 +719,7 @@
     Library.prototype.fetch = function () {
       var that = this,
         genericUrl;
-      if (!this.isFetchPending && !this.searching){
+      if (!this.isFetchPending && !this.searching && !this.noOtherDataToLoad){
 
         this.isFetchPending = true;
         // For asynchronous loading debug
@@ -734,7 +735,12 @@
         $.get(genericUrl, function(output){
           // For asynchronous loading debug
           // console.log("append lib: "+ output);
-          $.ongaku.library.append(output);
+          if (output == undefined || output == null || output.length == 0){
+            console.log("no other data");
+            that.noOtherDataToLoad = true;
+          } else {
+            $.ongaku.library.append(output);
+          }
           that.isFetchPending = false;
         });
       }
