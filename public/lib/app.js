@@ -62,6 +62,48 @@
     };
 
 
+    var Loader = function (targetElement) {
+      this.targetElement = targetElement;
+      this.loadContainer = $("<div>", {
+        class: "loading-container"
+      });
+      var loadWidget = $("<div>", {
+        class: "loader"
+      });
+      var loadSlidesContainer = $("<div>", {
+        class: "loading-slide"
+      });
+
+      for (var i = 0; i < 3; i++) {
+        var slide = $("<div>", {
+          class: "slide"
+        });
+        loadSlidesContainer.append(slide);
+      }
+
+      loadWidget.append(loadSlidesContainer);
+      this.loadContainer.append(loadWidget);
+      this.isShowing = false;
+    };
+
+    Loader.prototype.show = function () {
+      this.isShowing = true;
+      $(this.targetElement).append(this.loadContainer);
+    };
+
+    Loader.prototype.hide = function () {
+      this.isShowing = false;
+      this.loadContainer.remove();
+    };
+
+    Loader.prototype.toggle = function () {
+      if (this.isShowing){
+        this.hide();
+      } else {
+        this.show();
+      }
+    };
+
     function Player() {
         this.titleScroller = new TitleScroller();
         this.titleScroller.start();
@@ -387,6 +429,7 @@
       this.videos = [];
       this.page = 0;
       this.type = "audio";
+      this.loader = new Loader(".library .lib");
     }
 
     Library.prototype.setPage = function (page) {
@@ -442,7 +485,6 @@
     };
 
     Library.prototype.bind = function () {
-        console.log("Library.bind");
         this.unbind();
         $.each(this.handlers(), function (type, handler){
           handler.bind();
@@ -468,9 +510,7 @@
 
     Library.prototype.unbind = function () {
       if (this.handles){
-        console.log("Library.unbind")
         $.each(this.handles, function (index, value){
-          console.log("Library.unbind(".concat(index).concat(")"));
           value.unbind();
         });
       }
@@ -731,16 +771,17 @@
         }
         genericUrl = genericUrl.concat("/library/").concat(this.page);
         this.page += 1;
-
+        this.loader.toggle();
         $.get(genericUrl, function(output){
           // For asynchronous loading debug
           // console.log("append lib: "+ output);
+
           if (output == undefined || output == null || output.length == 0){
-            console.log("no other data");
             that.noOtherDataToLoad = true;
           } else {
             $.ongaku.library.append(output);
           }
+          that.loader.toggle();
           that.isFetchPending = false;
         });
       }

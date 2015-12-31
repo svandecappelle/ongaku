@@ -110,9 +110,14 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/api/audio/library/:page', function (req, res) {
             // load by page of 3 artists.
+
+            // Time out for testing the defered loading
+            //setTimeout(function () {
             logger.info("Get all one page of library ".concat(req.params.page));
             var libraryDatas = library.getAudio(req.params.page, 3);
             middleware.json(req, res, libraryDatas);
+            //}, 10000);
+
         });
 
         app.get('/api/video/library/:page', function (req, res) {
