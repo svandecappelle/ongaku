@@ -361,7 +361,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	transition: height 0.5s linear 0.1s;
 	border-top: 6px solid black;
 	font-size: 0.8em;
-	margin-right: -2px;
+	margin-right: 9px;
 }
 
 .pending-list.video{
