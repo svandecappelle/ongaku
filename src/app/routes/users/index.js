@@ -98,10 +98,11 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/api/audio/library/filter/:search', function (req, res) {
             logger.debug("Search filtering audio library");
-            setTimeout(function () {
+            // Time out for testing the defered loading
+            // setTimeout(function () {
             var libraryDatas = library.search(req.params.search, "audio");
             middleware.json(req, res, libraryDatas);
-            }, 10000);
+            // }, 10000);
         });
 
         app.get('/api/audio/library', function (req, res) {
