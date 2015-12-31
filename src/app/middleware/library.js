@@ -154,6 +154,7 @@
     };
 
     Library.scanning = function () {
+        logger.info("scan: ", this.scanProgress);
         return this.scanProgress !== undefined ? this.scanProgress : false;
     };
 
@@ -169,7 +170,8 @@
 
         // Rescan full library.
         Library.flatten = null;
-        this.beginScan(function (){
+        this.beginScan(function () {
+
             if (that.videoScanned && that.audioScanned){
               that.scanProgress = false;
               callback();

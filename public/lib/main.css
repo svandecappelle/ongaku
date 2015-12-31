@@ -474,7 +474,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 }
 
 .pending-list .song:hover .layer{
-	background: none repeat scroll 0% 0% rgba(6, 72, 6, 0.5);
+	background: none repeat scroll 0% 0% rgba(52, 187, 52, 0.5);
 }
 
 .pending-list .song.playing:hover .layer{
@@ -539,7 +539,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	padding-right: 25px;
 }
 .pending-list .song .layer .left, .pending-list .song .layer .right, .pending-list .song .layer .top, .pending-list .song .layer .bottom{
-	background: #313832;
+	background: #152105;
 }
 
 .pending-list .song.playing .layer .left, .pending-list .song.playing .layer .right, .pending-list .song.playing .layer .top, .pending-list .song.playing .layer .bottom{
