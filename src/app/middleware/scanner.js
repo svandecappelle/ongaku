@@ -26,7 +26,7 @@
             Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
               logger.debug("Callback scan audio folder");
               if (res.length){
-                logger.info("Adding " + res.length + " audio entries into library. finished all: ");
+                logger.info("Adding " + res.length + " audio entries into library.");
               } else if (isFinishedAll){
                 logger.info("Audio elements are all scanned into library folder ");
               }
