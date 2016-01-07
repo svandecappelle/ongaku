@@ -3,10 +3,10 @@
         .saved-playlist
             span.title Playlist:
             if !session.user.isAnonymous
-              if data.playlistname
-                input.form-control(type="text", value="#{data.playlistname}", disabled)
+              if session.playlistname
+                input#playlistname.form-control(type="text", value="#{session.playlistname}")
               else
-                input.form-control(type="text", value="Unsaved Playlist", disabled)
+                input#playlistname.form-control(type="text", value="Unsaved Playlist")
               input.form-control.default#save-current-playlist(type="button", value="Save", disabled)
               input.form-control.default(type="button", value="Create", disabled)
             else

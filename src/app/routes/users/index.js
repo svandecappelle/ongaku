@@ -28,6 +28,15 @@ logger.setLevel(nconf.get('logLevel'));
       }
     };
 
+    UsersRoutes.callIfAuthenticated = function (req, res, callback) {
+      if (middleware.isAuthenticated(req)) {
+          callback();
+      } else {
+          logger.warn("Call with Anonymous access is forbidden: authentication required.");
+          middleware.json(req, res, {error: "Authentication required", code: "403"});
+      }
+    };
+
     UsersRoutes.checkingAuthorization = function (req, res, callback) {
         meta.settings.getOne("global", "require-authentication", function (err, curValue) {
             if (err) {
@@ -360,6 +369,37 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
+        app.post('/api/playlist/save', function(req, res){
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            var username = req.session.passport.user.username;
+            var newplaylistname = req.body.playlistname;
+
+            var appendToPlaylist = function(){
+              logger.info("Add all playlist tracks");
+              playlist.push(username, newplaylistname, req.session.playlist, function(){
+                req.session.playlistname = newplaylistname;
+                req.session.save(function () {
+                    res.setHeader('Access-Control-Allow-Credentials', 'true');
+                    res.send({});
+                });
+              });
+            }
+
+            if (req.session.playlistname){
+              if (newplaylistname){
+                logger.info("rename playlist: ", newplaylistname);
+              }
+
+              logger.info("clearing playlist: ", username, req.session.playlistname);
+              playlist.clear(username, req.session.playlistname, function (){
+                appendToPlaylist();
+              });
+            } else {
+              appendToPlaylist();
+            }
+          });
+        });
+
         app.post('/api/metadata/set/:id', function (req, res) {
           var id = req.params.id;
           var metadata = req.body.metadatas;
@@ -374,6 +414,20 @@ logger.setLevel(nconf.get('logLevel'));
           } else {
             return res.json();
           }
+        });
+
+        app.get("/api/user/playlists/:playlist", function (req, res){
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            var username = req.session.passport.user.username;
+            playlist.getPlaylistContent(username, req.params.playlist, function(err, playlistElements){
+              var playlistObject = [];
+              _.each(playlistElements, function(uidFile){
+                var track = library.getByUid(uidFile);
+                playlistObject.push(track);
+              });
+              res.json({all: playlistObject});
+            });
+          });
         });
 
         app.get("/api/users", function (req, res){

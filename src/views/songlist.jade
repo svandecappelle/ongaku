@@ -23,11 +23,25 @@ block append scripts
             $(".playlists-elements").append(playlistBlock);
           });
         });
-
         $("#save-current-playlist").click(function(){
-          console.log("save");
-          $.post("/api/user/playlist/save", function(){
-              $("#save-current-playlist").prop('disabled', true);
+          var playlistname = $("#playlistname").val();
+          $.ajax({
+              url: '/api/playlist/save',
+              type: 'POST',
+              data: JSON.stringify({playlistname: playlistname}),
+              contentType: 'application/json; charset=utf-8',
+              dataType: 'json',
+              async: false,
+              success: function() {
+                $("#save-current-playlist").prop('disabled', true);  
+              }
+          });
+        });
+        
+        $('ul.dropdown-menu .playlists-elements').click(function (){
+          var playlistName = $(this).text();
+          $.get("/api/user/playlists/" + playlistName, function(playlist){
+            $.ongaku.playlist.rebuild(playlist);
           });
         });
       });
