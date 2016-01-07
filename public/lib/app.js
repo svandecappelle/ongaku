@@ -897,17 +897,18 @@
       });
 
       var trackObj = playlist.lastAdded;
-      var audioControls = $("<audio>", {
-        id: 'controls',
-        controls: 'controls',
-        width: '100%'
-      });
-      var source = $("<source>",{
-        id: 'mp3src',
-        type: 'audio/'.concat(trackObj.encoding),
-        src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
-      });
-
+      if (trackObj){
+        var audioControls = $("<audio>", {
+          id: 'controls',
+          controls: 'controls',
+          width: '100%'
+        });
+        var source = $("<source>",{
+          id: 'mp3src',
+          type: 'audio/'.concat(trackObj.encoding),
+          src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
+        });
+      }
       $.ongaku.controls.bind();
       $('.scroll-pane').jScrollPane();
 
@@ -924,6 +925,12 @@
         $(".list-container").find("[data-uid='".concat($.ongaku.getCurrent()).concat("']")).addClass('playing');
       }
 
+    };
+
+    Playlist.prototype.fetch = function(){
+      $.get("/api/playlist", function (playlist) {
+          $.ongaku.playlist.rebuild(playlist);
+      });
     };
 
     var PendingTrack = function (val){

@@ -241,6 +241,11 @@ logger.setLevel(nconf.get('logLevel'));
           });
         });
 
+        app.get('/api/playlist', function (req, res) {
+            logger.debug("get current playlist");
+            res.send({all: req.session.playlist});
+        });
+
         // Posts
 
         app.post('/api/playlist/add/:uid', function (req, res) {
