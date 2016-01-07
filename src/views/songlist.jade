@@ -7,24 +7,26 @@ block append songlist
     section.song-list
         .list-container
             .infos
-                .artist
-                    span Playlist
-                    if data.playlistname
-                      input.form-control(type="text", style="height: 39px", value="#{data.playlistname}")
+                .saved-playlist
+                    span.title Playlist:
+                    if !session.user.isAnonymous
+                      if data.playlistname
+                        input.form-control(type="text", value="#{data.playlistname}", disabled)
+                      else
+                        input.form-control(type="text", value="Unsaved Playlist", disabled)
+                      input.form-control.default#save-current-playlist(type="button", value="Save", disabled)
+                      input.form-control.default(type="button", value="Create", disabled)
                     else
-                      input.form-control(type="text", style="height: 39px", value="Unsaved Playlist")
-                .playlists
-                    .form-group.form-group-sm
-                      label.col-md-8.control-label(style="display: inline-block; vertical-align: middle; line-height: 39px;") Saved Playlists:
-                      .col-md-2
-                        button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
-                            span.caret(style="margin-left: 5px;")
-                        ul.dropdown-menu(role="menu", style="margin-left: 15px;")
-                            li
-                                a Playlist1
-                                a Playlist2
-                                a Playlist3
-                                a Playlist4
+                      span.title Anonymous users can't save playlists.
+                if !session.user.isAnonymous
+                  .playlists
+                      .form-group.form-group-sm
+                        label.col-md-8.control-label(style="display: inline-block; vertical-align: middle; line-height: 39px;") Saved Playlists:
+                        .col-md-2
+                          button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
+                              span.caret(style="margin-left: 5px;")
+                          ul.dropdown-menu(role="menu", style="margin-left: 15px;")
+                              li.playlists-elements
             .list-actions
                 span.button
                     i.fa.fa-heart
@@ -68,3 +70,21 @@ block append scripts
       $.ongaku.library.bind();
       $.ongaku.library.fetch();
     });
+  if !session.user.isAnonymous
+    script.
+      $(function(){
+        $.get("/api/user/playlists", function(output){
+          $.each(output, function(index, playlist){
+            var playlistBlock = $("<a>");
+            playlistBlock.text(playlist);
+            $(".playlists-elements").append(playlistBlock);
+          });
+        });
+
+        $("#save-current-playlist").click(function(){
+          console.log("save");
+          $.post("/api/user/playlist/save", function(){
+              $("#save-current-playlist").prop('disabled', true);
+          });
+        });
+      });

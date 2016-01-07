@@ -10,6 +10,7 @@ var authentication = require("./../../middleware/authentication"),
     meta = require("./../../meta"),
     user = require("./../../model/user"),
     userlib = require("./../../model/library"),
+    playlist = require("./../../model/playlist"),
     async = require("async");
 
 logger.setLevel(nconf.get('logLevel'));
@@ -117,7 +118,12 @@ logger.setLevel(nconf.get('logLevel'));
             // Time out for testing the defered loading
             //setTimeout(function () {
             logger.debug("Get all one page of library ".concat(req.params.page));
-            var libraryDatas = library.getAudio(req.params.page, 3);
+            var libraryDatas = null;
+            if (req.params.page === "all"){
+              libraryDatas = library.getAudio();
+            } else {
+              libraryDatas = library.getAudio(req.params.page, 3);
+            }
             middleware.json(req, res, libraryDatas);
             //}, 10000);
 
@@ -160,7 +166,12 @@ logger.setLevel(nconf.get('logLevel'));
           var username = req.session.passport.user.username;
 
           userlib.get(username, function (err, uids){
-            var libraryDatas = library.getAudioById(uids, req.params.page, 3);
+            var libraryDatas = null;
+            if (req.params.page === "all"){
+              libraryDatas = library.getAudioById(uids);
+            } else {
+              libraryDatas = library.getAudioById(uids, req.params.page, 3);
+            }
             middleware.json(req, res, libraryDatas);
           });
         });
@@ -336,6 +347,17 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/api/metadata/set/:id', function (req, res) {
           var id = req.params.id;
           var metadata = req.body.metadatas;
+        });
+
+        app.get("/api/user/playlists", function (req, res){
+          if (middleware.isAuthenticated(req)) {
+            var username = req.session.passport.user.username;
+            playlist.getPlaylists(username, function(err, playlists){
+              res.json(playlists);
+            });
+          } else {
+            return res.json();
+          }
         });
 
         app.get("/api/users", function (req, res){

@@ -19,11 +19,45 @@ block append library
         span.small-title(style="margin-left:10px;") #{session.user.username}
       hr
       div.separated
-        div.small-title groups
+        div.small-title Groups
         each group in user.groups
           div #{group}
   .col-md-7
     .panel.panel-default
       div.small-title Playlists
       hr
-      .playlist
+      .playlists-elements
+      div.small-title Personal library
+      hr
+      .library
+
+block append scripts  
+  script.
+    $(function(){
+      
+      $.get("/api/user/playlists", function(output){
+        $.each(output, function(index, playlist){
+          var playlistBlock = $("<div>", {
+            class: "playlist"
+          });
+          playlistBlock.text(playlist);
+          $(".playlists-elements").append(playlistBlock);
+        });
+      });
+      
+      $.get("/api/user/library/all", function(output){
+        $.each(output, function(index, artist){
+          $.each(artist.albums, function(index, album){
+            $.each(album.tracks, function(index, song){
+            
+              var songBlock = $("<div>", {
+                class: "song"
+              });
+              songBlock.text(song.title);
+              $(".library").append(songBlock);
+            });
+          });
+          
+        });
+      });
+    });

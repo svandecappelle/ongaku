@@ -451,7 +451,6 @@
         "album" : new HandlerRegisteration(".appendplaylist:not(.disabled)", "click", function (event) {
             event.preventDefault();
             event.stopPropagation();
-            console.log("album append")
             $.ongaku.playlist.appendFromElement($(this));
         }),
         "pending-list": new HandlerRegisteration(".pending-list .list", "mousewheel", function (event, delta) {
@@ -823,56 +822,60 @@
     }
 
     Playlist.prototype.remove = function (uidFile) {
-        $.post("/api/playlist/remove/".concat(uidFile), function (playlist) {
-            $.ongaku.playlist.rebuild(playlist);
-        });
+      $("#save-current-playlist").prop('disabled', false);
+      $.post("/api/playlist/remove/".concat(uidFile), function (playlist) {
+          $.ongaku.playlist.rebuild(playlist);
+      });
     };
 
     Playlist.prototype.clear = function () {
-        $.post("/api/playlist/clear", function (playlist) {
-            $.ongaku.playlist.rebuild(playlist);
-        });
+      $("#save-current-playlist").prop('disabled', false);
+      $.post("/api/playlist/clear", function (playlist) {
+          $.ongaku.playlist.rebuild(playlist);
+      });
     };
 
     Playlist.prototype.append = function (uidFile) {
-        $.post("/api/playlist/add/".concat(uidFile), function (playlist) {
-            $.ongaku.playlist.rebuild(playlist);
-            if ($(".pending-list .song").length === 1) {
-                $.ongaku.next();
-            }
-        });
+      $("#save-current-playlist").prop('disabled', false);
+      $.post("/api/playlist/add/".concat(uidFile), function (playlist) {
+          $.ongaku.playlist.rebuild(playlist);
+          if ($(".pending-list .song").length === 1) {
+              $.ongaku.next();
+          }
+      });
     };
 
     Playlist.prototype.appendFromElement = function (element) {
-        // TODO check if test on lenght is necessary or not.
-        // For asynchronous lib append debug
-        // console.log("append from element");
-        var elementsToAppend = $(element).parent().find(".track");
-        if (elementsToAppend.length > 1){
-          var jsonElementsAppend = [];
-          $.each(elementsToAppend, function (index, value){
-            jsonElementsAppend.push($(value).data("uid"));
-          });
-          $.ajax({
-              url: '/api/playlist/addgroup',
-              type: 'POST',
-              data: JSON.stringify({elements: jsonElementsAppend}),
-              contentType: 'application/json; charset=utf-8',
-              dataType: 'json',
-              async: false,
-              success: function(playlist) {
-                  $.ongaku.playlist.rebuild(playlist);
+      $("#save-current-playlist").prop('disabled', false);
+      // TODO check if test on lenght is necessary or not.
+      // For asynchronous lib append debug
+      // console.log("append from element");
+      var elementsToAppend = $(element).parent().find(".track");
+      if (elementsToAppend.length > 1){
+        var jsonElementsAppend = [];
+        $.each(elementsToAppend, function (index, value){
+          jsonElementsAppend.push($(value).data("uid"));
+        });
+        $.ajax({
+            url: '/api/playlist/addgroup',
+            type: 'POST',
+            data: JSON.stringify({elements: jsonElementsAppend}),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: false,
+            success: function(playlist) {
+                $.ongaku.playlist.rebuild(playlist);
 
-                  if ($(".pending-list .song").length === 1) {
-                      $.ongaku.next();
-                  }
-              }
-          });
-        } else {
-          $(element).parent().find(".track").each(function (id, track) {
-              $.ongaku.playlist.append($(track).data("uid"));
-          });
-        }
+                if ($(".pending-list .song").length === 1) {
+                    $.ongaku.next();
+                }
+            }
+        });
+      } else {
+        $(element).parent().find(".track").each(function (id, track) {
+            $.ongaku.playlist.append($(track).data("uid"));
+        });
+      }
     };
 
     Playlist.prototype.rebuild = function (playlist) {

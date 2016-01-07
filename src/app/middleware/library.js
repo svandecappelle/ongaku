@@ -184,7 +184,7 @@
         uuid = uuid.replace(".ogg", "");
         uuid = uuid.replace(".wav", "");
 
-        logger.warn("getRelativePath: " + uuid);
+        logger.debug("getRelativePath: " + uuid);
         var libElement = this.getByUid(uuid);
         return libElement.relativePath;
     };
@@ -274,12 +274,10 @@
         return _.contains(ids, obj.uid);
       });
 
-      logger.warn(searchResultList);
       searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
 
       var arrayResults = [];
       arrayResults = _.map(searchResultList, function(val, artist){
-        logger.info("image: ", artist);
         var artistObject = {
           artist: artist,
           image: Library.loadingCoverArtists[artist],

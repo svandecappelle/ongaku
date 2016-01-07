@@ -161,9 +161,9 @@ section.song-list > .list-container .infos{
 	left: 0px;
 }
 
-section.song-list > .list-container .infos>.artist{
+section.song-list > .list-container .infos>.saved-playlist{
 	font-weight: bold;
-	width: 40%;
+	width: 100%;
 	margin-left: 10px;
 }
 
@@ -805,7 +805,20 @@ ul.group.artist img.artist{
 .playlists{
 	position: absolute;
 	top: 0;
-	left: 40%;
+	right: 25px;
+}
+
+.saved-playlist span.title{
+	float: left;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+
+.saved-playlist input{
+	float: left;
+	margin-right: 10px;
+	height: 39px;
+	width: auto;
 }
 
 .menu.project{
@@ -1236,6 +1249,14 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 .panel{
 	background-color: rgba(24, 41, 15, 0.8);
 	border-color: #140606;
+}
+
+.library .song{
+	color: white;
+}
+
+.playlists-elements .playlist{
+	/*color: white;*/
 }
 
 .login-screen label{

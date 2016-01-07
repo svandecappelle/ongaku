@@ -16,11 +16,8 @@ block append songlist
                     button.btn.btn-default.dropdown-toggle(style="height:39px", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
                         span.caret(style="margin-left: 5px;")
                     ul.dropdown-menu(role="menu", style="margin-left: 15px;")
-                        li
-                            a Playlist1
-                            a Playlist2
-                            a Playlist3
-                            a Playlist4
+                        li.playlists-elements
+
             .list-actions
                 span.button
                     i.fa.fa-heart
@@ -66,4 +63,12 @@ block append scripts
       $.ongaku.library.setView("user");
       $.ongaku.library.bind();
       $.ongaku.library.fetch();
+      
+      $.get("/api/user/playlists", function(output){
+        $.each(output, function(index, playlist){
+          var playlistBlock = $("<a>");
+          playlistBlock.text(playlist);
+          $(".playlists-elements").append(playlistBlock);
+        });
+      });
     });
