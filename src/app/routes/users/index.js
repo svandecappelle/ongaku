@@ -19,6 +19,15 @@ logger.setLevel(nconf.get('logLevel'));
 (function (UsersRoutes) {
     "use strict";
 
+    UsersRoutes.redirectIfNotAuthenticated = function (req, res, callback) {
+      if (middleware.isAuthenticated(req)) {
+          callback();
+      } else {
+          logger.warn("Anonymous access forbidden: authentication required.");
+          middleware.redirect('/login', res);
+      }
+    };
+
     UsersRoutes.checkingAuthorization = function (req, res, callback) {
         meta.settings.getOne("global", "require-authentication", function (err, curValue) {
             if (err) {
@@ -154,11 +163,13 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
         app.get('/library', function (req, res){
-          var username = req.session.passport.user.username;
+          UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+            var username = req.session.passport.user.username;
 
-          userlib.get(username, function (err, uids){
-            var libraryDatas = library.getAudioById(uids, 0, 3);
-            middleware.render('userlist', req, res, {library: libraryDatas});
+            userlib.get(username, function (err, uids){
+              var libraryDatas = library.getAudioById(uids, 0, 3);
+              middleware.render('userlist', req, res, {library: libraryDatas});
+            });
           });
         });
 
