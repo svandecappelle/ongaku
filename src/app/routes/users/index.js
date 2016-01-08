@@ -19,6 +19,14 @@ logger.setLevel(nconf.get('logLevel'));
 (function (UsersRoutes) {
     "use strict";
 
+    var SuccessCall = function(){
+
+    };
+
+    SuccessCall.prototype.json = function () {
+      return {code: 200, message: "Success"};
+    };
+
     UsersRoutes.redirectIfNotAuthenticated = function (req, res, callback) {
       if (middleware.isAuthenticated(req)) {
           callback();
@@ -263,7 +271,7 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/api/playlist', function (req, res) {
             logger.debug("get current playlist");
-            res.send({all: req.session.playlist});
+            res.send({all: req.session.playlist, name: req.session.playlistname});
         });
 
         // Posts
@@ -368,7 +376,17 @@ logger.setLevel(nconf.get('logLevel'));
                 res.send({all: req.session.playlist});
             });
         });
+        app.post('/api/user/playlists/new', function(req, res){
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            req.session.playlistname = null;
+            req.session.playlist = [];
 
+            req.session.save(function () {
+                res.setHeader('Access-Control-Allow-Credentials', 'true');
+                res.send(new SuccessCall().json());
+            });
+          });
+        });
         app.post('/api/playlist/save', function(req, res){
           UsersRoutes.callIfAuthenticated(req, res, function(){
             var username = req.session.passport.user.username;
@@ -378,9 +396,21 @@ logger.setLevel(nconf.get('logLevel'));
               logger.info("Add all playlist tracks");
               playlist.push(username, newplaylistname, req.session.playlist, function(){
                 req.session.playlistname = newplaylistname;
-                req.session.save(function () {
-                    res.setHeader('Access-Control-Allow-Credentials', 'true');
-                    res.send({});
+
+                playlist.exists(username, newplaylistname, function (err, exists){
+                  if(!err && !exists){
+                    playlist.create(username, newplaylistname, function (){
+                      req.session.save(function () {
+                          res.setHeader('Access-Control-Allow-Credentials', 'true');
+                          res.send(new SuccessCall().json());
+                      });
+                    });
+                  } else {
+                    req.session.save(function () {
+                        res.setHeader('Access-Control-Allow-Credentials', 'true');
+                        res.send(new SuccessCall().json());
+                    });
+                  }
                 });
               });
             }
@@ -391,7 +421,7 @@ logger.setLevel(nconf.get('logLevel'));
               }
 
               logger.info("clearing playlist: ", username, req.session.playlistname);
-              playlist.clear(username, req.session.playlistname, function (){
+              playlist.remove(username, req.session.playlistname, function (){
                 appendToPlaylist();
               });
             } else {
@@ -414,6 +444,46 @@ logger.setLevel(nconf.get('logLevel'));
           } else {
             return res.json();
           }
+        });
+
+        app.post("/api/user/playlists/load/:playlist", function (req, res){
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            var playlistname = req.params.playlist;
+            var username = req.session.passport.user.username;
+            req.session.playlistname = playlistname;
+
+            playlist.getPlaylistContent(username, playlistname, function(err, playlistElements){
+              var playlistObject = [];
+              _.each(playlistElements, function(uidFile){
+                var track = library.getByUid(uidFile);
+                playlistObject.push(track);
+              });
+
+              req.session.playlist = playlistObject;
+
+              req.session.save(function () {
+                  res.setHeader('Access-Control-Allow-Credentials', 'true');
+                  res.send(new SuccessCall().json());
+              });
+            });
+          });
+        });
+
+        app.post("/api/user/playlists/delete/:playlist", function (req, res){
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            var playlistname = req.params.playlist;
+            var username = req.session.passport.user.username;
+
+            req.session.playlistname = null;
+            req.session.playlist = [];
+
+            playlist.remove(username, playlistname, function (){
+              req.session.save(function () {
+                  res.setHeader('Access-Control-Allow-Credentials', 'true');
+                  res.send(new SuccessCall().json());
+              });
+            });
+          });
         });
 
         app.get("/api/user/playlists/:playlist", function (req, res){

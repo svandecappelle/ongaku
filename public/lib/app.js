@@ -882,54 +882,133 @@
       $("ul.playlist").empty();
 
       $('.pending-list .list .jspPane').empty();
-      if (playlist.all.length === 0) {
+      if (playlist && playlist.all) {
+        if (playlist.all.length === 0){
           $('.pending-list .list .jspPane').empty();
           $(".player").empty();
           $.ongaku.setInitialized(false);
-      }
+        }
 
-      var tracknumber = 0;
+        if (playlist.name){
+          $("#playlistname").val(playlist.name);
+        }
 
-      $.each(playlist.all, function (index, val) {
-          tracknumber += 1;
-          $("ul.playlist").append(new Track(tracknumber, val));
-          $('.pending-list .list .jspPane').append(new PendingTrack(val));
-      });
+        var tracknumber = 0;
 
-      var trackObj = playlist.lastAdded;
-      if (trackObj){
-        var audioControls = $("<audio>", {
-          id: 'controls',
-          controls: 'controls',
-          width: '100%'
+        $.each(playlist.all, function (index, val) {
+            tracknumber += 1;
+            $("ul.playlist").append(new Track(tracknumber, val));
+            $('.pending-list .list .jspPane').append(new PendingTrack(val));
         });
-        var source = $("<source>",{
-          id: 'mp3src',
-          type: 'audio/'.concat(trackObj.encoding),
-          src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
-        });
-      }
-      $.ongaku.controls.bind();
-      $('.scroll-pane').jScrollPane();
 
-      if (!$.ongaku.isInitialised()) {
-          console.log("Build controls for first init plays");
-          $(".player").empty();
-          $(".player").show();
-          $(".player").html(audioControls);
-          $(".player > audio").html(source);
-          $.ongaku.build(function () {
-              $.ongaku.next();
+        var trackObj = playlist.lastAdded;
+        if (trackObj){
+          var audioControls = $("<audio>", {
+            id: 'controls',
+            controls: 'controls',
+            width: '100%'
           });
-      } else {
-        $(".list-container").find("[data-uid='".concat($.ongaku.getCurrent()).concat("']")).addClass('playing');
-      }
+          var source = $("<source>",{
+            id: 'mp3src',
+            type: 'audio/'.concat(trackObj.encoding),
+            src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
+          });
+        }
+        $.ongaku.controls.bind();
+        $('.scroll-pane').jScrollPane();
 
+        if (!$.ongaku.isInitialised()) {
+            console.log("Build controls for first init plays");
+            $(".player").empty();
+            $(".player").show();
+            $(".player").html(audioControls);
+            $(".player > audio").html(source);
+            $.ongaku.build(function () {
+                $.ongaku.next();
+            });
+        } else {
+          $(".list-container").find("[data-uid='".concat($.ongaku.getCurrent()).concat("']")).addClass('playing');
+        }
+      } else {
+        $('.pending-list .list .jspPane').empty();
+        $(".player").empty();
+        $.ongaku.setInitialized(false);
+      }
     };
 
     Playlist.prototype.fetch = function(){
       $.get("/api/playlist", function (playlist) {
           $.ongaku.playlist.rebuild(playlist);
+      });
+    };
+
+    Playlist.prototype.loadAllPlaylists = function () {
+      $(".playlists-dropdown").empty();
+      $.get("/api/user/playlists", function(output){
+        $.each(output, function(index, playlist){
+          var playlistBlock = $("<li>");
+          var playlistAnchor = $("<a>", {
+            class: "playlist-element"
+          });
+          playlistAnchor.text(playlist);
+          playlistBlock.append(playlistAnchor);
+          $(".playlists-dropdown").append(playlistBlock);
+
+          $(playlistAnchor).click(function (){
+            var playlistName = $(this).text();
+            $.get("/api/user/playlists/" + playlistName, function(playlist){
+
+              $.post("/api/user/playlists/load/" + playlistName, function(){
+                $("#playlistname").val(playlistName);
+                $.ongaku.playlist.rebuild(playlist);
+              });
+            });
+          });
+        });
+      });
+    };
+
+    Playlist.prototype.bind = function () {
+      $("#save-current-playlist").click(function(){
+        var playlistname = $("#playlistname").val();
+        if (playlistname && playlistname !== ""){
+          $.ajax({
+              url: '/api/playlist/save',
+              type: 'POST',
+              data: JSON.stringify({playlistname: playlistname}),
+              contentType: 'application/json; charset=utf-8',
+              dataType: 'json',
+              async: false,
+              success: function() {
+                console.log("saved");
+                $("#save-current-playlist").prop('disabled', true);
+                $.ongaku.playlist.loadAllPlaylists();
+              }
+          });
+        } else {
+          alertify.error('Playlist name could not be empty');
+        }
+      });
+
+      $("#new-playlist").click(function (){
+        $("#playlistname").val("");
+        $.post("/api/user/playlists/new", function(err){
+          $.ongaku.playlist.rebuild();
+        });
+      });
+
+      $("#delete-playlist").click(function (){
+        var playlistname = $("#playlistname").val();
+        if (playlistname && playlistname !== ""){
+          $.post("/api/user/playlists/delete/" + playlistname, function(err){
+            $("#playlistname").val("");
+            $("#save-current-playlist").prop('disabled', true);
+            $.ongaku.playlist.rebuild();
+            $.ongaku.playlist.loadAllPlaylists();
+          });
+        } else {
+          alertify.error('Select a playlist to delete before.');
+        }
       });
     };
 

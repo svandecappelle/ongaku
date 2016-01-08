@@ -19,6 +19,10 @@ var logger = require('log4js').getLogger('PlaylistModel'),
     });
   };
 
+  Playlist.exists = function (username, playlist, callback){
+    db.isSetMember(username + ':playlists', playlist, callback);
+  };
+
   Playlist.getPlaylistContent = function (username, playlist, callback){
     db.getSetMembers(username + ':playlist:' + playlist, function(err, songuid){
       if (err) {
@@ -37,7 +41,9 @@ var logger = require('log4js').getLogger('PlaylistModel'),
   };
 
   Playlist.remove = function (username, playlist, callback){
-    db.setRemove(username + ':playlists', playlist, callback);
+    db.setRemove(username + ':playlists', playlist, function (){
+      Playlist.clear(username, playlist, callback);
+    });
   };
 
   Playlist.clear = function (username, playlist, callback){
@@ -45,7 +51,7 @@ var logger = require('log4js').getLogger('PlaylistModel'),
   };
 
   Playlist.push = function (username, playlist, tracks, callback){
-    async.each(tracks, function(track, next){
+    async.forEach(tracks, function(track, next){
       db.setAdd(username + ':playlist:' + playlist, track.uid, next);
     }, function(){
       callback();
@@ -53,7 +59,7 @@ var logger = require('log4js').getLogger('PlaylistModel'),
   };
 
   Playlist.pop = function (username, playlist, tracks, callback){
-    async.each(tracks, function(track, next){
+    async.forEach(tracks, function(track, next){
       db.setRemove(username + ':playlist:' + playlist, track.uid, next);
     }, function(){
       callback();
