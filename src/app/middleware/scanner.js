@@ -116,6 +116,10 @@
         var results = [];
         logger.debug("Scanning directory: ".concat(apath));
         fs.readdir(apath, function (err, files) {
+            if (files === undefined){
+              logger.warn("Not any files found on your library folder.");
+              return;
+            }
             var counter = 0;
             async.whilst(function () {
                 return counter < files.length;
