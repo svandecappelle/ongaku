@@ -241,6 +241,21 @@ logger.setLevel(nconf.get('logLevel'));
             });
         }
 
+        app.get("/user/:username/edit", function (req, res){
+          var username = req.params.username;
+
+          if (username !== undefined) {
+            logger.info("get user: ", username);
+            user.getUserDataByUsername(username, function (err, userData){
+              user.getGroupsByUsername(username, function (groups){
+                userData = _.extend(userData, { groups: groups });
+                logger.info("Check user: ", username, userData);
+                middleware.render('user/edit', req, res, {user: userData});
+              });
+            });
+          }
+        });
+
         app.get("/user/info/:username", function (req, res){
           var username = req.params.username;
 
