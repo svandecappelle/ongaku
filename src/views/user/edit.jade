@@ -2,14 +2,7 @@ extends ../app
 block append headpage
   title Ongaku user
 block append library
-  div.account.panel
-    ol.breadcrumb
-      li
-        a(href="/")
-           span Accueil
-      li.active
-        span #{session.user.username}
-      
+  div.account   
     div.cover.initialised(style="background-image: url(/cover.png); background-position: 47.0141% 20.4126%;")
       div.avatar
         img.user-profile-picture(src="#{session.user.avatar}")
@@ -37,9 +30,13 @@ block append library
             i.fa.fa-fw.fa-floppy-o
           div.indicator Enregistrement 
             i.fa.fa-fw.fa-refresh.fa-spin
-          
-
-    div.profile
+    div.profile.panel
+      ol.breadcrumb
+        li
+          a(href="/")
+             span Accueil
+        li.active
+          span #{session.user.username}
       h1.fullname #{session.user.username}
       h2.username @#{session.user.username}
       div.text-center.profile-meta
@@ -50,6 +47,15 @@ block append library
         br
         span Email
         strong
-          i.fa.fa-eye-slash(title="Email masqué") sv@test.com 
-    </div>
-  </div>
+          i.fa.fa-eye-slash(title="Email masqué") sv@test.com
+      div.row
+        div.col-md-2.col-sm-4.text-center
+          div.account-picture-block
+            div.avatar
+              img.user-profile-picture.avatar-lg.avatar-rounded(src="#{session.user.avatar}")
+          ul.list-group
+            a.list-group-item#changePictureBtn(href="#") Change avatar
+            a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur
+            a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur
+            a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur
+            a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
