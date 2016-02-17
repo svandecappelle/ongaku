@@ -1,0 +1,60 @@
+extends ../app
+block append headpage
+  title Ongaku user
+block append library
+  div.account   
+    div.cover.initialised(style="background-image: url(/cover.png); background-position: 47.0141% 20.4126%;")
+      div.avatar(style="z-index: 1;")
+        img.user-profile-picture(src="avatar")
+        i.fa.fa-circle.status.online(title="En ligne")
+      div.container
+        div.btn-group.account-fab(style="z-index: 1;")
+          button.fab.dropdown-toggle(type="button", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+            i.fa.fa-ellipsis-v
+          ul.dropdown-menu.dropdown-menu-right
+            li
+              a.inline-block(href="/user/svandecappelle", id="profile") Profil
+            li 
+              a(href="/user/svandecappelle/settings") Paramètres
+            li
+              a(href="/user/svandecappelle/edit") Éditer
+        div.controls
+          span.upload
+            i.fa.fa-fw.fa-4x.fa-upload
+          span.resize
+            i.fa.fa-fw.fa-4x.fa-arrows
+          span.remove
+            i.fa.fa-fw.fa-4x.fa-times
+          div.save Enregistrer 
+            i.fa.fa-fw.fa-floppy-o
+          div.indicator Enregistrement 
+            i.fa.fa-fw.fa-refresh.fa-spin
+    div.profile.panel
+      ol.breadcrumb
+        li
+          a(href="/")
+             span Accueil
+        li.active
+          span #{session.user.username}
+      h1.fullname #{session.user.username}
+      h2.username @#{session.user.username}
+      div.text-center.profile-meta
+        span Inscrit
+        strong.timeago(title="Fri Nov 20 2015 14:41:16 GMT+0100 (CET)") il y a environ 3 mois
+        span Dernière connexion
+        strong.timeago(title="Fri Feb 12 2016 15:29:48 GMT+0100 (CET)") il y a environ une heure
+        br
+        span Email
+        strong
+          i.fa.fa-eye-slash(title="Email masqué") sv@test.com
+      div.row
+        div.col-md-2.col-sm-4.text-center
+          div.account-picture-block
+            div.avatar
+              img.user-profile-picture(src="avatar")
+          ul.list-group
+            a.list-group-item#changePictureBtn(href="#") Change avatar
+            a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur
+            a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur
+            a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur
+            a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte

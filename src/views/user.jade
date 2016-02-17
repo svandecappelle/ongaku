@@ -13,7 +13,7 @@ block append library
   .col-md-5
     .panel.panel-default
       div.separated
-        img(src="#{session.user.avatar}", height="150px")
+        img(src="/user/#{user.username}/edit", height="150px")
       div.separated
         i.fa.fa-circle.status.online
         span.small-title(style="margin-left:10px;") #{session.user.username}

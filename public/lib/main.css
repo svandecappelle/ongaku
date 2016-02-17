@@ -1182,12 +1182,10 @@ h2{
 
 .panel.panel-default .small-title {
     text-align: center;
-		color: #fff;
 }
 
 .panel.panel-default .separated{
 	text-align: center;
-	color: #fff;
 }
 
 .separated{
@@ -1247,19 +1245,23 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 }
 
 .panel{
-	background-color: rgba(24, 41, 15, 0.8);
-	border-color: #140606;
+	background-color: rgba(255, 255, 255, 0.8);
+  border-color: #140606;
+  color: black;
+  padding: 5px;
+}
+
+.panel .library .song, .panel h1, .panel h2 {
+	color: black;
+}
+
+.panel hr{
+	border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #000000;
+  box-shadow: rgba(0, 0, 0, 0.5) 1px 4px 7px;
 }
 
 .library .song{
-	color: white;
-}
-
-.playlists-elements .playlist{
-	/*color: white;*/
-}
-
-.login-screen label{
 	color: white;
 }
 
@@ -1364,4 +1366,183 @@ a.link.video>.name{
   50% {
     left: 100%;
   }
+}
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.account .breadcrumb {
+    margin-bottom: 30px;
+    border-radius: 0px;
+}
+
+.breadcrumb {
+    font-size: 16px;
+    padding: 0;
+    background: none;
+}
+
+.account {
+	position: relative;
+	top: 0px;
+	left: 0;
+	width: 100%;
+	margin: 0px;
+}
+
+.account .cover, .account .container {
+  height: 300px;
+}
+
+.account .cover {
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+	margin-bottom: 1em;
+	background-origin: content-box;
+	width: 100%;
+	top: 0px;
+	position: absolute;
+	left: auto;
+	right: 0;
+	box-shadow: #1F1E1E 0px 1px 20px 4px;
+}
+
+.account .cover .controls {
+    text-align: center;
+    height: 200px;
+    line-height: 200px;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    opacity: 0;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=(0));
+    filter: alpha(opacity = (0));
+    -webkit-transition: opacity .15s linear;
+    -o-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+.account .cover:hover .controls {
+    filter: alpha(opacity=80);
+    -moz-opacity: .8;
+    opacity: .8;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=(80));
+    filter: alpha(opacity = (80));
+}
+
+.account .cover .controls .fa {
+    color: white;
+    background-color: #333;
+    opacity: 1;
+    margin: 15px;
+    padding: 5px;
+}
+
+.account .avatar, .account .avatar {
+  top: 230px;
+	width: 128px;
+	height: 128px;
+	border: 4px solid white;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.account .cover .avatar {
+	position: absolute;
+	left: 50%;
+	margin-left: -64px;
+}
+
+.account .profile{
+	position: absolute;
+	top: 320px;
+	margin-right: 5%;
+	margin-left: 5%;
+	left: 0;
+  right: 0px;
+}
+
+
+.account .profile .account-picture-block{
+	margin-left: 74px;
+	margin-bottom: 10px;
+}
+
+.account .profile ul.list-group .btn{
+	margin-top: 10px;
+}
+
+.user-profile-picture {
+	display: inline-block;
+  width: 100%;
+  line-height: 128px;
+}
+
+.account .cover .avatar .status {
+    position: absolute;
+    font-size: 23px;
+    top: 17px;
+    right: -3px;
+}
+
+.account .cover .save {
+    display: none;
+}
+
+.account .cover .indicator {
+    display: none;
+}
+
+.fab {
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.156863),0 2px 10px 0 rgba(0,0,0,0.117647);
+    background-color: #337ab7;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 55.5px;
+    vertical-align: middle;
+    height: 55.5px;
+    width: 55.5px;
+}
+
+.account-fab .fab {
+    color: white;
+    font-size: 20px;
+    border-radius: 50%;
+}
+
+.account-fab {
+    position: absolute;
+    right: 150px;
+    bottom: -26px;
+}
+
+.profile .fullname, .profile .username{
+	text-align: center;
+
+  margin-top: 2px;
+  line-height: 20px;
+}
+
+.profile .fullname{
+	color: #777;
+	font-weight: 300;
+	font-size: 32px;
+	margin-bottom: 12px;
+}
+
+.profile .username{
+	font-size: 15px;
+	margin-bottom: 15px;
+}
+
+.profile-meta strong{
+	padding-left: 3px;
+	padding-right: 3px;
 }
