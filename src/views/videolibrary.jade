@@ -14,22 +14,6 @@ section.sidebar.show
 		.library
 			ul.lib.group.artist.open
 
-	.pending-list.video
-			.list.scroll-pane
-				for track in data.playlist
-					.song
-						.layer
-							.top
-							.left
-							.right
-							.bottom
-						.info
-							.song-title= track.title
-							.song-artist= track.artist
-							.song-infos= track.duration
-						.play
-							.button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
-
 block scripts
 	script.
 		$(function(){
