@@ -13,7 +13,6 @@ block append scripts
       $.ongaku.library.setView("user");
       $.ongaku.library.bind();
       $.ongaku.library.fetch();
-      $.ongaku.playlist.fetch();
       $.get("/api/user/playlists", function(output){
         $.each(output, function(index, playlist){
           var playlistBlock = $("<a>");

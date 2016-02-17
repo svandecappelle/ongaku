@@ -256,26 +256,40 @@ logger.setLevel(nconf.get('logLevel'));
           }
         });
 
-        app.get("/user/info/:username", function (req, res){
+        app.get("/user/:username/info", function (req, res){
           var username = req.params.username;
 
           if (username !== undefined) {
-            logger.info("get user: ", username);
+            logger.info("get user: ", username, req.url);
             user.getUserDataByUsername(username, function (err, userData){
               user.getGroupsByUsername(username, function (groups){
                 userData = _.extend(userData, { groups: groups });
                 logger.info("Check user: ", username, userData);
-                middleware.render('user', req, res, {user: userData});
+                middleware.render('user/info', req, res, {user: userData});
               });
             });
           }
         });
 
         app.get("/user/:username/avatar", function (req, res){
-          if (middleware.hasAvatar()){
-            res.sendFile("/public/".concat(middleware.getAvatar(req.params.username)));
-          }else {
-            res.redirect(middleware.getAvatar(req.params.username));
+          var username = req.params.username,
+            avatar = middleware.getAvatar(username);
+          if (middleware.hasAvatar(username)) {
+            logger.info("sending user avatar file: " + avatar);
+            res.sendFile(avatar);
+          } else {
+            res.redirect(avatar);
+          }
+        });
+
+        app.get("/user/:username/cover", function (req, res){
+          var username = req.params.username,
+            cover = middleware.getCover(username);
+          if (middleware.hasCover(username)) {
+            logger.info("sending user cover file: " + cover);
+            res.sendFile(cover);
+          } else {
+            res.redirect(cover);
           }
         });
 

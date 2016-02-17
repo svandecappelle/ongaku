@@ -1546,3 +1546,6 @@ a.link.video>.name{
 	padding-left: 3px;
 	padding-right: 3px;
 }
+.user-avatar{
+		height: 36px;
+}

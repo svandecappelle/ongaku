@@ -70,7 +70,7 @@ html
                     li.dropdown(style="float: left; margin-left: 5px;")
                         a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
                             if session.user.avatar
-                                img(src="#{session.user.avatar}", width="36px")
+                                img.user-avatar(src="/user/#{session.user.username}/avatar")
                             else
                                 if session.user.isAnonymous
                                     i.fa.fa-fw.fa-sign-in
@@ -81,7 +81,7 @@ html
                                 if session.user.isAnonymous
                                     a(href="/login") Connection
                                 else
-                                    a(href="/user/info/#{session.user.username}")
+                                    a(href="/user/#{session.user.username}/info")
                                         i.fa.fa-circle.status.online
                                         span#username(style="margin-left:10px;") #{session.user.username}
                                         a(href="/logout") Deconnection
@@ -148,10 +148,15 @@ html
             block library
             block songlist
             include player
+            include pending-play
 
         unless session.user.isAnonymous
           script.
             $.ongaku.setUser("#{session.user.username}");
+            $(function () {
+              $.ongaku.playlist.bind();
+              $.ongaku.playlist.fetch();
+            });
         script.
           videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
           $(function () {
@@ -187,7 +192,6 @@ html
                 $.get("/api/reload/audio/library", function(output){
                   $(".sidebar.show>.message").remove();
                   $.ongaku.library.rebuild(output, "audio");
-                  //$.ongaku.library.search("", "audio");
                 });
               });
           });

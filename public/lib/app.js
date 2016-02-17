@@ -442,9 +442,6 @@
 
     Library.prototype.handlers = function () {
       this.handles = {
-        "controller" : new HandlerRegisteration(".pending-list .controller", "click", function () {
-          $('.pending-list').toggleClass("active");
-        }),
         "searchbox" : new HandlerRegisteration("input.searchbox", "change", function () {
             $.ongaku.library.search($(this).val());
         }),
@@ -968,47 +965,58 @@
       });
     };
 
-    Playlist.prototype.bind = function () {
-      $("#save-current-playlist").click(function(){
-        var playlistname = $("#playlistname").val();
-        if (playlistname && playlistname !== ""){
-          $.ajax({
-              url: '/api/playlist/save',
-              type: 'POST',
-              data: JSON.stringify({playlistname: playlistname}),
-              contentType: 'application/json; charset=utf-8',
-              dataType: 'json',
-              async: false,
-              success: function() {
-                console.log("saved");
-                $("#save-current-playlist").prop('disabled', true);
-                $.ongaku.playlist.loadAllPlaylists();
-              }
-          });
-        } else {
-          alertify.error('Playlist name could not be empty');
-        }
-      });
-
-      $("#new-playlist").click(function (){
-        $("#playlistname").val("");
-        $.post("/api/user/playlists/new", function(err){
-          $.ongaku.playlist.rebuild();
-        });
-      });
-
-      $("#delete-playlist").click(function (){
-        var playlistname = $("#playlistname").val();
-        if (playlistname && playlistname !== ""){
-          $.post("/api/user/playlists/delete/" + playlistname, function(err){
-            $("#playlistname").val("");
-            $("#save-current-playlist").prop('disabled', true);
+    Playlist.prototype.handlers = function () {
+      this.handles = {
+        "controller" : new HandlerRegisteration(".pending-list .controller", "click", function () {
+          $('.pending-list').toggleClass("active");
+        }),
+        "save-current-playlist" : new HandlerRegisteration("#save-current-playlist", "click", function () {
+          var playlistname = $("#playlistname").val();
+          if (playlistname && playlistname !== ""){
+            $.ajax({
+                url: '/api/playlist/save',
+                type: 'POST',
+                data: JSON.stringify({playlistname: playlistname}),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                async: false,
+                success: function() {
+                  console.log("saved");
+                  $("#save-current-playlist").prop('disabled', true);
+                  $.ongaku.playlist.loadAllPlaylists();
+                }
+            });
+          } else {
+            alertify.error('Playlist name could not be empty');
+          }
+        }),
+        "new-playlist" : new HandlerRegisteration("#new-playlist", "click", function () {
+          $("#playlistname").val("");
+          $.post("/api/user/playlists/new", function(err){
             $.ongaku.playlist.rebuild();
-            $.ongaku.playlist.loadAllPlaylists();
           });
-        } else {
-          alertify.error('Select a playlist to delete before.');
-        }
+        }),
+        "delete-playlist" : new HandlerRegisteration("#delete-playlist", "click", function () {
+          var playlistname = $("#playlistname").val();
+          if (playlistname && playlistname !== ""){
+            $.post("/api/user/playlists/delete/" + playlistname, function(err){
+              $("#playlistname").val("");
+              $("#save-current-playlist").prop('disabled', true);
+              $.ongaku.playlist.rebuild();
+              $.ongaku.playlist.loadAllPlaylists();
+            });
+          } else {
+            alertify.error('Select a playlist to delete before.');
+          }
+        })
+      };
+      return this.handles;
+    };
+
+    Playlist.prototype.bind = function () {
+      console.log("stack: " , new Error());
+      $.each(this.handlers(), function (type, handler){
+        handler.bind();
       });
     };
 

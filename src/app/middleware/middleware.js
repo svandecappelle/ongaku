@@ -185,7 +185,7 @@
             if (middlewareObject.req.isAuthenticated()) {
                 middlewareObject.objs.session.user = middlewareObject.req.user;
 
-                middlewareObject.objs.session.user.avatar = getAvatar(middlewareObject.req.user.username);
+                middlewareObject.objs.session.user.avatar = Middleware.getAvatar(middlewareObject.req.user.username);
                 middlewareObject.objs.session.user.isAnonymous = false;
 
                 // Retrieve role type
@@ -200,47 +200,77 @@
         middlewareObject.objs.session.host = nconf.get("hostname").concat(":").concat(nconf.get("port"));
     };
 
-    Middleware.hasAvatar = function (username){
-      var avatarDirectory = __dirname + "/../../../public/users",
-          avatarPathFile = avatarDirectory + "/icons/" + username;
-      if (!fs.existsSync(avatarDirectory)) {
-          fs.mkdirSync(avatarDirectory);
-          fs.mkdirSync(avatarDirectory + "/icons/");
+    /**
+    * Checking user file served or not depending of the file type [cover/avatar...].
+    */
+    Middleware.hasImageFile = function (username, type){
+      var imageDirectory = __dirname + "/../../../users/",
+          imageFile = imageDirectory + username + "/" + type;
+      if (!fs.existsSync(imageDirectory)) {
+          fs.mkdirSync(imageDirectory);
+          logger.info("folder user not exists. Create one.");
       }
-      return fs.existsSync(avatarPathFile);
+      return fs.existsSync(imageFile);
     };
 
-    Middleware.getAvatar = function (username) {
-      var urlUser = '/img/anonymous.jpg';
-      // generate a url through identicon if none found on gravatar
-      logger.debug("gravatar user: " + username);
-      if (!nconf.get("gravatar") || this.hasAvatar(username)) {
-          logger.info("no gravatar found for user.");
-          var avatarDirectory = __dirname + "/../../../public/users",
-              avatarPathFile = avatarDirectory + "/icons/" + username;
-          urlUser = "/users/icons/" + username;
+    /**
+    * Check if user has a served avatar.
+    */
+    Middleware.hasAvatar = function (username){
+      return this.hasImageFile(username, "avatar");
+    };
+    /**
+    * Check if user has a served cover.
+    */
+    Middleware.hasCover = function (username){
+      return this.hasImageFile(username, "cover");
+    };
 
-          if (!fs.existsSync(avatarDirectory)) {
-              fs.mkdirSync(avatarDirectory);
-              fs.mkdirSync(avatarDirectory + "/icons/");
-          }
+    /**
+    * Get generic file location depending of the type.
+    */
+    Middleware.getImageFile = function (username, type){
+      var urlUser = null;
 
-          if (!fs.existsSync(avatarPathFile)) {
-              if (identicon) {
-                  identicon.generate(username, 150, function (err, buffer) {
-                      if (err) {
-                          throw err;
-                      }
-
-                      fs.writeFileSync(avatarPathFile, buffer);
-                  });
-              }
-          }
-      } else {
-          urlUser = gravatar.url(username, {s: '200', r: 'pg', d: 'identicon'});
+      if (this.hasImageFile(username, type)){
+        var imageDirectory = __dirname + "/../../../users/",
+            imageFile = imageDirectory + username + "/" + type;
+        urlUser = path.resolve(imageFile);
       }
-
       return urlUser;
+    };
+
+    /**
+    * Get the avatar file location of a user for serving.
+    */
+    Middleware.getAvatar = function (username) {
+      var urlUser = this.getImageFile(username, "avatar");
+      var imageDirectory = __dirname + "/../../../users/",
+          imageFile = imageDirectory + username + "/avatar";
+      if (imageFile === null){
+        if (!nconf.get("gravatar")) {
+          if (identicon) {
+              identicon.generate(username, 150, function (err, buffer) {
+                  if (err) {
+                      throw err;
+                  }
+
+                  fs.writeFileSync(imageFile, buffer);
+              });
+              urlUser = path.resolve(imageFile);
+          }
+        } else {
+            urlUser = gravatar.url(username, {s: '200', r: 'pg', d: 'identicon'});
+        }
+      }
+      return urlUser;
+    };
+
+    /**
+    * Get the cover file of a user.
+    */
+    Middleware.getCover = function (username) {
+      return this.getImageFile(username, "cover");
     };
 
     /*

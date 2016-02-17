@@ -22,21 +22,3 @@ section.sidebar.show
 	.user-sidebar.library-view(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 25%; overflow-y: auto;")
 		.library
 			ul.lib.group.artist.open
-				
-	.pending-list
-			.controller.glyphicon.glyphicon-resize-full
-			#visualisation(style="height:50px;")
-			.list.scroll-pane
-				for track in data.playlist
-					.song
-						.layer
-							.top
-							.left
-							.right
-							.bottom
-						.info
-							.song-title= track.title
-							.song-artist= track.artist
-							.song-infos= track.duration
-						.play
-							.button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
