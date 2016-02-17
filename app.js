@@ -79,7 +79,7 @@ if (process.argv[2] === "dev"){
         var httplog = morgan(':req[X-Forwarded-For] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
           "stream": {
             write: function(str) {
-              logger.info(str.trim());
+              logger.debug(str.trim());
             }
           }
         });
