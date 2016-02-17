@@ -133,8 +133,7 @@
     Middleware.session = function (middlewareObject, next) {
         logger.debug(middlewareObject.objs);
 
-        var urlUser = '/img/anonymous.jpg',
-            urlServer = null;
+        var urlServer = null;
 
         if (middlewareObject.req.headers.host.lastIndexOf(":" + nconf.get("port")) != -1){
             urlServer = middlewareObject.req.headers.host.substring(0, middlewareObject.req.headers.host.length - (nconf.get("port").length + 1));
@@ -186,37 +185,7 @@
             if (middlewareObject.req.isAuthenticated()) {
                 middlewareObject.objs.session.user = middlewareObject.req.user;
 
-                // generate a url through identicon if none found on gravatar
-                logger.debug("gravatar " + middlewareObject.req.user.uid + " url: " + urlUser);
-                if (!nconf.get("gravatar")) {
-                    logger.info("no gravatar found for user.");
-                    var avatarDirectory = __dirname + "/../../../public/users",
-                        avatarPathFile = avatarDirectory + "/icons/" + middlewareObject.req.user.username + '.png';
-                    urlUser = "/users/icons/" + middlewareObject.req.user.username + '.png';
-
-                    if (!fs.existsSync(avatarDirectory)) {
-                        fs.mkdirSync(avatarDirectory);
-                        fs.mkdirSync(avatarDirectory + "/icons/");
-                    }
-
-                    if (!fs.existsSync(avatarPathFile)) {
-                        if (identicon) {
-                            identicon.generate(middlewareObject.req.user.uid, 150, function (err, buffer) {
-                                if (err) {
-                                    throw err;
-                                }
-
-                                fs.writeFileSync(avatarPathFile, buffer);
-                                middlewareObject.objs.session.user.avatar = urlUser;
-                            });
-                        }
-                    } else {
-                        middlewareObject.objs.session.user.avatar = urlUser;
-                    }
-                } else {
-                    urlUser = gravatar.url(middlewareObject.req.user.uid, {s: '200', r: 'pg', d: 'identicon'});
-                    middlewareObject.objs.session.user.avatar = urlUser;
-                }
+                middlewareObject.objs.session.user.avatar = getAvatar(middlewareObject.req.user.username);
                 middlewareObject.objs.session.user.isAnonymous = false;
 
                 // Retrieve role type
@@ -229,6 +198,49 @@
 
         middlewareObject.objs.session.hostname = nconf.get("hostname");
         middlewareObject.objs.session.host = nconf.get("hostname").concat(":").concat(nconf.get("port"));
+    };
+
+    Middleware.hasAvatar = function (username){
+      var avatarDirectory = __dirname + "/../../../public/users",
+          avatarPathFile = avatarDirectory + "/icons/" + username;
+      if (!fs.existsSync(avatarDirectory)) {
+          fs.mkdirSync(avatarDirectory);
+          fs.mkdirSync(avatarDirectory + "/icons/");
+      }
+      return fs.existsSync(avatarPathFile);
+    };
+
+    Middleware.getAvatar = function (username) {
+      var urlUser = '/img/anonymous.jpg';
+      // generate a url through identicon if none found on gravatar
+      logger.debug("gravatar user: " + username);
+      if (!nconf.get("gravatar") || this.hasAvatar(username)) {
+          logger.info("no gravatar found for user.");
+          var avatarDirectory = __dirname + "/../../../public/users",
+              avatarPathFile = avatarDirectory + "/icons/" + username;
+          urlUser = "/users/icons/" + username;
+
+          if (!fs.existsSync(avatarDirectory)) {
+              fs.mkdirSync(avatarDirectory);
+              fs.mkdirSync(avatarDirectory + "/icons/");
+          }
+
+          if (!fs.existsSync(avatarPathFile)) {
+              if (identicon) {
+                  identicon.generate(username, 150, function (err, buffer) {
+                      if (err) {
+                          throw err;
+                      }
+
+                      fs.writeFileSync(avatarPathFile, buffer);
+                  });
+              }
+          }
+      } else {
+          urlUser = gravatar.url(username, {s: '200', r: 'pg', d: 'identicon'});
+      }
+
+      return urlUser;
     };
 
     /*

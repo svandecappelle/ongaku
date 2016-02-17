@@ -271,6 +271,14 @@ logger.setLevel(nconf.get('logLevel'));
           }
         });
 
+        app.get("/user/:username/avatar", function (req, res){
+          if (middleware.hasAvatar()){
+            res.sendFile("/public/".concat(middleware.getAvatar(req.params.username)));
+          }else {
+            res.redirect(middleware.getAvatar(req.params.username));
+          }
+        });
+
         app.get("/users", function (req, res){
           user.getAllUsers(function (err, usersDatas){
             async.map(usersDatas.users, function (userData, next){
