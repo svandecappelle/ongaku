@@ -2,7 +2,9 @@
     .infos
         .saved-playlist
             span.title Playlist:
-            if !session.user.isAnonymous
+            if session.user.isAnonymous && meta.requireAuthentication
+              span.title Anonymous users can't save playlists.
+            else
               if session.playlistname
                 input#playlistname.form-control(type="text", value="#{session.playlistname}")
               else
@@ -10,8 +12,6 @@
               input.form-control.btn.btn-default#save-current-playlist(type="button", value="Save", disabled)
               input.form-control.btn.btn-default#new-playlist(type="button", value="New")
               input.form-control.btn.btn-danger#delete-playlist(type="button", value="Delete")
-            else
-              span.title Anonymous users can't save playlists.
         if !session.user.isAnonymous
           .playlists
               .form-group.form-group-sm
