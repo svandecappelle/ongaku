@@ -1,8 +1,8 @@
-var logger = require('log4js').getLogger("AdministratorsRoutes")
-var nconf = require("nconf");
-
-var middleware = require("./../../middleware/middleware"),
-	library = require("./../../middleware/library");
+var logger = require('log4js').getLogger("AdministratorsRoutes"),
+	nconf = require("nconf"),
+	middleware = require("./../../middleware/middleware"),
+	library = require("./../../middleware/library"),
+	meta = require("./../../meta");
 	application = require("./../../");
 
 logger.setLevel(nconf.get('logLevel'));
@@ -11,10 +11,13 @@ logger.setLevel(nconf.get('logLevel'));
 
 	AdministratorsRoutes.load = function (app) {
 		app.get('/admin/', function (req, res) {
-			logger.info("Client access to admin index ["+req.ip+"]");
-			middleware.render('admin/index', req, res, {});
+			var properties = ["global"];
+			logger.info("Client access to admin index [" + req.ip + "]");
+			meta.settings.get(properties, function (err, settings){
+				logger.info("settings: ", settings);
+					middleware.render('admin/index', req, res, settings);
+			});
 		});
-
 
 		app.get('/api/reload/audio/library', function (req, res) {
 				logger.info("reload audio library");
@@ -24,5 +27,5 @@ logger.setLevel(nconf.get('logLevel'));
 				});
 		});
 
-	}
+	};
 })(exports);
