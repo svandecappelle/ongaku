@@ -19,7 +19,7 @@ block append userpage-content
 block append scripts  
   script.
     $(function(){
-      $.get("/api/user/playlists", function(output){
+      $.get("/api/user/#{user.username}/playlists", function(output){
         $.each(output, function(index, playlist){
           var playlistBlock = $("<div>", {
             class: "playlist"
@@ -29,7 +29,7 @@ block append scripts
         });
       });
       
-      $.get("/api/user/library/all", function(output){
+      $.get("/api/user/#{user.username}/library/all", function(output){
         $.each(output, function(index, artist){
           $.each(artist.albums, function(index, album){
             $.each(album.tracks, function(index, song){

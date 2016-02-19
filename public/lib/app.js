@@ -899,6 +899,11 @@
         });
 
         var trackObj = playlist.lastAdded;
+
+        if (!trackObj && playlist.all && playlist.all.length > 0){
+          trackObj = playlist.all[0];
+        }
+
         if (trackObj){
           var audioControls = $("<audio>", {
             id: 'controls',
@@ -911,6 +916,7 @@
             src: '/api/stream/'.concat(trackObj.uid).concat(".").concat(trackObj.encoding)
           });
         }
+
         $.ongaku.controls.bind();
         $('.scroll-pane').jScrollPane();
 
@@ -1014,7 +1020,6 @@
     };
 
     Playlist.prototype.bind = function () {
-      console.log("stack: " , new Error());
       $.each(this.handlers(), function (type, handler){
         handler.bind();
       });

@@ -190,8 +190,8 @@ logger.setLevel(nconf.get('logLevel'));
           });
         });
 
-        app.get('/api/user/library/:page', function (req, res){
-          var username = req.session.passport.user.username;
+        app.get('/api/user/:username/library/:page', function (req, res){
+          var username = req.params.username;
 
           userlib.get(username, function (err, uids){
             var libraryDatas = null;
@@ -201,7 +201,7 @@ logger.setLevel(nconf.get('logLevel'));
               libraryDatas = library.getAudioById(uids, req.params.page, 3);
             }
             middleware.json(req, res, libraryDatas);
-          });
+          })
         });
 
         app.get('/api/user/library/filter/:search', function (req, res) {
@@ -470,6 +470,13 @@ logger.setLevel(nconf.get('logLevel'));
         app.post('/api/metadata/set/:id', function (req, res) {
           var id = req.params.id;
           var metadata = req.body.metadatas;
+        });
+
+        app.get("/api/user/:username/playlists", function (req, res){
+          var username = req.params.username;
+          playlist.getPlaylists(username, function(err, playlists){
+            res.json(playlists);
+          });
         });
 
         app.get("/api/user/playlists", function (req, res){

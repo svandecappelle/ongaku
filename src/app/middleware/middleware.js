@@ -247,7 +247,7 @@
       var urlUser = this.getImageFile(username, "avatar");
       var imageDirectory = __dirname + "/../../../users/",
           imageFile = imageDirectory + username + "/avatar";
-      if (imageFile === null){
+      if (urlUser === null){
         if (!nconf.get("gravatar")) {
           if (identicon) {
               identicon.generate(username, 150, function (err, buffer) {
