@@ -17,6 +17,10 @@ nav ul, nav ol{
 	margin: 0 !important;
 }
 
+.nav>li{
+	display: inline-block;
+}
+
 a{
 	cursor: pointer;
 	color: #13CC00;

@@ -9,41 +9,47 @@ block append library
 				label.tab(for="tab1") Application
 				div#tab-content1.tab-content
 					form.form-horizontal
-						.form-group.form-group-sm
-							label.control-label.col-sm-4 Port number
-							.col-sm-4
+						.form-group
+							label.col-md-2.control-label Port number
+							.col-md-6
 								input.form-control(name="portnumber")
 						.form-group.form-group-sm
-							label.col-sm-4.control-label Allow user register
-							.col-sm-4
+							label.col-md-2.control-label Allow user register
+							.col-md-6
 								.toggle-icon.icon.red
 									.handle
 										.glyphicon.glyphicon-user
 						.form-group.form-group-sm
-							label.col-sm-2.control-label Allow user upload
-							.col-sm-4
+							label.col-md-2.control-label Require authentication to stream
+							.col-md-6
+								.toggle-icon.icon.red
+									.handle
+										.glyphicon.glyphicon-headphones
+						.form-group.form-group-sm
+							label.col-md-2.control-label Allow user upload
+							.col-md-6
 								.toggle-icon.icon.green
 									.handle
 										.glyphicon.glyphicon-cloud-upload
 						.form-group.form-group-sm
-							label.col-sm-2.control-label User library is public
-							.col-sm-4
+							label.col-md-2.control-label User library is public
+							.col-md-6
 								.toggle-icon.icon.green
 									.handle
 										.glyphicon.glyphicon-globe
 						.form-group.form-group-sm
-							label.col-sm-2.control-label User download
-							.col-sm-4
+							label.col-md-2.control-label User download
+							.col-md-6
 								.toggle-icon.icon.green
 									.handle
 										.glyphicon.glyphicon-cloud-download
 						.form-group.form-group-sm
-							label.col-sm-2.control-label Streaming buffer size
-							.col-sm-4
+							label.col-md-2.control-label Streaming buffer size
+							.col-md-6
 								input.form-control
 						.form-group.form-group-sm
-							label.col-sm-2.control-label Allowed formats
-							.col-sm-4
+							label.col-md-2.control-label Allowed formats
+							.col-md-6
 								input.form-control
 
 			li
