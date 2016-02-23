@@ -58,7 +58,7 @@
             var grpByArtists = _.groupBy(lib, 'artist'),
                 groupByArtistsAndAlbum = [];
 
-            _.each(grpByArtists, function (tracks, artist) {
+            _.each(grpByArtists, function (tracks, artistbean) {
                 var albums = _.map(_.groupBy(tracks, 'album'), function (tracks, title) {
                     if (!title) {
                         title = "Unknown album";
@@ -66,9 +66,8 @@
                     return {title: title, tracks: tracks};
                 });
 
-
                 var artist = {
-                    artist: artist,
+                    artist: artistbean,
                     albums: albums
                 };
 
@@ -151,7 +150,7 @@
           }
       });
       return imageSource;
-    };
+    }
 
     Library.scanning = function () {
         logger.info("scan: ", this.scanProgress);
@@ -162,7 +161,7 @@
         var that = this;
         this.scanProgress = true;
         this.videoScanned = false;
-        this.audioScanned = false
+        this.audioScanned = false;
         // Clear all datas.
         this.data  = {audio: [], video: []};
         this.loadingCoverAlbums = [];

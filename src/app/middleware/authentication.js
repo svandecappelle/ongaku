@@ -34,6 +34,7 @@
             return res.send(404);
         }
         passport.authenticate('local', function (err, userData, info) {
+            var duration;
             if (err) {
                 return next(err);
             }
@@ -48,11 +49,11 @@
             // Alter user cookie depending on passed-in option
 
             if (req.body.remember === 'on') {
-                var duration = 1000 * 60 * 60 * 24 * parseInt(meta.config.loginDays || 14, 10);
+                duration = 1000 * 60 * 60 * 24 * parseInt(meta.config.loginDays || 14, 10);
                 req.session.cookie.maxAge = duration;
                 logger.warn("Saving session for: " + duration + "ms");
             } else {
-                var duration = 1000 * 60 * 60;
+                duration = 1000 * 60 * 60;
                 req.session.cookie.maxAge = duration;
             }
             req.logIn({
@@ -174,7 +175,7 @@
                     return done(null, false, {
                       code: '417',
                       message: err.message
-                    })
+                    });
                   } else {
                     return done(null, false, err.message);
                   }

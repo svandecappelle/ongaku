@@ -246,7 +246,7 @@
       this.eventType = eventType;
       this.handle = handle;
       return this;
-    };
+    }
 
     HandlerRegisteration.prototype.unbind = function () {
       $(this.target).unbind(this.eventType);
@@ -742,7 +742,7 @@
 
           videoHtml5.append(videoSource);
           videoLink.append(videoName);
-          videoLink.append(videoHtml5)
+          videoLink.append(videoHtml5);
           videoElement.append(videoLink);
 
           $(".lib.group.artist.open").append(videoElement);
@@ -765,9 +765,9 @@
         // For asynchronous loading debug
         // console.log("Getting new page: " + this.page);
         if (this.view){
-          genericUrl = "/api/".concat(this.view)
+          genericUrl = "/api/".concat(this.view);
         }else{
-          genericUrl = "/api/".concat(this.type)
+          genericUrl = "/api/".concat(this.type);
         }
         genericUrl = genericUrl.concat("/library/").concat(this.page);
         this.page += 1;
@@ -776,7 +776,7 @@
           // For asynchronous loading debug
           // console.log("append lib: "+ output);
 
-          if (output == undefined || output == null || output.length == 0){
+          if (output === undefined || output === null || output.length === 0) {
             that.noOtherDataToLoad = true;
           } else {
             $.ongaku.library.append(output);
@@ -800,14 +800,14 @@
         that.videos.push(videojs($( this ).attr('id'), {width: "480", height: "270"}, function(){
 					// Player (this) is initialized and ready.
 				}));
-			})
+			});
     };
 
     Library.prototype.videoDispose = function () {
       if (this.videos !== null){
         $.each(this.videos, function(index, player){
   				player.dispose();
-  			})
+  			});
       }
       this.videos = [];
     };
@@ -1056,7 +1056,7 @@
 
       var trackPlay = $("<div>", {
         class: "play"
-      })
+      });
       var playButton = $("<div>", {
         class: 'button',
         "data-uid": val.uid

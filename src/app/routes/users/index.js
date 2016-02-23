@@ -201,7 +201,7 @@ logger.setLevel(nconf.get('logLevel'));
               libraryDatas = library.getAudioById(uids, req.params.page, 3);
             }
             middleware.json(req, res, libraryDatas);
-          })
+          });
         });
 
         app.get('/api/user/library/filter/:search', function (req, res) {
@@ -450,7 +450,7 @@ logger.setLevel(nconf.get('logLevel'));
                   }
                 });
               });
-            }
+            };
 
             if (req.session.playlistname){
               if (newplaylistname){
