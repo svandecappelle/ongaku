@@ -119,7 +119,14 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/api/video/library/filter/:search/:page', function (req, res) {
             logger.debug("Search filtering video library");
-            var libraryDatas = library.search(req.params.search, "video", req.params.page, 3);
+            
+            var libraryDatas;
+            if (req.params.page === "all"){
+              libraryDatas = library.search(req.params.search, "video");
+            } else {
+              libraryDatas = library.searchPage(req.params.search, "video", req.params.page, 3);
+            }
+
             middleware.json(req, res, libraryDatas);
         });
 
