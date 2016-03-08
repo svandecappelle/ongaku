@@ -268,6 +268,11 @@
       return arrayResults;
     };
 
+    Library.searchPage = function (filter, type, page, lenght) {
+      var that = this;
+      return _.first(_.rest(that.search(filter, type), page * lenght), lenght);
+    };
+
     Library.getAudioById = function (ids, page, length){
       var searchResultList =  _.filter(this.flatten, function (obj) {
         return _.contains(ids, obj.uid);

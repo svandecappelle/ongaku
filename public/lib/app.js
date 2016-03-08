@@ -515,31 +515,17 @@
     Library.prototype.search = function (pattern) {
         console.log("search for: ", pattern);
         if (pattern) {
+          this.searchPattern = pattern;
           this.searching = true;
-          this.noOtherDataToLoad = false;
-          var searchUrl;
-          if (this.view){
-            searchUrl = "/api/".concat(this.view);
-          } else {
-            searchUrl = "/api/".concat(this.type);
-          }
-
-          searchUrl = searchUrl.concat("/library/filter/").concat(pattern);
-
-          $.ongaku.library.clear();
-          this.loader.toggle();
-          var that = this;
-          $.get(searchUrl, function (output) {
-              that.loader.toggle();
-              $.ongaku.library.buildSearch(output);
-          });
+          this.page = 0;
         } else {
-          this.searching = false;
-          this.noOtherDataToLoad = false;
           this.page = -1;
-          $.ongaku.library.clear();
-          $.ongaku.library.fetch();
+          this.searching = false;
         }
+
+        this.noOtherDataToLoad = false;
+        $.ongaku.library.clear();
+        $.ongaku.library.fetch();
     };
 
     Library.prototype.buildSearch = function (library) {
@@ -759,7 +745,7 @@
     Library.prototype.fetch = function () {
       var that = this,
         genericUrl;
-      if (!this.isFetchPending && !this.searching && !this.noOtherDataToLoad){
+      if (!this.isFetchPending && !this.noOtherDataToLoad){
 
         this.isFetchPending = true;
         // For asynchronous loading debug
@@ -769,7 +755,14 @@
         }else{
           genericUrl = "/api/".concat(this.type);
         }
-        genericUrl = genericUrl.concat("/library/").concat(this.page);
+
+        genericUrl = genericUrl.concat("/library/");
+
+        if (this.searching){
+          genericUrl = genericUrl.concat("filter/").concat(this.searchPattern).concat("/");
+        }
+        genericUrl = genericUrl.concat(this.page);
+
         this.page += 1;
         this.loader.toggle();
         $.get(genericUrl, function(output){

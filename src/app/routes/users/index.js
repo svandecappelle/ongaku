@@ -117,19 +117,23 @@ logger.setLevel(nconf.get('logLevel'));
             });
         });
 
-        app.get('/api/video/library/filter/:search', function (req, res) {
+        app.get('/api/video/library/filter/:search/:page', function (req, res) {
             logger.debug("Search filtering video library");
-            var libraryDatas = library.search(req.params.search, "video");
+            var libraryDatas = library.search(req.params.search, "video", req.params.page, 3);
             middleware.json(req, res, libraryDatas);
         });
 
-        app.get('/api/audio/library/filter/:search', function (req, res) {
+        app.get('/api/audio/library/filter/:search/:page', function (req, res) {
             logger.debug("Search filtering audio library");
-            // Time out for testing the defered loading
-            // setTimeout(function () {
-            var libraryDatas = library.search(req.params.search, "audio");
+
+            var libraryDatas;
+            if (req.params.page === "all"){
+              libraryDatas = library.search(req.params.search, "audio");
+            } else {
+              libraryDatas = library.searchPage(req.params.search, "audio", req.params.page, 3);
+            }
+
             middleware.json(req, res, libraryDatas);
-            // }, 10000);
         });
 
         app.get('/api/audio/library', function (req, res) {
@@ -141,8 +145,6 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/api/audio/library/:page', function (req, res) {
             // load by page of 3 artists.
 
-            // Time out for testing the defered loading
-            //setTimeout(function () {
             logger.debug("Get all one page of library ".concat(req.params.page));
             var libraryDatas = null;
             if (req.params.page === "all"){
@@ -151,8 +153,6 @@ logger.setLevel(nconf.get('logLevel'));
               libraryDatas = library.getAudio(req.params.page, 3);
             }
             middleware.json(req, res, libraryDatas);
-            //}, 10000);
-
         });
 
         app.get('/api/video/library/:page', function (req, res) {
