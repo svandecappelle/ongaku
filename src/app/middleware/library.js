@@ -213,7 +213,7 @@
         return _.find(this.flatten, {uid: uuid});
     };
 
-    Library.search = function (filter, type, fromList) {
+    Library.search = function (filter, type, groupby, fromList) {
       if (!fromList){
         fromList = this.flatten;
       }
@@ -239,26 +239,7 @@
       var arrayResults = [];
 
       if (type === "audio"){
-        searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
-        arrayResults = _.map(searchResultList, function(val, artist){
-          var artistObject = {
-            artist: artist,
-            image: Library.loadingCoverArtists[artist],
-            albums: _.map(val, function(album, title){
-              var albumObject = {
-                title: title,
-                cover: Library.loadingCoverAlbums[artist][title],
-                tracks: _.map(album, function(tracks, index){
-                  return tracks;
-                })
-              };
-              logger.debug(albumObject);
-              return albumObject;
-            })
-          };
-
-          return artistObject;
-        });
+        arrayResults = this.groupby(searchResultList, groupby);
       } else {
         arrayResults = searchResultList;
       }
@@ -268,9 +249,44 @@
       return arrayResults;
     };
 
-    Library.searchPage = function (filter, type, page, lenght) {
+    Library.groupby = function(searchResultList, groupbyClause){
+      var groupedResultList = _.groupByMulti(searchResultList, groupbyClause ? groupbyClause : ['artist', 'albums']);
+
+      return _.map(groupedResultList, function(val, groupObject) {
+        var rootGroupObject = {};
+
+        if (groupbyClause[0] === "artist"){
+          rootGroupObject.image = Library.loadingCoverArtists[groupObject];
+        }
+
+        if (groupbyClause.length > 1){
+          rootGroupObject[groupbyClause[0]] = groupObject;
+          rootGroupObject[groupbyClause[1]] = _.map(val, function(album, title){
+            var albumObject = {
+              title: title,
+              tracks: _.map(album, function(tracks, index){
+                return tracks;
+              })
+            };
+
+            if (groupbyClause[0] === "artist" && groupbyClause[1] === "albums"){
+                albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
+            }
+
+            logger.debug(albumObject);
+            return albumObject;
+          });
+        } else {
+          rootGroupObject[groupbyClause[0]] = groupObject;
+          rootGroupObject.tracks = val;
+        }
+        return rootGroupObject;
+      });
+    };
+
+    Library.searchPage = function (filter, type, page, lenght, groupBy) {
       var that = this;
-      return _.first(_.rest(that.search(filter, type), page * lenght), lenght);
+      return _.first(_.rest(that.search(filter, type, groupBy), page * lenght), lenght);
     };
 
     Library.getAudioById = function (ids, page, length){

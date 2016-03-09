@@ -119,7 +119,7 @@ logger.setLevel(nconf.get('logLevel'));
 
         app.get('/api/video/library/filter/:search/:page', function (req, res) {
             logger.debug("Search filtering video library");
-            
+
             var libraryDatas;
             if (req.params.page === "all"){
               libraryDatas = library.search(req.params.search, "video");
@@ -133,11 +133,14 @@ logger.setLevel(nconf.get('logLevel'));
         app.get('/api/audio/library/filter/:search/:page', function (req, res) {
             logger.debug("Search filtering audio library");
 
+            var groupby = req.session.groupby;
+            groupby = ["artist", "albums"];
+
             var libraryDatas;
             if (req.params.page === "all"){
-              libraryDatas = library.search(req.params.search, "audio");
+              libraryDatas = library.search(req.params.search, "audio", groupby);
             } else {
-              libraryDatas = library.searchPage(req.params.search, "audio", req.params.page, 3);
+              libraryDatas = library.searchPage(req.params.search, "audio", req.params.page, 3, groupby);
             }
 
             middleware.json(req, res, libraryDatas);
@@ -219,7 +222,7 @@ logger.setLevel(nconf.get('logLevel'));
           userlib.get(username, function (err, uids){
             var libraryDatas = library.getAudioFlattenById(uids);
 
-            var filteredDatas = library.search(req.params.search, "audio", libraryDatas);
+            var filteredDatas = library.search(req.params.search, "audio", undefined, libraryDatas);
             middleware.json(req, res, filteredDatas);
           });
         });
