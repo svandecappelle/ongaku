@@ -250,7 +250,7 @@
     };
 
     Library.groupby = function(searchResultList, groupbyClause){
-      var groupedResultList = _.groupByMulti(searchResultList, groupbyClause ? groupbyClause : ['artist', 'albums']);
+      var groupedResultList = _.groupByMulti(searchResultList, groupbyClause ? groupbyClause : ['artist', 'album']);
 
       return _.map(groupedResultList, function(val, groupObject) {
         var rootGroupObject = {};
@@ -261,7 +261,8 @@
 
         if (groupbyClause.length > 1){
           rootGroupObject[groupbyClause[0]] = groupObject;
-          rootGroupObject[groupbyClause[1]] = _.map(val, function(album, title){
+
+          var filteredTracks = _.map(val, function(album, title){
             var albumObject = {
               title: title,
               tracks: _.map(album, function(tracks, index){
@@ -269,13 +270,19 @@
               })
             };
 
-            if (groupbyClause[0] === "artist" && groupbyClause[1] === "albums"){
+            if (groupbyClause[0] === "artist" && groupbyClause[1] === "album"){
                 albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
             }
-
-            logger.debug(albumObject);
+            
             return albumObject;
           });
+
+          if (groupbyClause[1] === "album"){
+            rootGroupObject.albums = filteredTracks;
+          } else {
+            rootGroupObject[groupbyClause[1]] = filteredTracks;
+          }
+
         } else {
           rootGroupObject[groupbyClause[0]] = groupObject;
           rootGroupObject.tracks = val;

@@ -134,7 +134,7 @@ logger.setLevel(nconf.get('logLevel'));
             logger.debug("Search filtering audio library");
 
             var groupby = req.session.groupby;
-            groupby = ["artist", "albums"];
+            groupby = ["artist", "album"];
 
             var libraryDatas;
             if (req.params.page === "all"){
