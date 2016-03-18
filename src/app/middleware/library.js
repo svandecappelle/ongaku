@@ -214,31 +214,46 @@
     };
 
     Library.search = function (filter, type, groupby, fromList) {
+      var searchResultList;
+
+      if (filter.indexOf("~") === 0){
+        var filters = filter.substring(1, filter.length).split(" ");
+        logger.info("Search into any of these values: ", filters);
+        _.each(filters, function(subFilter){
+          if (searchResultList){
+            searchResultList = Library.search(subFilter, type, undefined, searchResultList);
+          } else {
+            searchResultList = Library.search(subFilter, type, undefined);
+          }
+        });
+        return this.groupby(searchResultList, groupby);
+      }
+
       if (!fromList){
         fromList = this.flatten;
       }
 
-      var searchResultList =  _.filter(fromList, function (obj) {
+      searchResultList =  _.filter(fromList, function (obj) {
+        var filterClause = ".*".concat(filter.toLowerCase().trim().replace(/ /g, ".*")).concat(".*"),
+          found = false;
         if (type === "video" && obj.type === type) {
-            return obj.name.toLowerCase().match(filter.toLowerCase());
+          found = obj.name.toLowerCase().match(filterClause);
         } else if (type === "audio" && obj.type === type) {
-          var output = obj.title.toLowerCase().match(filter.toLowerCase()) || obj.album.toLowerCase().match(filter.toLowerCase());
-          if (!output) {
+          found = obj.title.toLowerCase().match(filterClause) || obj.album.toLowerCase().match(filterClause);
+          if (!found) {
             _.each(obj.metadatas, function (val, key) {
-              if (val.toLowerCase().match(filter.toLowerCase())) {
-                output = true;
+              if (!found && val.toLowerCase().match(filterClause)) {
+                found = true;
               }
             });
           }
-          return output;
         }
-
-        return false;
+        return found;
       });
 
       var arrayResults = [];
 
-      if (type === "audio"){
+      if (type === "audio" && groupby){
         arrayResults = this.groupby(searchResultList, groupby);
       } else {
         arrayResults = searchResultList;
@@ -273,7 +288,7 @@
             if (groupbyClause[0] === "artist" && groupbyClause[1] === "album"){
                 albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
             }
-            
+
             return albumObject;
           });
 
