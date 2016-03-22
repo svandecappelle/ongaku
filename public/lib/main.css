@@ -158,7 +158,8 @@ section.sidebar .search{
 	background-color: rgba(53, 44, 44, 0.53);
 	position: absolute;
 	top: 0px;
-	margin-right: 20%;
+	right: 20%;
+	margin-right: 7px;
 }
 
 section.sidebar.show {
@@ -866,10 +867,13 @@ ul.group.artist img.artist{
 .message {
 	text-align: center;
 	position: absolute;
-	top: 0px;
-	z-index: 10000000;
-	left: 50%;
-	margin-left: -25%;
+	top: 59px;
+	z-index: 1;
+	background-color: black;
+	margin: auto;
+	left: 0px;
+	right: 20%;
+	margin-right: 7px;
 }
 
 .message span.text{
