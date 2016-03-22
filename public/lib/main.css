@@ -3,11 +3,19 @@ ul {
 	padding: 0;
 }
 
-main{
+main{/*
 	position: relative;
 	height: 100%;
 	overflow: hidden;
+*/
+	position: absolute;
+	bottom: 0px;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	overflow: auto;
 }
+
 
 main.default{
 	display: inline-block !important;
@@ -41,7 +49,9 @@ nav{
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;
-	position: relative;
+	position: fixed;
+	z-index: 1000;
+	/*position: relative;*/
 }
 
 nav .menu{
@@ -79,13 +89,22 @@ nav a span{
 }
 
 nav:hover{
-	width: 10%;
+	width: 130px;
 }
 
 nav:hover span{
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;
+}
+
+.library-view{
+	position: absolute;
+	top: 59px;
+	bottom: 0px;
+	left: 0px;
+	right: 25%;
+	overflow-y: auto;
 }
 
 section.song-list > .list-container {
@@ -132,9 +151,23 @@ section.song-list  .list-actions {
 	overflow: hidden;
 }
 
-section.sidebar.show {
-  padding-left: 30px;
+section.sidebar .search{
+	padding-left: 30px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	background-color: rgba(53, 44, 44, 0.53);
+	position: absolute;
+	top: 0px;
+	margin-right: 20%;
+}
+
+section.sidebar.show {
+	position: absolute;
+	top: 0px;
+	margin-top: 50px;
+	bottom: 70px;
+	left: 0;
+	right: 0;
 }
 
 section.sidebar .user-sidebar{
@@ -354,7 +387,8 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 }
 
 .pending-list{
-	position: absolute;
+	position: fixed;
+	/*position: absolute;*/
 	left: 0px;
 	right: 20%;
 	bottom: 30px;
@@ -365,7 +399,6 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	transition: height 0.5s linear 0.1s;
 	border-top: 6px solid black;
 	font-size: 0.8em;
-	margin-right: 9px;
 }
 
 .pending-list.video{
@@ -639,10 +672,6 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 
 .ajs-message{
 	z-index: 99999;
-}
-
-.search{
-	height: 50px;
 }
 
 img.album{
@@ -1031,7 +1060,7 @@ ul.group.artist img.artist{
 
 
 .main-content{
-	margin-left: 1em;
+	margin-left: 35px;
 	padding-top: 50px;
 	/*background: url('http://images4.fanpop.com/image/photos/17500000/cool-background-random-17506457-2299-1437.jpg') no-repeat center center fixed;*/
 	background: url('/img/background.jpg') repeat center center fixed;
@@ -1462,6 +1491,7 @@ a.link.video>.name{
 	border: 4px solid white;
 	border-radius: 50%;
 	overflow: hidden;
+	margin: auto;
 }
 
 .account .cover .avatar {
@@ -1477,11 +1507,15 @@ a.link.video>.name{
 	margin-left: 5%;
 	left: 0;
   right: 0px;
+	margin-bottom: 70px;
 }
 
+.account .user-panel{
+	display: inline-block;
+	width: 100%;
+}
 
 .account .profile .account-picture-block{
-	margin-left: 74px;
 	margin-bottom: 10px;
 }
 

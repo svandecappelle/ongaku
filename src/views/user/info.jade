@@ -1,13 +1,13 @@
 extends layout
 block append userpage-content
-  .col-md-5
+  .user-panel
     .panel.panel-default
       div.separated
         div.small-title Groups
         hr
         each group in user.groups
           div #{group}
-  .col-md-7
+  .user-panel
     .panel.panel-default
       div.small-title Playlists
       hr

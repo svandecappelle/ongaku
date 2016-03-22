@@ -495,6 +495,7 @@
         this.libraryScrollPane.unbind('jsp-scroll-y');
       }
       this.libraryScrollPane = $('.library-view').jScrollPane();
+
       this.libraryScrollPane.bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
         // For asynchronous loading debug
         // console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);

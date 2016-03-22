@@ -145,9 +145,9 @@ html
 
         main.main-content
             block library
-            block songlist
-            include player
-            include pending-play
+        block songlist
+        include player
+        include pending-play
 
         unless session.user.isAnonymous
           script.
