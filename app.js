@@ -26,6 +26,7 @@ if (process.argv[2] === "dev"){
 (function (ApplicationRoot) {
     "use strict";
     ApplicationRoot.preload = function () {
+        console.log("configuring");
         nconf.argv().env();
 
         // Alternate configuration file support
@@ -53,7 +54,8 @@ if (process.argv[2] === "dev"){
         return this;
     };
 
-    ApplicationRoot.start = function () {
+    ApplicationRoot.start = function (callback) {
+      console.log("test");
         var bodyParser = require('body-parser'),
             session = require('express-session'),
             cookieParser = require('cookie-parser'),
@@ -87,9 +89,11 @@ if (process.argv[2] === "dev"){
 
         // ROUTES
         var application = require('./src/app/');
-        application.load(app);
+        application.load(app, callback);
         application.start();
     };
 
-    ApplicationRoot.preload().start();
+    if (process.window === undefined){
+      ApplicationRoot.preload().start();
+    }
 }(exports));

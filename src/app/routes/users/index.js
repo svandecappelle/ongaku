@@ -7,14 +7,16 @@ var _ = require("underscore");
 var authentication = require("./../../middleware/authentication"),
     library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
+    exporter = require("./../../middleware/exporter"),
     meta = require("./../../meta"),
     user = require("./../../model/user"),
     userlib = require("./../../model/library"),
     playlist = require("./../../model/playlist"),
+    mime = require("mime"),
+    fs = require("fs"),
     async = require("async");
 
 logger.setLevel(nconf.get('logLevel'));
-
 
 (function (UsersRoutes) {
     "use strict";
@@ -558,5 +560,24 @@ logger.setLevel(nconf.get('logLevel'));
           res.json();
         });
 
+        app.get("/api/download/:search/:page", function(req, res){
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            var groupby = req.session.groupby;
+            var username = req.session.passport.user.username;
+
+            groupby = ["artist", "album"];
+
+            var libraryDatas;
+            if (req.params.page === "all"){
+              libraryDatas = library.search(req.params.search, "audio", groupby);
+            } else {
+              libraryDatas = library.searchPage(req.params.search, "audio", req.params.page, 3, groupby);
+            }
+
+            exporter.toZip(libraryDatas, username, function(filename){
+              res.download(filename);
+            });
+          });
+        });
     };
 }(exports));

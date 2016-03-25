@@ -83,7 +83,9 @@
           if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
               groove.open(filePath, function (err, file) {
                   if (err) {
-                      throw err;
+                      console.log("filePath: "+ filePath, err);
+                      //return cb(null, results);
+                      //throw err;
                   }
                   var libElement = Scanner.song(filePath, file.metadata(), file.duration());
                   results.push(libElement);

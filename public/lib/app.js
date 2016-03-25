@@ -519,7 +519,13 @@
           this.searchPattern = pattern;
           this.searching = true;
           this.page = 0;
+          $(".downloader").attr("href", "/api/download/" + pattern + "/all");
+          $(".downloader").show();
+
         } else {
+          $(".downloader").attr("href", "#");
+          $(".downloader").hide();
+
           this.page = -1;
           this.searching = false;
         }
@@ -527,6 +533,7 @@
         this.noOtherDataToLoad = false;
         $.ongaku.library.clear();
         $.ongaku.library.fetch();
+
     };
 
     Library.prototype.buildSearch = function (library) {

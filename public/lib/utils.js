@@ -3,23 +3,17 @@
 
 	var utils, fs, XRegExp;
 
-	if ('undefined' === typeof window) {
-		fs = require('fs');
-		XRegExp = require('xregexp').XRegExp;
+	fs = require('fs');
+	XRegExp = require('xregexp').XRegExp;
 
-		process.profile = function(operation, start) {
-			console.log('%s took %d milliseconds', operation, process.elapsedTimeSince(start));
-		};
+	process.profile = function(operation, start) {
+		console.log('%s took %d milliseconds', operation, process.elapsedTimeSince(start));
+	};
 
-		process.elapsedTimeSince = function(start) {
-			var diff = process.hrtime(start);
-			return diff[0] * 1e3 + diff[1] / 1e6;
-		};
-
-	} else {
-		XRegExp = window.XRegExp;
-	}
-
+	process.elapsedTimeSince = function(start) {
+		var diff = process.hrtime(start);
+		return diff[0] * 1e3 + diff[1] / 1e6;
+	};
 
 	module.exports = utils = {
 		generateUUID: function() {
@@ -119,7 +113,7 @@
 			} else {
 				str = XRegExp.replace(str, utils.invalidUnicodeChars, '-');
 			}
-			str = str.replace(utils.collapseWhitespace, '-')
+			str = str.replace(utils.collapseWhitespace, '-');
 			str = str.replace(utils.collapseDash, '-');
 			str = str.replace(utils.trimTrailingDash, '');
 			str = str.replace(utils.trimLeadingDash, '');
@@ -190,7 +184,7 @@
 			return function (path) {
 				var extension = utils.fileExtension(path);
 				return map[extension] || '*';
-			}
+			};
 		})(),
 
 		isRelativeUrl: function(url) {

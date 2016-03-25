@@ -38,6 +38,7 @@
         var that = this;
         scan.library(function (lib) {
             if (lib.audio){
+              logger.warn("audio folder scanned");
               that.populate("audio", lib, callback);
             }else if (lib.video){
               that.populate("video", lib, callback);
@@ -54,7 +55,6 @@
         }));
 
         if (type === "audio") {
-
             var grpByArtists = _.groupBy(lib, 'artist'),
                 groupByArtistsAndAlbum = [];
 
@@ -120,11 +120,9 @@
                   logger.debug("found artist into index: " + index, Library.data[type][index]);
                   Library.data[type][index].albums = _.union(Library.data[type][index].albums, artist.albums);
                   logger.debug("added album into index: " + index, Library.data[type][index]);
-
                 } else {
                   Library.data[type].push(artist);
                 }
-                //Library.data[type] = _.extend(Library.data[type][artist.artist], artist);
             });
             logger.debug("add scanned entries into library: ", groupByArtistsAndAlbum);
             logger.debug("lib: ", Library.data[type]);
@@ -132,6 +130,7 @@
         } else {
           Library.data[type] = _.union(Library.data[type], lib);
         }
+
         if (type === "audio" && libObject.isFinishedAll){
           logger.warn("audio scanned");
           this.audioScanned = true;
