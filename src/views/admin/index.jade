@@ -5,52 +5,57 @@ block append library
 	section.global-administration
 		ul.tabs
 			li
-				input#tab1(type="radio", name="tabs", checked)
-				label.tab(for="tab1") Application
-				div#tab-content1.tab-content
-					form.form-horizontal
+				input#tab-general(type="radio", name="tabs", checked)
+				label.tab(for="tab-general") Application
+				div.tab-content
+					form#general.form-horizontal
 						.form-group
 							label.col-md-2.control-label Port number
 							.col-md-6
-								input.form-control(name="portnumber")
+								input.form-control(name="port", value="#{port}")
 						.form-group.form-group-sm
 							label.col-md-2.control-label Allow user register
 							.col-md-6
 								.toggle-icon.icon.red
+									input(name="allowRegisteration", type="checkbox", value="#{allowRegisteration}")
 									.handle
 										.glyphicon.glyphicon-user
 						.form-group.form-group-sm
 							label.col-md-2.control-label Require authentication to stream
 							.col-md-6
 								.toggle-icon.icon.red
+									input(name="requireLogin", type="checkbox", value="#{requireLogin}")
 									.handle
 										.glyphicon.glyphicon-headphones
 						.form-group.form-group-sm
 							label.col-md-2.control-label Allow user upload
 							.col-md-6
 								.toggle-icon.icon.green
+									input(name="allowUpload", type="checkbox", value="#{allowUpload}")
 									.handle
 										.glyphicon.glyphicon-cloud-upload
 						.form-group.form-group-sm
 							label.col-md-2.control-label User library is public
 							.col-md-6
 								.toggle-icon.icon.green
+									input(name="publicLibrary", type="checkbox", value="#{publicLibrary}")
 									.handle
 										.glyphicon.glyphicon-globe
 						.form-group.form-group-sm
 							label.col-md-2.control-label User download
 							.col-md-6
 								.toggle-icon.icon.green
+									input(name="allowDownload", type="checkbox", value="#{allowDownload}")
 									.handle
 										.glyphicon.glyphicon-cloud-download
 						.form-group.form-group-sm
 							label.col-md-2.control-label Streaming buffer size
 							.col-md-6
-								input.form-control
+								input(name="bufferSize", value="#{bufferSize}").form-control
 						.form-group.form-group-sm
 							label.col-md-2.control-label Allowed formats
 							.col-md-6
-								input.form-control
+								input("allow-format", value="#{audio}").form-control
 						.form-group
 							.pull-right.col-md-4
 								button.btn.btn-danger.col-md-12(type="button") Reset to default values
@@ -59,10 +64,10 @@ block append library
 							.pull-right.col-md-4
 								button.btn.btn-info.col-md-12(type="button") Cancel
 
-			li
-				input#tab2(type="radio", name="tabs")
-				label.tab(for="tab2") Users
-				div#tab-content2.tab-content
+			li(style="display: none;")
+				input#tab-users(type="radio", name="tabs")
+				label.tab(for="tab-users") Users
+				div#users.tab-content
 					span Users management (Not yet configurable).
 
 block append songlist
@@ -72,17 +77,36 @@ block append songlist
 			$(function(){
 				/* bind widgets */
 				$('.toggle-icon').on('click', function () {
+					$(this).children('input').val(!$(this).hasClass('on'));
 					if ($(this).hasClass('on')) {
-					return $(this).removeClass('on');
+						return $(this).removeClass('on');
 					} else {
-					return $(this).addClass('on');
+						return $(this).addClass('on');
 					}
 				});
 				
-				$("input[name='portnumber']").TouchSpin({
+				$.each($("input[type='checkbox']"), function(index, val){
+					if ($(val).val() === "true"){
+						$(this).parents(".toggle-icon.icon").addClass('on');
+					}
+				});
+				
+				$("input[name='port']").TouchSpin({
 					min: 1,
 					max: 100000,
 					step: 1,
 					verticalbuttons: true
+				});
+				
+				$("form button.btn-success").on("click", function (){
+					var preferences = {},
+						$form = $(this).parents("form"),
+						formId = $($form).attr("id");
+					
+					$.each($($form).find("input"), function (index, val){
+						preferences[$(val).attr("name")] = $(val).val();
+					});
+					
+					$.post("/api/admin/".concat(formId), preferences);
 				});
 			});

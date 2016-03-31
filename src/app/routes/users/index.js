@@ -48,7 +48,7 @@ logger.setLevel(nconf.get('logLevel'));
     };
 
     UsersRoutes.checkingAuthorization = function (req, res, callback) {
-      meta.settings.getOne("global", "require-authentication", function (err, curValue) {
+      meta.settings.getOne("global", "requireLogin", function (err, curValue) {
         if (err) {
           logger.debug("userauth error checking");
           middleware.redirect('/login', res);

@@ -160,6 +160,7 @@ section.sidebar .search{
 	top: 0px;
 	right: 20%;
 	margin-right: 7px;
+	left: 0px;
 }
 
 section.sidebar.show {
@@ -894,6 +895,10 @@ ul.group.artist img.artist{
 	line-height: 24px;
 }
 
+.toggle-icon>input{
+	display: none;
+}
+
 .tabs {
 	float: none;
 	list-style: none;
@@ -951,7 +956,7 @@ ul.group.artist img.artist{
 	border-top-left-radius: 0px;
 }
 
-.tabs [id^="tab"]:checked + label.tab {
+.tabs [id^="tab-"]:checked + label.tab {
   top: 0;
   padding-top: 17px;
   box-shadow: 3px 0px 3px -3px #AAA;
@@ -967,7 +972,7 @@ ul.group.artist img.artist{
   margin-top: 0px;
 }
 
-.tabs [id^="tab"]:checked ~ [id^="tab-content"] {
+.tabs [id^="tab-"]:checked ~ [class^="tab-content"] {
   display: block;
 	background-color: white;
 }

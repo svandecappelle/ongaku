@@ -2,14 +2,9 @@
 "use strict";
 
 var fs = require('fs'),
-    //path = require('path'),
-    //async = require('async'),
     logger = require('log4js').getLogger("meta"),
-    //nconf = require('nconf'),
-    //_ = require('underscore'),
-    //rimraf = require('rimraf'),
-    //mkdirp = require('mkdirp'),
-
+    nconf = require('nconf'),
+    _ = require('underscore'),
     utils = require('./../../public/lib/utils'),
     //translator = require('./../public/translator'),
     db = require('./model/database'),
@@ -24,6 +19,12 @@ var fs = require('fs'),
         allowLocalLogin: true
     };
 
+    function mergeConfiguration(redisConfig){
+      var jsonConfiguration = nconf.get();
+      var mergedConfig = Object.assign(jsonConfiguration, redisConfig);
+      return mergedConfig;
+    }
+
     /* Settings */
     Meta.settings = {};
     Meta.settings.get = function (hash, callback) {
@@ -32,7 +33,7 @@ var fs = require('fs'),
             if (err) {
                 callback(err);
             } else {
-                callback(null, settings || {});
+                callback(null, mergeConfiguration(settings || {}));
             }
         });
     };

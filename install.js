@@ -37,36 +37,37 @@ var logger = require('log4js').getLogger('Installer'),
     Installation.install = function () {
         logger.info("Installing");
         var user = require("./src/app/model/user"),
-            meta = require('./src/app/meta'),
-            playlist = require('./src/app/model/playlist');
+          groups = require("./src/app/model/groups"),
+          meta = require('./src/app/meta'),
+          playlist = require('./src/app/model/playlist');
 
-        meta.settings.setOne("global", "require-authentication", "true", function (err) {
-            if (err) {
-                logger.debug("userauth error initialising");
-            }
-            logger.info("Standard global settings initialised");
+        meta.settings.setOne("global", "requireLogin", "true", function (err) {
+          if (err) {
+            logger.debug("userauth error initialising");
+          }
+          logger.info("Standard global settings initialised");
         });
 
+
         /*user.create({email: "admin@domain.fr", username: "admin", password: "admin"}, function (err, uuid) {
-            if (err) {
-                logger.error("Error while create user: " + err);
-                process.exit(1);
-            } else {
-                logger.info("Success create user: " + uuid);
-                user.getUsers(["admin@heimdall.fr"], function (err, data) {
-                    logger.info("Installed");
-                    process.exit(0);
-                });
-            }
+          if (err) {
+            logger.error("Error while create user: " + err);
+            process.exit(1);
+          } else {
+            logger.info("Success create user: " + uuid);
+            user.getUsers(["admin@domain.fr"], function (err, data) {
+              logger.info("Installed");
+              process.exit(0);
+            });
+          }
         });*/
 
-/*
-        playlist.create("admin", "oneplaylist", function(){
-          logger.info("playlist created");
-        });*/
-        /*playlist.push("admin", "oneplaylist", ["asong"], function(){
-          logger.info("added song to playlist");
-        });*/
+        groups.join("administrators", "admin@domain.fr", function(err){
+          if (err){
+            logger.error(err);
+          }
+          logger.info("User admin configured as administrator");
+        });
     };
 
     Installation.preload().install();

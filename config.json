@@ -15,8 +15,9 @@
     },
     "secret": "eba16c61-18db-471a-9406-6371d7e42f63",
     "bcrypt_rounds": 12,
-    "require-login": true,
     "gravatar": true,
     "local": false,
-    "register": true
+    "requireLogin": true,
+    "allowUpload": true,
+    "allowRegisteration": true
 }
