@@ -26,6 +26,5 @@ logger.setLevel(nconf.get('logLevel'));
 					middleware.json(req, res, libraryDatas);
 				});
 		});
-
 	};
 })(exports);

@@ -17,5 +17,6 @@
     "bcrypt_rounds": 12,
     "require-login": true,
     "gravatar": true,
-    "local": false
+    "local": false,
+    "register": true
 }
