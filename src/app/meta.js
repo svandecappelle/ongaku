@@ -4,6 +4,7 @@
 var fs = require('fs'),
     logger = require('log4js').getLogger("meta"),
     nconf = require('nconf'),
+    objectAssign = require('object-assign'),
     _ = require('underscore'),
     utils = require('./../../public/lib/utils'),
     //translator = require('./../public/translator'),
@@ -21,7 +22,7 @@ var fs = require('fs'),
 
     function mergeConfiguration(redisConfig){
       var jsonConfiguration = nconf.get();
-      var mergedConfig = Object.assign(jsonConfiguration, redisConfig);
+      var mergedConfig = objectAssign(jsonConfiguration, redisConfig);
       return mergedConfig;
     }
 
