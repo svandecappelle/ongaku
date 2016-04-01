@@ -4,8 +4,7 @@ var nconf = require("nconf");
 var passport = require("passport");
 var _ = require("underscore");
 
-var authentication = require("./../../middleware/authentication"),
-    library = require("./../../middleware/library"),
+var library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
     exporter = require("./../../middleware/exporter"),
     meta = require("./../../meta"),
@@ -477,16 +476,12 @@ logger.setLevel(nconf.get('logLevel'));
         var libraryDatas = library.getAudio(0, 3);
 
         logger.debug(libraryDatas);
-        middleware.render('songlist', req, res, {library: libraryDatas});
-      });
-
-      app.get('/403', function (req, res) {
-        middleware.render('403', req, res);
+        middleware.render('library/index', req, res, {library: libraryDatas});
       });
 
       app.get('/video', function (req, res) {
         logger.debug("Client access to videos [" + req.ip + "]");
-        middleware.render('videolist', req, res);
+        middleware.render('library/videos', req, res);
       });
 
       app.get('/library', function (req, res){
@@ -495,7 +490,7 @@ logger.setLevel(nconf.get('logLevel'));
 
           userlib.get(username, function (err, uids){
             var libraryDatas = library.getAudioById(uids, 0, 3);
-            middleware.render('userlist', req, res, {library: libraryDatas});
+            middleware.render('user/index', req, res, {library: libraryDatas});
           });
         });
       });
@@ -551,25 +546,9 @@ logger.setLevel(nconf.get('logLevel'));
           res.redirect(cover);
         }
       });
-
-      app.get("/users", function (req, res){
-        user.getAllUsers(function (err, usersDatas){
-          async.map(usersDatas.users, function (userData, next){
-            user.getGroupsByUsername(userData.username, function (groups){
-              userData = _.extend(userData, {groups: groups});
-              next(null, userData);
-            });
-          }, function (err, usersDatas){
-            middleware.render('users', req, res, {users: usersDatas});
-          });
-        });
-      });
     };
 
     UsersRoutes.load = function (app) {
-      authentication.initialize(app);
-      authentication.createRoutes(app);
-
       this.api(app);
       this.routes(app);
     };

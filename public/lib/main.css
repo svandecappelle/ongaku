@@ -82,7 +82,7 @@ nav a i{
 
 nav a span{
 	position: absolute;
-	padding-left: 15px;
+	padding-left: 16px;
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;

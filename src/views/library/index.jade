@@ -1,11 +1,11 @@
-extends app
+extends ../layouts/app
 block append headpage
     title Ongaku music
 block append library
     include library
 block append songlist
     section.song-list
-        include playlist
+        include ../layouts/playlist
 
 block append scripts
   script.

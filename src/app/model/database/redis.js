@@ -5,7 +5,7 @@
     var nconf = require('nconf'),
         path = require('path'),
         express = require('express'),
-        utils = require('./../../../../public/lib/utils.js'),
+        utils = require('./../../utils.js'),
         logger = require('log4js').getLogger('Database:redis'),
         redis,
         ConnectRedis,

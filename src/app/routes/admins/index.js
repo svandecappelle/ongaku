@@ -1,6 +1,7 @@
 var logger = require('log4js').getLogger("AdministratorsRoutes"),
 	nconf = require("nconf"),
 	async = require('async'),
+	_ = require("underscore"),
 	middleware = require("./../../middleware/middleware"),
 	library = require("./../../middleware/library"),
 	meta = require("./../../meta"),
@@ -63,6 +64,23 @@ logger.setLevel(nconf.get('logLevel'));
 					middleware.render('admin/index', req, res, settings);
 				});
 			});
+		});
+
+		app.get("/users", function (req, res){
+			user.getAllUsers(function (err, usersDatas){
+				async.map(usersDatas.users, function (userData, next){
+					user.getGroupsByUsername(userData.username, function (groups){
+						userData = _.extend(userData, {groups: groups});
+						next(null, userData);
+					});
+				}, function (err, usersDatas){
+					middleware.render('admin/users', req, res, {users: usersDatas});
+				});
+			});
+		});
+
+		app.get("/register", function(req, res){
+			middleware.render("admin/register");
 		});
 	};
 

@@ -6,7 +6,7 @@
         logger = require('log4js').getLogger('Groups'),
         user = require('./user'),
         db = require('./database'),
-        utils = require('../../../public/lib/utils'),
+        utils = require('./../utils'),
 
         filterGroups = function (groups, options) {
             // Remove system, hidden, or deleted groups from this list

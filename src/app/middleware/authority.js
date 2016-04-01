@@ -1,19 +1,18 @@
-(function (Auth) {
+(function (Authority) {
     "use strict";
 
     var passport = require('passport'),
-        LocalStrategy = require('passport-local').Strategy,
-        nconf = require('nconf'),
-        bcrypt = require('bcryptjs'),
-        logger = require('log4js').getLogger("authenticate"),
-        meta = require('./../meta'),
-        user = require('./../model/user'),
-        db = require('../model/database'),
-        utils = require('./../../../public/lib/utils'),
-        middleware = require('./../middleware/middleware');
+      bcrypt = require('bcryptjs'),
+      nconf = require('nconf'),
+      logger = require('log4js').getLogger("authority"),
 
+      middleware = require("./middleware"),
+      meta = require('./../meta'),
+      user = require('./../model/user'),
+      db = require('./../model/database'),
+      utils = require('./../utils');
 
-    function logout(req, res) {
+    Authority.logout = function (req, res) {
         if (req.isAuthenticated()) {
             logger.info('[Auth] Session ' + req.sessionID + ' logout (uid: ' + req.session.passport.user + ')');
 
@@ -27,9 +26,9 @@
         }
 
         middleware.redirect('/', res);
-    }
+    };
 
-    function login(req, res, next) {
+    Authority.authenticate = function(req, res, next) {
         if (meta.config.allowLocalLogin !== undefined && parseInt(meta.config.allowLocalLogin, 10) === 0) {
             return res.send(404);
         }
@@ -74,9 +73,9 @@
             });
 
         })(req, res, next);
-    }
+    };
 
-    function register(req, res) {
+     Authority.register = function (req, res) {
         if (meta.config.allowRegistration !== undefined && parseInt(meta.config.allowRegistration, 10) === 0) {
             return res.send(403);
         }
@@ -113,46 +112,9 @@
                 });
             });
         });
-    }
-
-    Auth.initialize = function (app) {
-        app.use(passport.initialize());
-        app.use(passport.session());
     };
 
-    Auth.registerApp = function (app) {
-        Auth.app = app;
-    };
-
-    Auth.createRoutes = function (app) {
-        //app.get('/api/login', middleware.redirectToAccountIfLoggedIn, controllers.login);
-        app.get('/logout', logout);
-
-        app.get('/login', function (req, res) {
-            if (req.session === undefined  || req.session.redirectTo !== undefined) {
-                req.session.redirectTo = "/";
-            }
-            middleware.render('login', req, res);
-        });
-
-        app.post('/logout', logout);
-        app.post('/register', register);
-        app.post('/login', function (req, res, next) {
-            if (req.body.username && utils.isEmailValid(req.body.username)) {
-                user.getUsernameByEmail(req.body.username, function (err, username) {
-                    if (err) {
-                        return next(err);
-                    }
-                    req.body.username = username ? username : req.body.username;
-                    login(req, res, next);
-                });
-            } else {
-                login(req, res, next);
-            }
-        });
-    };
-
-    Auth.login = function (username, password, done) {
+    Authority.login = function (username, password, done) {
         if (!username || !password) {
             return done(new Error('[[error:invalid-user-data]]'));
         }
@@ -217,17 +179,4 @@
             });
         });
     };
-
-    passport.use(new LocalStrategy(Auth.login));
-
-    passport.serializeUser(function (user, done) {
-        done(null, user);
-    });
-
-    passport.deserializeUser(function (user, done) {
-        done(null, {
-            uid: user.uid,
-            username: user.username
-        });
-    });
 }(exports));
