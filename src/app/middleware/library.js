@@ -38,7 +38,6 @@
         var that = this;
         scan.library(function (lib) {
             if (lib.audio){
-              logger.warn("audio folder scanned");
               that.populate("audio", lib, callback);
             }else if (lib.video){
               that.populate("video", lib, callback);
@@ -132,10 +131,10 @@
         }
 
         if (type === "audio" && libObject.isFinishedAll){
-          logger.warn("audio scanned");
+          logger.info("audio scanned");
           this.audioScanned = true;
         } else if(libObject.isFinishedAll) {
-          logger.warn("video scanned");
+          logger.info("video scanned");
           this.videoScanned = true;
         }
         callback();
@@ -152,7 +151,6 @@
     }
 
     Library.scanning = function () {
-        logger.info("scan: ", this.scanProgress);
         return this.scanProgress !== undefined ? this.scanProgress : false;
     };
 
@@ -181,8 +179,6 @@
         uuid = uuid.replace(".mp3", "");
         uuid = uuid.replace(".ogg", "");
         uuid = uuid.replace(".wav", "");
-
-        logger.debug("getRelativePath: " + uuid);
         var libElement = this.getByUid(uuid);
         return libElement.relativePath;
     };
@@ -200,7 +196,6 @@
     };
 
     Library.getVideo = function (page, lenght) {
-      logger.info(_.first(_.rest(this.data.video, page * lenght), lenght));
       return _.first(_.rest(this.data.video, page * lenght), lenght);
     };
 
@@ -217,7 +212,7 @@
 
       if (filter.indexOf("~") === 0){
         var filters = filter.substring(1, filter.length).split(" ");
-        logger.info("Search into any of these values: ", filters);
+        logger.debug("Search into any of these values: ", filters);
         _.each(filters, function(subFilter){
           if (searchResultList){
             searchResultList = Library.search(subFilter, type, undefined, searchResultList);

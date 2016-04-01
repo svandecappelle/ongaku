@@ -12,9 +12,6 @@ var logger = require('log4js').getLogger('PlaylistModel'),
           return callback(err);
       }
 
-      for (var i = 0; i < playlistuids.length; i++) {
-        logger.info("playlist: ", playlistuids[i]);
-      }
       callback(null, playlistuids);
     });
   };
@@ -29,9 +26,6 @@ var logger = require('log4js').getLogger('PlaylistModel'),
           return callback(err);
       }
 
-      for (var i = 0; i < songuid.length; i++) {
-        logger.info("playlist song: ", songuid[i]);
-      }
       callback(null, songuid);
     });
   };

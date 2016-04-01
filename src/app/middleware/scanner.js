@@ -25,22 +25,12 @@
           audio: function(){
             Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
               logger.debug("Callback scan audio folder");
-              if (res.length){
-                logger.info("Adding " + res.length + " audio entries into library.");
-              } else if (isFinishedAll){
-                logger.info("Audio elements are all scanned into library folder ");
-              }
               callback({audio: res, isFinishedAll: isFinishedAll});
             });
           },
           video: function(){
             Scanner.scanVideo(nconf.get("library"), function (err, res, isFinishedAll) {
               logger.debug("Callback scan video folder");
-              if (res.length > 0){
-                logger.info("Adding " + res.length + " video entries into library.");
-              } else if (isFinishedAll){
-                  logger.info("Video elements are all scanned into library folder ");
-              }
               callback({video: res, isFinishedAll: isFinishedAll});
             });
           }
@@ -148,7 +138,7 @@
 
                 });
             }, function (err) {
-                logger.debug("Scan " + apath + " finished");
+                logger.info("All files scanned into " + apath + " finished: " + results.length + " elements found.");
                 if (callback !== libraryCallBack){
                   callback(err, results);
                   libraryCallBack(err, results, false);
