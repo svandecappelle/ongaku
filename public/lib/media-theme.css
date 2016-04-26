@@ -1,0 +1,21 @@
+.mejs-container .mejs-controls {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.mejs-controls .mejs-button button:hover{
+  color: #97EDA7;
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-current{
+    background-color: rgb(208, 212, 209);
+    background: linear-gradient(rgba(255, 255, 255, 0.8), rgb(255, 255, 255));
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-loaded{
+    background-color: rgb(82, 199, 89);
+    background: linear-gradient(rgb(40, 226, 75), rgb(113, 230, 135));
+}
+
+.mejs-controls .mejs-time-rail .mejs-time-buffering{
+
+}

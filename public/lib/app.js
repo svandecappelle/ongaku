@@ -135,7 +135,6 @@
 
         $(".playing").removeClass('playing');
         this.current = uid;
-        console.log("start playing: ", this.current);
 
         $("#controls").attr("src", "/api/stream/".concat(uid));
         $("#mp3src").attr("src", "/api/stream/".concat(uid).concat(".".concat(encoding))).remove().appendTo("#controls");
@@ -146,16 +145,13 @@
         $.ongaku.audiowave.rebuild();
 
         if (['mp3', 'ogg', 'wav'].indexOf(encoding) === -1) {
-            console.log(encoding);
             alertify.success('Transcoding...', 0);
         }
 
         $(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
-        console.log($(".list-container").find("[data-uid='" + this.current + "']"));
         $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing');
 
         var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text() + " ";
-        console.log("play: " + title);
         this.titleScroller.configure({
             text: title,
             speed: 500,
@@ -174,11 +170,10 @@
     Player.prototype.build = function (callback) {
         if ($('.player > audio').children().length > 0 && !this.isInitialised()) {
             this.initialised = true;
-            console.log("build audio controls");
             this.player = new MediaElementPlayer("audio", {
                 volume: 0.1,
+                features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
                 success: function (me) {
-                    console.log("musique player builded: playing starting");
                     me.addEventListener('loadedmetadata', function () {
                         alertify.dismissAll();
                     });
@@ -191,7 +186,6 @@
                             alertify.warning('Add a track to play', 2);
                             $.ongaku.stop();
                         } else if ( $(".playing").length === 0) {
-                            console.log("need to select into playing: " + $.ongaku.getCurrent());
                             $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
                         }
                     });

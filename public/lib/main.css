@@ -1072,7 +1072,7 @@ ul.group.artist img.artist{
 	margin-left: 35px;
 	padding-top: 50px;
 	/*background: url('http://images4.fanpop.com/image/photos/17500000/cool-background-random-17506457-2299-1437.jpg') no-repeat center center fixed;*/
-	background: url('/img/background.jpg') repeat center center fixed;
+	background: url('/img/background.jpg') repeat center center;
 	background-size: cover;
 }
 
