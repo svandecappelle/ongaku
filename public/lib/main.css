@@ -125,7 +125,19 @@ section.song-list > .list-container {
 }
 
 section.song-list > .list-container.video {
-	left: 90%;
+	left: 80%;
+}
+
+.link.video{
+	color: #C4CAC3;
+}
+
+.link.video:hover{
+	color: #FFF;
+}
+
+.video-js .vjs-tech:hover{
+	background-color: rgba(30, 30, 30, 0.84);
 }
 
 section.song-list > .list-container:hover {
