@@ -236,6 +236,7 @@ section.song-list > .list-container{
 section.song-list > .list-container .playlist{
 	margin: 0px;
 	padding-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 section.song-list > .list-container .playlist-columns{
