@@ -474,7 +474,9 @@
       return this.handles;
     };
 
-    Library.prototype.bind = function () {
+    Library.prototype.bind = function (view) {
+      console.log("bind", new Error());
+        this.view = view;
         this.unbind();
         $.each(this.handlers(), function (type, handler){
           handler.bind();
@@ -740,10 +742,6 @@
       this.scrollingLoader();
     };
 
-    Library.prototype.setView = function (view) {
-      this.view = view;
-    };
-
     Library.prototype.fetch = function () {
       var that = this,
         genericUrl;
@@ -767,6 +765,7 @@
 
         this.page += 1;
         this.loader.toggle();
+        console.log("fetching page: " + genericUrl);
         $.get(genericUrl, function(output){
           // For asynchronous loading debug
           // console.log("append lib: "+ output);

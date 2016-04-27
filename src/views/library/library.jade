@@ -25,9 +25,3 @@ section.sidebar.show
 	.user-sidebar.library-view
 		.library
 			ul.lib.group.artist.open
-
-block append scripts
-	script.
-		$(function (){
-			$.ongaku.library.setView("user/#{session.user.username}");
-		});

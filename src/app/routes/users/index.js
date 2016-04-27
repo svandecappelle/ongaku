@@ -46,6 +46,18 @@ logger.setLevel(nconf.get('logLevel'));
       }
     };
 
+    UsersRoutes.renderLibraryPage = function (username, req, res){
+      userlib.get(username, function (err, uids){
+        var libraryDatas = null;
+        if (req.params.page === "all"){
+          libraryDatas = library.getAudioById(uids);
+        } else {
+          libraryDatas = library.getAudioById(uids, req.params.page, 3);
+        }
+        middleware.json(req, res, libraryDatas);
+      });
+    };
+
     UsersRoutes.checkingAuthorization = function (req, res, callback) {
       meta.settings.getOne("global", "requireLogin", function (err, curValue) {
         if (err) {
@@ -159,16 +171,7 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get('/api/user/:username/library/:page', function (req, res){
         var username = req.params.username;
-
-        userlib.get(username, function (err, uids){
-          var libraryDatas = null;
-          if (req.params.page === "all"){
-            libraryDatas = library.getAudioById(uids);
-          } else {
-            libraryDatas = library.getAudioById(uids, req.params.page, 3);
-          }
-          middleware.json(req, res, libraryDatas);
-        });
+        UsersRoutes.renderLibraryPage(username, req, res);
       });
 
       app.get('/api/user/library/filter/:search', function (req, res) {

@@ -6,3 +6,16 @@ block append library
 block append songlist
     section.song-list
         include ../layouts/playlist
+block append scripts
+  script.
+    $(function (){
+      $.ongaku.library.bind("user/#{session.user.username}");
+      $.ongaku.library.fetch();
+      $.get("/api/user/playlists", function(output){
+        $.each(output, function(index, playlist){
+          var playlistBlock = $("<a>");
+          playlistBlock.text(playlist);
+          $(".playlists-elements").append(playlistBlock);
+        });
+      });
+    });
