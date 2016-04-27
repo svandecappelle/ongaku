@@ -203,7 +203,6 @@
         } else {
             this.initialised = false;
             $('.player').height("30px");
-            $('.player').css("background-color", "black");
             $('.player>audio').hide();
         }
     };

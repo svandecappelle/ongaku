@@ -42,7 +42,7 @@ nav{
 	color: white;
 	width: 45px;
 	height: 100%;
-	background-color: #030303;
+	background-color: #1a2226;
 	float: left;
 	overflow: hidden;
 	box-sizing: border-box;
@@ -155,7 +155,7 @@ section.sidebar .search{
 	padding-left: 30px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	background-color: rgba(53, 44, 44, 0.53);
+	background-color: rgba(30, 30, 30, 0.84);
 	position: absolute;
 	top: 0px;
 	right: 20%;
@@ -177,7 +177,7 @@ section.sidebar .user-sidebar{
 }
 
 span.button{
-	background-color: black;
+	background-color: #1a2226;
 	color: white;
 	border-radius: 2px;
 	font-size: 10pt;
@@ -190,7 +190,7 @@ span.button{
 
 span.button:hover{
 	background-color: #DCDCDC;
-	color: black;
+	color: #1a2226;
 }
 
 section.song-list > .list-container .infos{
@@ -379,7 +379,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	right: 0;
 	width: 100%;
 	z-index: 1000;
-	background-color: black;
+	background-color: #1a2226;
 }
 
 .player.empty{
@@ -395,11 +395,11 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	right: 20%;
 	bottom: 30px;
 	height: 36px;
-	background-color: rgba(0, 0, 0, 0.75);
+	background-color: rgba(30, 30, 30, 0.84);
 	text-align: center;
 	color: white;
 	transition: height 0.5s linear 0.1s;
-	border-top: 6px solid black;
+	border-top: 6px solid #1a2226;
 	font-size: 0.8em;
 }
 
@@ -713,7 +713,7 @@ ul.group.artist>li{
   box-shadow: 0px 0px 5px rgba(131, 127, 127, 0.5);
 	margin: 7px;
 	padding: 6px;
-	background-color: rgba(12, 12, 12, 0.8);
+	background-color: rgba(30, 30, 30, 0.84);
 }
 
 ul.group.artist>li.detail{
@@ -828,7 +828,7 @@ ul.group.artist img.artist{
 }
 
 .lib .group .tracklist>li:hover{
-	background-color: #EFEFEF;
+	background-color: rgb(236, 236, 236);
 }
 
 .notrackplaying{
@@ -1126,19 +1126,10 @@ ul.group.artist img.artist{
 }
 
 #header{
-	height: 51px;
+	height: 50px;
 	color: #fff;
-    background: repeat scroll 0px 0px #000;
-    border-right: 1px solid #000;
-    border-width: 0px 1px 1px;
-    border-style: solid;
-    border-color: #000;
-    -moz-border-top-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    border-image: none;
-    box-shadow: 0px -3px 12px rgba(0, 0, 0, 0.5);
+  background: repeat scroll 0px 0px #1a2226;
+  border: none;
 }
 
 #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
@@ -1216,12 +1207,12 @@ h2{
 }
 
 .navbar-default .navbar-nav .dropdown-menu a:hover, .navbar-default .navbar-nav .dropdown-menu a:focus {
-    background-color: #111;
+    background-color: #1a2226;
     color: white;
 }
 
 .navbar-default .navbar-nav .dropdown-menu a:hover, .navbar-default .navbar-nav .dropdown-menu a:focus {
-    background-color: #111 !important;
+    background-color: #1a2226 !important;
 }
 
 .small-title {

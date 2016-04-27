@@ -12,6 +12,5 @@ block player
 	if (data.playing)
 		script.
 			$(function(){
-				console.log("set current track: #{data.playing.uid}");
 				$.ongaku.setCurrent("#{data.playing.uid}");
 			});
