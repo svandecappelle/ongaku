@@ -971,7 +971,7 @@ ul.group.artist img.artist{
   box-shadow: 4px -4px 2px -4px #AAA;
   border-width: 1px;
   border-style: solid;
-  border-color: #AAA;
+  border-color: #1a2226;
   border-radius: 5px;
 }
 
@@ -983,13 +983,13 @@ ul.group.artist img.artist{
   top: 0;
   padding-top: 17px;
   box-shadow: 3px 0px 3px -3px #AAA;
-  background: #FFF none repeat scroll 0% 0%;
+  background: #1a2226 none repeat scroll 0% 0%;
   z-index: 6;
-  color: #13CC00;
+  color: #E2E2E2;
   border-top: 1px solid;
   border-left: 1px solid;
   border-right: 1px solid;
-  border-color: #AAA;
+  border-color: #1a2226;
   box-sizing: border-box;
   line-height: 21px;
   margin-top: 0px;
@@ -997,17 +997,19 @@ ul.group.artist img.artist{
 
 .tabs [id^="tab-"]:checked ~ [class^="tab-content"] {
   display: block;
-	background-color: white;
+	background-color: #1a2226;
+	color: #FFF
+}
+
+.form-control:focus {
+    border-color: #21F332;
 }
 
 /* Toggle buttons */
-
-
 .icon {
   position: relative;
   border-radius: 70px;
   background-color: #EFF4FF;
-  box-shadow: 0 2px 1px 0 rgba(255, 255, 255, 0.5), inset 0 1px 3px 0 rgba(0, 0, 0, 0.2);
   width: 65px;
   height: 29px;
   margin-right: 20px;
@@ -1276,7 +1278,7 @@ h2{
 }
 
 .popover-content{
-	color: black;
+	color: #FFF;
 }
 
 .mini-title{
