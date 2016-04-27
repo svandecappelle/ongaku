@@ -1665,3 +1665,8 @@ a.link.video>.name{
 .jspDrag{
 	background-color: #4B4C4C;
 }
+
+.jspTrack {
+    background: rgba(224, 200, 135, 0.39);
+    position: relative;
+}
