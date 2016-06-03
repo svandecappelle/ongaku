@@ -40,6 +40,9 @@
     "min_width": 400,
     "min_height": 200
   },
+  "optionalDependencies": {
+    "groove": ">=2.4.0"
+  },
   "dependencies": {
     "async": ">1.5.0",
     "bcryptjs": "~0.7.10",
@@ -52,7 +55,6 @@
     "express-session": "1.2.1",
     "forever": "0.15.1",
     "gravatar": "1.0.6",
-    "groove": "2.4.0",
     "jade": "*",
     "jszip": "2.6.0",
     "lastfmapi": "0.0.6",
