@@ -97,14 +97,13 @@
                 var mm = require('musicmetadata');
                 //var taglib = require('taglib');
 
-                logger.info("Loading using mm: ", filePath);
+                logger.debug("Loading using mm: ", filePath);
 
                 var parser = mm(fs.createReadStream(filePath), function (err, metadata) {
                   if (err) throw err;
                 });
 
                 parser.on("metadata", function(metadata){
-                  logger.info(metadata);
                   var libElement = Scanner.song(filePath, metadata, metadata.duration);
                   results.push(libElement);
                   logger.debug(libElement);
