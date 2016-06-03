@@ -236,7 +236,7 @@
           found = obj.title.toLowerCase().match(filterClause) || obj.album.toLowerCase().match(filterClause);
           if (!found) {
             _.each(obj.metadatas, function (val, key) {
-              if (!found && val.toLowerCase().match(filterClause)) {
+              if (!found && (val && val.toLowerCase().match(filterClause))) {
                 found = true;
               }
             });
