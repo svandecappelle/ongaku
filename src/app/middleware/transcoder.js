@@ -1,13 +1,18 @@
 /*jslint node: true */
 (function (Transcoder) {
     "use strict";
-    var groove = require('groove'),
-        childProcess = require("child_process"),
+    var childProcess = require("child_process"),
         logger = require('log4js').getLogger("Transcoder"),
         fs = require("fs"),
-        //lame = require("lame"),
         assert = require('assert'),
         _ = require("underscore");
+
+    // groove seems to be better than mm
+    try {
+      var groove = require('groove');
+    } catch (ex){
+      logger.warn("Optional dependency not installed");
+    }
 
     Transcoder.sendVideoFile = function (params, res) {
         res.writeHead({
@@ -86,42 +91,86 @@
     // TODO find if it is better to transcode on streaming or on upload.
     Transcoder.transcode = function(params, req, res) {
         logger.debug("sending audio file");
-        groove.setLogging(groove.LOG_INFO);
+        var outputFile = "/tmp/".concat(params.sessionId).concat(".mp3"),
+          that = this,
+          streamStarted = false;
+        if (groove){
+          groove.setLogging(groove.LOG_INFO);
 
-        var playlist = groove.createPlaylist(),
-            encoder = groove.createEncoder(),
-            outputFile = "/tmp/".concat(params.sessionId).concat(".mp3"),
-            outStream = fs.createWriteStream(outputFile),
-            streamStarted = false,
-            that = this;
-        encoder.formatShortName = "mp3";
-        encoder.codecShortName = "lame";
+          var playlist = groove.createPlaylist(),
+              encoder = groove.createEncoder(),
+              outStream = fs.createWriteStream(outputFile);
+          encoder.formatShortName = "mp3";
+          encoder.codecShortName = "lame";
 
-        encoder.on('buffer', function () {
-            var buffer;
-            while (buffer = encoder.getBuffer()) {
-                if (buffer.buffer) {
-                    outStream.write(buffer.buffer);
-                } else {
-                    if (!streamStarted) {
-                        streamStarted = true;
-                        that.startStream(req, res, outputFile, params.sessionId);
-                    }
+          encoder.on('buffer', function () {
+              var buffer;
+              while (buffer = encoder.getBuffer()) {
+                  if (buffer.buffer) {
+                      outStream.write(buffer.buffer);
+                  } else {
+                      if (!streamStarted) {
+                          streamStarted = true;
+                          that.startStream(req, res, outputFile, params.sessionId);
+                      }
 
-                    that.cleanup(playlist, encoder);
-                    return;
-                }
+                      that.cleanup(playlist, encoder);
+                      return;
+                  }
+              }
+          });
+          encoder.attach(playlist, function (err) {
+              assert.ifError(err);
+
+              groove.open(params.location, function (err, file) {
+                  assert.ifError(err);
+                  playlist.insert(file, null);
+              });
+          });
+        } else {
+          exportToMp3(params, function(){
+            logger.debug("encoding file")
+          }, function(){
+            if (!streamStarted) {
+              streamStarted = true;
+              that.startStream(req, res, outputFile, params.sessionId);
             }
-        });
-        encoder.attach(playlist, function (err) {
-            assert.ifError(err);
-
-            groove.open(params.location, function (err, file) {
-                assert.ifError(err);
-                playlist.insert(file, null);
-            });
-        });
+          });
+        }
     };
+
+    function exportToMp3(file, onData, onDone){
+      var childProcess = require("child_process");
+
+    	var args = [
+    		"-i", file.location,
+    		"-ab", "320k",
+    		"-map_metadata", "0",
+    		"-id3v2_version", "3",
+    		"-y",
+    		"/tmp/" + file.sessionId + ".mp3"
+    	]
+
+    	var ffmpeg = childProcess.spawn("ffmpeg", args)
+
+    	// NOTE: ffmpeg outputs to standard error - Always has, always will no doubt
+
+    	ffmpeg.stdout.on("data", function(data) {
+    		onData({out: data})
+    	})
+
+      ffmpeg.stderr.on("data", function(data) {
+    		onData({err: data})
+    	})
+
+      ffmpeg.on("close", function(data) {
+        onDone({out: data})
+      })
+
+      ffmpeg.on("close", function(data) {
+    		onDone({err: data})
+    	})
+    }
 
     Transcoder.startStream = function (req, res, outputFile, sessionId) {
         var reqStreaming = _.clone(req),

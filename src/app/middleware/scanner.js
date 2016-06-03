@@ -9,10 +9,14 @@
         path = require("path"),
         nconf = require("nconf"),
         mm = require('musicmetadata'),
-        // groove seems to be better than mm
-        groove = require('groove'),
         uuid = require('uuid'),
         crypto = require('crypto');
+    // groove seems to be better than mm
+    try {
+      var groove = require('groove');
+    } catch (ex){
+      logger.warn("Optional dependency not installed");
+    }
 
     logger.setLevel(nconf.get('logLevel'));
 
@@ -71,23 +75,42 @@
       type: "audio",
       append: function (filePath, cb, results) {
           if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
-              groove.open(filePath, function (err, file) {
-                  if (err) {
-                      console.log("filePath: "+ filePath, err);
-                      //return cb(null, results);
-                      //throw err;
-                  }
-                  var libElement = Scanner.song(filePath, file.metadata(), file.duration());
+              if (groove){
+                groove.open(filePath, function (err, file) {
+                    if (err) {
+                        console.log("filePath: "+ filePath, err);
+                        //return cb(null, results);
+                        //throw err;
+                    }
+                    var libElement = Scanner.song(filePath, file.metadata(), file.duration());
+                    results.push(libElement);
+                    logger.debug(libElement);
+
+                    file.close(function (err) {
+                        if (err) {
+                            throw err;
+                        }
+                    });
+                    cb(null, results); // asynchronously call the loop
+                });
+              } else {
+                var mm = require('musicmetadata');
+                //var taglib = require('taglib');
+
+                logger.info("Loading using mm: ", filePath);
+
+                var parser = mm(fs.createReadStream(filePath), function (err, metadata) {
+                  if (err) throw err;
+                });
+
+                parser.on("metadata", function(metadata){
+                  logger.info(metadata);
+                  var libElement = Scanner.song(filePath, metadata, metadata.duration);
                   results.push(libElement);
                   logger.debug(libElement);
-
-                  file.close(function (err) {
-                      if (err) {
-                          throw err;
-                      }
-                  });
-                  cb(null, results); // asynchronously call the loop
-              });
+                  return cb(null, results);
+                });
+              }
           } else {
               cb(null, results); // asynchronously call the loop
           }

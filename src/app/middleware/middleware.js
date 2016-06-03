@@ -97,20 +97,21 @@
         } else {
             logger.info("Stream " + type);
             var fs = require("fs"),
-                src = library.getRelativePath(path.basename(uuid));
-            // logger.info("streaming type: "+ path.extname(src).replace(".", ""));
-            if (type === 'audio' && !_.contains(allowedStreamingAudioTypes, path.extname(src).replace(".", ""))){
+                src = library.getRelativePath(path.basename(uuid)),
+                extension =  path.extname(src).replace(".", "");
+            if (type === 'audio' && !_.contains(allowedStreamingAudioTypes, extension)){
+                logger.info(src, "type: " + type, path.extname(src).replace(".", ""), "not in allowed direct streaming type need to convert: ", allowedStreamingAudioTypes);
                 var libraryEntry = library.getByUid(uuid),
                     audio = {
                         duration: libraryEntry.duration,
                         location: libraryEntry.file,
                         uid: libraryEntry.uid,
-                        sessionId: req.sessionID
+                        sessionId: req.sessionID,
+                        extname: extension
                     };
                 logger.debug(audio);
                 transcoder.transcode(audio, req, res);
             } else {
-                logger.debug(src);
                 var reqStreaming = _.clone(req),
                     settings = {
                         "mode": "development",
