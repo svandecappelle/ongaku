@@ -244,7 +244,7 @@
                 } else if (Array.isArray(val)){
                   for (var value of val){
                     logger.info("test value: ", value);
-                    if (value.toLowerCase().match(filterClause)){
+                    if (typeof value === 'String' && value.toLowerCase().match(filterClause)){
                       found = true
                       break;
                     }
