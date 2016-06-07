@@ -236,8 +236,23 @@
           found = obj.title.toLowerCase().match(filterClause) || obj.album.toLowerCase().match(filterClause);
           if (!found) {
             _.each(obj.metadatas, function (val, key) {
-              if (!found && (typeof val === 'String' && val.toLowerCase().match())) {
-                found = true;
+              if (!found){
+                if (typeof val === 'String' ){
+                  if (val.toLowerCase().match(filterClause)){
+                    found = true;
+                  }
+                } else if (Array.isArray(val)){
+                  for (var value of val){
+                    if (value.toLowerCase().match(filterClause)){
+                      found = true
+                      break;
+                    }
+                  }
+                } else {
+                  if (val === filterClause){
+                    found = true
+                  }
+                }
               }
             });
           }
