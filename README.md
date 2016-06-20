@@ -2,7 +2,7 @@ ongaku
 ======
 
 Music &amp; video browser player in nodejs.
-Demo [Here](http://mizore.fr:8000/ "here")
+Demo [Here](http://music.mizore.fr/ "here")
 
 # Getting started
 ## Installation
