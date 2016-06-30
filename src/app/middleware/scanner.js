@@ -8,14 +8,16 @@
         _  = require("underscore"),
         path = require("path"),
         nconf = require("nconf"),
-        mm = require('musicmetadata'),
         uuid = require('uuid'),
-        crypto = require('crypto');
+        crypto = require('crypto'),
+        mm,
+        groove;
     // groove seems to be better than mm
     try {
-      var groove = require('groove');
+      groove = require('groove');
     } catch (ex){
       logger.warn("Optional dependency not installed");
+      mm = require('musicmetadata');
     }
 
     logger.setLevel(nconf.get('logLevel'));
@@ -41,6 +43,12 @@
         }, function(){
 
         });
+/*
+      Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
+        logger.debug("Callback scan audio folder");
+        callback({audio: res, isFinishedAll: isFinishedAll});
+      });
+      */
     };
 
     Scanner.Appenders = function (){
@@ -94,11 +102,7 @@
                     cb(null, results); // asynchronously call the loop
                 });
               } else {
-                var mm = require('musicmetadata');
-                //var taglib = require('taglib');
-
                 logger.debug("Loading using mm: ", filePath);
-
                 var parser = mm(fs.createReadStream(filePath), function (err, metadata) {
                   if (err) throw err;
                 });
@@ -148,8 +152,6 @@
 
                     if (stat.isFile()) {
                         logger.debug("File found".concat(newpath));
-                        var metadataParser = mm(fs.createReadStream(newpath));
-
                         if (appender) {
                             appender.append(newpath, cb, results);
                         }
