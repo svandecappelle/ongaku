@@ -49,7 +49,7 @@ var logger = require('log4js').getLogger('Installer'),
         });
 
 
-        /*user.create({email: "admin@domain.fr", username: "admin", password: "admin"}, function (err, uuid) {
+        user.create({email: "admin@domain.fr", username: "admin", password: "admin"}, function (err, uuid) {
           if (err) {
             logger.error("Error while create user: " + err);
             process.exit(1);
@@ -60,7 +60,7 @@ var logger = require('log4js').getLogger('Installer'),
               process.exit(0);
             });
           }
-        });*/
+        });
 
         groups.join("administrators", "admin@domain.fr", function(err){
           if (err){

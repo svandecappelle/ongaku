@@ -1,6 +1,8 @@
 +function ($) {
     'use strict';
 
+    var activateBottomPendingList = true;
+
     function TitleScroller() {
         this.appearCharLenghtLimit = 16;
         this.options = {};
@@ -474,15 +476,14 @@
     };
 
     Library.prototype.bind = function (view) {
-      console.log("bind", new Error());
-        this.view = view;
-        this.unbind();
-        $.each(this.handlers(), function (type, handler){
-          handler.bind();
-        });
+      this.view = view;
+      this.unbind();
+      $.each(this.handlers(), function (type, handler){
+        handler.bind();
+      });
 
-        this.type = $("input.searchbox").data("type");
-        this.scrollingLoader();
+      this.type = $("input.searchbox").data("type");
+      this.scrollingLoader();
     };
 
     Library.prototype.scrollingLoader = function () {
@@ -888,7 +889,9 @@
         $.each(playlist.all, function (index, val) {
             tracknumber += 1;
             $("ul.playlist").append(new Track(tracknumber, val));
-            $('.pending-list .list .jspPane').append(new PendingTrack(val));
+            if (activateBottomPendingList){
+              $('.pending-list .list .jspPane').append(new PendingTrack(val));
+            }
         });
 
         var trackObj = playlist.lastAdded;

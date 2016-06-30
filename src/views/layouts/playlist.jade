@@ -1,33 +1,34 @@
 .list-container
     .infos
         .saved-playlist
-            span.title Playlist:
-            if session.user.isAnonymous && meta.requireAuthentication
-              span.title Anonymous users can't save playlists.
-            else
-              if session.playlistname
-                input#playlistname.form-control(type="text", value="#{session.playlistname}")
-              else
-                input#playlistname.form-control(type="text", placeholder="Unsaved Playlist")
-              input.form-control.btn.btn-default#save-current-playlist(type="button", value="Save", disabled)
-              input.form-control.btn.btn-default#new-playlist(type="button", value="New")
-              input.form-control.btn.btn-danger#delete-playlist(type="button", value="Delete")
         if !session.user.isAnonymous
-          .playlists
-              .form-group.form-group-sm
-                label.col-md-8.control-label(style="display: inline-block; vertical-align: middle; line-height: 39px;") Saved Playlists:
-                .col-md-2
-                  button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
-                      span.caret(style="margin-left: 5px;")
-                  ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
-
-    .list-actions
-        span.button
-            i.fa.fa-heart
-        span.button
-            i.fa.fa-plus
-        span.button
-            i.fa.fa-eraser
+          .form-inline
+            .form-group
+              .input-group
+                label.input-group-addon Playlist
+                if session.playlistname
+                  input#playlistname.form-control(type="text", value="#{session.playlistname}")
+                else
+                  input#playlistname.form-control(type="text", placeholder="Unsaved Playlist")
+              //input.form-control.btn.btn-default#save-current-playlist(type="button", value="Save", disabled)
+              //input.form-control.btn.btn-default#new-playlist(type="button", value="New")
+              //input.form-control.btn.btn-danger#delete-playlist(type="button", value="Delete")
+              .playlists
+                  .form-group.form-group-sm
+                    label.col-md-8.control-label(style="display: inline-block; vertical-align: middle; line-height: 39px;") Saved Playlists:
+                    .col-md-2
+                      button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
+                          span.caret(style="margin-left: 5px;")
+                      ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
+              .list-actions(style="float:right;")
+                  span.button
+                      i.fa.fa-save
+                  span.button#new-playlist
+                      i.fa.fa-plus
+                  span.button#delete-playlist(style="background-color: rgba(255,120,120,0.6);")
+                      i.fa.fa-trash
+                  span.button
+                      i.fa.fa-eraser
     .playlist-columns
         .tracks-columns
             .track-info.track-px
@@ -40,7 +41,8 @@
                     span Title
                 .track-info.track-artist
                     span Artist
-    .songs-container.scroll-pane
+    // .scroll-pane
+    .songs-container
         ul.playlist
 
 block append scripts

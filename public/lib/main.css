@@ -113,7 +113,6 @@ section.song-list > .list-container {
 	right: 0px;
 	top: 0px;
 	bottom: 0px;
-	padding: 10px;
 	/* TODO Check what is the best skin color */
 	background-color: rgba(30, 30, 30, 0.84);
 	color: #FFF;
@@ -153,8 +152,6 @@ section.song-list > .list-container .scroller {
 
 section.song-list .list-actions {
 	margin-bottom: 10px;
-	position: absolute;
-	right: 0px;
 	padding: 10px;
 }
 
@@ -170,8 +167,7 @@ section.sidebar .search{
 	background-color: rgba(30, 30, 30, 0.84);
 	position: absolute;
 	top: 0px;
-	right: 20%;
-	margin-right: 7px;
+	right: 0px;
 	left: 0px;
 }
 
@@ -206,10 +202,8 @@ span.button:hover{
 }
 
 section.song-list > .list-container .infos{
-	position: absolute;
 	font-size: 15pt;
-	right: 90px;
-	left: 0px;
+	padding: 10px;
 }
 
 section.song-list > .list-container .infos>.saved-playlist{
@@ -230,22 +224,21 @@ section.song-list > .list-container .infos>.album>.title{
 section.song-list > .list-container{
 	min-width: 60%;
 	overflow: auto;
-	margin-top: 50px;
+	margin-top: 109px;
 }
 
 section.song-list > .list-container .playlist{
 	margin: 0px;
-	padding-bottom: 30px;
+	padding: 10px;
 	margin-bottom: 20px;
 }
 
 section.song-list > .list-container .playlist-columns{
-	margin: 10px;
-	margin-top: 0;
-	z-index: -1;
-	position: absolute;
+	z-index: 1;
+	position: sticky;
 	left: 0;
 	right: 0;
+	top: 0;
 }
 
 section.song-list > .list-container .playlist-columns .track-info{
@@ -259,13 +252,10 @@ section.song-list > .list-container .songs-container ul li a{
 
 section.song-list > .list-container .songs-container{
 	margin: 10px;
-	margin-top: 25px;
-	position: absolute;
 	top: 70px;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	z-index: 3;
 	overflow: auto;
 }
 
@@ -293,8 +283,6 @@ section.song-list > .list-container .playlist-columns .tracks-columns{
 	white-space: nowrap;
 	margin-bottom: 4px;
 	background-color: white;
-	border-radius: 3px;
-	margin-top: 60px;
 }
 
 section.song-list > .list-container .song:hover{
@@ -444,10 +432,9 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	height: 12px;
 	color: white;
 	position: absolute;
-	left: 0px;
+	left: 50px;
 	cursor: pointer;
 }
-
 
 .pending-list .controller:hover{
 	color: #97EDA7;

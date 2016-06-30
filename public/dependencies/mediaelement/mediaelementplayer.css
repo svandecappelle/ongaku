@@ -163,7 +163,7 @@
 	background: -o-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
 	background: -ms-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
 	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7));
-	height: 30px;
+	height: 40px;
 	width: 100%;
 }
 .mejs-container .mejs-controls  div {
@@ -187,7 +187,7 @@
 	font-size: 0;
 	line-height: 0;
 	text-decoration: none;
-	margin: 7px 5px;
+	margin: 12px 5px;
 	padding: 0;
 	position: absolute;
 	height: 16px;
@@ -213,7 +213,7 @@
 	display: block;
 	height: 17px;
 	width: auto;
-	padding: 10px 3px 0 3px ;
+	padding: 13px 3px 0 3px ;
 	overflow: hidden;
 	text-align: center;
 	-moz-box-sizing: content-box;
@@ -257,7 +257,7 @@
 	display: block;
 	position: absolute;
 	width: 180px;
-	height: 10px;
+	height: 20px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
@@ -500,7 +500,7 @@
 .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
 	position: absolute;
 	left: 0;
-	top: 11px;
+	top: 15px;
 	width: 50px;
 	height: 8px;
 	margin: 0;
@@ -522,7 +522,7 @@
 .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
 	position: absolute;
 	left: 0;
-	top: 11px;
+	top: 15px;
 	width: 50px;
 	height: 8px;
 	margin: 0;
@@ -997,4 +997,3 @@ div.mejs-speed-button {
 }
 
 /* End: Skip Back */
-
