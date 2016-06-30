@@ -134,7 +134,6 @@
     };
 
     Player.prototype.play = function (uid, encoding) {
-
         $(".playing").removeClass('playing');
         this.current = uid;
 
@@ -145,9 +144,9 @@
         $("#controls")[0].load();
         $("#controls")[0].play();
         $.ongaku.audiowave.rebuild();
-
         if (['mp3', 'ogg', 'wav'].indexOf(encoding) === -1) {
-            alertify.success('Transcoding...', 0);
+          alertify.dismissAll();
+          alertify.success('Transcoding...', 0);
         }
 
         $(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
@@ -170,43 +169,48 @@
     };
 
     Player.prototype.build = function (callback) {
-        if ($('.player > audio').children().length > 0 && !this.isInitialised()) {
-            this.initialised = true;
-            this.player = new MediaElementPlayer("audio", {
-                volume: 0.1,
-                features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
-                success: function (me) {
-                    me.addEventListener('loadedmetadata', function () {
-                        alertify.dismissAll();
-                    });
-                    me.addEventListener('ended', function () {
-                        $.ongaku.next();
-                    });
-                    me.addEventListener('play', function () {
-                        //$.ongaku.getPlayer.volume = 1;
-                        if ($.ongaku.isFirst()) {
-                            alertify.warning('Add a track to play', 2);
-                            $.ongaku.stop();
-                        } else if ( $(".playing").length === 0) {
-                            $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
-                        }
-                    });
-                    if (callback !== undefined) {
-                        callback();
-                    }
-                },
-                error: function (me) {
-                    console.log("failure build musique player:", me);
-                }
-            });
+      if ($('.player > audio').children().length > 0 && !this.isInitialised()) {
+          this.initialised = true;
+          this.player = new MediaElementPlayer("audio", {
+              volume: 0.1,
+              features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
+              success: function (me) {
+                  me.addEventListener('loadedmetadata', function () {
+                      alertify.dismissAll();
+                  });
+                  me.addEventListener('ended', function () {
+                      $.ongaku.next();
+                  });
+                  me.addEventListener('play', function () {
+                      //$.ongaku.getPlayer.volume = 1;
+                      if ($.ongaku.isFirst()) {
+                          alertify.warning('Add a track to play', 2);
+                          $.ongaku.stop();
+                      } else if ( $(".playing").length === 0) {
+                          $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
+                      }
+                  });
 
-            $('.player').height("30px");
-            $('.player > audio').show();
-        } else {
-            this.initialised = false;
-            $('.player').height("30px");
-            $('.player>audio').hide();
-        }
+                  me.addEventListener('error', function failed(e) {
+                    alertify.dismissAll();
+                    alertify.error("Error reading file: \n Check authentication rights.");
+                  });
+                  if (callback !== undefined) {
+                      callback();
+                  }
+              },
+              error: function (me) {
+                console.log("failure build musique player:", me);
+              }
+          });
+
+          $('.player').height("30px");
+          $('.player > audio').show();
+      } else {
+          this.initialised = false;
+          $('.player').height("30px");
+          $('.player>audio').hide();
+      }
     };
 
     Player.prototype.isInitialised = function () {

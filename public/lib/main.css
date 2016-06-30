@@ -175,7 +175,7 @@ section.sidebar.show {
 	position: absolute;
 	top: 0px;
 	margin-top: 50px;
-	bottom: 70px;
+	bottom: 80px;
 	left: 0;
 	right: 0;
 }
@@ -402,11 +402,10 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 
 .pending-list{
 	position: fixed;
-	/*position: absolute;*/
 	left: 0px;
 	right: 20%;
 	bottom: 30px;
-	height: 36px;
+	height: 50px;
 	background-color: rgba(30, 30, 30, 0.84);
 	text-align: center;
 	color: white;
@@ -418,10 +417,6 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 .pending-list.video{
 	right: 10%;
 }
-/*
-.pending-list:hover{
-	height: 180px;
-}*/
 
 .pending-list.active{
 	height: 230px;
@@ -1080,6 +1075,9 @@ ul.group.artist img.artist{
 	padding-left: 2px;
 }
 
+#header .navbar{
+	height: 50px;
+}
 
 .main-content{
 	margin-left: 35px;
@@ -1147,6 +1145,7 @@ ul.group.artist img.artist{
 
 #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
 	color: #fff;
+	height: 50px;
 }
 
 h1{
