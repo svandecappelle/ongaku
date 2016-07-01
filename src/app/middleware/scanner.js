@@ -43,12 +43,6 @@
         }, function(){
 
         });
-/*
-      Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
-        logger.debug("Callback scan audio folder");
-        callback({audio: res, isFinishedAll: isFinishedAll});
-      });
-      */
     };
 
     Scanner.Appenders = function (){
@@ -162,7 +156,7 @@
 
                 });
             }, function (err) {
-                logger.info("All files scanned into " + apath + " finished: " + results.length + " elements found.");
+                logger.info("All files " + appender.type + " scanned into " + apath + " finished: " + results.length + " elements found.");
                 if (callback !== libraryCallBack){
                   callback(err, results);
                   libraryCallBack(err, results, false);
