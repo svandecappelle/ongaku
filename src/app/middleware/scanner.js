@@ -126,7 +126,7 @@
 
     Scanner.scan = function (apath, callback, appender, libraryCallBack) {
         var results = [];
-        logger.debug("Scanning directory: ".concat(apath));
+        logger.info("Scanning directory: ".concat(apath));
         fs.readdir(apath, function (err, files) {
             if (files === undefined){
               logger.warn("Not any files found on your library folder.");
