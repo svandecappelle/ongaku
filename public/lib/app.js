@@ -548,6 +548,7 @@
 
     Library.prototype.append = function (library) {
       var that = this;
+      // TODO load using the group by value.
       if (this.type === 'audio'){
         $.each(library, function (index, artist) {
             // For asynchronous loading debug
@@ -654,7 +655,6 @@
 
                 trackDetailElement.html(track.title);
 
-
                 if (!$.ongaku.isAnonymous()){
                   if (that.view){
                     new UserLib().remover(trackDetailElement);
@@ -671,27 +671,23 @@
                 }
 
                 var trackShowDetail = $('<a>', {
-                  "role": "button",
-                  "tabindex": "0",
-                  "data-placement": "auto bottom",
+                  "tabindex": 0,
+                  "title": "Track metadatas",
+                  "class": "trackaction metadatas-details",
+                  "data-placement": "left",
                   "data-toggle": "popover",
-                  "title": "Track metadatas"
+                  "data-html": "true",
+                  "data-content": new MetadatasArray(track.metadatas).html(),
+                  "data-trigger": "hover",
+                  "data-delay": 100
                 });
                 var glyphShowDetail = $('<i>', {
-                  "class": 'glyphicon glyphicon-info-sign trackaction metadata-track',
+                  "class": 'glyphicon glyphicon-info-sign' // metadata-track,
                 });
                 trackShowDetail.append(glyphShowDetail);
-                $(trackShowDetail).popover({
-                  "trigger": "focus",
-                  "html": true,
-                  "container": 'body',
-                  "content": new MetadatasArray(track.metadatas).html()
-                });
                 trackElement.append(trackShowDetail);
-
                 trackElement.append(trackDetailElement);
                 tracks.append(trackElement);
-
                 $(trackDetailElement).tooltip();
 
                 trackDetailElement.on("click", function (event) {
@@ -701,8 +697,11 @@
                 });
               });
             });
-
         });
+        $('.metadatas-details').popover({
+          viewport: { "selector": ".sidebar", "padding": 10 }
+        });
+
       } else if (this.type === 'video'){
         //this.clear();
         if (this.searching){
