@@ -109,7 +109,11 @@
                 });
 
                 parser.on("done", function(err){
-                  return err ? logger.warn("Error on parsing metadata:", err) && cb(null, results) : 0;
+                  if (err){
+                    // in error call the loopback
+                    logger.warn("Error on parsing metadata:", err);
+                    cb(null, results);
+                  }
                 });
               }
           } else {
