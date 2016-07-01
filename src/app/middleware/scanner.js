@@ -80,8 +80,8 @@
               if (groove){
                 groove.open(filePath, function (err, file) {
                     if (err) {
-                        console.log("filePath: "+ filePath, err);
-                        //return cb(null, results);
+                        logger.error("filePath: " + filePath, err);
+                        return cb(err, results);
                         //throw err;
                     }
                     var libElement = Scanner.song(filePath, file.metadata(), file.duration());
@@ -107,6 +107,10 @@
                   logger.debug(libElement);
                   return cb(null, results);
                 });
+
+                parser.on("error", function(){
+                  return cb(null, results);
+                });
               }
           } else {
               cb(null, results); // asynchronously call the loop
@@ -130,6 +134,13 @@
         fs.readdir(apath, function (err, files) {
             if (files === undefined){
               logger.warn("Not any files found on your library folder.");
+              if (callback !== libraryCallBack) {
+                callback(err, results);
+                libraryCallBack(err, results, false);
+              } else {
+                logger.debug("finish lib scan: " + apath + " type: " + appender.type, (callback !== libraryCallBack ? "Not": "") + "Finished");
+                libraryCallBack(err, results, callback === libraryCallBack);
+              }
               return;
             }
             var counter = 0;
