@@ -109,7 +109,7 @@
                 });
 
                 parser.on("done", function(err){
-                  return err ? cb(null, results): 0;
+                  return err ? logger.warn("Error on parsing metadata:", err) && cb(null, results) : 0;
                 });
               }
           } else {
