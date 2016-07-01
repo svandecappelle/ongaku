@@ -98,6 +98,10 @@ nav:hover span{
 	-webkit-transition: all 0.3s ease 0s;
 }
 
+.message + .library-view{
+	margin-top: 11px;
+}
+
 .library-view{
 	position: absolute;
 	top: 59px;
@@ -898,7 +902,7 @@ ul.group.artist span.artistname{
 	position: absolute;
 	top: 59px;
 	z-index: 1;
-	background-color: black;
+	background-color: rgba(30, 30, 30, 0.84);
 	margin: auto;
 	left: 0px;
 	right: 20%;
