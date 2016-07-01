@@ -99,7 +99,7 @@
 
                 logger.debug("Loading using mm: ", filePath);
 
-                var parser = mm(fs.createReadStream(filePath), function (err, metadata) {
+                var parser = mm(fs.createReadStream(filePath), { duration: true }, function (err, metadata) {
                   if (err) throw err;
                 });
 
