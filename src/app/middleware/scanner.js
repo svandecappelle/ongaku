@@ -108,8 +108,8 @@
                   return cb(null, results);
                 });
 
-                parser.on("error", function(){
-                  return cb(null, results);
+                parser.on("done", function(err){
+                  return err ? cb(null, results): 0;
                 });
               }
           } else {
