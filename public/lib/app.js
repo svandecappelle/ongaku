@@ -558,8 +558,14 @@
             $(".lib.group.artist.open").append(artistElement);
 
             var artistDetailElement = $("<a>", {
-              class: 'link'
+              class: 'link artist-link image-extensible',
+              href: artist.image
+            }).on("click", function(ev){
+              ev.stopPropagation();
+              ev.preventDefault();
+              $(this).toggleClass("extended");
             });
+
             var artistImage = $('<img>', {class: 'artist', src: artist.image});
             var artistName = $('<span>', {class: 'artistname'});
             artistName.html(artist.artist);
@@ -602,7 +608,11 @@
             $.each(artist.albums, function(title, album){
               var albumElement = $('<li>');
               var tracks = $('<ul>', {class: "group tracklist"});
-              var albumDetailElement = $("<a>", {class: 'link'});
+              var albumDetailElement = $("<a>", {class: 'link image-extensible'}).on("click", function(ev){
+                ev.stopPropagation();
+                ev.preventDefault();
+                $(this).toggleClass("extended");
+              });;
               var albumImage = $('<img>', {class: 'album', src: album.cover});
               var albumTitle = $('<span>', {class: 'albumtitle'});
 
@@ -701,6 +711,8 @@
         $('.metadatas-details').popover({
           viewport: { "selector": ".sidebar", "padding": 10 }
         });
+
+        //$(".artist-img").magnificPopup({type:'image'});
 
       } else if (this.type === 'video'){
         //this.clear();

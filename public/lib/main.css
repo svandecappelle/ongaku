@@ -689,12 +689,44 @@ img.album{
 	border-radius: 5px;
 }
 
-img.artist{
-	width: 150px;
-	height: auto;
-	margin-right: 10px;
+a.artist-link.image-extensible{
+	position: absolute;
 }
 
+a.image-extensible.extended{
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	z-index: 1;
+	transition: all linear 0.5s;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+a.artist-link > img{
+	width: 150px;
+	height: auto;
+	position: absolute;
+	margin-top: 27px;
+	border: 1px solid transparent;
+	border-radius: 13px;
+}
+
+a.image-extensible.extended > img{
+	position: absolute;
+	vertical-align: middle;
+	top: 50%;
+	height: 50%;
+	width: auto;
+	text-align: center;
+	margin: 0px;
+	margin-left: -15%;
+	margin-top: -15%;
+	z-index: 1;
+	box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+}
 
 ul.group>li{
 	margin-right: 10px;
@@ -805,14 +837,6 @@ ul.group.artist.open>li{
 ul.group.artist span.artistname{
 	vertical-align: top;
 	color: white;
-}
-
-ul.group.artist img.artist{
-	margin-right: 10px;
-	position: absolute;
-	margin-top: 27px;
-	border: 1px solid transparent;
-	border-radius: 13px;
 }
 
 .trackaction{

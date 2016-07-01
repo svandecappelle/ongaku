@@ -143,8 +143,12 @@
     function getBigImage (imageList) {
       var imageSource;
       imageList.forEach(function (img) {
-          if (img.size === "large") {
-              imageSource = img["#text"];
+          if (img.size === "mega"){
+            imageSource = img["#text"];
+          } else if (img.size === "extralarge"){
+            imageSource = img["#text"];
+          }else if (img.size === "large") {
+            imageSource = img["#text"];
           }
       });
       return imageSource;
