@@ -30,9 +30,10 @@
   function render() {
     var audiowave = $.ongaku.audiowave;
     // requestAnimationFrame(this.getRenderer);
-    setTimeout(function(){
+    // TODO check if the timeout is necessary for the improves performances.
+    //setTimeout(function(){
       requestAnimationFrame(render);
-    }, 50);
+    //}, 50);
 
     // Copy frequency data to frequencyData array.
     audiowave.analyser.getByteFrequencyData(audiowave.frequencyData);
