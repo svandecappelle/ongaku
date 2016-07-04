@@ -102,6 +102,9 @@
                 });
 
                 parser.on("metadata", function(metadata){
+                  if (metadata.picture){
+                    metadata.picture = undefined;
+                  }
                   var libElement = Scanner.song(filePath, metadata, metadata.duration);
                   results.push(libElement);
                   logger.debug(libElement);
