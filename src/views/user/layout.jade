@@ -4,8 +4,9 @@ block append headpage
 block append library
   div.account   
     div.cover.initialised(style="background-image: url(cover); background-position: 47.0141% 20.4126%;")
-      div.avatar(style="z-index: 1;")
-        img.user-profile-picture(src="avatar")
+      div.avatar-container
+        div.avatar(style="z-index: 1;")
+          img.user-profile-picture(src="avatar")
         i.fa.fa-circle.status.online(title="En ligne")
       div.container
         div.btn-group.account-fab(style="z-index: 1;")
@@ -50,8 +51,9 @@ block append library
       div.row
         div.col-md-2.col-sm-4.text-center
           div.account-picture-block
-            div.avatar
-              img.user-profile-picture(src="avatar")
+            div.avatar-container
+              div.avatar
+                img.user-profile-picture(src="avatar")
           ul.list-group
             a.list-group-item#changePictureBtn(href="#") Change avatar
             a.list-group-item(href="/user/mizore/edit/username") Changer le nom d'utilisateur

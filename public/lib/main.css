@@ -406,7 +406,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 
 .pending-list{
 	position: fixed;
-	left: 0px;
+	left: 45px;
 	right: 20%;
 	bottom: 30px;
 	height: 50px;
@@ -416,6 +416,10 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	transition: height 0.5s linear 0.1s;
 	border-top: 6px solid #1a2226;
 	font-size: 0.8em;
+}
+
+.pending-list.wfull{
+	right: 0px;
 }
 
 .pending-list.video{
@@ -431,7 +435,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	height: 12px;
 	color: white;
 	position: absolute;
-	left: 50px;
+	left: 0px;
 	cursor: pointer;
 }
 
@@ -523,7 +527,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 }
 
 .pending-list .song:hover .layer{
-	background: none repeat scroll 0% 0% rgba(52, 187, 52, 0.5);
+	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.5);
 }
 
 .pending-list .song.playing:hover .layer{
@@ -588,7 +592,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	padding-right: 25px;
 }
 .pending-list .song .layer .left, .pending-list .song .layer .right, .pending-list .song .layer .top, .pending-list .song .layer .bottom{
-	background: #152105;
+	background: #000;
 }
 
 .pending-list .song.playing .layer .left, .pending-list .song.playing .layer .right, .pending-list .song.playing .layer .top, .pending-list .song.playing .layer .bottom{
@@ -1107,7 +1111,7 @@ ul.group.artist span.artistname{
 }
 
 .main-content{
-	margin-left: 35px;
+	margin-left: 45px;
 	padding-top: 50px;
 	/*background: url('http://images4.fanpop.com/image/photos/17500000/cool-background-random-17506457-2299-1437.jpg') no-repeat center center fixed;*/
 	background: url('/img/background.jpg') repeat center center;
@@ -1461,10 +1465,9 @@ a.link.video>.name{
 }
 
 .account {
-	position: relative;
-	top: 0px;
-	left: 0;
-	width: 100%;
+	position: absolute;
+	left: 0px;
+	right: 0px;
 	margin: 0px;
 }
 
@@ -1518,30 +1521,38 @@ a.link.video>.name{
     padding: 5px;
 }
 
-.account .avatar, .account .avatar {
+.account .avatar-container, .account .avatar-container {
   top: 230px;
 	width: 128px;
 	height: 128px;
 	border: 4px solid white;
 	border-radius: 50%;
-	overflow: hidden;
 	margin: auto;
+	z-index: 1;
 }
 
-.account .cover .avatar {
+.account .cover .avatar-container {
 	position: absolute;
 	left: 50%;
 	margin-left: -64px;
 }
 
+.avatar{
+	width: 128px;
+	height: 128px;
+	overflow: hidden;
+	border-radius: 50%;
+	margin: auto;
+}
+
 .account .profile{
-	position: absolute;
-	top: 320px;
+	position: relative;
+	margin-top: 320px;
 	margin-right: 5%;
 	margin-left: 5%;
 	left: 0;
   right: 0px;
-	margin-bottom: 70px;
+	margin-bottom: 100px;
 }
 
 .account .user-panel{
@@ -1563,7 +1574,7 @@ a.link.video>.name{
   line-height: 128px;
 }
 
-.account .cover .avatar .status {
+.account .cover .avatar-container .status {
     position: absolute;
     font-size: 23px;
     top: 17px;

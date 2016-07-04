@@ -8,7 +8,7 @@ block append library
     .panel.panel-default(style="width: 130px; margin: 5px;")
       div.separated
         i.fa.fa-circle.status.online
-        span.small-title(style="margin-left:10px;") #{user.username}
+        a.small-title(style="margin-left:10px;", href="/user/#{user.username}/info") #{user.username}
       div.separated
         each group in user.groups
           div #{group}
