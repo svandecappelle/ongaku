@@ -500,7 +500,7 @@ logger.setLevel(nconf.get('logLevel'));
         middleware.render('api/audio', req, res, {library: libraryDatas});
       });
 
-      app.get("/api/view/videos", function(req, res){
+      app.get("/api/view/video", function(req, res){
         logger.debug("Client access to videos api renderer [" + req.ip + "]");
         middleware.render('api/videos', req, res);
       });

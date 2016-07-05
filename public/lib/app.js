@@ -437,9 +437,9 @@
 
     Library.prototype.reset = function (page) {
       $(".lib.group.artist.open").empty();
+      this.noOtherDataToLoad = false;
       if (this.videos){
         for (var i = 0; i < this.videos.length; i++) {
-          console.log(this.videos[i])
           if (this.videos[i]){
             this.videos[i].dispose();
           }
@@ -622,7 +622,7 @@
                 ev.stopPropagation();
                 ev.preventDefault();
                 $(this).toggleClass("extended");
-              });;
+              });
               var albumImage = $('<img>', {class: 'album', src: album.cover});
               var albumTitle = $('<span>', {class: 'albumtitle'});
 
