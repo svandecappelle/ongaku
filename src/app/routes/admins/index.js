@@ -66,7 +66,7 @@ logger.setLevel(nconf.get('logLevel'));
 			});
 		});
 
-		app.get("/users", function (req, res){
+		var renderUserView = function(req, res, view){
 			user.getAllUsers(function (err, usersDatas){
 				async.map(usersDatas.users, function (userData, next){
 					user.getGroupsByUsername(userData.username, function (groups){
@@ -74,9 +74,16 @@ logger.setLevel(nconf.get('logLevel'));
 						next(null, userData);
 					});
 				}, function (err, usersDatas){
-					middleware.render('admin/users', req, res, {users: usersDatas});
+					middleware.render(view, req, res, {users: usersDatas});
 				});
 			});
+		};
+
+		app.get("/api/view/users", function (req, res){
+			renderUserView(req, res, "api/users");
+		});
+		app.get("/users", function (req, res){
+			renderUserView(req, res, "admin/users");
 		});
 
 		app.get("/register", function(req, res){

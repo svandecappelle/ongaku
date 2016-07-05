@@ -3,11 +3,7 @@ ul {
 	padding: 0;
 }
 
-main{/*
-	position: relative;
-	height: 100%;
-	overflow: hidden;
-*/
+main{
 	position: absolute;
 	bottom: 0px;
 	top: 0px;
@@ -36,6 +32,11 @@ a{
 
 a:hover{
 	text-decoration: none;
+}
+
+a:visited{
+	text-decoration: none;
+	color: #FFF;
 }
 
 nav{

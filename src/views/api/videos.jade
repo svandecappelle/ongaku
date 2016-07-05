@@ -1,0 +1,26 @@
+section.sidebar.show
+	h1(style="margin: 0px;") Video library
+	.search
+		.col-lg-8
+			.input-group
+				span.input-group-addon
+					i.glyphicon.glyphicon-search
+				input.searchbox.form-control(type="text", placeholder="Search", style="height:39px", data-type="video")
+	if (data.message !== null)
+		h1.message
+			i.fa.fa-circle-o-notch.fa-spin 
+			span.text= data.message
+	.user-sidebar.library-view(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 10%; overflow-y: auto;")
+		.library
+			ul.lib.group.artist.open
+
+script.
+	function initView(){
+		$.ongaku.library.bind("video");
+		$.ongaku.library.reset();
+		$.ongaku.library.setPage(0);
+		$.ongaku.library.clear();
+		$.ongaku.library.loadVideo();
+		$.ongaku.library.fetch();
+		$('.pending-list.wfull').removeClass("wfull");
+	}

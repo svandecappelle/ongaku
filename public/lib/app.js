@@ -437,6 +437,16 @@
 
     Library.prototype.reset = function (page) {
       $(".lib.group.artist.open").empty();
+      if (this.videos){
+        for (var i = 0; i < this.videos.length; i++) {
+          console.log(this.videos[i])
+          if (this.videos[i]){
+            this.videos[i].dispose();
+          }
+        }
+
+        this.videos = [];
+      }
     };
 
     Library.prototype.handlers = function () {

@@ -1,0 +1,13 @@
+section.sidebar.show
+  .search(style="height: 59px")
+    .col-lg-8.col-md-8
+      h2(style="color: #FFF;") All users
+  .user-sidebar.library-view(style="top:70px;")
+    each user in users  
+      .panel.panel-default(style="width: 130px; margin: 5px;")
+        div.separated
+          i.fa.fa-circle.status.online
+          a.small-title(style="margin-left:10px;", href="/user/#{user.username}/info") #{user.username}
+        div.separated
+          each group in user.groups
+            div #{group}

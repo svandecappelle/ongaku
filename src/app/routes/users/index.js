@@ -482,9 +482,43 @@ logger.setLevel(nconf.get('logLevel'));
         middleware.render('library/index', req, res, {library: libraryDatas});
       });
 
+      app.get('/audio', function (req, res) {
+        logger.info("Client access to index [" + req.ip + "]");
+        // Get first datas fetch is defined into client side.
+        var libraryDatas = library.getAudio(0, 3);
+
+        logger.debug(libraryDatas);
+        middleware.render('library/index', req, res, {library: libraryDatas});
+      });
+
+      app.get("/api/view/audio", function(req, res){
+        logger.info("Client access to index [" + req.ip + "]");
+        // Get first datas fetch is defined into client side.
+        var libraryDatas = library.getAudio(0, 3);
+
+        logger.debug(libraryDatas);
+        middleware.render('api/audio', req, res, {library: libraryDatas});
+      });
+
+      app.get("/api/view/videos", function(req, res){
+        logger.debug("Client access to videos api renderer [" + req.ip + "]");
+        middleware.render('api/videos', req, res);
+      });
+
       app.get('/video', function (req, res) {
         logger.debug("Client access to videos [" + req.ip + "]");
         middleware.render('library/videos', req, res);
+      });
+
+      app.get('/api/view/library', function (req, res){
+        UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+          var username = req.session.passport.user.username;
+
+          userlib.get(username, function (err, uids){
+            var libraryDatas = library.getAudioById(uids, 0, 3);
+            middleware.render('api/library', req, res, {library: libraryDatas});
+          });
+        });
       });
 
       app.get('/library', function (req, res){

@@ -111,15 +111,15 @@ html
                             i.glyphicon.glyphicon-star
                             span Featured
                     li
-                        a(href="/")
+                        a.view(href="/", data-view="audio")
                             i.glyphicon.glyphicon-music
                             span Music
                     li
-                        a(href="/video")
+                        a.view(href="/video", data-view="videos")
                             i.glyphicon.glyphicon-facetime-video
                             span Videos
                     li
-                        a(href="/users")
+                        a.view(href="/users", data-view="users")
                             i.glyphicon.glyphicon-user
                             span Users
                     li
@@ -130,7 +130,8 @@ html
               .menu.me
                   ul
                       li
-                          a(href="/library")
+                          //TODO active view layer
+                          a(href="/library", data-view="library")
                               i.glyphicon.glyphicon-book
                               span Library
                       li
@@ -159,6 +160,10 @@ html
             });
         script.
           videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
+          function processAjaxData(idContent, html, urlPath){
+            $(idContent).html(html);
+            window.history.pushState("", "", "/".concat(urlPath));
+          }
           $(function () {
               $('[data-toggle="popover"]').popover();
               $('[data-toggle="tooltip"]').tooltip();
@@ -192,6 +197,15 @@ html
                 $.get("/api/reload/audio/library", function(output){
                   $(".sidebar.show>.message").remove();
                   $.ongaku.library.rebuild(output, "audio");
+                });
+              });
+              $("a.view").on("click", function(ev){
+                ev.preventDefault();
+                ev.stopPropagation();
+                var view = $(this).data("view");
+                $.get("/api/view/".concat(view), function(html){
+                  processAjaxData(".main-content", html, view);
+                  initView();
                 });
               });
           });

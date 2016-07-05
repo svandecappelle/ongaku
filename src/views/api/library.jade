@@ -1,0 +1,11 @@
+block append library
+  include ../library/library
+script.
+  $(function (){
+    $.ongaku.library.bind("user/#{session.user.username}");
+    $.ongaku.library.reset();
+    $.ongaku.library.setPage(0);
+    $.ongaku.library.clear();
+    $.ongaku.library.fetch();
+    $('.pending-list.wfull').removeClass("wfull");
+  });
