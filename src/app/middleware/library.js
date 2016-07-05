@@ -237,7 +237,7 @@
         if (type === "video" && obj.type === type) {
           found = obj.name.toLowerCase().match(filterClause);
         } else if (type === "audio" && obj.type === type) {
-          found = obj.title.toLowerCase().match(filterClause) || obj.album.toLowerCase().match(filterClause) || obj.artist.toLowerCase().match(filterClause);
+          found = obj.title.toLowerCase().match(filterClause) || obj.album.toLowerCase().match(filterClause) || obj.metadatas.artist.toLowerCase().match(filterClause);
 
           if (!found) {
             _.each(obj.metadatas, function (val, key) {
