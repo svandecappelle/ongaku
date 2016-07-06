@@ -3,7 +3,7 @@
     "hostname": "localhost",
     "uploader": false,
     "logLevel": "INFO",
-    "library": "/home/mizore/Musique",
+    "library": "/home/svandecappelle/Musique",
     "audio": ["mp3",  "wav", "wma", "ogg", "flac"],
     "video": ["mp4", "webm", "flv", "ogv"],
     "database": "redis",
