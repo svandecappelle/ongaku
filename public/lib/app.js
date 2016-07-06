@@ -449,6 +449,7 @@
       }
       this.searchPattern = null;
       this.searching = false;
+      this.view = null;
     };
 
     Library.prototype.handlers = function () {

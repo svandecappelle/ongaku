@@ -1,11 +1,11 @@
 block append library
   include ../library/library
 script.
-  $(function (){
-    $.ongaku.library.bind("user/#{session.user.username}");
+  function initView(){
     $.ongaku.library.reset();
-    $.ongaku.library.setPage(0);
     $.ongaku.library.clear();
+    $.ongaku.library.setPage(0);
+    $.ongaku.library.bind("user/#{session.user.username}");
     $.ongaku.library.fetch();
     $('.pending-list.wfull').removeClass("wfull");
-  });
+  };
