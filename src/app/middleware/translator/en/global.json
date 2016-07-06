@@ -18,6 +18,6 @@
   "search": "Search",
   "track": "Track",
   "duration": "Duration",
-  "track-title": "Title",
+  "track_title": "Title",
   "artist": "Artist"
 }
