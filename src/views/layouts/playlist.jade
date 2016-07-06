@@ -5,16 +5,15 @@
             .form-group
               if !session.user.isAnonymous
                 .input-group
-                  label.input-group-addon Playlist
+                  label.input-group-addon #{playlist}
                   if session.playlistname
                     input#playlistname.form-control(type="text", value="#{session.playlistname}")
                   else
-                    input#playlistname.form-control(type="text", placeholder="Unsaved Playlist")
+                    input#playlistname.form-control(type="text", placeholder="#{new-playlist}")
                 .playlists
                     .form-group.form-group-sm
-                      label.col-md-8.control-label(style="display: inline-block; vertical-align: middle; line-height: 39px;") Saved Playlists:
                       .col-md-2
-                        button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") Playlists
+                        button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{my-playlists}
                             span.caret(style="margin-left: 5px;")
                         ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
                 .list-actions(style="float:right;")
@@ -27,7 +26,7 @@
                     span.button
                         i.fa.fa-eraser
               else if meta.requireAuthentication
-                div Authentication required to stream.
+                div #{stream-auth-required}
               else
                 .list-actions(style="float:right;")
                   span.button
@@ -36,14 +35,14 @@
         .tracks-columns
             .track-info.track-px
                 .track-info.track-num
-                    span Track
+                    span #{track}
                 .track-info.track-time
-                    span Duration
+                    span #{duration}
             .track-info.track
                 .track-info.track-title
-                    span Title
+                    span #{track-title}
                 .track-info.track-artist
-                    span Artist
+                    span #{artist}
     // .scroll-pane
     .songs-container
         ul.playlist

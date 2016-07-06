@@ -7,7 +7,7 @@ block player
 					source(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")
 	else
 		.player.empty
-			span Login is required to stream
+			span #{stream-auth-required}
 			
 	if (data.playing)
 		script.

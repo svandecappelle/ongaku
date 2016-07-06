@@ -10,5 +10,14 @@
   "users": "Users",
   "library": "Library",
   "upload": "Upload",
-  "project": "Project"
+  "project": "Project",
+  "stream-auth-required": "Authentication required to stream.",
+  "playlist": "Playlist",
+  "my-playlist": "My playlists",
+  "new-playlist": "New playlist",
+  "search": "Search",
+  "track": "Track",
+  "duration": "Duration",
+  "track-title": "Title",
+  "artist": "Artist"
 }

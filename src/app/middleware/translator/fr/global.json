@@ -10,5 +10,14 @@
   "users": "Utilisateurs",
   "library": "Librairie",
   "upload": "Téléverser",
-  "project": "Projet"
+  "project": "Projet",
+  "stream-auth-required": "Connection requise pour la lecture.",
+  "playlist": "Liste de lecture",
+  "my-playlist": "Mes listes de lectures",
+  "new-playlist": "Nouvelle liste",
+  "search": "Rechercher",
+  "track": "Piste",
+  "duration": "Durée",
+  "track-title": "Titre",
+  "artist": "Artiste"
 }
