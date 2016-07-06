@@ -447,6 +447,8 @@
 
         this.videos = [];
       }
+      this.searchPattern = null;
+      this.searching = false;
     };
 
     Library.prototype.handlers = function () {
@@ -524,7 +526,6 @@
     };
 
     Library.prototype.search = function (pattern) {
-        console.log("search for: ", pattern);
         if (pattern) {
           this.searchPattern = pattern;
           this.searching = true;
