@@ -110,23 +110,23 @@ html
                     li
                         a
                             i.glyphicon.glyphicon-star
-                            span Featured
+                            span #{featured}
                     li
                         a.view(href="/", data-view="audio")
                             i.glyphicon.glyphicon-music
-                            span Music
+                            span #{music}
                     li
                         a.view(href="/video", data-view="video")
                             i.glyphicon.glyphicon-facetime-video
-                            span Videos
+                            span #{video}
                     li
                         a.view(href="/users", data-view="users")
                             i.glyphicon.glyphicon-user
-                            span Users
+                            span #{users}
                     li
                         a
                             i.glyphicon.glyphicon-tasks
-                            span Radios
+                            span #{radios}
             if !session.user.isAnonymous
               .menu.me
                   ul
@@ -134,17 +134,17 @@ html
                           //TODO active view layer
                           a(href="/library", data-view="library")
                               i.glyphicon.glyphicon-book
-                              span Library
+                              span #{library}
                       li
                           a
                               i.glyphicon.glyphicon-upload
-                              span Upload
+                              span #{upload}
             .menu.project
                 ul
                     li
-                        a(href="https://github.com/svandecappelle/ongaku")
+                        a(href="https://github.com/svandecappelle/ongaku", target="_blank")
                             i.fa.fa-github(style="font-size: 20pt;")
-                            span Project
+                            span #{project}
 
         main.main-content
             block library

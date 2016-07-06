@@ -6,6 +6,7 @@
     "library": "/home/svandecappelle/Musique",
     "audio": ["mp3",  "wav", "wma", "ogg", "flac"],
     "video": ["mp4", "webm", "flv", "ogv"],
+    "defaultLanguage": "fr",
     "database": "redis",
     "redis": {
         "host": "127.0.0.1",

@@ -12,12 +12,14 @@
         library = require("./library"),
         transcoder = require("./transcoder"),
         meta = require("./../meta"),
+        translator = require("./translator"),
         gravatar = require("gravatar"),
         identicon;
 
     logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
+    new translator.preload();
     try {
         identicon = require('identicon');
     } catch (expect) {
@@ -35,7 +37,7 @@
                 view: view,
                 objs: viewParams
             },
-            call = async.compose(this.session, this.meta);
+            call = async.compose(this.session, this.meta, this.translate);
 
         if (viewParams === undefined) {
             viewParams = {};
@@ -309,5 +311,18 @@
         return req.isAuthenticated();
     };
 
+    /*
+     * Translate view
+     */
+    Middleware.translate = function(middlewareObject, next){
+    	// Add I18n values
+    	var locale = nconf.get('defaultLanguage');
+    	if (middlewareObject.req && middlewareObject.req.session && middlewareObject.req.session.locale){
+    		locale = middlewareObject.req.session.locale;
+    	}
 
+    	var i18nValues = new translator.Language(locale);
+    	_.extend(middlewareObject.objs, i18nValues.get(middlewareObject.view));
+    	next(null, middlewareObject);
+    };
 }(exports));

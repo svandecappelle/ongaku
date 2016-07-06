@@ -13,6 +13,7 @@ var library = require("./../../middleware/library"),
     playlist = require("./../../model/playlist"),
     mime = require("mime"),
     fs = require("fs"),
+    translator = require("./../../middleware/translator"),
     async = require("async");
 
 logger.setLevel(nconf.get('logLevel'));
@@ -535,18 +536,32 @@ logger.setLevel(nconf.get('logLevel'));
       app.get("/user/:username/edit", function (req, res){
         var username = req.params.username;
 
-        if (username !== undefined) {
-          logger.info("get user: ", username);
-          user.getUserDataByUsername(username, function (err, userData){
-            user.getGroupsByUsername(username, function (groups){
-              userData = _.extend(userData, { groups: groups });
-              logger.info("Check user: ", username, userData);
-              middleware.render('user/edit', req, res, {user: userData});
+        UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+          if (username === req.session.passport.user.username){
+            logger.info("get user: ", username);
+            user.getUserDataByUsername(username, function (err, userData){
+              user.getGroupsByUsername(username, function (groups){
+                userData = _.extend(userData, { groups: groups });
+                logger.info("Check user: ", username, userData);
+                middleware.render('user/edit', req, res, {
+                  user: userData,
+                  languages: translator.getAvailableLanguages()
+                });
+              });
             });
-          });
-        }
+          }
+        });
       });
 
+      app.post("/user/:username/edit", function (req, res){
+        var lang = req.body.lang;
+        console.log(req.body);
+        req.session.locale = lang;
+        req.session.save(function () {
+          res.setHeader('Access-Control-Allow-Credentials', 'true');
+          middleware.redirect("/user/" + req.params.username + "/edit", res);
+        });
+      });
       app.get("/user/:username/info", function (req, res){
         var username = req.params.username;
 

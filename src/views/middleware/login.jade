@@ -1,27 +1,26 @@
 extends ../layouts/app
 block append headpage
-	title Ongaku authentication
+	title Ongaku #{title}
 block append library
 		.col-md-8.panel.panel-default.col-md-offset-1.login-screen
-			h1 Be connected:
+			h1 #{connectTitle}
 			hr
 			form.form-horizontal(method='post')
 				.form-group
-					label.col-sm-2.control-label(for="username") Username
+					label.col-sm-2.control-label(for="username") #{username}
 					.col-sm-10
-						input.form-control(type="text", id="username", name="username", placeholder="Nom d'utilisateur")
+						input.form-control(type="text", id="username", name="username", placeholder="#{username}")
 				.form-group
-					label.col-sm-2.control-label(for="password") Password
+					label.col-sm-2.control-label(for="password") #{password}
 					.col-sm-10
-						input.form-control(type="password", id="password", name="password", placeholder="Mot de passe")
+						input.form-control(type="password", id="password", name="password", placeholder="#{password}")
 				.form-group
 					.col-sm-offset-2.col-sm-10
 						.checkbox
 							label
 								input(type="checkbox", name="remember")
-								span Remember me
-				button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;") Connect
-				a#reset-link(href="/reset")
+								span #{remember}
+				button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;") #{connect}
 block append scripts
 	script.
 		$(function() {

@@ -1,0 +1,14 @@
+{
+  "i18n_languages": {
+    "fr": "French",
+    "en": "English"
+  },
+  "music": "Music",
+  "video": "Video",
+  "featured": "Featured",
+  "radios": "Radios",
+  "users": "Users",
+  "library": "Library",
+  "upload": "Upload",
+  "project": "Project"
+}

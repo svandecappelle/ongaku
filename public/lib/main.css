@@ -34,7 +34,7 @@ a:hover{
 	text-decoration: none;
 }
 
-a:visited{
+nav a:visited{
 	text-decoration: none;
 	color: #FFF;
 }
