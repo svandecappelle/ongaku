@@ -6,6 +6,8 @@ block append library
     h1 All users
   each user in users  
     .panel.panel-default(style="width: 130px; margin: 5px;")
+      div.image
+        img(src="#{user.avatar}", style="width: 115px;")
       div.separated
         i.fa.fa-circle.status.online
         a.small-title(style="margin-left:10px;", href="/user/#{user.username}/info") #{user.username}

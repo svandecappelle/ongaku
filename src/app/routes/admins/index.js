@@ -69,6 +69,8 @@ logger.setLevel(nconf.get('logLevel'));
 		var renderUserView = function(req, res, view){
 			user.getAllUsers(function (err, usersDatas){
 				async.map(usersDatas.users, function (userData, next){
+					userData.avatar = middleware.getAvatar(userData.username);
+					logger.info(userData);
 					user.getGroupsByUsername(userData.username, function (groups){
 						userData = _.extend(userData, {groups: groups});
 						next(null, userData);
