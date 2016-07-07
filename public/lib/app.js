@@ -734,7 +734,7 @@
 
         $.each(library, function (index, video) {
           var videoElement = $('<li>', {
-            style: "width: 494px; display: inline-block;"
+            style: "width: 465px; display: inline-block;"
           });
           var videoLink = $('<a>', {
             class: "link video"
@@ -746,8 +746,8 @@
 
           var videoHtml5 = $('<video>', {
             class : 'player-video video-js vjs-default-skin not-initialized',
-            height: "270",
-            width: "480",
+            height: "253",
+            width: "450",
             id : video.uid,
             preload: "auto",
             controls: true
@@ -818,7 +818,7 @@
 				// For asynchronous loading debug
         // console.log($( this ).attr('id'));
 				$(this).removeClass(".not-initialized");
-        that.videos.push(videojs($( this ).attr('id'), {width: "480", height: "270"}, function(){
+        that.videos.push(videojs($( this ).attr('id'), {width: "450", height: "253"}, function(){
 					// Player (this) is initialized and ready.
 				}));
 			});
