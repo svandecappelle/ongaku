@@ -27,10 +27,10 @@ section.sidebar.show
 			ul.lib.group.artist.open
 script.
 	function initView(){
-		$.ongaku.library.bind();
 		$.ongaku.library.reset();
-		$.ongaku.library.setPage(0);
 		$.ongaku.library.clear();
+		$.ongaku.library.setPage(0);
+		$.ongaku.library.bind();
 		$.ongaku.library.fetch();
 		$('.pending-list.wfull').removeClass("wfull");  
 	}

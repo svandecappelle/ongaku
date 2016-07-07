@@ -13,3 +13,11 @@ section.sidebar.show
         div.separated
           each group in user.groups
             div #{group}
+
+script.
+  function initView(){
+    $.ongaku.library.unbind();
+    $.ongaku.library.reset();
+    $.ongaku.library.clear();
+    $('.pending-list.wfull').removeClass("wfull");
+  }

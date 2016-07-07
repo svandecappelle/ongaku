@@ -449,7 +449,7 @@
       }
       this.searchPattern = null;
       this.searching = false;
-      this.view = null;
+      this.view = undefined;
     };
 
     Library.prototype.handlers = function () {

@@ -1,18 +1,4 @@
-section.sidebar.show
-	h1(style="margin: 0px;") Video library
-	.search
-		.col-lg-8
-			.input-group
-				span.input-group-addon
-					i.glyphicon.glyphicon-search
-				input.searchbox.form-control(type="text", placeholder="#{search}", style="height:39px", data-type="video")
-	if (data.message !== null)
-		h1.message
-			i.fa.fa-circle-o-notch.fa-spin 
-			span.text= data.message
-	.user-sidebar.library-view(style="position: absolute; top: 140px; bottom: 70px; left: 0px; right: 10%; overflow-y: auto;")
-		.library
-			ul.lib.group.artist.open
+include ../api/videos
 
 block scripts
 	script.

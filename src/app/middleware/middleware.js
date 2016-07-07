@@ -19,6 +19,12 @@
     logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
+    const USERS_IMAGE_DIRECTORY = __dirname + "/../../../public/user/";
+    if (!fs.existsSync(USERS_IMAGE_DIRECTORY)) {
+        fs.mkdirSync(USERS_IMAGE_DIRECTORY);
+        logger.info("User folder not exists. Create one.");
+    }
+
     new translator.preload();
     try {
         identicon = require('identicon');
@@ -207,12 +213,7 @@
     * Checking user file served or not depending of the file type [cover/avatar...].
     */
     Middleware.hasImageFile = function (username, type){
-      var imageDirectory = __dirname + "/../../../users/",
-          imageFile = imageDirectory + username + "/" + type;
-      if (!fs.existsSync(imageDirectory)) {
-          fs.mkdirSync(imageDirectory);
-          logger.info("folder user not exists. Create one.");
-      }
+      var imageFile = USERS_IMAGE_DIRECTORY + username + "/" + type;
       return fs.existsSync(imageFile);
     };
 
@@ -236,8 +237,7 @@
       var urlUser = null;
 
       if (this.hasImageFile(username, type)){
-        var imageDirectory = __dirname + "/../../../users/",
-            imageFile = imageDirectory + username + "/" + type;
+        var imageFile = "/user/" + username + "/" + type;
         urlUser = path.resolve(imageFile);
       }
       return urlUser;
@@ -248,8 +248,7 @@
     */
     Middleware.getAvatar = function (username) {
       var urlUser = this.getImageFile(username, "avatar");
-      var imageDirectory = __dirname + "/../../../users/",
-          imageFile = imageDirectory + username + "/avatar";
+      var imageFile = "/user/" + username + "/avatar";
       if (urlUser === null){
         if (!nconf.get("gravatar")) {
           if (identicon) {
