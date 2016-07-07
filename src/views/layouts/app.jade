@@ -163,53 +163,62 @@ html
           videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
           function processAjaxData(idContent, html, urlPath){
             $(idContent).html(html);
-            window.history.pushState("", "", "/".concat(urlPath));
           }
           $(function () {
-              $('[data-toggle="popover"]').popover();
-              $('[data-toggle="tooltip"]').tooltip();
-              $('.scroll-pane').jScrollPane();
-              $.ongaku.build();
-              $.ongaku.controls.bind();
-              var socket = io.connect('http://#{session.host}/');
-              socket.on('connect', function () {
-                  console.log("Connected");
-              });
-              socket.on('library:scanned', function () {
-                  console.log("Library scanned");
-                  location.reload();
-              });
+            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.scroll-pane').jScrollPane();
+            $.ongaku.build();
+            $.ongaku.controls.bind();
+            var socket = io.connect('http://#{session.host}/');
+            socket.on('connect', function () {
+                console.log("Connected");
+            });
+            socket.on('library:scanned', function () {
+                console.log("Library scanned");
+                location.reload();
+            });
 
-              $(".nav-reload>a").on("click", function(){
+            $(".nav-reload>a").on("click", function(){
 
-                var message = $("<h1>", {
-                  class: "message"
-                });
-                message.append($("<i>", {
-                  class: "fa fa-circle-o-notch fa-spin"
-                }));
-                var loadingText = $("<span>", {
-                  class: "text"
-                });
-                message.append(loadingText);
-                loadingText.html("Reloading library");
-                $(".sidebar.show").append(message);
+              var message = $("<h1>", {
+                class: "message"
+              });
+              message.append($("<i>", {
+                class: "fa fa-circle-o-notch fa-spin"
+              }));
+              var loadingText = $("<span>", {
+                class: "text"
+              });
+              message.append(loadingText);
+              loadingText.html("Reloading library");
+              $(".sidebar.show").append(message);
 
-                $.get("/api/reload/audio/library", function(output){
-                  $(".sidebar.show>.message").remove();
-                  $.ongaku.library.rebuild(output, "audio");
+              $.get("/api/reload/audio/library", function(output){
+                $(".sidebar.show>.message").remove();
+                $.ongaku.library.rebuild(output, "audio");
+              });
+            });
+            $("a.view").on("click", function(ev){
+              ev.preventDefault();
+              ev.stopPropagation();
+              var view = $(this).data("view");
+              $.get("/api/view/".concat(view), function(html){
+                processAjaxData(".main-content", html, view);
+                window.history.pushState(view, "", "/".concat(view));
+                initView();
+              });
+            });
+              
+            // Revert to a previously saved state
+            window.addEventListener('popstate', function(event) {
+              var view = event.state !== null ? event.state : "audio";
+              $.get("/api/view/".concat(view), function(html){
+                processAjaxData(".main-content", html, view);
+                initView();
                 });
               });
-              $("a.view").on("click", function(ev){
-                ev.preventDefault();
-                ev.stopPropagation();
-                var view = $(this).data("view");
-                $.get("/api/view/".concat(view), function(html){
-                  processAjaxData(".main-content", html, view);
-                  initView();
-                });
-              });
-          });
+            });
 
         block scripts
 
