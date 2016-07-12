@@ -132,6 +132,7 @@
 
         if (type === "audio" && libObject.isFinishedAll){
           logger.info("audio scanned");
+          Library.data["audio"] = _.sortBy(Library.data["audio"], "artist")
           this.audioScanned = true;
         } else if(libObject.isFinishedAll) {
           logger.info("video scanned");
