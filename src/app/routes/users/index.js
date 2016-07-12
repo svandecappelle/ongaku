@@ -471,6 +471,27 @@ logger.setLevel(nconf.get('logLevel'));
           });
         });
       });
+
+      app.get("/api/album-download/:artist/:album", function(req, res){
+        UsersRoutes.callIfAuthenticated(req, res, function(){
+          var groupby = req.session.groupby;
+          //var username = req.session.passport.user.username;
+
+          groupby = ["artist", "album"];
+
+          var libraryDatas,
+            zipName = req.params.artist;
+          if (req.params.album === "all"){
+            libraryDatas = library.getAlbums(req.params.artist);
+          } else {
+            zipName += " - ".concat(req.params.album);
+            libraryDatas = library.getAlbum(req.params.artist, req.params.album);
+          }
+          exporter.toZip(libraryDatas, zipName, function(filename){
+            res.download(filename);
+          });
+        });
+      });
     };
 
     UsersRoutes.routes = function (app){

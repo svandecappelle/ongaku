@@ -281,7 +281,8 @@
     };
 
     Library.groupby = function(searchResultList, groupbyClause){
-      var groupedResultList = _.groupByMulti(searchResultList, groupbyClause ? groupbyClause : ['artist', 'album']);
+      groupbyClause = groupbyClause ? groupbyClause : ['artist', 'album'];
+      var groupedResultList = _.groupByMulti(searchResultList, groupbyClause);
 
       return _.map(groupedResultList, function(val, groupObject) {
         var rootGroupObject = {};
@@ -302,7 +303,7 @@
             };
 
             if (groupbyClause[0] === "artist" && groupbyClause[1] === "album"){
-                albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
+                //albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
             }
 
             return albumObject;
@@ -358,6 +359,26 @@
         return _.first(_.rest(arrayResults, page * length), length);
       }
       return arrayResults;
+    };
+
+    Library.getAlbums = function (artist){
+      return this.getAlbum(artist);
+    };
+
+    Library.getAlbum = function (artist, album){
+        var arrayResults = this.groupby(this.flatten);
+        arrayResults = _.where(arrayResults, {artist: artist});
+        if (album){
+          var albumSearched = null;
+          _.each(arrayResults[0].albums, function(albumObj, index){
+            if (albumObj.title === album){
+              albumSearched = albumObj;
+            }
+          });
+
+          arrayResults.albums = albumSearched
+        }
+        return arrayResults;
     };
 
     Library.getAudioFlattenById = function (ids){

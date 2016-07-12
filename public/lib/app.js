@@ -597,8 +597,22 @@
 
             artistAppender.append(glyficonArtistAppender);
 
+            var artistDownloader = $('<a>', {
+              class: 'trackaction artist-download',
+              "data-placement": "left",
+              "data-toggle": "tooltip",
+              "data-original-title": "Add all tracks to current playlist",
+              "href": "/api/album-download/".concat(artist.artist).concat("/").concat("all"),
+              "target": "_self"
+            });
+            var glyficonArtistDownloader = $('<i>', {
+              class: 'glyphicon glyphicon-download',
+            });
+            artistDownloader.append(glyficonArtistDownloader);
             artistElement.append(artistAppender);
             if (!$.ongaku.isAnonymous()){
+
+              artistElement.append(artistDownloader);
               if (that.view){
                 new UserLib().remover(artistElement);
               } else {
@@ -638,9 +652,25 @@
                 class: 'glyphicon glyphicon-plus'
               });
 
+              var albumDownloader = $('<a>', {
+                class: 'trackaction artist-download',
+                "data-placement": "left",
+                "data-toggle": "tooltip",
+                "data-original-title": "Add all tracks to current playlist",
+                "href": "/api/album-download/".concat(artist.artist).concat("/").concat(album.title),
+                "target": "_self"
+              });
+              var glyficonAlbumDownloader = $('<i>', {
+                class: 'glyphicon glyphicon-download',
+              });
+              albumDownloader.append(glyficonAlbumDownloader);
+
               albumAppender.append(glyficonAlbumAppender);
               albumElement.append(albumAppender);
+
               if (!$.ongaku.isAnonymous()){
+
+                albumElement.append(albumDownloader);
                 if (that.view){
                   new UserLib().remover(albumElement);
                 } else {
