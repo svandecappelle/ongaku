@@ -242,32 +242,33 @@
                   }, false);
 
                   mediaElement.addEventListener('canplay', function(e){
-                      var parent = $(this).closest('.audio-player');
-                      var playButton = parent.find('.playpause');
-                      var duration = mediaElement.duration;
+                    $.ongaku.audiowave.rebuild();
+                    var parent = $(this).closest('.audio-player');
+                    var playButton = parent.find('.playpause');
+                    var duration = mediaElement.duration;
 
-                      parent.find('.song-duration').html(secondsToMinutes(duration));
-                      playButton.prop('disabled', false);
+                    parent.find('.song-duration').html(secondsToMinutes(duration));
+                    playButton.prop('disabled', false);
 
-                      playButton.on('click', function(e){
-                        if (parent.hasClass('is-paused')) {
-                          mediaElement.play();
-                        } else if (parent.hasClass('is-playing')) {
-                          mediaElement.pause();
-                        }
-                      });
-
-                      if ($.ongaku.getNextSong()){
-                          $(".audio-player .next").prop('disabled', false);
-                      }else{
-                        $(".audio-player .next").prop('disabled', true);
+                    playButton.on('click', function(e){
+                      if (parent.hasClass('is-paused')) {
+                        mediaElement.play();
+                      } else if (parent.hasClass('is-playing')) {
+                        mediaElement.pause();
                       }
+                    });
 
-                      if ($.ongaku.getPreviousSong()){
-                          $(".audio-player .previous").prop('disabled', false);
-                      }else{
-                        $(".audio-player .previous").prop('disabled', true);
-                      }
+                    if ($.ongaku.getNextSong()){
+                        $(".audio-player .next").prop('disabled', false);
+                    }else{
+                      $(".audio-player .next").prop('disabled', true);
+                    }
+
+                    if ($.ongaku.getPreviousSong()){
+                        $(".audio-player .previous").prop('disabled', false);
+                    }else{
+                      $(".audio-player .previous").prop('disabled', true);
+                    }
                   });
 
                   mediaElement.addEventListener('pause', function(e){
