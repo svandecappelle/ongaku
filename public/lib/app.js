@@ -149,10 +149,9 @@
           alertify.success('Transcoding...', 0);
         }
 
-        $(".play").find("[data-uid='" + this.current + "']").parent().parent().addClass('playing');
         $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing');
 
-        var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text() + " ";
+        var title = $(".playlist").find("[data-uid='" + this.current + "']").find(".track-title").text() + " ";
         $(".song-info .title").text(title);
         this.titleScroller.configure({
             text: title,
@@ -311,7 +310,6 @@
       } else {
           nextSong = $(".playlist .song").first();
       }
-
 
       return nextSong;
     }
