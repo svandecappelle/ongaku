@@ -177,7 +177,7 @@
     }
 
     Player.prototype.build = function (callback) {
-      if ($('.player > audio').children().length > 0 && !this.isInitialised()) {
+      if ($('.player .media > audio').children().length > 0 && !this.isInitialised()) {
 
           $(".audio-player .next").on("click", function(){
             $.ongaku.next();
@@ -191,7 +191,8 @@
           this.player = new MediaElementPlayer("audio", {
               volume: 0.1,
               audioVolume: 'vertical',
-              features: ['progress','volume'],
+              audioHeight: 50,
+              features: ['progress', 'volume'],
               success: function (mediaElement) {
                   mediaElement.addEventListener('loadedmetadata', function () {
                       alertify.dismissAll();
@@ -286,13 +287,10 @@
                 console.log("failure build musique player:", me);
               }
           });
-
-          $('.player').height("30px");
-          $('.player > audio').show();
+          $('.player .media > audio').show();
       } else {
           this.initialised = false;
-          $('.player').height("30px");
-          $('.player>audio').hide();
+          $('.player .media > audio').hide();
       }
     };
 
@@ -306,20 +304,24 @@
 
     Player.prototype.getNextSong = function(){
       var nextSong = null;
+
       if (this.current) {
-          nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().next();
+          nextSong = $(".playlist").find("[data-uid='" + this.current + "']").parent().next().find(".song").first();
+          console.log(this.current, nextSong);
       } else {
-          nextSong = $(".play>.button").first().parent().parent();
+          nextSong = $(".playlist .song").first();
       }
+
+
       return nextSong;
     }
 
     Player.prototype.getPreviousSong = function(){
       var nextSong = null;
       if (this.current) {
-          nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().prev();
+          nextSong = $(".playlist").find("[data-uid='" + this.current + "']").parent().prev().find(".song").first();
       } else {
-          nextSong = $(".play>.button").first().parent().parent();
+          nextSong = $(".playlist .song").first();
       }
       return nextSong;
     }
@@ -327,8 +329,8 @@
     Player.prototype.next = function () {
         var nextSong = this.getNextSong();
         if (nextSong) {
-            var nextUid = nextSong.find(".button").data('uid'),
-                encoding = nextSong.find(".button").data('encoding');
+            var nextUid = nextSong.data('uid'),
+                encoding = nextSong.data('encoding');
             $(".audio-player .next").prop('disabled', false);
 
             if ($.ongaku.getPreviousSong()){
@@ -346,8 +348,8 @@
     Player.prototype.previous = function () {
         var previousSong = this.getPreviousSong();
         if (previousSong) {
-            var nextUid = previousSong.find(".button").data('uid'),
-                encoding = previousSong.find(".button").data('encoding');
+            var nextUid = previousSong.data('uid'),
+                encoding = previousSong.data('encoding');
             $(".audio-player .previous").prop('disabled', false);
 
             if ($.ongaku.getNextSong()){
@@ -383,9 +385,6 @@
 
     Controls.prototype.handlers = function () {
       this.handles = {
-        "pending-song": new HandlerRegisteration(".pending-list .list .song", "click", function () {
-            $.ongaku.play($(this).find(".button").data("uid"), $(this).find(".button").data("encoding"));
-        }),
         "song": new HandlerRegisteration("a.song", "click", function () {
             $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
         })
@@ -583,12 +582,6 @@
             event.preventDefault();
             event.stopPropagation();
             $.ongaku.playlist.appendFromElement($(this));
-        }),
-        "pending-list": new HandlerRegisteration(".pending-list .list", "mousewheel", function (event, delta) {
-            var leftPos = $('.pending-list .list .jspPane').position().left;
-            leftPos += (delta * 70);
-            $(".pending-list .list .jspPane").css({left : leftPos});
-            event.preventDefault();
         }),
         "eraser": new HandlerRegisteration(".fa-eraser", "click", function(){
             $.ongaku.playlist.clear();
@@ -1009,7 +1002,7 @@
       $("#save-current-playlist").prop('disabled', false);
       $.post("/api/playlist/add/".concat(uidFile), function (playlist) {
           $.ongaku.playlist.rebuild(playlist);
-          if ($(".pending-list .song").length === 1) {
+          if ($(".playlist li").length === 1) {
               $.ongaku.next();
           }
       });
@@ -1036,7 +1029,7 @@
             success: function(playlist) {
                 $.ongaku.playlist.rebuild(playlist);
 
-                if ($(".pending-list .song").length === 1) {
+                if ($(".playlist .song").length === 1) {
                     $.ongaku.next();
                 }
             }
@@ -1051,11 +1044,9 @@
     Playlist.prototype.rebuild = function (playlist) {
       $("ul.playlist").empty();
 
-      $('.pending-list .list .jspPane').empty();
       if (playlist && playlist.all) {
         if (playlist.all.length === 0){
-          $('.pending-list .list .jspPane').empty();
-          $(".player").empty();
+          $(".player .media").empty();
           $.ongaku.setInitialized(false);
         }
 
@@ -1068,9 +1059,6 @@
         $.each(playlist.all, function (index, val) {
             tracknumber += 1;
             $("ul.playlist").append(new Track(tracknumber, val));
-            if (activateBottomPendingList){
-              $('.pending-list .list .jspPane').append(new PendingTrack(val));
-            }
         });
 
         var trackObj = playlist.lastAdded;
@@ -1097,10 +1085,10 @@
 
         if (!$.ongaku.isInitialised()) {
             console.log("Build controls for first init plays");
-            $(".player").empty();
-            $(".player").show();
-            $(".player").html(audioControls);
-            $(".player > audio").html(source);
+            $(".player .media").empty();
+            $(".player .media").show();
+            $(".player .media").html(audioControls);
+            $(".player .media > audio").html(source);
             $.ongaku.build(function () {
                 $.ongaku.next();
             });
@@ -1108,8 +1096,7 @@
           $(".list-container").find("[data-uid='".concat($.ongaku.getCurrent()).concat("']")).addClass('playing');
         }
       } else {
-        $('.pending-list .list .jspPane').empty();
-        $(".player").empty();
+        $(".player .media").empty();
         $.ongaku.setInitialized(false);
       }
     };
@@ -1148,9 +1135,6 @@
 
     Playlist.prototype.handlers = function () {
       this.handles = {
-        "controller" : new HandlerRegisteration(".pending-list .controller", "click", function () {
-          $('.pending-list').toggleClass("active");
-        }),
         "save-current-playlist" : new HandlerRegisteration("#save-current-playlist", "click", function () {
           var playlistname = $("#playlistname").val();
           if (playlistname && playlistname !== ""){

@@ -1,24 +1,25 @@
 block player
 	#wave
-	if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
-		.player.audio-player.is-paused
-			.song-info
-				button.previous(disabled)
-					i.fa.fa-step-backward
-				button.playpause.is-paused(disabled)
-					i.fa.fa-play
-				button.next(disabled)
-					i.fa.fa-step-forward
-				.title
-				.song-time
-					.song-current-time
-					.song-duration
-			audio#controls(controls="controls", width="100%")
-				if (data.playing)
-					source(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")
-	else
-		.player.empty
-			span #{stream_auth_required}
+	.player.audio-player.is-paused
+		.song-info
+			button.previous(disabled)
+				i.fa.fa-step-backward
+			button.playpause.is-paused(disabled)
+				i.fa.fa-play
+			button.next(disabled)
+				i.fa.fa-step-forward
+			.title
+			.song-time
+				.song-current-time
+				.song-duration
+		.media
+			if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
+				audio#controls(controls="controls", width="100%;")
+					if (data.playing)
+						source(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")
+			else
+				.player.empty
+					span #{stream_auth_required}
 			
 	if (data.playing)
 		script.

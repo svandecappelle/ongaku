@@ -1,17 +1,3 @@
 .pending-list.wfull
   .controller.glyphicon.glyphicon-resize-full
   #visualisation(style="height:50px;")
-  .list.scroll-pane
-    for track in data.playlist
-      .song
-        .layer
-          .top
-          .left
-          .right
-          .bottom
-        .info
-          .song-title= track.title
-          .song-artist= track.artist
-          .song-infos= track.duration
-        .play
-          .button(data-uid="#{track.uid}", data-encoding="#{track.encoding}") Play
