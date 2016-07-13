@@ -150,14 +150,6 @@
         }
 
         $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing');
-
-        var title = $(".playlist").find("[data-uid='" + this.current + "']").find(".track-title").text() + " ";
-        $(".song-info .title").text(title);
-        this.titleScroller.configure({
-            text: title,
-            speed: 500,
-            forceReset: true
-        });
     };
 
     Player.prototype.stop = function (uid, encoding) {
@@ -221,6 +213,14 @@
                       $(this).removeClass('is-paused').addClass('is-playing');
                       playButton.find('.fa').removeClass('fa-play').addClass('fa-pause');
                       parent.removeClass('is-paused').addClass('is-playing');
+                      if ($.ongaku.getCurrent()){
+                        var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
+                        $.ongaku.titleScroller.configure({
+                            text: title,
+                            speed: 500,
+                            forceReset: true
+                        });
+                      }
                   });
 
                   mediaElement.addEventListener('error', function failed(e) {
@@ -243,6 +243,11 @@
 
                   mediaElement.addEventListener('canplay', function(e){
                     $.ongaku.audiowave.rebuild();
+                    if ($.ongaku.getCurrent()){
+                      var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
+                      $(".song-info .title").text(title);
+                    }
+
                     var parent = $(this).closest('.audio-player');
                     var playButton = parent.find('.playpause');
                     var duration = mediaElement.duration;

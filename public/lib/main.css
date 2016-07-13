@@ -32,11 +32,16 @@ a{
 
 a:hover{
 	text-decoration: none;
+	outline: none !important;
 }
 
 nav a:visited{
 	text-decoration: none;
 	color: #FFF;
+}
+
+a:focus{
+	outline: none !important;
 }
 
 nav{
@@ -66,6 +71,7 @@ nav a{
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;
+	outline: none;
 }
 
 nav a:hover{

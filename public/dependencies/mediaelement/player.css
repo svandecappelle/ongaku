@@ -11,6 +11,10 @@
 	outline: none;
 }
 
+.audio-player .media{
+	overflow: visible !important;
+}
+
 .audio-player{
 	height: 50px;
 }
@@ -44,7 +48,6 @@
 	width: 400px;
 	height: 5px;
 	left: 0;
-	bottom: 0;
 	cursor: pointer;
 
 	-webkit-border-radius: 0px 0px 2px 2px;
@@ -77,9 +80,20 @@
 .mejs-controls .mejs-time-rail .mejs-time-total:hover {
 	background: #999999;
 	margin: 0;
-	top: -5;
+	top: -5px;
 	height: 10px;
 	transition: all 0.2s linear;
+}
+
+.mejs-button, .mejs-button:focus{
+	outline: none !important;
+}
+
+.mejs-button.mejs-volume-button.mejs-mute, .mejs-button.mejs-volume-button.mejs-unmute{
+	position: absolute;
+	right: 0;
+	top: 5px;
+	outline: none;
 }
 
 .mejs-container .mejs-controls{
@@ -118,9 +132,11 @@
   color: #FFF;
   transition: all 200ms ease-in;
 	margin-left: 20px;
+	outline: none !important;
 }
+
 .audio-player button:focus {
-  outline: none;
+  outline: none !important;
 }
 
 .audio-player button:enabled:hover {
