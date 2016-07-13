@@ -153,6 +153,7 @@
         $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing');
 
         var title = $(".play").find("[data-uid='" + this.current + "']").parent().parent().find(".song-title").text() + " ";
+        $(".song-info .title").text(title);
         this.titleScroller.configure({
             text: title,
             speed: 500,
@@ -168,20 +169,43 @@
       return this.player;
     };
 
+    function secondsToMinutes(time) {
+      var minutes = Math.floor(time / 60);
+      var seconds = Math.floor(time % 60);
+      seconds = ("0" + (+seconds + 1)).slice(-2);
+      return minutes + ":" + seconds;
+    }
+
     Player.prototype.build = function (callback) {
       if ($('.player > audio').children().length > 0 && !this.isInitialised()) {
+
+          $(".audio-player .next").on("click", function(){
+            $.ongaku.next();
+          });
+
+          $(".audio-player .previous").on("click", function(){
+            $.ongaku.previous();
+          });
+
           this.initialised = true;
           this.player = new MediaElementPlayer("audio", {
               volume: 0.1,
-              features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
-              success: function (me) {
-                  me.addEventListener('loadedmetadata', function () {
+              audioVolume: 'vertical',
+              features: ['progress','volume'],
+              success: function (mediaElement) {
+                  mediaElement.addEventListener('loadedmetadata', function () {
                       alertify.dismissAll();
                   });
-                  me.addEventListener('ended', function () {
+                  mediaElement.addEventListener('ended', function () {
                       $.ongaku.next();
+
+                      var parent = $(this).closest('.audio-player');
+                      $(this).closest('.audio-player').find(".progress-bar").css("width", "100%");
+                      parent.find('.playpause').removeClass('is-playing').addClass('is-paused');
+                      parent.find('.playpause').find('.fa').removeClass('fa-pause').addClass('fa-play');
+                      parent.removeClass('is-playing').addClass('is-paused').addClass('already-played');
                   });
-                  me.addEventListener('play', function () {
+                  mediaElement.addEventListener('play', function () {
                       //$.ongaku.getPlayer.volume = 1;
                       if ($.ongaku.isFirst()) {
                           alertify.warning('Add a track to play', 2);
@@ -189,12 +213,71 @@
                       } else if ( $(".playing").length === 0) {
                           $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
                       }
+
+                      var otherPlayers =  $('audio').not(this);
+                      var parent = $(this).closest('.audio-player');
+                      var playButton = parent.find('.playpause');
+
+                      $(this).removeClass('is-paused').addClass('is-playing');
+                      playButton.find('.fa').removeClass('fa-play').addClass('fa-pause');
+                      parent.removeClass('is-paused').addClass('is-playing');
                   });
 
-                  me.addEventListener('error', function failed(e) {
+                  mediaElement.addEventListener('error', function failed(e) {
                     alertify.dismissAll();
                     alertify.error("Error reading file: \n Check authentication rights.");
                   });
+
+                  // add event listener
+                  mediaElement.addEventListener('timeupdate', function(e) {
+                      var parent = $(this).closest('.audio-player');
+                      var currentTime = mediaElement.currentTime;
+                      var duration = mediaElement.duration;
+                      var percentage = (currentTime / duration) * 100 + "%";
+
+                      if (currentTime > 0.5 && currentTime <= duration) {
+                        $(this).closest('.audio-player').find(".progress-bar").css("width", percentage);
+                        parent.find('.song-current-time').html(secondsToMinutes(currentTime) + ' / ');
+                      }
+                  }, false);
+
+                  mediaElement.addEventListener('canplay', function(e){
+                      var parent = $(this).closest('.audio-player');
+                      var playButton = parent.find('.playpause');
+                      var duration = mediaElement.duration;
+
+                      parent.find('.song-duration').html(secondsToMinutes(duration));
+                      playButton.prop('disabled', false);
+
+                      playButton.on('click', function(e){
+                        if (parent.hasClass('is-paused')) {
+                          mediaElement.play();
+                        } else if (parent.hasClass('is-playing')) {
+                          mediaElement.pause();
+                        }
+                      });
+
+                      if ($.ongaku.getNextSong()){
+                          $(".audio-player .next").prop('disabled', false);
+                      }else{
+                        $(".audio-player .next").prop('disabled', true);
+                      }
+
+                      if ($.ongaku.getPreviousSong()){
+                          $(".audio-player .previous").prop('disabled', false);
+                      }else{
+                        $(".audio-player .previous").prop('disabled', true);
+                      }
+                  });
+
+                  mediaElement.addEventListener('pause', function(e){
+                      var parent = $(this).closest('.audio-player');
+                      var playButton = parent.find('.playpause');
+                      playButton.removeClass('is-playing').addClass('is-paused');
+                      playButton.find('.fa').removeClass('fa-pause').addClass('fa-play');
+                      parent.removeClass('is-playing').addClass('is-paused');
+                  });
+
                   if (callback !== undefined) {
                       callback();
                   }
@@ -221,22 +304,61 @@
         this.initialised = initialised;
     };
 
+    Player.prototype.getNextSong = function(){
+      var nextSong = null;
+      if (this.current) {
+          nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().next();
+      } else {
+          nextSong = $(".play>.button").first().parent().parent();
+      }
+      return nextSong;
+    }
+
+    Player.prototype.getPreviousSong = function(){
+      var nextSong = null;
+      if (this.current) {
+          nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().prev();
+      } else {
+          nextSong = $(".play>.button").first().parent().parent();
+      }
+      return nextSong;
+    }
+
     Player.prototype.next = function () {
-        var nextSong = null;
-        if (this.current) {
-            nextSong = $(".play").find("[data-uid='" + this.current + "']").parent().parent().next();
-        } else {
-            nextSong = $(".play>.button").first().parent().parent();
-        }
-
-        console.log("Start next song: ", this.current);
-
+        var nextSong = this.getNextSong();
         if (nextSong) {
             var nextUid = nextSong.find(".button").data('uid'),
                 encoding = nextSong.find(".button").data('encoding');
+            $(".audio-player .next").prop('disabled', false);
+
+            if ($.ongaku.getPreviousSong()){
+                $(".audio-player .previous").prop('disabled', false);
+            }
+
             if (nextUid) {
                 this.play(nextUid, encoding);
             }
+        } else {
+          $(".audio-player .next").prop('disabled', true);
+        }
+    };
+
+    Player.prototype.previous = function () {
+        var previousSong = this.getPreviousSong();
+        if (previousSong) {
+            var nextUid = previousSong.find(".button").data('uid'),
+                encoding = previousSong.find(".button").data('encoding');
+            $(".audio-player .previous").prop('disabled', false);
+
+            if ($.ongaku.getNextSong()){
+                $(".audio-player .next").prop('disabled', false);
+            }
+
+            if (nextUid) {
+                this.play(nextUid, encoding);
+            }
+        } else {
+          $(".audio-player .previous").prop('disabled', true);
         }
     };
 

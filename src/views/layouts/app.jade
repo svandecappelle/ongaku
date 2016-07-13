@@ -4,6 +4,7 @@ html
         meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
         link(rel="stylesheet", type="text/css", href="/dependencies/font-awesome-4.2.0/css/font-awesome.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/mediaelement/mediaelementplayer.css")
+        link(rel="stylesheet", type="text/css", href="/dependencies/mediaelement/player.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/bootstrap-3.3.6-dist/css/bootstrap.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/alertifyjs-0.10.2/css/alertify.min.css")
@@ -110,23 +111,23 @@ html
                     li
                         a
                             i.glyphicon.glyphicon-star
-                            span #{featured}
+                            div #{featured}
                     li
                         a.view(href="/", data-view="audio")
                             i.glyphicon.glyphicon-music
-                            span #{music}
+                            div #{music}
                     li
                         a.view(href="/video", data-view="video")
                             i.glyphicon.glyphicon-facetime-video
-                            span #{video}
+                            div #{video}
                     li
                         a.view(href="/users", data-view="users")
                             i.glyphicon.glyphicon-user
-                            span #{ongaku_users}
+                            div #{ongaku_users}
                     li
                         a
                             i.glyphicon.glyphicon-tasks
-                            span #{radios}
+                            div #{radios}
             if !session.user.isAnonymous
               .menu.me
                   ul
@@ -134,17 +135,17 @@ html
                           //TODO active view layer
                           a.view(href="/library", data-view="library")
                               i.glyphicon.glyphicon-book
-                              span #{library}
+                              div #{library}
                       li
                           a
                               i.glyphicon.glyphicon-upload
-                              span #{upload}
+                              div #{upload}
             .menu.project
                 ul
                     li
                         a(href="https://github.com/svandecappelle/ongaku", target="_blank")
                             i.fa.fa-github(style="font-size: 20pt;")
-                            span #{project}
+                            div #{project}
 
         main.main-content
             block library
@@ -152,13 +153,12 @@ html
         include player
         include pending-play
 
-        unless session.user.isAnonymous
-          script.
-            $.ongaku.setUser("#{session.user.username}");
-            $(function () {
-              $.ongaku.playlist.bind();
-              $.ongaku.playlist.fetch();
-            });
+        script.
+          $.ongaku.setUser("#{session.user.username}");
+          $(function () {
+            $.ongaku.playlist.bind();
+            $.ongaku.playlist.fetch();
+          });
         script.
           videojs.options.flash.swf = "http://#{session.host}/video-js/video-js.swf";
           function processAjaxData(idContent, html, urlPath){
@@ -206,7 +206,9 @@ html
               $.get("/api/view/".concat(view), function(html){
                 processAjaxData(".main-content", html, view);
                 window.history.pushState(view, "", "/".concat(view));
-                initView();
+                if (initView){
+                  initView();
+                }
               });
             });
               
@@ -215,7 +217,9 @@ html
               var view = event.state !== null ? event.state : "audio";
               $.get("/api/view/".concat(view), function(html){
                 processAjaxData(".main-content", html, view);
-                initView();
+                  if (initView){
+                    initView();
+                  }
                 });
               });
             });
@@ -224,7 +228,9 @@ html
 
         script.
           $(function(){
-            if (initView){
+            try{
               initView();
+            } catch (e){
+              
             }
           });

@@ -1,7 +1,18 @@
 block player
 	#wave
 	if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
-		.player
+		.player.audio-player.is-paused
+			.song-info
+				button.previous(disabled)
+					i.fa.fa-step-backward
+				button.playpause.is-paused(disabled)
+					i.fa.fa-play
+				button.next(disabled)
+					i.fa.fa-step-forward
+				.title
+				.song-time
+					.song-current-time
+					.song-duration
 			audio#controls(controls="controls", width="100%")
 				if (data.playing)
 					source(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")

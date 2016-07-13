@@ -56,7 +56,6 @@ nav{
 }
 
 nav .menu{
-	margin-left: 10px;
 	margin-top: 20px;
 }
 
@@ -97,6 +96,24 @@ nav:hover span{
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;
+}
+
+.main-menu li{
+	margin-bottom: 15px;
+}
+
+.main-menu{
+	width: 90px;
+}
+
+.menu a{
+	width: 100%;
+	text-align: center;
+}
+
+.menu a>i{
+	width: 100%;
+	text-align: center;
 }
 
 .message + .library-view{
@@ -898,6 +915,8 @@ ul.group.artist span.artistname{
 .menu.project{
 	position: absolute;
 	bottom: 50px;
+	left: 0px;
+	right: 0px;
 }
 
 .menu.project a>span{
@@ -1113,7 +1132,7 @@ ul.group.artist span.artistname{
 }
 
 .main-content{
-	margin-left: 45px;
+	margin-left: 90px;
 	padding-top: 50px;
 	/*background: url('http://images4.fanpop.com/image/photos/17500000/cool-background-random-17506457-2299-1437.jpg') no-repeat center center fixed;*/
 	background: url('/img/background.jpg') repeat center center;
