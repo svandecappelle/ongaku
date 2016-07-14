@@ -48,7 +48,24 @@
         return d === 0 ? 0 : ((d * audiowave.svgHeight) / audiowave.maxFrenquency);
       })
       .attr('fill', function(d) {
-        return 'rgba(0, ' + d + ', 0, ' + (0.3 + (d / 255)) + ')';
+        var color = $.ongaku.audiowave.getColor();
+
+        if (!color){
+          color = 'rgba(0, ' + d + ', 0, ' + (d / 255) + ')';
+        } else if (color.match("rgba*")){
+          var hue,
+            colorArray = color.split(",");
+          color = "";
+          for (var i = 0; i < colorArray.length; i++) {
+            hue = colorArray[i];
+            if (i > 2){
+              break;
+            }
+            color += hue.concat(",");
+          }
+          color += "" + (d / 255)+ ')';
+        }
+        return color;
       });
   }
 
@@ -59,12 +76,21 @@
     // Default value is 255
     this.maxFrenquency = 255;
     this.render = render;
+    this.color = "rgba(0, 255, 0, 1)";
   }
 
   $.ongaku.audiowave = new Audiowave();
 
   Audiowave.prototype.rebuildSVG = function(parent, height, width) {
     return d3.select(parent).append('svg').attr('height', height).attr('width', width);
+  };
+
+  Audiowave.prototype.setColor = function(color) {
+    this.color = color;
+  };
+
+  Audiowave.prototype.getColor = function() {
+    return this.color;
   };
 
   Audiowave.prototype.rebuild = function() {

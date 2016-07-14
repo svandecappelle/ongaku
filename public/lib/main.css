@@ -1520,3 +1520,32 @@ a.link.video>.name{
     background: rgba(224, 200, 135, 0.39);
     position: relative;
 }
+
+.colorpicker{
+	position: absolute;
+	right: 30px;
+	top: 5px;
+	bottom: 0;
+}
+
+.sp-replacer{
+	border: none;
+	background: #151313;
+	color: #FFF;
+}
+
+.sp-replacer:hover{
+	color: #CACACA;
+}
+
+.sp-container{
+		background-color: #000;
+		border: none;
+}
+.sp-picker-container{
+		border-left: 1px solid #000;
+}
+
+.sp-cancel{
+		color: #CACACA;
+}

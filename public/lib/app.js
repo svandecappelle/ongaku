@@ -1288,5 +1288,34 @@
             a.unshift(a.pop());
         }
     };
+    var Themer = function(){
 
+    };
+
+    Themer.prototype.setBaseColor = function (color) {
+      if (color.match("rgb.*")){
+        if (!color.match("rgba.*")) {
+          color = color.replace("rgb", "rgba");
+          color = color.replace(")", ", 1)");
+        }
+      }
+      $(".mejs-time-loaded").css({
+        "background" : color
+      });
+
+      // fonts:
+      /*$("section.song-list > .list-container .songs-container ul li a").css({
+        color: color
+      });*/
+      $(".albumtitle").css({
+        color: color
+      });
+
+      $("ul.group.album > li").css({
+        "box-shadow": '0px -4px 0px 0px ' + color+ 'inset'
+      });
+      $.ongaku.audiowave.setColor(color);
+    };
+
+    $.ongaku.themer = new Themer();
 }(jQuery);
