@@ -55,10 +55,9 @@ html
                                 a(href="#reload", title="Reload library")
                                   i.fa.fa-book
                                   span.text Reload lib
-
+            div.pull-right(style="padding-top: 6px;")
+              input#base-color(type="text")
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
-                .colorpicker
-                  input#base-color(type="text")
                 ul
                     unless session.user.isAnonymous
                         li.dropdown(style="float: left;")
