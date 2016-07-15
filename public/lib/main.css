@@ -258,7 +258,7 @@ section.song-list > .list-container{
 section.song-list > .list-container .playlist{
 	margin: 0px;
 	padding: 10px;
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 }
 
 section.song-list > .list-container .playlist-columns{
@@ -296,6 +296,7 @@ section.song-list > .list-container .songs-container ul li{
 
 section.song-list > .list-container .songs-container ul li:hover{
 	background-color: rgba(187, 208, 208, 0.49);
+	text-shadow: 1px 1px #434343;
 }
 
 section.song-list > .list-container .song{
