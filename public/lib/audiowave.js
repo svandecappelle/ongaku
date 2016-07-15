@@ -97,6 +97,10 @@
     var that = this;
 
     if (!this.binded) {
+      var savedColor = Cookies.get("base-color");
+      if (savedColor){
+        this.setColor(savedColor)
+      }
       this.binded = true;
 
       if (window.AudioContext) {

@@ -255,6 +255,12 @@
                       $(".song-info .title").text(title);
                     }
 
+                    if ($.ongaku.themer.getBaseColor()){
+                      $(".mejs-time-loaded").css({
+                        "background" : $.ongaku.themer.getBaseColor()
+                      });
+                    }
+
                     var parent = $(this).closest('.audio-player');
                     var playButton = parent.find('.playpause');
                     var duration = mediaElement.duration;
@@ -319,7 +325,6 @@
 
       if (this.current) {
           nextSong = $(".playlist").find("[data-uid='" + this.current + "']").parent().next().find(".song").first();
-          console.log(this.current, nextSong);
       } else {
           nextSong = $(".playlist .song").first();
       }
@@ -374,6 +379,47 @@
           $(".audio-player .previous").prop('disabled', true);
         }
     };
+
+    var Themer = function(){
+      var savedColor = Cookies.get("base-color");
+      if (savedColor) {
+        this.color = savedColor;
+      }
+    };
+
+    Themer.prototype.getBaseColor = function () {
+      return this.color;
+    };
+
+    Themer.prototype.setBaseColor = function (color) {
+      this.color = color;
+      if (color.match("rgb.*")){
+        if (!color.match("rgba.*")) {
+          color = color.replace("rgb", "rgba");
+          color = color.replace(")", ", 1)");
+        }
+      }
+      Cookies.set("base-color", color);
+
+      $(".mejs-time-loaded").css({
+        "background" : color
+      });
+
+      // fonts:
+      $(".song:not(.playing)").css({
+        color: color
+      });
+      $(".albumtitle").css({
+        color: color
+      });
+
+      $("ul.group.album > li").css({
+        "box-shadow": '0px -4px 0px 0px ' + color+ 'inset'
+      });
+      $.ongaku.audiowave.setColor(color);
+    };
+
+    $.ongaku.themer = new Themer();
 
     function HandlerRegisteration(target, eventType, handle){
       this.target = target;
@@ -1271,10 +1317,17 @@
 
     var Track = function (tracknumber, val){
       var track = $("<li>");
+
+
       var trackSong = $("<a>", {
         class: "song",
         "data-uid": val.uid
       });
+      if ($.ongaku.themer.getBaseColor()){
+        trackSong.css({
+          color: $.ongaku.themer.getBaseColor()
+        });
+      }
       track.append(trackSong);
 
       var trackInfoNums = $("<div>", {
@@ -1324,39 +1377,4 @@
             a.unshift(a.pop());
         }
     };
-    var Themer = function(){
-
-    };
-
-    Themer.prototype.getBaseColor = function () {
-      return this.color;
-    };
-
-    Themer.prototype.setBaseColor = function (color) {
-      this.color = color;
-      if (color.match("rgb.*")){
-        if (!color.match("rgba.*")) {
-          color = color.replace("rgb", "rgba");
-          color = color.replace(")", ", 1)");
-        }
-      }
-      $(".mejs-time-loaded").css({
-        "background" : color
-      });
-
-      // fonts:
-      $(".song:not(.playing)").css({
-        color: color
-      });
-      $(".albumtitle").css({
-        color: color
-      });
-
-      $("ul.group.album > li").css({
-        "box-shadow": '0px -4px 0px 0px ' + color+ 'inset'
-      });
-      $.ongaku.audiowave.setColor(color);
-    };
-
-    $.ongaku.themer = new Themer();
 }(jQuery);

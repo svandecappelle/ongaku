@@ -345,7 +345,7 @@ section.song-list > .list-container .song:hover .track-num:before, section.song-
 }
 
 section.song-list > .list-container .songs-container ul li a.playing{
-	color: rgba(254, 255, 253, 0.9);
+	color: rgba(254, 255, 253, 0.9) !important;
 }
 
 section.song-list > .list-container .song .track-num:after{

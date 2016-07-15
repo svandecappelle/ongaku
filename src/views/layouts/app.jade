@@ -26,6 +26,7 @@ html
         script(src="/dependencies/jScrollPane/jquery.jscrollpane.min.js")
         script(src="/dependencies/socket.io/socket.io.js")
         script(src="/dependencies/video-js/video.js")
+        script(src="/dependencies/js-cookie.js")
         script(src="/dependencies/d3.js")
         script(src="/dependencies/spectrum/spectrum.js")
 
@@ -168,8 +169,9 @@ html
             $(idContent).html(html);
           }
           $(function () {
+            var basecolor = Cookies.get("base-color");
             $("#base-color").spectrum({
-              color: "#0f0",
+              color:  basecolor ? basecolor : "#0f0",
               "body": "input.colorpicker",
               "showAlpha": true,
               "preferredFormat": "rgb",
