@@ -64,7 +64,7 @@ if (process.argv[2] === "dev"){
         app.set('views', __dirname + '/src/views');
         app.set('view engine', 'jade');
         app.use(express.static(__dirname + '/public'));
-        app.use(bodyParser());
+        app.use(bodyParser({uploadDir:'./uploads'}));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
           extended: true

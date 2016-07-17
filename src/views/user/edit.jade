@@ -1,11 +1,15 @@
 extends layout
 
 block append userpage-content
-  form#general.form-horizontal(method='post')
+  form#general.form-horizontal(method='post', enctype="multipart/form-data")
     .form-group
       label.col-md-2.control-label Language
-      .col-md-6
+      .col-md-4
         select.form-control(name="lang")
           for language in languages
             option(value="#{language}")= i18n_languages[language]
+    .form-group
+      label.col-md-2.control-label Background image
+      .col-md-6
+        input(type="file", name="background")
     button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit") ok

@@ -32,7 +32,11 @@ html
 
         script(src="/lib/app.js")
         script(src="/lib/audiowave.js")
-
+        if !session.user.isAnonymous
+          style.
+            .main-content{
+              background: url('/user/#{session.user.username}/background') repeat center center;
+            }
     body
         #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 15px;",role="navigation")
             h1(style="padding-left: 40px;float:left;margin:0px;")
@@ -55,7 +59,7 @@ html
                             li.nav-reload
                                 a(href="#reload", title="Reload library")
                                   i.fa.fa-book
-                                  span.text Reload lib
+                                  span.text Reloéad lib
             div.pull-right(style="padding-top: 6px;")
               input#base-color(type="text")
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")

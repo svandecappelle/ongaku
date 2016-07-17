@@ -1,8 +1,9 @@
 /*jslint node: true */
-var logger = require('log4js').getLogger("UsersRoutes");
-var nconf = require("nconf");
-var passport = require("passport");
-var _ = require("underscore");
+var logger = require('log4js').getLogger("UsersRoutes"),
+  nconf = require("nconf"),
+  passport = require("passport"),
+  _ = require("underscore"),
+  Busboy = require('busboy');
 
 var library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
@@ -15,7 +16,15 @@ var library = require("./../../middleware/library"),
     fs = require("fs"),
     translator = require("./../../middleware/translator"),
     async = require("async");
-
+var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
+  userFilesOpts = {
+    root: DEFAULT_USER_IMAGE_DIRECTORY,
+   dotfiles: 'deny',
+   headers: {
+       'x-timestamp': Date.now(),
+       'x-sent': true
+   }
+  };
 logger.setLevel(nconf.get('logLevel'));
 
 (function (UsersRoutes) {
@@ -576,12 +585,22 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.post("/user/:username/edit", function (req, res){
         var lang = req.body.lang;
-        console.log(req.body);
         req.session.locale = lang;
+
+        var busboy = new Busboy({ headers: req.headers });
         req.session.save(function () {
           res.setHeader('Access-Control-Allow-Credentials', 'true');
-          middleware.redirect("/user/" + req.params.username + "/edit", res);
+          busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+            var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/background";
+            file.pipe(fs.createWriteStream(saveTo));
+            });
+          busboy.on('finish', function() {
+            res.redirect("back");
+          });
+
+          req.pipe(busboy);
         });
+
       });
       app.get("/user/:username/info", function (req, res){
         var username = req.params.username;
@@ -600,21 +619,32 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get("/user/:username/avatar", function (req, res){
         var username = req.params.username,
-          avatar = middleware.getAvatar(username);
+          avatar = username + "/avatar";
         if (middleware.hasAvatar(username)) {
           logger.info("sending user avatar file: " + avatar);
-          res.sendFile(avatar);
+          res.sendFile(avatar, userFilesOpts);
         } else {
           res.redirect(avatar);
         }
       });
 
+      app.get("/user/:username/background", function (req, res){
+        var username = req.params.username,
+          background = username + "/background";
+          if (!middleware.hasImageFile(username, "background")){
+            background = "background.jpg";
+          }
+
+          logger.info("sending user background file: " + background);
+          res.sendFile(background, userFilesOpts);
+      });
+
       app.get("/user/:username/cover", function (req, res){
         var username = req.params.username,
-          cover = middleware.getCover(username);
+          cover = username + "/cover";
         if (middleware.hasCover(username)) {
           logger.info("sending user cover file: " + cover);
-          res.sendFile(cover);
+          res.sendFile(cover, userFilesOpts);
         } else {
           res.redirect(cover);
         }

@@ -19,7 +19,7 @@
     logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
-    const USERS_IMAGE_DIRECTORY = __dirname + "/../../../public/user/";
+    var USERS_IMAGE_DIRECTORY = __dirname + "/../../../users/";
     if (!fs.existsSync(USERS_IMAGE_DIRECTORY)) {
         fs.mkdirSync(USERS_IMAGE_DIRECTORY);
         logger.info("User folder not exists. Create one.");
@@ -273,6 +273,13 @@
     */
     Middleware.getCover = function (username) {
       return this.getImageFile(username, "cover");
+    };
+
+    /**
+    * Get the cover file of a user.
+    */
+    Middleware.getBackground = function (username) {
+      return this.getImageFile(username, "background");
     };
 
     /*
