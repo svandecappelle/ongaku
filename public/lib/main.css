@@ -1275,6 +1275,34 @@ a.link.video>.name{
   }
 }
 
+.user-vignette{
+	width: 130px;
+	margin: 5px;
+	display: inline-block;
+	height: 250px;
+	vertical-align: top;
+	background-color: rgba(0,0,0,0.6);
+	color: white;
+	border-color: #FFF;
+}
+
+.user-vignette a{
+	color: #FFF;
+}
+
+.user-vignette .avatar-vignette{
+	position: relative;
+	top: 0px;
+	height: 50%;
+	overflow: hidden;
+	border: 3px solid #FFF;
+	border-radius: 50%;
+}
+
+.user-vignette .avatar-vignette img{
+	width: 100%;
+}
+
 .container {
     margin-right: auto;
     margin-left: auto;
@@ -1367,8 +1395,8 @@ a.link.video>.name{
 }
 
 .avatar{
-	width: 128px;
-	height: 128px;
+	width: 120px;
+	height: 120px;
 	overflow: hidden;
 	border-radius: 50%;
 	margin: auto;

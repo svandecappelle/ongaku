@@ -91,7 +91,7 @@ html
                                 if session.user.isAnonymous
                                     a(href="/login") Connection
                                 else
-                                    a(href="/user/#{session.user.username}/info")
+                                    a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
                                         i.fa.fa-circle.status.online
                                         span#username(style="margin-left:10px;") #{session.user.username}
                                         a(href="/logout") Deconnection
@@ -172,6 +172,19 @@ html
           function processAjaxData(idContent, html, urlPath){
             $(idContent).html(html);
           }
+          
+          function loadView(ev, view){
+            ev.preventDefault();
+            ev.stopPropagation();
+            $.get("/api/view/".concat(view), function(html){
+              processAjaxData(".main-content", html, view);
+              window.history.pushState(view, "", "/".concat(view));
+              if (initView){
+                initView();
+              }
+            });
+          }
+          
           $(function () {
             var basecolor = Cookies.get("base-color");
             $("#base-color").spectrum({
@@ -219,16 +232,7 @@ html
               });
             });
             $("a.view").on("click", function(ev){
-              ev.preventDefault();
-              ev.stopPropagation();
-              var view = $(this).data("view");
-              $.get("/api/view/".concat(view), function(html){
-                processAjaxData(".main-content", html, view);
-                window.history.pushState(view, "", "/".concat(view));
-                if (initView){
-                  initView();
-                }
-              });
+              loadView(ev, $(this).data("view"));
             });
               
             // Revert to a previously saved state

@@ -602,7 +602,8 @@ logger.setLevel(nconf.get('logLevel'));
         });
 
       });
-      app.get("/user/:username/info", function (req, res){
+
+      var infoViewLoad = function(req, res, apiView){
         var username = req.params.username;
 
         if (username !== undefined) {
@@ -611,10 +612,21 @@ logger.setLevel(nconf.get('logLevel'));
             user.getGroupsByUsername(username, function (groups){
               userData = _.extend(userData, { groups: groups });
               logger.info("Check user: ", username, userData);
-              middleware.render('user/info', req, res, {user: userData});
+              if (apiView) {
+                middleware.render('api/user/info', req, res, {user: userData});
+              } else {
+                middleware.render('user/info', req, res, {user: userData});
+              }
             });
           });
         }
+      }
+      app.get("/user/:username/info", function (req, res){
+        infoViewLoad(req, res);
+      });
+
+      app.get("/api/view/user/:username/info", function (req, res){
+        infoViewLoad(req, res, true)
       });
 
       app.get("/user/:username/avatar", function (req, res){

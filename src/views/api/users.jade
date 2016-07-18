@@ -4,12 +4,12 @@ section.sidebar.show
       h2(style="color: #FFF;") All users
   .user-sidebar.library-view(style="top:70px;")
     each user in users  
-      .panel.panel-default(style="width: 130px; margin: 5px;")
-        div.image
-          img(src="#{user.avatar}", style="width: 115px;")
+      .panel.panel-default.user-vignette
+        div.image.avatar-vignette
+          img(src="/user/#{user.username}/avatar")
         div.separated
           i.fa.fa-circle.status.online
-          a.small-title(style="margin-left:10px;", href="/user/#{user.username}/info") #{user.username}
+          a.view.small-title(style="margin-left:10px;", data-view="user/#{user.username}/info", href="/user/#{user.username}/info") #{user.username}
         div.separated
           each group in user.groups
             div #{group}
@@ -19,5 +19,7 @@ script.
     $.ongaku.library.unbind();
     $.ongaku.library.reset();
     $.ongaku.library.clear();
-    $('.pending-list.wfull').removeClass("wfull");
+    $(".user-sidebar a.view").on("click", function(ev){
+      loadView(ev, $(this).data("view"));
+    });
   }
