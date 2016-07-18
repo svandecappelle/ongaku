@@ -443,10 +443,6 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	font-size: 0.8em;
 }
 
-.pending-list.wfull{
-	right: 0px;
-}
-
 .pending-list.video{
 	right: 10%;
 }

@@ -12,7 +12,6 @@ block append scripts
     $(function (){
       $.ongaku.library.bind();
       $.ongaku.library.fetch();
-      $('.pending-list.wfull').removeClass("wfull");
       $.get("/api/user/playlists", function(output){
         $.each(output, function(index, playlist){
           var playlistBlock = $("<a>");
