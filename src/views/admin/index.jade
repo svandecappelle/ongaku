@@ -2,79 +2,92 @@ extends ../layouts/app
 block append headpage
 	title Ongaku administration panel
 block append library
-	section.global-administration
-		ul.tabs
-			li
-				input#tab-general(type="radio", name="tabs", checked)
-				label.tab(for="tab-general") Application
-				div.tab-content
-					form#general.form-horizontal
-						.form-group
-							label.col-md-2.control-label Port number
-							.col-md-6
-								input.form-control(name="port", value="#{port}")
-						.form-group.form-group-sm
-							label.col-md-2.control-label Allow user register
-							.col-md-6
-								.toggle-icon.icon.red
-									input(name="allowRegisteration", type="checkbox", value="#{allowRegisteration}")
-									.handle
-										.glyphicon.glyphicon-user
-						.form-group.form-group-sm
-							label.col-md-2.control-label Require authentication to stream
-							.col-md-6
-								.toggle-icon.icon.red
-									input(name="requireLogin", type="checkbox", value="#{requireLogin}")
-									.handle
-										.glyphicon.glyphicon-headphones
-						.form-group.form-group-sm
-							label.col-md-2.control-label Allow user upload
-							.col-md-6
-								.toggle-icon.icon.green
-									input(name="allowUpload", type="checkbox", value="#{allowUpload}")
-									.handle
-										.glyphicon.glyphicon-cloud-upload
-						.form-group.form-group-sm
-							label.col-md-2.control-label User library is public
-							.col-md-6
-								.toggle-icon.icon.green
-									input(name="publicLibrary", type="checkbox", value="#{publicLibrary}")
-									.handle
-										.glyphicon.glyphicon-globe
-						.form-group.form-group-sm
-							label.col-md-2.control-label User download
-							.col-md-6
-								.toggle-icon.icon.green
-									input(name="allowDownload", type="checkbox", value="#{allowDownload}")
-									.handle
-										.glyphicon.glyphicon-cloud-download
-						.form-group.form-group-sm
-							label.col-md-2.control-label Streaming buffer size
-							.col-md-6
-								input(name="bufferSize", value="#{bufferSize}").form-control
-						.form-group.form-group-sm
-							label.col-md-2.control-label Allowed formats
-							.col-md-6
-								input("allow-format", value="#{audio}").form-control
-						.form-group
-							.pull-right.col-md-4
-								button.btn.btn-danger.col-md-12(type="button") Reset to default values
-							.pull-right.col-md-4
-								button.btn.btn-success.col-md-12(type="button") Save
-							.pull-right.col-md-4
-								button.btn.btn-info.col-md-12(type="button") Cancel
+	section.sidebar.show
+		.search(style="height:59px") 
+			.col-lg-8.col-md-8
+				.input-group
+					h1 Administration
+		.user-sidebar.library-view
+			section.global-administration
+				ul.tabs
+					li
+						input#tab-general(type="radio", name="tabs", checked)
+						label.tab(for="tab-general") Application
+						div.tab-content
+							form#general.form-horizontal(method="POST")
+								.form-group
+									label.col-md-2.control-label Port number
+									.col-md-6
+										input.form-control(name="port", value="#{port}")
+								.form-group.form-group-sm
+									label.col-md-2.control-label Allow user register
+									.col-md-6
+										.toggle-icon.icon.red
+											input(name="allowRegisteration", type="checkbox", value="#{allowRegisteration}")
+											.handle
+												.glyphicon.glyphicon-user
+								.form-group.form-group-sm
+									label.col-md-2.control-label Require authentication to stream
+									.col-md-6
+										.toggle-icon.icon.red
+											input(name="requireLogin", type="checkbox", value="#{requireLogin}")
+											.handle
+												.glyphicon.glyphicon-headphones
+								.form-group.form-group-sm
+									label.col-md-2.control-label Allow user upload
+									.col-md-6
+										.toggle-icon.icon.green
+											input(name="allowUpload", type="checkbox", value="#{allowUpload}")
+											.handle
+												.glyphicon.glyphicon-cloud-upload
+								.form-group.form-group-sm
+									label.col-md-2.control-label User library is public
+									.col-md-6
+										.toggle-icon.icon.green
+											input(name="publicLibrary", type="checkbox", value="#{publicLibrary}")
+											.handle
+												.glyphicon.glyphicon-globe
+								.form-group.form-group-sm
+									label.col-md-2.control-label User download
+									.col-md-6
+										.toggle-icon.icon.green
+											input(name="allowDownload", type="checkbox", value="#{allowDownload}")
+											.handle
+												.glyphicon.glyphicon-cloud-download
+								.form-group.form-group-sm
+									label.col-md-2.control-label Streaming buffer size
+									.col-md-6
+										input(name="bufferSize", value="#{bufferSize}").form-control
+								.form-group.form-group-sm
+									label.col-md-2.control-label Allowed formats
+									.col-md-6
+										input(name="allow-format", value="#{audio}").form-control
+								.form-group.form-group-sm
+									label.col-md-2.control-label Notification ('cariage return' separated)
+									.col-md-6
+										input.form-control(name="notifications", value="#{notifications}")
+								.form-group
+									.pull-right.col-md-4
+										button.btn.btn-danger.col-md-12(type="button") Reset to default values
+									.pull-right.col-md-4
+										button.btn.btn-success.col-md-12(type="button") Save
+									.pull-right.col-md-4
+										button.btn.btn-info.col-md-12(type="button") Cancel
 
-			li(style="display: none;")
-				input#tab-users(type="radio", name="tabs")
-				label.tab(for="tab-users") Users
-				div#users.tab-content
-					span Users management (Not yet configurable).
+					li(style="display: none;")
+						input#tab-users(type="radio", name="tabs")
+						label.tab(for="tab-users") Users
+						div#users.tab-content
+							span Users management (Not yet configurable).
 
 block append songlist
+	section.song-list
+		include ../layouts/playlist
 
 	block append script
 		script.
 			$(function(){
+				$('.pending-list.wfull').removeClass("wfull");
 				/* bind widgets */
 				$('.toggle-icon').on('click', function () {
 					$(this).children('input').val(!$(this).hasClass('on'));

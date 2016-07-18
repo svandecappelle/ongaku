@@ -555,15 +555,13 @@ a.artist-link > img{
 }
 
 a.image-extensible.extended > img{
-	position: absolute;
-	vertical-align: middle;
-	top: 50%;
+	position: fixed;
+	top: 100px;
 	height: 75%;
 	width: auto;
 	text-align: center;
-	margin: 0px;
-	margin-left: -15%;
-	margin-top: -15%;
+	margin: auto;
+	margin-left: -25%;
 	z-index: 1;
 	box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
 }

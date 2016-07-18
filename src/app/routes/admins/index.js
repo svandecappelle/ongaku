@@ -56,14 +56,26 @@ logger.setLevel(nconf.get('logLevel'));
 	};
 
 	AdministratorsRoutes.routes = function (app){
-		app.get('/admin/', function (req, res) {
+		var loadAdminScreen = function(req, res, apiView){
 			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
 				var properties = ["global"];
 				logger.info("Client access to admin index [" + req.ip + "]");
 				meta.settings.get(properties, function (err, settings){
-					middleware.render('admin/index', req, res, settings);
+					if (apiView){
+						middleware.render('api/admin/index', req, res, settings);
+					} else {
+						middleware.render('admin/index', req, res, settings);
+					}
 				});
 			});
+		}
+
+		app.get('/admin/', function (req, res) {
+			loadAdminScreen(req, res);
+		});
+
+		app.get('/api/view/admin', function (req, res) {
+			loadAdminScreen(req, res, "api");
 		});
 
 		var renderUserView = function(req, res, view){

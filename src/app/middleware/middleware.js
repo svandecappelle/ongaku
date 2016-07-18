@@ -174,39 +174,49 @@
         }
         middlewareObject.objs.session.chats = middlewareObject.req.session.chats;
 
-        middlewareObject.objs.session.notifications = {
-            count: 2,
-            datas: ["Application is still in beta access.", "Songs rights are free licenced."]
-        };
+        meta.settings.getOne("global", "notifications", function (err, curValue) {
+          if (!err && curValue){
+            middlewareObject.objs.session.notifications = {
+              count: curValue.split(";").length,
+              datas: curValue.split(";")
+            };
+          } else {
+            middlewareObject.objs.session.notifications = {
+              count: 0,
+              datas: []
+            };
+          }
 
-        // config
-        middlewareObject.objs.meta = {
-            requireAuthentication: false
-        };
+          // config
+          middlewareObject.objs.meta = {
+              requireAuthentication: false
+          };
 
-        meta.settings.getOne("global", "requireLogin", function (err, curValue) {
-            if (err) {
-                logger.debug("userauth error checking");
-            } else if (curValue === "true") {
-                middlewareObject.objs.meta.requireAuthentication = true;
-            }
+          meta.settings.getOne("global", "requireLogin", function (err, curValue) {
+              if (err) {
+                  logger.debug("userauth error checking");
+              } else if (curValue === "true") {
+                  middlewareObject.objs.meta.requireAuthentication = true;
+              }
 
-            if (middlewareObject.req.isAuthenticated()) {
-                middlewareObject.objs.session.user = middlewareObject.req.user;
+              if (middlewareObject.req.isAuthenticated()) {
+                  middlewareObject.objs.session.user = middlewareObject.req.user;
 
-                middlewareObject.objs.session.user.avatar = Middleware.getAvatar(middlewareObject.req.user.username);
-                middlewareObject.objs.session.user.isAnonymous = false;
+                  middlewareObject.objs.session.user.avatar = Middleware.getAvatar(middlewareObject.req.user.username);
+                  middlewareObject.objs.session.user.isAnonymous = false;
 
-                // Retrieve role type
-                next(null, middlewareObject);
-            } else {
-                logger.debug("return middleware: " + middlewareObject);
-                next(null, middlewareObject);
-            }
+                  // Retrieve role type
+                  next(null, middlewareObject);
+              } else {
+                  logger.debug("return middleware: " + middlewareObject);
+                  next(null, middlewareObject);
+              }
+          });
+
+          middlewareObject.objs.session.hostname = nconf.get("hostname");
+          middlewareObject.objs.session.host = nconf.get("hostname").concat(":").concat(nconf.get("port"));
+
         });
-
-        middlewareObject.objs.session.hostname = nconf.get("hostname");
-        middlewareObject.objs.session.host = nconf.get("hostname").concat(":").concat(nconf.get("port"));
     };
 
     /**

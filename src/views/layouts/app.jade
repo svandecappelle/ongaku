@@ -47,13 +47,13 @@ html
                 nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left; width: auto;")
                     ul.nav.navbar.varbar-nav.pull-left
                         li.nav-home
-                            a(href="/", title="Acceuil")
+                            a.view(href="/", title="Acceuil", data-view="audio")
                                 i.fa.fa-home
                                 span.text Acceuil
                         if !session.user.isAnonymous
                             //&& session.user.isAdmin
                             li.nav-cog
-                                a(href="/admin", title="Administration")
+                                a.view(href="/admin", title="Administration", data-view='admin')
                                   i.fa.fa-cog
                                   span.text Admin
                             li.nav-reload

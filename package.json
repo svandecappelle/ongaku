@@ -47,6 +47,7 @@
     "async": ">1.5.0",
     "bcryptjs": "~0.7.10",
     "body-parser": "~1.0.0",
+    "busboy": "0.2.13",
     "colors": "^1.1.0",
     "connect-busboy": "*",
     "connect-redis": ">1.4.x",
