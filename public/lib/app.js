@@ -414,7 +414,7 @@
       });
 
       $("ul.group.album > li").css({
-        "box-shadow": '0px -4px 0px 0px ' + color+ 'inset'
+        "box-shadow": '0px -4px 0px 0px ' + color + 'inset'
       });
       $.ongaku.audiowave.setColor(color);
     };

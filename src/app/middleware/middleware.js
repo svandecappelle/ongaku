@@ -56,6 +56,7 @@
         if (middlewareObject.objs.session === undefined) {
             middlewareObject.objs.session = {};
         }
+        middlewareObject.objs.theme = nconf.get("theme");
 
         call(middlewareObject, function (err, middlewareObject) {
 
