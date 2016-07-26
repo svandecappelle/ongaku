@@ -37,6 +37,8 @@ html
             .main-content{
               background: url('/user/#{session.user.username}/background') repeat center center;
             }
+        script.
+          $.ongaku.themer.setBaseColor("#{theme['base-color']}");
     body
         #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 15px;",role="navigation")
             h1(style="padding-left: 40px;float:left;margin:0px;")
