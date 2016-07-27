@@ -54,7 +54,14 @@ section.sidebar.show
                   img.user-profile-picture(src="/user/#{user.username}/avatar")
             ul.list-group
               a.list-group-item#changePictureBtn(href="#") Change avatar
-              a.list-group-item Changer le mot de passe
+              a.list-group-item.modalview(data-toggle="modal") Changer le mot de passe
               a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
           div.col-md-10
             block userpage-content
+          include change-password
+script.
+  function initView(){
+    $(".modalview").on("click", function(){
+      $('#changePassword').modal();
+    });
+  }

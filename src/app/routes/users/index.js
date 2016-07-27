@@ -634,6 +634,46 @@ logger.setLevel(nconf.get('logLevel'));
         infoViewLoad(req, res, true)
       });
 
+      app.post("/user/:username/change-password", function (req, res){
+        var password = req.body.password,
+          confirmPassword = req.body['password-confirm'];
+        if (password !== confirmPassword){
+          return res.json({
+            error: "password doesn't match"
+          });
+        }
+        UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+          user.isAdministrator(req.session.passport.user.uid, function (err, isAdmin){
+            if (isAdmin || username === req.session.passport.user.username){
+
+              user.hashPassword(password, function (err, hash) {
+                if (err) {
+                  res.json({
+                    error: "error"
+                  });
+                }
+                user.getUidByUsername(req.params.username, function(err, uid){
+                  if (err){
+                    return res.json({
+                      error: "username not valid"
+                    })
+                  }
+                  user.setUserField(uid, 'password', hash);
+                  res.json({
+                    status: "ok"
+                  });
+                })
+              });
+
+            } else {
+              res.json({
+                error: "not authorized"
+              });
+            }
+          });
+        });
+      });
+
       app.get("/user/:username/avatar", function (req, res){
         var username = req.params.username,
           avatar = username + "/avatar";
