@@ -78,7 +78,7 @@
    Authority.register = function (req, res) {
     user.count(function(err, usercount){
       meta.settings.getOne("global", "allowRegisteration", function(err, val){
-        if (usercount < val){
+        if (usercount < parseInt(val)){
           var userData = {
               username: req.body.username,
               password: req.body.password,
@@ -119,7 +119,7 @@
       return done(new Error('[[error:invalid-user-data]]'));
     }
 
-    var userslug = utils.slugify(username);
+    var userslug = username;
 
     user.getUidByUsername(userslug, function (err, uid) {
       if (err) {
