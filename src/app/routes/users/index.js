@@ -592,6 +592,10 @@ logger.setLevel(nconf.get('logLevel'));
         req.session.save(function () {
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+            if (!fs.existsSync(USERS_IMAGE_DIRECTORY + username)){
+              fs.mkdirSync(USERS_IMAGE_DIRECTORY + username);
+            }
+
             var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
             file.pipe(fs.createWriteStream(saveTo));
             });
