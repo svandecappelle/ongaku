@@ -101,7 +101,8 @@
   passport.deserializeUser(function (user, done) {
     done(null, {
       uid: user.uid,
-      username: user.username
+      username: user.username,
+      administrator : user.administrator
     });
   });
 }(exports));

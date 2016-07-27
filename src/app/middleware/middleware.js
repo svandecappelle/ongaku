@@ -13,8 +13,12 @@
         transcoder = require("./transcoder"),
         meta = require("./../meta"),
         translator = require("./translator"),
-        gravatar = require("gravatar"),
-        identicon;
+        gravatar = require("gravatar");
+        try{
+          var identicon = require("identicon");
+        }catch (err){
+          logger.warn("identicon disabled");
+        }
 
     logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
@@ -205,6 +209,8 @@
                   middlewareObject.objs.session.user = middlewareObject.req.user;
 
                   middlewareObject.objs.session.user.avatar = Middleware.getAvatar(middlewareObject.req.user.username);
+                  middlewareObject.objs.session.user.cover = Middleware.getCover(middlewareObject.req.user.username);
+
                   middlewareObject.objs.session.user.isAnonymous = false;
 
                   // Retrieve role type
@@ -247,11 +253,23 @@
     */
     Middleware.getImageFile = function (username, type){
       var urlUser = null;
+      var imageFile = "/user/" + username + "/" + type;
+      urlUser = path.resolve(imageFile);
 
-      if (this.hasImageFile(username, type)){
-        var imageFile = "/user/" + username + "/" + type;
-        urlUser = path.resolve(imageFile);
+      if (!this.hasImageFile(username, type)){
+        if (identicon) {
+          if (!fs.existsSync(USERS_IMAGE_DIRECTORY + username)){
+            fs.mkdirSync(USERS_IMAGE_DIRECTORY + username);
+          }
+          identicon.generate(type === "avatar" ? username : username + "-" + type, type === "avatar" ? 150 : 600, function (err, buffer) {
+            if (err) {
+              throw err;
+            }
+            fs.writeFileSync(USERS_IMAGE_DIRECTORY + username + "/" + type, buffer);
+          });
+        }
       }
+
       return urlUser;
     };
 
@@ -264,14 +282,15 @@
       if (urlUser === null){
         if (!nconf.get("gravatar")) {
           if (identicon) {
-              identicon.generate(username, 150, function (err, buffer) {
-                  if (err) {
-                      throw err;
-                  }
-
-                  fs.writeFileSync(imageFile, buffer);
-              });
-              urlUser = path.resolve(imageFile);
+            if (!fs.existsSync(USERS_IMAGE_DIRECTORY + username)){
+              fs.mkdirSync(USERS_IMAGE_DIRECTORY + username);
+            }
+            identicon.generate(username, 150, function (err, buffer) {
+                if (err) {
+                    throw err;
+                }
+                fs.writeFileSync(USERS_IMAGE_DIRECTORY + username + "/avatar", buffer);
+            });
           }
         } else {
             urlUser = gravatar.url(username, {s: '200', r: 'pg', d: 'identicon'});

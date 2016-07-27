@@ -82,6 +82,7 @@ logger.setLevel(nconf.get('logLevel'));
 			user.getAllUsers(function (err, usersDatas){
 				async.map(usersDatas.users, function (userData, next){
 					userData.avatar = middleware.getAvatar(userData.username);
+					userData.cover = middleware.getCover(userData.username);
 					logger.info(userData);
 					user.getGroupsByUsername(userData.username, function (groups){
 						userData = _.extend(userData, {groups: groups});

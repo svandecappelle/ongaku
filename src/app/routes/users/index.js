@@ -567,18 +567,20 @@ logger.setLevel(nconf.get('logLevel'));
         var username = req.params.username;
 
         UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
-          if (username === req.session.passport.user.username){
-            logger.info("get user: ", username);
-            user.getUserDataByUsername(username, function (err, userData){
-              user.getGroupsByUsername(username, function (groups){
-                userData = _.extend(userData, { groups: groups });
-                logger.info("Check user: ", username, userData);
-                middleware.render('user/edit', req, res, {
-                  user: userData
+          user.isAdministrator(req.session.passport.user.uid, function (err, isAdmin){
+            if (isAdmin || username === req.session.passport.user.username){
+              user.getUserDataByUsername(username, function (err, userData){
+                user.getGroupsByUsername(username, function (groups){
+                  userData = _.extend(userData, { groups: groups });
+                  middleware.render('user/edit', req, res, {
+                    user: userData
+                  });
                 });
               });
-            });
-          }
+            } else {
+              res.redirect("/403");
+            }
+          });
         });
       });
 
@@ -590,7 +592,7 @@ logger.setLevel(nconf.get('logLevel'));
         req.session.save(function () {
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-            var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/background";
+            var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
             file.pipe(fs.createWriteStream(saveTo));
             });
           busboy.on('finish', function() {

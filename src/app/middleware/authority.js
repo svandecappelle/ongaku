@@ -57,7 +57,8 @@
         }
         req.logIn({
           uid: userData.uid,
-          username: req.body.username
+          username: req.body.username,
+          administrator: userData.administrator
         }, function () {
           if (userData.uid) {
             //user.logIP(userData.uid, req.ip);
