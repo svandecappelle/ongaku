@@ -23,7 +23,7 @@ logger.setLevel(nconf.get('logLevel'));
 			});
 		} else {
 			logger.warn("Anonymous access forbidden: authentication required.");
-			res.redirect('/login', res);
+			middleware.redirect('/login', res);
 		}
 	};
 
