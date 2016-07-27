@@ -18,10 +18,7 @@ section.sidebar.show
               .form-group.form-group-sm
                 label.col-md-2.control-label Allow user register
                 .col-md-6
-                  .toggle-icon.icon.red
-                    input(name="allowRegisteration", type="checkbox", value="#{allowRegisteration}")
-                    .handle
-                      .glyphicon.glyphicon-user
+                  input(name="allowRegisteration", value="#{allowRegisteration}")
               .form-group.form-group-sm
                 label.col-md-2.control-label Require authentication to stream
                 .col-md-6
@@ -97,6 +94,13 @@ script.
     $("input[name='port']").TouchSpin({
       min: 1,
       max: 100000,
+      step: 1,
+      verticalbuttons: true
+    });
+    
+    $("input[name='allowRegisteration']").TouchSpin({
+      min: -1,
+      max: 10000,
       step: 1,
       verticalbuttons: true
     });

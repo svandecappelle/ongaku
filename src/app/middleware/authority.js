@@ -75,49 +75,42 @@
     };
 
    Authority.register = function (req, res) {
-    if (meta.config.allowRegistration !== undefined && parseInt(meta.config.allowRegistration, 10) === 0) {
-        return res.send(403);
-    }
+    user.count(function(err, usercount){
+      meta.settings.getOne("global", "allowRegisteration", function(err, val){
+        if (usercount < val){
+          var userData = {
+              username: req.body.username,
+              password: req.body.password,
+              email: req.body.email,
+              ip: req.ip
+          };
 
-    meta.getOne("allowRegisteration", function(err, val){
-      if (val){
-        var userData = {
-            username: req.body.username,
-            password: req.body.password,
-            email: req.body.email,
-            ip: req.ip
-        };
-        /*
-        plugins.fireHook('filter:register.check', userData, function(err, userData) {
-            if (err) {
-                return res.redirect(nconf.get('relative_path') + '/register');
-            }*/
-
-        user.create(userData, function (err, uid) {
-          if (err || !uid) {
-            return res.redirect('/register');
-          }
-
-          req.login({
-            uid: uid
-          }, function () {
-            // TODO log conncetion on database
-            //user.logIP(uid, req.ip);
-            // for the connected users count
-            //require('../socket.io').emitUserCount();
-
-            if (req.body.referrer) {
-              res.redirect(req.body.referrer);
-            } else {
-              res.redirect('/');
+          user.create(userData, function (err, uid) {
+            if (err || !uid) {
+              return res.redirect('/register');
             }
+
+            req.login({
+              uid: uid,
+            }, function () {
+              // TODO log conncetion on database
+              //user.logIP(uid, req.ip);
+              // for the connected users count
+              //require('../socket.io').emitUserCount();
+              req.user.username = userData.username;
+              if (req.body.referrer) {
+                res.redirect(req.body.referrer);
+              } else {
+                res.redirect('/');
+              }
+            });
           });
-        });
-      }
+        } else {
+          req.session.error = "Maximum user registered";
+          res.redirect("/500");
+        }
+      });
     });
-
-
-      //});
   };
 
   Authority.login = function (username, password, done) {

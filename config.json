@@ -20,7 +20,7 @@
     "local": false,
     "requireLogin": true,
     "allowUpload": true,
-    "allowRegisteration": true,
+    "allowRegisteration": 0,
     "theme": {
       "base-color": "rgb(255, 0, 106)"
     }

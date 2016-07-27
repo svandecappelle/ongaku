@@ -9,25 +9,32 @@
     middleware = require('./../middleware/middleware'),
     authority = require('./../middleware/authority'),
     meta = require('./../meta'),
-    utils = require('./../utils');
+    utils = require('./../utils'),
+    user = require('./../model/user');
 
   var view = {
     register : function(req, res, viewtype){
-      meta.settings.getOne("global", "allowRegisteration", function(err, val){
-        logger.info(val);
-        if (val === "true"){
-          if (viewtype){
-            middleware.render("api/middleware/register", req, res);
+
+      user.count(function(err, usercount){
+        meta.settings.getOne("global", "allowRegisteration", function(err, val){
+          if (parseInt(val) > 0){
+            if (viewtype){
+              middleware.render("api/middleware/register", req, res, {
+                registerLeft: parseInt(val) - usercount > 0 ? parseInt(val) - usercount: 0,
+              });
+            } else {
+              middleware.render("middleware/register", req, res, {
+                registerLeft: parseInt(val) - usercount > 0 ? parseInt(val) - usercount : 0,
+              });
+            }
           } else {
-            middleware.render("middleware/register", req, res);
+            if (viewtype){
+              middleware.render("api/middleware/disabled", req, res);
+            } else {
+              middleware.render("middleware/disabled", req, res);
+            }
           }
-        } else {
-          if (viewtype){
-            middleware.render("api/middleware/disabled", req, res);
-          } else {
-            middleware.render("middleware/disabled", req, res);
-          }
-        }
+        });
       });
     },
     login: function (req, res, viewtype) {

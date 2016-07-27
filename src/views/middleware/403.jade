@@ -1,10 +1,8 @@
-section.sidebar.show
-  .search(style="height:59px") 
-    .col-lg-8.col-md-8
-      .input-group
-        h1 Error
-  .user-sidebar.library-view
-    .col-md-8.panel.panel-default.col-md-offset-1.login-screen
-      h1 Access forbidden:
-      hr
-      h2 Unsufisent privileges
+extends ../layouts/app
+block append headpage
+	title Ongaku forbidden access
+block append library
+	include ../api/middleware/403
+block append songlist
+	section.song-list
+		include ../layouts/playlist
