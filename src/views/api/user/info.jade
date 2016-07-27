@@ -18,6 +18,10 @@ block append userpage-content
 
   script.
     function initView(){
+      $("span.upload").on("click", function(){
+        alert("a");
+      })
+      
       $(".user-sidebar a.view").on("click", function(ev){
         loadView(ev, $(this).data("view"));
       });

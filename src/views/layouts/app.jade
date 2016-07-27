@@ -32,11 +32,29 @@ html
 
         script(src="/lib/app.js")
         script(src="/lib/audiowave.js")
-        if !session.user.isAnonymous
-          style.
+        style.
+          if !session.user.isAnonymous
             .main-content{
               background: url('/user/#{session.user.username}/background') repeat center center;
             }
+          textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+            border-color: #{theme['base-color']};
+            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px #{theme['base-color']};
+          }
+          .loading-slide .slide{
+            background: #{theme['base-color']};
+          }
+          .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+            background-color: #{theme['base-color']};
+          }
+          nav a:hover {
+            color: #{theme['base-color']};
+          }
+          
+          .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
+            color: white;
+            background: #{theme['base-color']};
+          }
         script.
           $.ongaku.themer.setBaseColor("#{theme['base-color']}");
     body
@@ -61,7 +79,7 @@ html
                             li.nav-reload
                                 a(href="#reload", title="Reload library")
                                   i.fa.fa-book
-                                  span.text Reloéad lib
+                                  span.text Reload lib
             div.pull-right(style="padding-top: 6px;")
               input#base-color(type="text")
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
@@ -89,31 +107,37 @@ html
                                 else
                                     i.fa.fa-fw.fa-user
                         ul.dropdown-menu(role="menu")
+                          if session.user.isAnonymous
                             li
-                                if session.user.isAnonymous
-                                    a(href="/login") Connection
-                                else
-                                    a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
-                                        i.fa.fa-circle.status.online
-                                        span#username(style="margin-left:10px;") #{session.user.username}
-                                        a(href="/logout") Deconnection
-                                    li.divider
-                                    li
-                                      a(href="/user/#{session.user.username}/status/online")
-                                        i.fa.fa-circle.status.online
-                                        span(style="margin-left:10px;") En ligne
-                                    li
-                                      a(href="/user/#{session.user.username}/status/away")
-                                        i.fa.fa-circle.status.away
-                                        span(style="margin-left:10px;") Absent
-                                    li
-                                      a(href="/user/#{session.user.username}/status/busy")
-                                        i.fa.fa-circle.status.busy
-                                        span(style="margin-left:10px;") Occupé
-                                    li
-                                      a(href="/user/#{session.user.username}/status/offline")
-                                        i.fa.fa-circle.status.offline
-                                        span(style="margin-left:10px;") Hors ligne
+                              a.view(href="/login", data-view="login")
+                                span Connection
+                            li
+                              a.view(href="/register", data-view="register")
+                                span Register
+                          else
+                            li
+                              a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
+                                  i.fa.fa-circle.status.online
+                                  span#username(style="margin-left:10px;") #{session.user.username}
+                            li
+                              a(href="/logout") Deconnection
+                            li.divider
+                            li
+                              a(href="/user/#{session.user.username}/status/online")
+                                i.fa.fa-circle.status.online
+                                span(style="margin-left:10px;") En ligne
+                            li
+                              a(href="/user/#{session.user.username}/status/away")
+                                i.fa.fa-circle.status.away
+                                span(style="margin-left:10px;") Absent
+                            li
+                              a(href="/user/#{session.user.username}/status/busy")
+                                i.fa.fa-circle.status.busy
+                                span(style="margin-left:10px;") Occupé
+                            li
+                              a(href="/user/#{session.user.username}/status/offline")
+                                i.fa.fa-circle.status.offline
+                                span(style="margin-left:10px;") Hors ligne
 
         nav.menu.main-menu
             .menu.menu-discover
@@ -177,7 +201,7 @@ html
           
           function loadView(ev, view){
             ev.preventDefault();
-            ev.stopPropagation();
+            //ev.stopPropagation();
             $.get("/api/view/".concat(view), function(html){
               processAjaxData(".main-content", html, view);
               window.history.pushState(view, "", "/".concat(view));

@@ -19,6 +19,10 @@ block append userpage-content
 block append scripts  
   script.
     $(function(){
+      $(".upload").on("click", function(){
+        alert("a");
+      })
+      
       $.get("/api/user/#{user.username}/playlists", function(output){
         $.each(output, function(index, playlist){
           var playlistBlock = $("<div>", {

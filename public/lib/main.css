@@ -1074,15 +1074,6 @@ h2{
 	color: #808080;
 }
 
-.navbar-default .navbar-nav .dropdown-menu a:hover, .navbar-default .navbar-nav .dropdown-menu a:focus {
-    background-color: #1a2226;
-    color: white;
-}
-
-.navbar-default .navbar-nav .dropdown-menu a:hover, .navbar-default .navbar-nav .dropdown-menu a:focus {
-    background-color: #1a2226 !important;
-}
-
 .small-title {
     font-size: 20px;
     font-weight: 700;
@@ -1136,9 +1127,9 @@ h2{
 .login-screen{
 	margin: auto;
 	width: 50%;
-	left: 50%;
-	margin-left: -25%;
-	margin-top: 50px;
+	left: 25%;
+	margin-top: 150px;
+	margin-left: -15%;
 }
 
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {

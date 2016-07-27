@@ -1,0 +1,44 @@
+section.sidebar.show
+  .search(style="height:59px") 
+    .col-lg-8.col-md-8
+      .input-group
+        h1 #{connectTitle}
+  .col-md-8.panel.panel-default.col-md-offset-1.login-screen
+    form.form-horizontal(method='post')
+      .form-group
+        label.col-sm-2.control-label(for="username") #{username}
+        .col-sm-10
+          input.form-control(type="text", id="username", name="username", placeholder="#{username}")
+      .form-group
+        label.col-sm-2.control-label(for="password") #{password}
+        .col-sm-10
+          input.form-control(type="password", id="password", name="password", placeholder="#{password}")
+      .form-group
+        .col-sm-offset-2.col-sm-10
+            .checkbox
+            label
+              input(type="checkbox", name="remember")
+              span #{remember}
+      input.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit", value="#{connect}")
+  script.
+    function initView(){
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        code,
+        i;
+        $("#username").focus();
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] === "error") {
+          code = sParameterName[1] === undefined ? true : sParameterName[1];
+          if (code === '407'){
+            alertify.error("Page need an authentication.");
+          } else if (code === '401'){
+            alertify.error("Invalid username / password combinaison.");
+          } else if (code === '417'){
+            alertify.error("Account is locked due to too many attempts login.");
+          }
+        }
+      }
+    }

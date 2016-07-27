@@ -574,8 +574,7 @@ logger.setLevel(nconf.get('logLevel'));
                 userData = _.extend(userData, { groups: groups });
                 logger.info("Check user: ", username, userData);
                 middleware.render('user/edit', req, res, {
-                  user: userData,
-                  languages: translator.getAvailableLanguages()
+                  user: userData
                 });
               });
             });

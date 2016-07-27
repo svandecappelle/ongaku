@@ -57,6 +57,7 @@
             middlewareObject.objs.session = {};
         }
         middlewareObject.objs.theme = nconf.get("theme");
+        middlewareObject.objs.languages = translator.getAvailableLanguages();
 
         call(middlewareObject, function (err, middlewareObject) {
 

@@ -21,17 +21,13 @@ section.sidebar.show
                 a(href="settings") Paramètres
               li
                 a(href="edit") Éditer
-          div.controls
-            span.upload
+          div.controls(style="position: absolute")
+            span.upload(style="z-index: 2")
               i.fa.fa-fw.fa-4x.fa-upload
-            span.resize
-              i.fa.fa-fw.fa-4x.fa-arrows
             span.remove
               i.fa.fa-fw.fa-4x.fa-times
             div.save Enregistrer 
               i.fa.fa-fw.fa-floppy-o
-            div.indicator Enregistrement 
-              i.fa.fa-fw.fa-refresh.fa-spin
       div.profile.panel
         ol.breadcrumb
           li
@@ -43,13 +39,13 @@ section.sidebar.show
         h2.username @#{user.username}
         div.text-center.profile-meta
           span Inscrit
-          strong.timeago(title="Fri Nov 20 2015 14:41:16 GMT+0100 (CET)") il y a environ 3 mois
+          strong.timeago(title="Fri Nov 20 2015 14:41:16 GMT+0100 (CET)") il y a environ #{user.signup}
           span Dernière connexion
-          strong.timeago(title="Fri Feb 12 2016 15:29:48 GMT+0100 (CET)") il y a environ une heure
+          strong.timeago(title="Fri Feb 12 2016 15:29:48 GMT+0100 (CET)") il y a environ #{user.lastconnection}
           br
           span Email
           strong
-            i.fa.fa-eye-slash(title="Email masqué") sv@test.com
+            i.fa.fa-eye-slash(title="Email masqué")
         div.row
           div.col-md-2.col-sm-4.text-center
             div.account-picture-block
@@ -58,9 +54,7 @@ section.sidebar.show
                   img.user-profile-picture(src="/user/#{user.username}/avatar")
             ul.list-group
               a.list-group-item#changePictureBtn(href="#") Change avatar
-              a.list-group-item Changer le nom d'utilisateur
-              a.list-group-item Changer le nom d'utilisateur
-              a.list-group-item Changer le nom d'utilisateur
+              a.list-group-item Changer le mot de passe
               a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
           div.col-md-10
             block userpage-content

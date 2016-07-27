@@ -118,7 +118,7 @@
     };
 
     Player.prototype.isAnonymous = function () {
-      return this.user === undefined;
+      return this.user === undefined || this.user === "";
     };
 
     Player.prototype.isFirst = function () {
@@ -555,7 +555,7 @@
     UserLib.prototype.appender = function (fromElement){
       var albumLibAppender = $('<a>', {
         class: 'trackaction tracklibappend',
-        "data-placement": "left",
+        "data-placement": "bottom",
         "data-toggle": "tooltip",
         "data-original-title": "Add all tracks to my library"
       });
@@ -579,7 +579,7 @@
     UserLib.prototype.remover = function (fromElement){
       var albumLibRemover = $('<a>', {
         class: 'trackaction tracklibremove',
-        "data-placement": "left",
+        "data-placement": "bottom",
         "data-toggle": "tooltip",
         "data-original-title": "Remove all tracks from my library"
       });
@@ -625,7 +625,7 @@
 
       var artistAppender = $('<a>', {
         class: 'trackaction',
-        "data-placement": "left",
+        "data-placement": "bottom",
         "data-toggle": "tooltip",
         "data-original-title": "Add all tracks to current playlist"
       });
@@ -637,9 +637,9 @@
 
       var artistDownloader = $('<a>', {
         class: 'trackaction artist-download',
-        "data-placement": "left",
+        "data-placement": "bottom",
         "data-toggle": "tooltip",
-        "data-original-title": "Add all tracks to current playlist",
+        "data-original-title": "Download tracks",
         "href": "/api/album-download/".concat(artist.artist).concat("/").concat("all"),
         "target": "_self"
       });
@@ -712,7 +712,6 @@
       albumElement.append(albumAppender);
 
       if (!$.ongaku.isAnonymous()){
-
         albumElement.append(albumDownloader);
         if (view){
           new UserLib().remover(albumElement);
@@ -769,13 +768,6 @@
           } else {
             new UserLib().appender(trackDetailElement);
           }
-        }
-
-        if (!$.ongaku.isAnonymous()){
-          var glyficonLikeAppender = $('<i>', {
-            class: 'glyphicon glyphicon-heart trackaction tracklike'
-          });
-          trackDetailElement.append(glyficonLikeAppender);
         }
 
         var trackShowDetail = $('<a>', {

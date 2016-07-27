@@ -84,7 +84,6 @@
 
   Translator.languageCollectonInstance = new Translator.LanguageCollecton();
 
-
   Translator.Language = function(lang){
       this._lang = lang;
       if (!Translator.languageCollectonInstance.has(this)){
@@ -98,9 +97,12 @@
   };
 
   Translator.Language.prototype.get = function(view){
-			logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
-      var output = this.datas['global'];
-      output = _.extend(output, this.datas[view]);
-      return output;
+		if (view.startsWith("api/")){
+			view = view.replace("api/", "");
+		}
+		logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
+    var output = this.datas['global'];
+    output = _.extend(output, this.datas[view]);
+    return output;
   };
 }(exports));
