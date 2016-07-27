@@ -644,7 +644,7 @@ logger.setLevel(nconf.get('logLevel'));
         }
         UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
           user.isAdministrator(req.session.passport.user.uid, function (err, isAdmin){
-            if (isAdmin || username === req.session.passport.user.username){
+            if (isAdmin || req.session.user.username === req.session.passport.user.username){
 
               user.hashPassword(password, function (err, hash) {
                 if (err) {
