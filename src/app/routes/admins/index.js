@@ -17,22 +17,24 @@ logger.setLevel(nconf.get('logLevel'));
 			user.isAdministrator(req.session.passport.user.uid, function(err, administrator){
 				if (administrator){
 					callback();
-				}else{
-					middleware.redirect("/403", res);
+				} else {
+					middleware.render("api/middleware/403", req, res);
 				}
 			});
 		} else {
 			logger.warn("Anonymous access forbidden: authentication required.");
-			middleware.redirect('/login', res);
+			res.redirect('/login', res);
 		}
 	};
 
 	AdministratorsRoutes.api = function(app){
 		app.get('/api/reload/audio/library', function (req, res) {
 			logger.info("reload audio library");
-			application.reload(function(){
-			var libraryDatas = library.getAudio();
-			middleware.json(req, res, libraryDatas);
+			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
+				application.reload(function(){
+				var libraryDatas = library.getAudio();
+				middleware.json(req, res, libraryDatas);
+				});
 			});
 		});
 
