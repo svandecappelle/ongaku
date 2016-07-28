@@ -66,7 +66,6 @@
       utils.walk(path.join(__dirname, './', lang), function (err, data) {
 
           for (var d in data) {
-							logger.info(d);
               if (data.hasOwnProperty(d)) {
                   // Only load .json files
                   if (path.extname(data[d]) === '.json') {
@@ -100,7 +99,7 @@
 		if (view.startsWith("api/")){
 			view = view.replace("api/", "");
 		}
-		logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
+		logger.debug("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
     var output = this.datas['global'];
     output = _.extend(output, this.datas[view]);
     return output;

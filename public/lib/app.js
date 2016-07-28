@@ -117,6 +117,10 @@
       this.user = user;
     };
 
+    Player.prototype.getUser = function () {
+      return this.user;
+    };
+
     Player.prototype.isAnonymous = function () {
       return this.user === undefined || this.user === "";
     };
@@ -1369,4 +1373,61 @@
             a.unshift(a.pop());
         }
     };
+
+    //Reference:
+    //http://www.onextrapixel.com/2012/12/10/how-to-create-a-custom-file-input-with-jquery-css3-and-php/
+		// Browser supports HTML5 multiple file?
+	  var multipleSupport = typeof $('<input/>')[0].multiple !== 'undefined',
+	      isIE = /msie/i.test( navigator.userAgent );
+
+	  $.fn.customFile = function(label) {
+	    return this.each(function() {
+	      var $file = $(this).addClass('custom-file-upload-hidden'), // the original file input
+	          $wrap = $('<div class="file-upload-wrapper">'),
+	          //$input = $('<input type="text" class="file-upload-input" />'),
+	          // Button that will be used in non-IE browsers
+	          $button = $('<button type="button" class="file-upload-button">' + label + '</button>');
+	          // Hack for IE
+	          //$label = $('<label class="file-upload-button" for="'+ $file[0].id +'">Select a File</label>');
+
+	      // Hide by shifting to the left so we
+	      // can still trigger events
+	      $file.css({
+	        position: 'absolute',
+	        left: '-9999px'
+	      });
+
+	      $wrap.insertAfter( $file )
+	        .append( $file, $button );
+
+	      // Prevent focus
+	      $file.attr('tabIndex', -1);
+	      $button.attr('tabIndex', -1);
+
+	      $button.click(function () {
+	        $file.focus().click(); // Open dialog
+	      });
+/*
+	      $file.change(function() {
+
+	        var files = [], fileArr, filename;
+
+	        // If multiple is supported then extract
+	        // all filenames from the file array
+	        if ( multipleSupport ) {
+	          fileArr = $file[0].files;
+	          for ( var i = 0, len = fileArr.length; i < len; i++ ) {
+	            files.push( fileArr[i].name );
+	          }
+	          filename = files.join(', ');
+
+	        // If not supported then just take the value
+	        // and remove the path to just show the filename
+	        } else {
+	          filename = $file.val().split('\\').pop();
+	        }
+
+	      });*/
+	    });
+	  }
 }(jQuery);

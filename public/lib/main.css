@@ -44,6 +44,32 @@ a:focus{
 	outline: none !important;
 }
 
+.custom-file-upload-hidden {
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+}
+
+.custom-file-upload {
+  display: block;
+  width: auto;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px;
+}
+
+.file-upload-button {
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+  background-color: transparent;
+  /* IE 9 Fix */
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
 nav{
 	color: white;
 	width: 45px;

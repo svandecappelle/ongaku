@@ -5,10 +5,10 @@ section.sidebar.show
         h1 Fiche utilisateur
   .user-sidebar.library-view
     div.account
-      div.cover.initialised(style="background-image: url(/user/#{user.username}/cover); background-position: 47.0141% 20.4126%;")
+      div.cover.initialised(style="background-image: url(/user/#{user.username}/cover?#{token}); background-position: 47.0141% 20.4126%;")
         div.avatar-container
           div.avatar(style="z-index: 1;")
-            img.user-profile-picture(src="/user/#{user.username}/avatar")
+            img.user-profile-picture(src="/user/#{user.username}/avatar?#{token}")
           i.fa.fa-circle.status.online(title="En ligne")
         div.container
           div.btn-group.account-fab(style="z-index: 1;")
@@ -17,10 +17,8 @@ section.sidebar.show
             ul.dropdown-menu.dropdown-menu-right
               li
                 a.inline-block(href="/user/#{user.username}/info", id="profile") Profil
-              li 
-                a(href="settings") Paramètres
               li
-                a(href="edit") Éditer
+                a(href="edit") Paramètres
           div.controls(style="position: absolute")
             span.upload(style="z-index: 2")
               i.fa.fa-fw.fa-4x.fa-upload
@@ -51,16 +49,54 @@ section.sidebar.show
             div.account-picture-block
               div.avatar-container
                 div.avatar
-                  img.user-profile-picture(src="/user/#{user.username}/avatar")
+                  img.user-profile-picture(src="/user/#{user.username}/avatar?#{token}")
             ul.list-group
-              a.list-group-item#changePictureBtn(href="#") Change avatar
-              a.list-group-item.modalview(data-toggle="modal") Changer le mot de passe
-              a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
+              li
+                a.list-group-item.custom-file-upload
+                  input.img-upload(type="file", name="avatar")
+              li
+                a.list-group-item.custom-file-upload
+                  input.img-upload(type="file", name="background")
+              li
+                a.list-group-item.custom-file-upload
+                  input.img-upload(type="file", name="cover")
+              li
+                a.list-group-item.modalview(data-toggle="modal") Changer le mot de passe
+              li
+                a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
           div.col-md-10
             block userpage-content
           include change-password
 script.
   function initView(){
+    $('input[name=avatar]').customFile("Changer avatar");
+    $('input[name=background]').customFile("Changer fond");
+    $('input[name=cover]').customFile("Changer couverture");
+    
+    $(".img-upload").liteUploader({
+      script: "upload"
+    })
+    .on("lu:progress", function (e, percentage) {
+      $(this).find("button").text("Uploading: " + percentage + "%")
+    })
+    .on("lu:success", function (e, response) {
+      var uploadedimage = $(this).attr("name");
+      if (uploadedimage === "avatar"){
+        $("img.user-profile-picture").attr("src", "avatar?" + new Date().getTime());
+        $(this).find("button").text("Changer avatar");
+      } else if (uploadedimage === "cover"){
+        $("div.cover").attr("background-image", "cover?" + new Date().getTime());
+        $(this).find("button").text("Changer couverture");
+      } else if (uploadedimage = "background" && "#{session.user.username}" === $.ongaku.getUser()) {
+        $(".main-content").css({
+          "background": "url('/user/#{session.user.username}/background?" + new Date().getTime() + "') repeat center center"  
+        });
+        $(this).find("button").text("Changer fond");
+      }
+    });
+    $(".img-upload").on('change', function () {
+      //$(this).data("liteUploader").startUpload();
+    });
     $(".modalview").on("click", function(){
       $('#changePassword').modal();
     });

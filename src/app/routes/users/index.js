@@ -343,7 +343,7 @@ logger.setLevel(nconf.get('logLevel'));
           var newplaylistname = req.body.playlistname;
 
           var appendToPlaylist = function(){
-            logger.info("Add all playlist tracks");
+            logger.debug("Add all playlist tracks");
             playlist.push(username, newplaylistname, req.session.playlist, function(){
               req.session.playlistname = newplaylistname;
 
@@ -367,10 +367,10 @@ logger.setLevel(nconf.get('logLevel'));
 
           if (req.session.playlistname){
             if (newplaylistname){
-              logger.info("rename playlist: ", newplaylistname);
+              logger.debug("rename playlist: ", newplaylistname);
             }
 
-            logger.info("clearing playlist: ", username, req.session.playlistname);
+            logger.debug("clearing playlist: ", username, req.session.playlistname);
             playlist.remove(username, req.session.playlistname, function (){
               appendToPlaylist();
             });
@@ -573,7 +573,8 @@ logger.setLevel(nconf.get('logLevel'));
                 user.getGroupsByUsername(username, function (groups){
                   userData = _.extend(userData, { groups: groups });
                   middleware.render('user/edit', req, res, {
-                    user: userData
+                    user: userData,
+                    token: new Date().getTime()
                   });
                 });
               });
@@ -605,22 +606,51 @@ logger.setLevel(nconf.get('logLevel'));
 
           req.pipe(busboy);
         });
+      });
 
+      app.post("/user/:username/upload", function (req, res){
+        var username = req.params.username;
+
+        UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+          user.isAdministrator(req.session.passport.user.uid, function (err, isAdmin){
+            if (isAdmin || username === req.session.passport.user.username){
+              var busboy = new Busboy({ headers: req.headers });
+              req.session.save(function () {
+                res.setHeader('Access-Control-Allow-Credentials', 'true');
+                busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+                  if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username)){
+                    fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username);
+                  }
+
+                  var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
+                  file.pipe(fs.createWriteStream(saveTo));
+                  });
+                busboy.on('finish', function() {
+                  res.json("ok upload");
+                });
+
+                req.pipe(busboy);
+              });
+            } else {
+              res.json({error: "403, not authorized"})
+            }
+          });
+        });
       });
 
       var infoViewLoad = function(req, res, apiView){
         var username = req.params.username;
 
         if (username !== undefined) {
-          logger.info("get user: ", username, req.url);
+          logger.debug("get user: ", username, req.url);
           user.getUserDataByUsername(username, function (err, userData){
             user.getGroupsByUsername(username, function (groups){
               userData = _.extend(userData, { groups: groups });
-              logger.info("Check user: ", username, userData);
+              logger.debug("Check user: ", username, userData);
               if (apiView) {
-                middleware.render('api/user/info', req, res, {user: userData});
+                middleware.render('api/user/info', req, res, {user: userData, token: new Date().getTime()});
               } else {
-                middleware.render('user/info', req, res, {user: userData});
+                middleware.render('user/info', req, res, {user: userData, token: new Date().getTime()});
               }
             });
           });
@@ -677,8 +707,14 @@ logger.setLevel(nconf.get('logLevel'));
       app.get("/user/:username/avatar", function (req, res){
         var username = req.params.username,
           avatar = username + "/avatar";
+
+        res.setHeader("Pragma-directive", "no-cache");
+        res.setHeader("Cache-directive", "no-cache");
+        res.setHeader("Cache-control", "no-cache");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         if (middleware.hasAvatar(username)) {
-          logger.info("sending user avatar file: " + avatar);
           res.sendFile(avatar, userFilesOpts);
         } else {
           res.redirect(avatar);
@@ -686,21 +722,31 @@ logger.setLevel(nconf.get('logLevel'));
       });
 
       app.get("/user/:username/background", function (req, res){
+        res.setHeader("Pragma-directive", "no-cache");
+        res.setHeader("Cache-directive", "no-cache");
+        res.setHeader("Cache-control", "no-cache");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         var username = req.params.username,
           background = username + "/background";
           if (!middleware.hasImageFile(username, "background")){
             background = "background.jpg";
           }
 
-          logger.info("sending user background file: " + background);
           res.sendFile(background, userFilesOpts);
       });
 
       app.get("/user/:username/cover", function (req, res){
+        res.setHeader("Pragma-directive", "no-cache");
+        res.setHeader("Cache-directive", "no-cache");
+        res.setHeader("Cache-control", "no-cache");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+
         var username = req.params.username,
           cover = username + "/cover";
         if (middleware.hasCover(username)) {
-          logger.info("sending user cover file: " + cover);
           res.sendFile(cover, userFilesOpts);
         } else {
           res.redirect(cover);

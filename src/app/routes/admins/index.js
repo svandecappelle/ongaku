@@ -85,13 +85,12 @@ logger.setLevel(nconf.get('logLevel'));
 				async.map(usersDatas.users, function (userData, next){
 					userData.avatar = middleware.getAvatar(userData.username);
 					userData.cover = middleware.getCover(userData.username);
-					logger.info(userData);
 					user.getGroupsByUsername(userData.username, function (groups){
 						userData = _.extend(userData, {groups: groups});
 						next(null, userData);
 					});
 				}, function (err, usersDatas){
-					middleware.render(view, req, res, {users: usersDatas});
+					middleware.render(view, req, res, {users: usersDatas, token: new Date().getTime()});
 				});
 			});
 		};
