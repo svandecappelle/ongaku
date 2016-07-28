@@ -303,8 +303,8 @@
               })
             };
 
-            if (groupbyClause[0] === "artist" && groupbyClause[1] === "album"){
-                //albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
+            if (groupbyClause[1] === "album"){
+                albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
             }
 
             return albumObject;
