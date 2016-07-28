@@ -77,21 +77,21 @@ script.
       script: "upload"
     })
     .on("lu:progress", function (e, percentage) {
-      $(this).find("button").text("Uploading: " + percentage + "%")
+      $(this).parent().find("button").text("Uploading: " + percentage + "%")
     })
     .on("lu:success", function (e, response) {
       var uploadedimage = $(this).attr("name");
       if (uploadedimage === "avatar"){
         $("img.user-profile-picture").attr("src", "avatar?" + new Date().getTime());
-        $(this).find("button").text("Changer avatar");
+        $(this).parent().find("button").text("Changer avatar");
       } else if (uploadedimage === "cover"){
         $("div.cover").attr("background-image", "cover?" + new Date().getTime());
-        $(this).find("button").text("Changer couverture");
+        $(this).parent().find("button").text("Changer couverture");
       } else if (uploadedimage = "background" && "#{session.user.username}" === $.ongaku.getUser()) {
         $(".main-content").css({
           "background": "url('/user/#{session.user.username}/background?" + new Date().getTime() + "') repeat center center"  
         });
-        $(this).find("button").text("Changer fond");
+        $(this).parent().find("button").text("Changer fond");
       }
     });
     $(".img-upload").on('change', function () {
