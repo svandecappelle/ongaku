@@ -888,7 +888,17 @@
       });
 
       $(".dropdown-menu.groupby a").on("click", function(){
-        $.get("/api/audio/groupby/"+$(this).data("groupby"));
+        $.get("/api/audio/groupby/" + $(this).data("groupby"), {
+          success: function(){
+            setTimeout(function(){
+              $.ongaku.library.reset();
+          		$.ongaku.library.clear();
+          		$.ongaku.library.setPage(0);
+          		$.ongaku.library.bind();
+          		$.ongaku.library.fetch();
+            }, 500);
+          }
+        });
       });
 
       this.type = $("input.searchbox").data("type");
