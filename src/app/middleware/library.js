@@ -298,7 +298,7 @@
         var rootGroupObject = {};
         if (groupbyClause[0] === "artist"){
           rootGroupObject.image = Library.loadingCoverArtists[groupObject];
-        } else if (groupbyClause[0] === "album"){
+        } else if (groupbyClause[0] === "album" && Library.loadingCoverAlbums[val[0].artist]){
           rootGroupObject.cover = Library.loadingCoverAlbums[val[0].artist][groupObject];
         }
 
