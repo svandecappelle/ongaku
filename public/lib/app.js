@@ -498,9 +498,12 @@
         "class": "mt-array"
       });
       var array = $(document.createElement('table'));
-      $.each(metadatas, function(index, value){
-        array.append(new MetadataLabel(index, value));
-      });
+      if (metadatas){
+        $.each(metadatas, function(index, value){
+          array.append(new MetadataLabel(index, value));
+        });
+      }
+
       container.append(array);
       return $('<div>').append(container.clone());
     }
@@ -676,9 +679,19 @@
 
     LibraryArtist.prototype.get = function (album, view) {
       return this.artistElement;
-    }
+    };
 
     LibraryArtist.prototype.album = function (album, view) {
+      var artistName = this.artist.artist;
+      this.artistAlbums.append(new LibraryAlbum({
+          title: album.title,
+          tracks : album.tracks,
+          cover: album.cover,
+          artist: artistName
+        }, view));
+    };
+
+    function LibraryAlbum(album, view){
       var baseThemeColor = $.ongaku.themer.getBaseColor(),
         albumElement = $('<li>');
 
@@ -704,7 +717,7 @@
         "data-placement": "left",
         "data-toggle": "tooltip",
         "data-original-title": "Add all tracks to current playlist",
-        "href": "/api/album-download/".concat(this.artist.artist).concat("/").concat(album.title),
+        "href": "/api/album-download/".concat(album.artist).concat("/").concat(album.title),
         "target": "_self"
       });
       var glyficonAlbumDownloader = $('<i>', {
@@ -735,7 +748,7 @@
       albumDetailElement.append(albumImage);
       albumDetailElement.append(albumTitle);
       albumElement.append(albumDetailElement);
-      this.artistAlbums.append(albumElement);
+
       albumElement.append(new LibraryTracksList(album.tracks, view));
 
 
@@ -747,7 +760,9 @@
           color: baseThemeColor
         });
       }
-    };
+
+      return albumElement;
+    }
 
     function LibraryTracksList(tracks, view) {
       var tracksElement = $('<ul>', {class: "group tracklist"});
@@ -801,7 +816,7 @@
         });
       });
       return tracksElement;
-    };
+    }
 
     function Library() {
       this.videos = [];
@@ -872,6 +887,10 @@
         handler.bind();
       });
 
+      $(".dropdown-menu.groupby a").on("click", function(){
+        $.get("/api/audio/groupby/"+$(this).data("groupby"));
+      });
+
       this.type = $("input.searchbox").data("type");
       this.scrollingLoader();
     };
@@ -935,17 +954,31 @@
       var that = this;
       // TODO load using the group by value.
       if (this.type === 'audio'){
-        $.each(library, function (index, artist) {
+        $.each(library, function (index, groupOne) {
             // For asynchronous loading debug
             // console.log("audio: " + index);
 
-            var artistLibrary = new LibraryArtist(artist, that.view);
+            if (groupOne.artist){
+              var artistLibrary = new LibraryArtist(groupOne, that.view);
+              if (groupOne.albums){
+                $.each(groupOne.albums, function(title, album){
+                  artistLibrary.album(album, that.view);
+                });
+              } else {
 
-            $.each(artist.albums, function(title, album){
-              artistLibrary.album(album, that.view);
-            });
-
-            $(".lib.group.artist.open").append(artistLibrary.get());
+              }
+              $(".lib.group.artist.open").append(artistLibrary.get());
+            } else if (groupOne.album) {
+              if (groupOne.tracks){
+                var albumLibrary = new LibraryAlbum({
+                  title: groupOne.album,
+                  tracks : groupOne.tracks,
+                  cover: groupOne.cover,
+                  artist: "all"
+                }, that.view);
+                $(".lib.group.artist.open").append(albumLibrary);
+              }
+            }
         });
         $('.metadatas-details').popover({
           viewport: { "selector": ".sidebar", "padding": 10 }

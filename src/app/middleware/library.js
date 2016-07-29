@@ -188,12 +188,21 @@
         return libElement.relativePath;
     };
 
-    Library.getAudio = function () {
+    Library.getAudio = function (groupby) {
+      if (groupby){
+        return this.search("", "audio", groupby);
+      } else {
         return this.data.audio;
+      }
     };
 
-    Library.getAudio = function (page, lenght) {
-        return _.first(_.rest(this.data.audio, page * lenght), lenght);
+    Library.getAudio = function (page, lenght, groupby) {
+      var audios = this.data.audio;
+      if (groupby){
+        audios = this.search("", "audio", groupby);
+      }
+      audios = _.first(_.rest(audios, page * lenght), lenght);
+      return audios;
     };
 
     Library.getVideo = function () {
@@ -287,9 +296,10 @@
 
       return _.map(groupedResultList, function(val, groupObject) {
         var rootGroupObject = {};
-
         if (groupbyClause[0] === "artist"){
           rootGroupObject.image = Library.loadingCoverArtists[groupObject];
+        } else if (groupbyClause[0] === "album"){
+          rootGroupObject.cover = Library.loadingCoverAlbums[val[0].artist][groupObject];
         }
 
         if (groupbyClause.length > 1){
@@ -367,19 +377,32 @@
     };
 
     Library.getAlbum = function (artist, album){
-        var arrayResults = this.groupby(this.flatten);
-        arrayResults = _.where(arrayResults, {artist: artist});
-        if (album){
-          var albumSearched = null;
-          _.each(arrayResults[0].albums, function(albumObj, index){
-            if (albumObj.title === album){
-              albumSearched = albumObj;
-            }
+      var arrayResults;
+      if (artist === "all"){
+        arrayResults = this.groupby(this.flatten, ["album"]);
+        arrayResults = _.where(arrayResults, {album: album});
+        var albumsObject = [];
+        _.each(arrayResults, function(album){
+          albumsObject.push({
+            artist: "",
+            albums: arrayResults,
           });
-
-          arrayResults.albums = albumSearched
-        }
-        return arrayResults;
+        });
+        logger.info(albumsObject);
+        return albumsObject;
+      } else {
+        arrayResults = this.groupby(this.flatten);
+        arrayResults = _.where(arrayResults, {artist: artist});
+        var albumSearched;
+        _.each(arrayResults[0].albums, function(albumObj, index){
+          if(albumObj.title === album){
+            albumSearched = albumObj;
+          }
+        });
+        arrayResults.albums = albumSearched;
+      }
+      logger.warn(arrayResults);
+      return arrayResults;
     };
 
     Library.getAudioFlattenById = function (ids){

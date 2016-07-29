@@ -705,6 +705,7 @@ ul.group.artist span.artistname{
 	float: right;
 	cursor: pointer;
 	margin: 2px;
+	color: #404040;
 	transition: all 0.3s ease-in-out 0s;
 }
 

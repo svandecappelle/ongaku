@@ -17,6 +17,7 @@ var library = require("./../../middleware/library"),
     translator = require("./../../middleware/translator"),
     async = require("async");
 var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
+  DEFAULT_GROUP_BY,
   userFilesOpts = {
     root: DEFAULT_USER_IMAGE_DIRECTORY,
    dotfiles: 'deny',
@@ -24,7 +25,7 @@ var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
        'x-timestamp': Date.now(),
        'x-sent': true
    }
-  };
+ };
 logger.setLevel(nconf.get('logLevel'));
 
 (function (UsersRoutes) {
@@ -109,12 +110,13 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get('/api/video/library/filter/:search/:page', function (req, res) {
         logger.debug("Search filtering video library");
+        var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
 
         var libraryDatas;
         if (req.params.page === "all"){
-          libraryDatas = library.search(req.params.search, "video");
+          libraryDatas = library.search(req.params.search, "video", groupby);
         } else {
-          libraryDatas = library.searchPage(req.params.search, "video", req.params.page, 3);
+          libraryDatas = library.searchPage(req.params.search, "video", req.params.page, 3, groupby);
         }
 
         middleware.json(req, res, libraryDatas);
@@ -123,8 +125,7 @@ logger.setLevel(nconf.get('logLevel'));
       app.get('/api/audio/library/filter/:search/:page', function (req, res) {
         logger.debug("Search filtering audio library");
 
-        var groupby = req.session.groupby;
-        groupby = ["artist", "album"];
+        var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
 
         var libraryDatas;
         if (req.params.page === "all"){
@@ -138,19 +139,33 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get('/api/audio/library', function (req, res) {
         logger.debug("Get all audio library");
-        var libraryDatas = library.getAudio();
+        var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
+
+        var libraryDatas = library.getAudio(groupby);
         middleware.json(req, res, libraryDatas);
+      });
+
+      app.get('/api/audio/groupby/:groupby', function(req, res){
+        req.session.groupby = req.params.groupby.split(",");
+        req.session.save(function () {
+
+          logger.info("changed groupby: ", req.session.groupby);
+
+          res.setHeader('Access-Control-Allow-Credentials', 'true');
+          res.json({status: "ok"});
+        });
       });
 
       app.get('/api/audio/library/:page', function (req, res) {
         // load by page of 3 artists.
+        var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
 
         logger.debug("Get all one page of library ".concat(req.params.page));
         var libraryDatas = null;
         if (req.params.page === "all"){
-          libraryDatas = library.getAudio();
+          libraryDatas = library.getAudio(groupby);
         } else {
-          libraryDatas = library.getAudio(req.params.page, 3);
+          libraryDatas = library.getAudio(req.params.page, 3, groupby);
         }
         middleware.json(req, res, libraryDatas);
       });
