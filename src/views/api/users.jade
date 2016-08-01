@@ -8,7 +8,7 @@ section.sidebar.show
         div.image.avatar-vignette
           img(src="/user/#{user.username}/avatar?#{token}")
         div.separated
-          i.fa.fa-circle.status.online
+          i.fa.fa-circle.status.online(data-user="#{user.username}")
           a.view.small-title(style="margin-left:10px;", data-view="user/#{user.username}/info", href="/user/#{user.username}/info") #{user.username}
         div.separated
           each group in user.groups
@@ -21,5 +21,8 @@ script.
     $.ongaku.library.clear();
     $(".user-sidebar a.view").on("click", function(ev){
       loadView(ev, $(this).data("view"));
+    });
+    $("i.online").on("click", function(){
+      $.chat.start($(this).data("user"));
     });
   }

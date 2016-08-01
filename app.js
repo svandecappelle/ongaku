@@ -71,7 +71,7 @@ if (process.argv[2] === "dev"){
         }));
         app.use(cookieParser()); // required before session.
         app.use(session({
-            secret: 'keyboard cat',
+            secret: nconf.get("secret"),
             proxy: true // if you do SSL outside of node.
         }));
         app.use(passport.initialize());

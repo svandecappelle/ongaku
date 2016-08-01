@@ -1,11 +1,11 @@
 var nconf = require("nconf");
-var socketio = require('socket.io');
 var logger = require('log4js').getLogger('Server');
 var async = require("async");
 
 var middleware = require('./middleware/middleware');
 var routes = require('./routes');
 var library = require("./middleware/library");
+var chat = require('./chat');
 
 logger.setLevel(nconf.get('logLevel'));
 
@@ -14,7 +14,7 @@ logger.setLevel(nconf.get('logLevel'));
 		routes.load(app);
 		this.app = app;
 		served = this.app.listen(nconf.get('port'));
-		this.io = socketio(served);
+		chat.load(served);
 		var urlService = "http://".concat(nconf.get("hostname")).concat(":").concat(nconf.get("port"));
 		logger.info("Service is ready and listening on: " + urlService);
 		if (callback){
@@ -36,11 +36,11 @@ logger.setLevel(nconf.get('logLevel'));
 	};
 
 	Application.on = function(event, callback){
-		this.io.on(event, callback);
+		chat.on(event, callback);
 	};
 
 	Application.emit = function(event, params){
-		this.io.emit(event, params);
+		chat.emit(event, params);
 	};
 
 	Application.start = function (){

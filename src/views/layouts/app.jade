@@ -15,6 +15,7 @@ html
 
         link(rel="stylesheet", type="text/css", href="/lib/video-js-ongaku-theme.css")
         link(rel="stylesheet", type="text/css", href="/lib/main.css")
+        link(rel="stylesheet", type="text/css", href="/lib/chat.css")
         link(rel="stylesheet", type="text/css", href="/lib/media-theme.css")
 
         script(src="/dependencies/jquery/jquery-2.1.1.min.js")
@@ -33,6 +34,7 @@ html
 
         script(src="/lib/app.js")
         script(src="/lib/audiowave.js")
+        script(src="/lib/chat.js")
         if !session.user.isAnonymous
           style.
             .main-content{
@@ -239,10 +241,13 @@ html
             socket.on('connect', function () {
                 console.log("Connected");
             });
+            
             socket.on('library:scanned', function () {
                 console.log("Library scanned");
                 location.reload();
             });
+            
+            $.chat.init(socket, $.ongaku.getUser());
 
             $(".nav-reload>a").on("click", function(){
 
