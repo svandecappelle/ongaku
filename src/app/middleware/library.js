@@ -313,7 +313,7 @@
               })
             };
 
-            if (groupbyClause[1] === "album"){
+            if (groupbyClause[1] === "album" && Library.loadingCoverAlbums[groupObject]){
                 albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
             }
 
