@@ -17,7 +17,7 @@ var library = require("./../../middleware/library"),
     translator = require("./../../middleware/translator"),
     async = require("async");
 var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
-  DEFAULT_GROUP_BY,
+  DEFAULT_GROUP_BY = ['artist', 'album'],
   userFilesOpts = {
     root: DEFAULT_USER_IMAGE_DIRECTORY,
    dotfiles: 'deny',
