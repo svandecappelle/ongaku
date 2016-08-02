@@ -6,6 +6,7 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 	library = require("./../../middleware/library"),
 	meta = require("./../../meta"),
 	application = require("./../../"),
+	chat = require("./../../chat"),
 	user = require("./../../model/user");
 
 logger.setLevel(nconf.get('logLevel'));
@@ -87,6 +88,7 @@ logger.setLevel(nconf.get('logLevel'));
 					userData.cover = middleware.getCover(userData.username);
 					user.getGroupsByUsername(userData.username, function (groups){
 						userData = _.extend(userData, {groups: groups});
+						userData.status = chat.status(userData.username);
 						next(null, userData);
 					});
 				}, function (err, usersDatas){

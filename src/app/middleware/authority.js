@@ -7,6 +7,7 @@
     logger = require('log4js').getLogger("authority"),
 
     middleware = require("./middleware"),
+    chat = require("./../chat"),
     meta = require('./../meta'),
     user = require('./../model/user'),
     db = require('./../model/database'),
@@ -21,7 +22,7 @@
             var ws = require('../socket.io');
             ws.logoutUser(req.user.uid);
         */
-        // chat.disconnect(req.user);
+        chat.disconnect(req.user);
         req.logout();
       }
 

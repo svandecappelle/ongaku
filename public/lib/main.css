@@ -1299,6 +1299,10 @@ a.link.video>.name{
 	border-color: #FFF;
 }
 
+.user-vignette.online, .user-vignette.away, .user-vignette.busy {
+	cursor: pointer;
+}
+
 .user-vignette a{
 	color: #FFF;
 }
@@ -1312,8 +1316,24 @@ a.link.video>.name{
 	border-radius: 50%;
 }
 
+.user-vignette.online:hover .avatar-vignette{
+	border-color: #060;
+}
+
+.user-vignette.away:hover .avatar-vignette{
+	border-color: #CC0;
+}
+
+.user-vignette.busy:hover .avatar-vignette{
+	border-color: #900;
+}
+
 .user-vignette .avatar-vignette img{
 	width: 100%;
+}
+
+.user-vignette a:hover{
+	color: #CACACA;
 }
 
 .container {

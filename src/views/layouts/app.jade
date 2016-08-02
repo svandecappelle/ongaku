@@ -64,6 +64,17 @@ html
             color: white;
             background: #{theme['base-color']};
           }
+          
+          .message-box .nav-tabs{
+            border-bottom: 1px solid #{theme['base-color']};
+          }
+
+          .chat-container .nav > li > a{
+            border-top: 1px solid #{theme['base-color']};
+            border-left: 1px solid #{theme['base-color']};
+            border-right: 1px solid #{theme['base-color']};
+          }
+          
         script.
           $.ongaku.themer.setBaseColor("#{theme['base-color']}");
     body
@@ -115,7 +126,7 @@ html
                                     i.fa.fa-fw.fa-sign-in
                                 else
                                     i.fa.fa-fw.fa-user
-                        ul.dropdown-menu(role="menu")
+                        ul.dropdown-menu.user-status(role="menu")
                           if session.user.isAnonymous
                             li
                               a.view(href="/login", data-view="login")
@@ -132,19 +143,19 @@ html
                               a(href="/logout") Deconnection
                             li.divider
                             li
-                              a(href="/user/#{session.user.username}/status/online")
+                              a(data-status="online")
                                 i.fa.fa-circle.status.online
                                 span(style="margin-left:10px;") En ligne
                             li
-                              a(href="/user/#{session.user.username}/status/away")
+                              a(data-status="away")
                                 i.fa.fa-circle.status.away
                                 span(style="margin-left:10px;") Absent
                             li
-                              a(href="/user/#{session.user.username}/status/busy")
+                              a(data-status="busy")
                                 i.fa.fa-circle.status.busy
                                 span(style="margin-left:10px;") Occupé
                             li
-                              a(href="/user/#{session.user.username}/status/offline")
+                              a(data-status="offline")
                                 i.fa.fa-circle.status.offline
                                 span(style="margin-left:10px;") Hors ligne
 

@@ -4,11 +4,11 @@ section.sidebar.show
       h2(style="color: #FFF;") All users
   .user-sidebar.library-view(style="top:70px;")
     each user in users  
-      .panel.panel-default.user-vignette
+      div(class="panel panel-default user-vignette #{user.status}", data-user="#{user.username}")
         div.image.avatar-vignette
           img(src="/user/#{user.username}/avatar?#{token}")
         div.separated
-          i.fa.fa-circle.status.online(data-user="#{user.username}")
+          i(data-user="#{user.username}", class="fa fa-circle status #{user.status}")
           a.view.small-title(style="margin-left:10px;", data-view="user/#{user.username}/info", href="/user/#{user.username}/info") #{user.username}
         div.separated
           each group in user.groups
@@ -20,9 +20,11 @@ script.
     $.ongaku.library.reset();
     $.ongaku.library.clear();
     $(".user-sidebar a.view").on("click", function(ev){
+      ev.stopPropagation();
+      ev.preventDefault();
       loadView(ev, $(this).data("view"));
     });
-    $("i.online").on("click", function(){
+    $(".user-vignette.online, .user-vignette.away, .user-vignette.busy").on("click", function(){
       $.chat.start($(this).data("user"));
     });
   }

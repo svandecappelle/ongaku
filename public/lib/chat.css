@@ -9,13 +9,17 @@
 
 .chat-container .message-box.show {
   visibility: visible;
+  opacity: 1;
 }
+
 .chat-container .message-box{
   visibility: hidden;
   position: fixed;
   height: 300px;
   width: 500px;
   background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: all 0.25s linear;
 }
 
 .chat-container .message-inbox{
@@ -72,4 +76,14 @@
 .chat-container .nav > li > a{
   padding: 5px 3px;
   font-size: 10pt;
+  color: white;
+  background-color: transparent;
+  border-bottom: 1px solid #000;
+  border-radius: 0px;
+  cursor: pointer !important;
+}
+
+.chat-container .nav > li > a:hover{
+  border: 1px solid #000;
+  background-color: black !important;
 }

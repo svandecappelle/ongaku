@@ -2,9 +2,10 @@
     'use strict';
 
     function ChatPanel(message){
+      this.id = message.from.replace(".", "-");
       this.panel = $("<div>", {
         class: "chat-panel tab-pane",
-        id: message.from
+        id: this.id
       });
 
       this.messageBox = $("<div>", {
@@ -15,19 +16,30 @@
       this.messageBox.append(this.allMessages);
 
       this.panel.append(this.messageBox);
-      if (message.start){
+      if (message.start !== true){
         this.add(message);
       }
 
       this.link = $("<li>");
       this.link.append($("<a>", {
-        href: "#".concat(message.from),
+        href: "#".concat(this.id),
         "aria-controls": "tab",
         role: "tab",
         "data-toggle": "tab",
         "data-to": message.from,
-        text: message.from
+        text: message.from,
+        class: "chat-tab-link",
+        id: this.id.concat("-tab")
       }));
+    };
+
+    ChatPanel.prototype.tab = function () {
+      console.log("#".concat(this.id));
+      $("#".concat(this.id).concat("-tab")).tab("show");
+    };
+
+    ChatPanel.prototype.active = function () {
+      $("#".concat(this.id).concat("-tab")).tab("show");
     };
 
     ChatPanel.prototype.getElement = function () {
@@ -88,7 +100,8 @@
 
       this.input = $("<input>", {
         class: "input-box form-control"
-      }).change(function () {
+      });
+      this.input.change(function () {
         var message = {
           from: $.ongaku.getUser(),
           to: $(".message-box li.active a").data("to"),
@@ -96,7 +109,7 @@
           date: new Date()
         };
         socket.emit("msg", message);
-        //that.incoming(message);
+        that.incoming(message);
 
         $(this).val("");
       });
@@ -133,7 +146,8 @@
       this.chats[message.from] = chatPanel;
       this.tabContent.append(chatPanel.getElement());
       this.chatsElements.append(chatPanel.getLink());
-      $(chatPanel).tab();
+      chatPanel.tab();
+      $(this.input).focus();
       return chatPanel;
     };
 
@@ -176,16 +190,31 @@
         socket.on('msg', function(incoming){
           that.chat.incoming(incoming);
         });
+
+        $(".user-status li a").on("click", function(){
+          socket.emit("statuschange", {
+            user: $.ongaku.getUser(),
+            status: $(this).data("status")
+          });
+        });
       }
       return this;
     };
 
     Chat.prototype.start = function (user) {
-      this.chat.add({
-        from: user,
-        to: $.ongaku.getUser(),
-        start: true
-      });
+      if (!this.chat.getChat(user)){
+        this.chat.add({
+          from: user,
+          to: $.ongaku.getUser(),
+          start: true
+        });
+      } else {
+        this.chat.getChat(user).active();
+      }
+
+      if (!this.chat.popup.hasClass("show")){
+        this.chat.toggle();
+      }
     };
     /**
     * Initialise chat
