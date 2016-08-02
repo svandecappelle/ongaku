@@ -1590,17 +1590,19 @@ a.link.video>.name{
 
 .sp-replacer{
 	border: none;
-	background: #151313;
+	background: transparent;
 	color: #FFF;
+	margin-top: 6px;
+	height: 38px;
 }
 
-.sp-replacer:hover{
+.sp-replacer:hover, .sp-replacer.sp-active{
 	color: #CACACA;
 }
 
 .sp-container{
-		background-color: #000;
-		border: none;
+	background-color: rgba(0,0,0,0.6);
+	border: none;
 }
 .sp-picker-container{
 		border-left: 1px solid #000;
