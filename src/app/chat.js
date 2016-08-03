@@ -1,6 +1,7 @@
 (function (Chat) {
 	var users = {};
 	var statuses = {};
+	var CHECK_TIME = 1000 * 60;
 	var moment = require('moment'),
 		_ = require("underscore"),
 		logger = require("log4js").getLogger("Chat"),
@@ -21,10 +22,21 @@
 
 	Chat.checkin = function(incoming, socket){
 		logger.warn(incoming.user + " connected on chat");
+		var that = this;
+		/* Check chat connection every minutes */
+		setTimeout(function () {
+			that.check(incoming.user);
+		}, CHECK_TIME);
+
 		//console.log(incoming);
 		//console.log("Connection to chat: " + incoming);
 		users[incoming.user] = socket;
-		statuses[incoming.user] = "online";
+		if (incoming.status){
+			statuses[incoming.user] = incoming.status;
+		} else if (statuses[incoming.user] === undefined){
+			statuses[incoming.user] = "online";
+		}
+
 		this.io.sockets.emit('statuschange', statuses);
 	}
 
@@ -98,6 +110,15 @@
 	Chat.status = function (user) {
 		var status = statuses[user];
 		return status ? status : "offline";
+	};
+
+	Chat.check = function (user) {
+		var oldstatus = statuses[user];
+		statuses[user] = "offline";
+		users[user].emit('checkin', {
+			user: user,
+			status: oldstatus
+		});
 	};
 
 	Chat.authenticatedUsers = function(){

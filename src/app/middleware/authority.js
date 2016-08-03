@@ -56,6 +56,7 @@
           duration = 1000 * 60 * 60;
           req.session.cookie.maxAge = duration;
         }
+
         req.logIn({
           uid: userData.uid,
           username: req.body.username,

@@ -191,6 +191,10 @@
           that.chat.incoming(incoming);
         });
 
+        socket.on("checkin", function(incoming){
+          socket.emit('checkin', incoming);
+        });
+
         $(".user-status li a").on("click", function(){
           socket.emit("statuschange", {
             user: $.ongaku.getUser(),
