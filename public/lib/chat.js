@@ -195,11 +195,27 @@
           socket.emit('checkin', incoming);
         });
 
-        $(".user-status li a").on("click", function(){
-          socket.emit("statuschange", {
-            user: $.ongaku.getUser(),
-            status: $(this).data("status")
+        socket.on("statuschange", function(incoming){
+          $(incoming).each(function(index, userstatus){
+            for ( username in userstatus ) {
+              var selector = "i.fa.fa-circle.status[data-user=" + username + "]";
+              console.log(selector);
+              $(selector).removeClass("away");
+              $(selector).removeClass("online");
+              $(selector).removeClass("busy");
+              $(selector).removeClass("offline");
+              $(selector).addClass(userstatus[username]);
+            }
           });
+        });
+
+        $(".user-status li a").on("click", function(){
+          if ($(this).data("status")){
+              socket.emit("statuschange", {
+              user: $.ongaku.getUser(),
+              status: $(this).data("status")
+            });
+          }
         });
       }
       return this;

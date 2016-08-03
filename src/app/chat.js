@@ -1,5 +1,6 @@
 (function (Chat) {
 	var users = {};
+	var checking = {};
 	var statuses = {};
 	var CHECK_TIME = 1000 * 60;
 	var moment = require('moment'),
@@ -24,6 +25,9 @@
 		logger.warn(incoming.user + " connected on chat");
 		var that = this;
 		/* Check chat connection every minutes */
+		if (checking[incoming.user]){
+			checking[incoming.user] = false;
+		}
 		setTimeout(function () {
 			that.check(incoming.user);
 		}, CHECK_TIME);
@@ -31,13 +35,19 @@
 		//console.log(incoming);
 		//console.log("Connection to chat: " + incoming);
 		users[incoming.user] = socket;
+		var oldStatus = statuses[incoming.user];
+
 		if (incoming.status){
 			statuses[incoming.user] = incoming.status;
 		} else if (statuses[incoming.user] === undefined){
 			statuses[incoming.user] = "online";
+		} else {
+			statuses[incoming.user] = "online";
 		}
 
-		this.io.sockets.emit('statuschange', statuses);
+		if (oldStatus !== statuses[incoming.user]){
+			this.io.sockets.emit('statuschange', statuses);			
+		}
 	}
 
 	Chat.statuschange = function(incoming, socket){
@@ -113,12 +123,21 @@
 	};
 
 	Chat.check = function (user) {
-		var oldstatus = statuses[user];
-		statuses[user] = "offline";
-		users[user].emit('checkin', {
-			user: user,
-			status: oldstatus
-		});
+		if (users[user]){
+			var oldstatus = statuses[user];
+
+			checking[user] = true;
+			users[user].emit('checkin', {
+				user: user,
+				status: oldstatus
+			});
+
+			setTimeout(function(){
+				if (checking[user]){
+					statuses[user] = "offline";
+				}
+			}, 1000 * 30);
+		}
 	};
 
 	Chat.authenticatedUsers = function(){

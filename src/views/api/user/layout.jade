@@ -9,7 +9,7 @@ section.sidebar.show
         div.avatar-container
           div.avatar(style="z-index: 1;")
             img.user-profile-picture(src="/user/#{user.username}/avatar?#{token}")
-          i.fa.fa-circle.status.online(title="En ligne")
+          i(data-user="#{user.username}", class="fa fa-circle status #{user.status}")
         div.container
           div.btn-group.account-fab(style="z-index: 1;")
             button.fab.dropdown-toggle(type="button", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")

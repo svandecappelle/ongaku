@@ -9,6 +9,7 @@ var library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
     exporter = require("./../../middleware/exporter"),
     meta = require("./../../meta"),
+    chat = require("./../../chat"),
     user = require("./../../model/user"),
     userlib = require("./../../model/library"),
     playlist = require("./../../model/playlist"),
@@ -587,6 +588,7 @@ logger.setLevel(nconf.get('logLevel'));
               user.getUserDataByUsername(username, function (err, userData){
                 user.getGroupsByUsername(username, function (groups){
                   userData = _.extend(userData, { groups: groups });
+                  userData.status = chat.status(userData.username);
                   middleware.render('user/edit', req, res, {
                     user: userData,
                     token: new Date().getTime()
@@ -661,6 +663,7 @@ logger.setLevel(nconf.get('logLevel'));
           user.getUserDataByUsername(username, function (err, userData){
             user.getGroupsByUsername(username, function (groups){
               userData = _.extend(userData, { groups: groups });
+              userData.status = chat.status(userData.username);
               logger.debug("Check user: ", username, userData);
               if (apiView) {
                 middleware.render('api/user/info', req, res, {user: userData, token: new Date().getTime()});
