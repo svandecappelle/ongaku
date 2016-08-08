@@ -209,6 +209,7 @@ html
 
         script.
           $.ongaku.setUser("#{session.user.username}");
+          $.ongaku.library.setGroupBy("#{session.groupby}");
           $(function () {
             $.ongaku.playlist.bind();
             $.ongaku.playlist.fetch();

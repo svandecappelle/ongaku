@@ -314,7 +314,9 @@
             };
 
             if (groupbyClause[1] === "album" && Library.loadingCoverAlbums[groupObject]){
-                albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
+              albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
+            } else if (groupbyClause[1] === "artist"){
+              albumObject.image = Library.loadingCoverArtists[albumObject.title];
             }
 
             return albumObject;

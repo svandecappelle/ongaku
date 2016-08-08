@@ -202,6 +202,10 @@
         if (!_.contains(["mp3", "ogg"], originalEncoding)){
           originalEncoding = "mp3";
         }
+
+        if (metadatas.genre.length === 0) {
+          metadatas.genre = ["Unknown"];
+        }
         return {
             artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : metadatas.artistalbum ? metadatas.artistalbum : "Unknown artist",
             file: file,
@@ -211,7 +215,8 @@
             metadatas: metadatas,
             duration: durationMin.toString().concat(":").concat(durationSec),
             uid: shasum.digest('hex'),
-            encoding: originalEncoding
+            encoding: originalEncoding,
+            genre: metadatas.genre ? metadatas.genre.join(",") : "-"
         };
     };
 

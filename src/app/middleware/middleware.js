@@ -147,6 +147,7 @@
      */
     Middleware.session = function (middlewareObject, next) {
         logger.debug(middlewareObject.objs);
+        middlewareObject.objs.session = middlewareObject.req.session;
 
         var urlServer = null;
 

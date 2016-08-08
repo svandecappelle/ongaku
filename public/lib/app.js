@@ -681,9 +681,13 @@
       return this.artistElement;
     };
 
+    LibraryArtist.prototype.append = function (object) {
+      this.artistAlbums.append(object);
+    };
+
     LibraryArtist.prototype.album = function (album, view) {
       var artistName = this.artist.artist;
-      this.artistAlbums.append(new LibraryAlbum({
+      this.append(new LibraryAlbum({
           title: album.title,
           tracks : album.tracks,
           cover: album.cover,
@@ -712,24 +716,27 @@
         class: 'glyphicon glyphicon-plus'
       });
 
-      var albumDownloader = $('<a>', {
-        class: 'trackaction artist-download',
-        "data-placement": "left",
-        "data-toggle": "tooltip",
-        "data-original-title": "Add all tracks to current playlist",
-        "href": "/api/album-download/".concat(album.artist).concat("/").concat(album.title),
-        "target": "_self"
-      });
-      var glyficonAlbumDownloader = $('<i>', {
-        class: 'glyphicon glyphicon-download',
-      });
-      albumDownloader.append(glyficonAlbumDownloader);
-
+      if (album.download !== false){
+        var albumDownloader = $('<a>', {
+          class: 'trackaction artist-download',
+          "data-placement": "left",
+          "data-toggle": "tooltip",
+          "data-original-title": "Add all tracks to current playlist",
+          "href": "/api/album-download/".concat(album.artist).concat("/").concat(album.title),
+          "target": "_self"
+        });
+        var glyficonAlbumDownloader = $('<i>', {
+          class: 'glyphicon glyphicon-download',
+        });
+        albumDownloader.append(glyficonAlbumDownloader);
+      }
       albumAppender.append(glyficonAlbumAppender);
       albumElement.append(albumAppender);
 
       if (!$.ongaku.isAnonymous()){
-        albumElement.append(albumDownloader);
+        if (album.download !== false){
+          albumElement.append(albumDownloader);
+        }
         if (view){
           new UserLib().remover(albumElement);
         } else {
@@ -750,7 +757,6 @@
       albumElement.append(albumDetailElement);
 
       albumElement.append(new LibraryTracksList(album.tracks, view));
-
 
       if (baseThemeColor){
         albumElement.css({
@@ -881,13 +887,16 @@
     };
 
     Library.prototype.bind = function (view) {
+      var that = this;
       this.view = view;
       this.unbind();
+
       $.each(this.handlers(), function (type, handler){
         handler.bind();
       });
 
       $(".dropdown-menu.groupby a").on("click", function(){
+        that.setGroupBy($(this).data("groupby"));
         $.get("/api/audio/groupby/" + $(this).data("groupby"), {
           success: function(){
             setTimeout(function(){
@@ -960,6 +969,14 @@
       $(".lib.group.artist.open").empty();
     };
 
+    Library.prototype.setGroupBy = function (groupBy) {
+      this.groupBy = groupBy;
+    };
+
+    Library.prototype.getGroupBy = function () {
+      return this.groupBy;
+    };
+
     Library.prototype.append = function (library) {
       var that = this;
       // TODO load using the group by value.
@@ -967,15 +984,24 @@
         $.each(library, function (index, groupOne) {
             // For asynchronous loading debug
             // console.log("audio: " + index);
+            //console.log(groupOne);
 
-            if (groupOne.artist){
+            if (groupOne.artist && (groupOne.albums || groupOne.tracks)){
+
               var artistLibrary = new LibraryArtist(groupOne, that.view);
               if (groupOne.albums){
                 $.each(groupOne.albums, function(title, album){
                   artistLibrary.album(album, that.view);
                 });
               } else {
-
+                if (groupOne.tracks){
+                  var albumLibrary = {
+                    title: "",
+                    tracks : groupOne.tracks,
+                    artist: "all"
+                  };
+                  artistLibrary.album(albumLibrary, that.view);
+                }
               }
               $(".lib.group.artist.open").append(artistLibrary.get());
             } else if (groupOne.album) {
@@ -987,6 +1013,50 @@
                   artist: "all"
                 }, that.view);
                 $(".lib.group.artist.open").append(albumLibrary);
+              }
+            } else {
+              var groups = that.getGroupBy().split(",");
+              var appendTo = $(".lib.group.artist.open");
+              for (var i = 0; i < groups.length; i++) {
+                console.log(groupOne[groups[i]]);
+
+                if (groupOne[groups[i]] !== undefined){
+
+                  if (groupOne.tracks){
+                    var albumLibrary = new LibraryAlbum({
+                      title: groupOne[groups[i]] ? groupOne[groups[i]].toString() : "-",
+                      tracks : groupOne.tracks,
+                      artist: "all",
+                      download: false
+                    }, that.view);
+                    appendTo.append(albumLibrary);
+
+                  } else {
+                    var artistLibrary = new LibraryArtist({
+                      artist: groupOne[groups[i]]
+                    }, that.view);
+                    appendTo = artistLibrary;
+
+                    if (groups.length > i + 1) {
+                      groupOne = groupOne[groups[i + 1]];
+
+                      $.each(groupOne, function(index, val){
+                        if (val.tracks){
+                          var albumLibrary = new LibraryAlbum({
+                            title: val.title,
+                            tracks : val.tracks,
+                            artist: "all",
+                            download: false,
+                            cover: val.image
+                          }, that.view);
+                          appendTo.append(albumLibrary);
+                        }
+                      });
+                    }
+                    $(".lib.group.artist.open").append(artistLibrary.get());
+                  }
+                }
+
               }
             }
         });

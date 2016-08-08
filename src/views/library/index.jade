@@ -10,8 +10,6 @@ block append songlist
 block append scripts
   script.
     $(function (){
-      $.ongaku.library.bind();
-      $.ongaku.library.fetch();
       $.get("/api/user/playlists", function(output){
         $.each(output, function(index, playlist){
           var playlistBlock = $("<a>");
