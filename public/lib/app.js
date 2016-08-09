@@ -641,23 +641,26 @@
       });
 
       artistAppender.append(glyficonArtistAppender);
-
-      var artistDownloader = $('<a>', {
-        class: 'trackaction artist-download',
-        "data-placement": "bottom",
-        "data-toggle": "tooltip",
-        "data-original-title": "Download tracks",
-        "href": "/api/album-download/".concat(artist.artist).concat("/").concat("all"),
-        "target": "_self"
-      });
-      var glyficonArtistDownloader = $('<i>', {
-        class: 'glyphicon glyphicon-download',
-      });
-      artistDownloader.append(glyficonArtistDownloader);
+      if (artist.download !== false) {
+        var artistDownloader = $('<a>', {
+          class: 'trackaction artist-download',
+          "data-placement": "bottom",
+          "data-toggle": "tooltip",
+          "data-original-title": "Download tracks",
+          "href": "/api/album-download/".concat(artist.artist).concat("/").concat("all"),
+          "target": "_self"
+        });
+        var glyficonArtistDownloader = $('<i>', {
+          class: 'glyphicon glyphicon-download',
+        });
+        artistDownloader.append(glyficonArtistDownloader);
+      }
       this.artistElement.append(artistAppender);
       if (!$.ongaku.isAnonymous()){
+        if (artist.download !== false) {
+          this.artistElement.append(artistDownloader);
+        }
 
-        this.artistElement.append(artistDownloader);
         if (view){
           new UserLib().remover(this.artistElement);
         } else {
@@ -691,7 +694,9 @@
           title: album.title,
           tracks : album.tracks,
           cover: album.cover,
-          artist: artistName
+          artist: artistName,
+          download: album.download,
+          hideTitle: album.hideTitle
         }, view));
     };
 
@@ -750,8 +755,9 @@
           event.stopPropagation();
           $.ongaku.playlist.appendFromElement($(this));
       });
-
-      albumTitle.html(album.title);
+      if (!album.hideTitle) {
+        albumTitle.html(album.title);
+      }
       albumDetailElement.append(albumImage);
       albumDetailElement.append(albumTitle);
       albumElement.append(albumDetailElement);
@@ -982,13 +988,59 @@
       // TODO load using the group by value.
       if (this.type === 'audio'){
         $.each(library, function (index, groupOne) {
-            // For asynchronous loading debug
-            // console.log("audio: " + index);
-            //console.log(groupOne);
+          // For asynchronous loading debug
+          // console.log("audio: " + index);
+          //console.log(groupOne);
 
-            if (groupOne.artist && (groupOne.albums || groupOne.tracks)){
 
-              var artistLibrary = new LibraryArtist(groupOne, that.view);
+          // specific multi groups:
+          var groups = that.getGroupBy().split(",");
+          if (groups[0] !== "artist" && groups.length > 1){
+            var appendTo = $(".lib.group.artist.open");
+            for (var i = 0; i < groups.length; i++) {
+              if (groupOne[groups[i]] !== undefined){
+                if (groupOne.tracks){
+                  var albumLibrary = new LibraryAlbum({
+                    title: groupOne[groups[i]] ? groupOne[groups[i]].toString() : "-",
+                    tracks : groupOne.tracks,
+                    artist: "all",
+                    download: false
+                  }, that.view);
+
+                  appendTo.append(albumLibrary);
+                } else {
+                  var artistLibrary = new LibraryArtist({
+                    artist: groupOne[groups[i]]
+                  }, that.view);
+                  appendTo = artistLibrary;
+
+                  if (groups.length > i + 1) {
+                    groupOne = groupOne[groups[i + 1]];
+
+                    $.each(groupOne, function(index, val){
+                      if (val.tracks){
+                        var albumLibrary = new LibraryAlbum({
+                          title: val.title,
+                          tracks : val.tracks,
+                          artist: "all",
+                          download: false,
+                          cover: val.image
+                        }, that.view);
+                        appendTo.append(albumLibrary);
+                      }
+                    });
+                  }
+                  $(".lib.group.artist.open").append(artistLibrary.get());
+                }
+              }
+            }
+          }else{
+            if (groupOne.artist || groupOne.albums || groupOne.tracks){
+              var groupTitle = groupOne.artist ? groupOne.artist : (groupOne[that.getGroupBy()] ? groupOne[that.getGroupBy()].toString() : "-");
+              var artistLibrary = new LibraryArtist({
+                artist: groupTitle,
+                download: groupOne.artist !== undefined
+              }, that.view);
               if (groupOne.albums){
                 $.each(groupOne.albums, function(title, album){
                   artistLibrary.album(album, that.view);
@@ -996,9 +1048,11 @@
               } else {
                 if (groupOne.tracks){
                   var albumLibrary = {
-                    title: "",
+                    title: groupOne.artist ? "all" : "",
+                    hideTitle: true,
                     tracks : groupOne.tracks,
-                    artist: "all"
+                    artist: "all",
+                    download: groupOne.artist !== undefined
                   };
                   artistLibrary.album(albumLibrary, that.view);
                 }
@@ -1007,58 +1061,15 @@
             } else if (groupOne.album) {
               if (groupOne.tracks){
                 var albumLibrary = new LibraryAlbum({
-                  title: groupOne.album,
+                  title: groupOne.album ? groupOne.album : "all",
                   tracks : groupOne.tracks,
                   cover: groupOne.cover,
                   artist: "all"
                 }, that.view);
                 $(".lib.group.artist.open").append(albumLibrary);
               }
-            } else {
-              var groups = that.getGroupBy().split(",");
-              var appendTo = $(".lib.group.artist.open");
-              for (var i = 0; i < groups.length; i++) {
-                console.log(groupOne[groups[i]]);
-
-                if (groupOne[groups[i]] !== undefined){
-
-                  if (groupOne.tracks){
-                    var albumLibrary = new LibraryAlbum({
-                      title: groupOne[groups[i]] ? groupOne[groups[i]].toString() : "-",
-                      tracks : groupOne.tracks,
-                      artist: "all",
-                      download: false
-                    }, that.view);
-                    appendTo.append(albumLibrary);
-
-                  } else {
-                    var artistLibrary = new LibraryArtist({
-                      artist: groupOne[groups[i]]
-                    }, that.view);
-                    appendTo = artistLibrary;
-
-                    if (groups.length > i + 1) {
-                      groupOne = groupOne[groups[i + 1]];
-
-                      $.each(groupOne, function(index, val){
-                        if (val.tracks){
-                          var albumLibrary = new LibraryAlbum({
-                            title: val.title,
-                            tracks : val.tracks,
-                            artist: "all",
-                            download: false,
-                            cover: val.image
-                          }, that.view);
-                          appendTo.append(albumLibrary);
-                        }
-                      });
-                    }
-                    $(".lib.group.artist.open").append(artistLibrary.get());
-                  }
-                }
-
-              }
             }
+          }
         });
         $('.metadatas-details').popover({
           viewport: { "selector": ".sidebar", "padding": 10 }
