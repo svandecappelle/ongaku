@@ -455,6 +455,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 
 .player .current-playing-image{
 	width: 30px;
+	margin-top: -5px;
 }
 
 .player.empty{
