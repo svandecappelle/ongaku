@@ -453,6 +453,10 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	background-color: #1a2226;
 }
 
+.player .current-playing-image{
+	width: 30px;
+}
+
 .player.empty{
 	height: 30px;
 	color: white;

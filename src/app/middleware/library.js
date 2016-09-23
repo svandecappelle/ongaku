@@ -221,6 +221,14 @@
         return _.find(this.flatten, {uid: uuid});
     };
 
+    Library.getAlbumArtImage = function (uuid) {
+        uuid = uuid.replace(".mp3", "");
+        uuid = uuid.replace(".ogg", "");
+        uuid = uuid.replace(".wav", "");
+
+        return Library.loadingCoverAlbums[_.find(this.flatten, {uid: uuid}).artist][_.find(this.flatten, {uid: uuid}).album];
+    };
+
     Library.search = function (filter, type, groupby, fromList) {
       var searchResultList;
 

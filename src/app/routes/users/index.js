@@ -770,6 +770,12 @@ logger.setLevel(nconf.get('logLevel'));
           res.redirect(cover);
         }
       });
+
+      app.get("/song-image/:songid", function(req, res){
+        var albumart = library.getAlbumArtImage(req.params.songid);
+        console.log(albumart);
+        res.redirect(albumart);
+      });
     };
 
     UsersRoutes.load = function (app) {

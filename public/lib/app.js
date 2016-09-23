@@ -161,6 +161,8 @@
       $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing').css({
         color: "#FFFFFF"
       });
+
+      $(".current-playing-image").attr("src", "/song-image/"+this.current);
     };
 
     Player.prototype.stop = function (uid, encoding) {
