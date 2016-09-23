@@ -600,7 +600,7 @@ a.image-extensible.extended > img{
 ul.group>li{
 	margin-right: 10px;
 	height: 0px;
-	background: none repeat scroll 0% 0% #FFF;
+	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.82);
 	border-radius: 5px;
 	transition: all 0.2s linear 0s;
 	width: 100px;
@@ -619,7 +619,7 @@ ul.group.artist>li{
   box-shadow: 0px 0px 5px rgba(131, 127, 127, 0.5);
 	margin: 7px;
 	padding: 6px;
-	background-color: rgba(30, 30, 30, 0.84);
+	background-color: rgba(30, 30, 30, 0.40);
 }
 
 ul.group.artist>li.detail{
@@ -652,6 +652,7 @@ ul.group.artist.open>li>a.trackaction{
 .albumtitle {
 	color: #13CC00;
 	text-shadow: 1px 0px rgba(0,0,0,0.3);
+	font-weight: 400;
 }
 
 ul.group.tracklist>li{
@@ -709,6 +710,7 @@ ul.group.artist.open>li{
 ul.group.artist span.artistname{
 	vertical-align: top;
 	color: white;
+	font-weight: bold;
 }
 
 .trackaction{
