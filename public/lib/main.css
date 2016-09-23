@@ -326,14 +326,16 @@ section.song-list > .list-container .songs-container ul li:hover{
 }
 
 section.song-list > .list-container .song{
-	margin-bottom: 2px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	vertical-align: middle;
+	line-height: 23.5px;
 	cursor: pointer;
 	width: 100%;
 	white-space: nowrap;
 }
 
 section.song-list > .list-container .playlist-columns .tracks-columns{
-	margin-bottom: 2px;
 	width: 100%;
 	white-space: nowrap;
 	margin-bottom: 4px;
@@ -349,6 +351,8 @@ section.song-list > .list-container .song .track-info, section.song-list > .list
 	padding-left: 15px;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	vertical-align: middle;
+	line-height: 23.5px;
 }
 
 section.song-list > .list-container .song .track-info.track-px, section.song-list > .list-container .playlist-colylns .tracks-columns .track-info.track-px{
@@ -642,6 +646,7 @@ ul.group.artist.open>li>a.trackaction{
 
 .albumtitle {
 	color: #13CC00;
+	text-shadow: 1px 0px rgba(0,0,0,0.3);
 }
 
 ul.group.tracklist>li{
