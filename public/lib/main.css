@@ -74,7 +74,6 @@ nav{
 	color: white;
 	width: 45px;
 	height: 100%;
-	background-color: #1a2226;
 	float: left;
 	overflow: hidden;
 	box-sizing: border-box;
@@ -84,6 +83,10 @@ nav{
 	position: fixed;
 	z-index: 1000;
 	/*position: relative;*/
+}
+
+nav.menu{
+	background-color: #1a2226;
 }
 
 nav .menu{
