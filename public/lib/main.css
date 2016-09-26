@@ -317,7 +317,7 @@ section.song-list > .list-container .songs-container{
 }
 
 section.song-list > .list-container .songs-container ul li{
-	margin-bottom: 4px;
+	margin-bottom: 1px;
 	background-color: rgba(75, 76, 76, 0.49);
 	border-radius: 3px;
 	transition: all 0.4s linear;
@@ -325,23 +325,21 @@ section.song-list > .list-container .songs-container ul li{
 
 section.song-list > .list-container .songs-container ul li:hover{
 	background-color: rgba(187, 208, 208, 0.49);
-	text-shadow: 1px 1px #434343;
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 section.song-list > .list-container .song{
-	padding-top: 1px;
-	padding-bottom: 1px;
 	vertical-align: middle;
-	line-height: 23.5px;
 	cursor: pointer;
 	width: 100%;
 	white-space: nowrap;
+	font-size: 15px;
 }
 
 section.song-list > .list-container .playlist-columns .tracks-columns{
 	width: 100%;
 	white-space: nowrap;
-	margin-bottom: 4px;
+	margin-bottom: 1px;
 	background-color: white;
 }
 
@@ -354,8 +352,6 @@ section.song-list > .list-container .song .track-info, section.song-list > .list
 	padding-left: 15px;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	vertical-align: middle;
-	line-height: 23.5px;
 }
 
 section.song-list > .list-container .song .track-info.track-px, section.song-list > .list-container .playlist-colylns .tracks-columns .track-info.track-px{
@@ -374,7 +370,6 @@ section.song-list > .list-container .song:hover .track-num:before, section.song-
 	font-family: "FontAwesome";
 	left: 5px;
 	position: absolute;
-	padding-top: 2px;
 }
 
 section.song-list > .list-container .songs-container ul li a.playing{
@@ -392,7 +387,6 @@ section.song-list > .list-container .song .track-info.track, section.song-list >
 	position: absolute;
 	left: 115px;
 	right: 63px;
-	padding-top: 2px;
 }
 
 section.song-list > .list-container .song .track-artist, section.song-list > .list-container .playlist-columns .tracks-columns .track-artist{
@@ -408,7 +402,6 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	padding-left: 15px;
 	position: absolute;
 	right: 0px;
-	padding-top: 2px;
 }
 
 .search-results li{
@@ -603,10 +596,13 @@ a.image-extensible.extended > img{
 ul.group>li{
 	margin-right: 10px;
 	height: 0px;
-	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.82);
 	border-radius: 5px;
 	transition: all 0.2s linear 0s;
 	width: 100px;
+}
+
+ul.group.album > li {
+	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.82);
 }
 
 ul.group{
@@ -654,7 +650,7 @@ ul.group.artist.open>li>a.trackaction{
 
 .albumtitle {
 	color: #13CC00;
-	text-shadow: 1px 0px rgba(0,0,0,0.3);
+	text-shadow: 1px 1px rgba(255,255,255,0.7);
 	font-weight: 400;
 }
 
@@ -675,7 +671,7 @@ ul.group.tracklist{
 }
 
 ul.group.tracklist>li{
-	margin-bottom: 5px;
+	border-radius: 0px;
 	padding-left: 6px;
 }
 
@@ -734,7 +730,7 @@ ul.group.artist span.artistname{
 }
 
 .lib .group .tracklist>li:hover{
-	background-color: rgb(236, 236, 236);
+	background-color: rgba(255, 255, 255, 0.82);
 }
 
 .notrackplaying{
@@ -1592,7 +1588,7 @@ a.link.video>.name{
 }
 
 .jspTrack {
-    background: rgba(224, 200, 135, 0.39);
+    background: rgba(255, 255, 255, 0.39);
     position: relative;
 }
 
