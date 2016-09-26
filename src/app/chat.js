@@ -22,7 +22,6 @@
 	};
 
 	Chat.checkin = function(incoming, socket){
-		logger.warn(incoming.user + " connected on chat");
 		var that = this;
 		/* Check chat connection every minutes */
 		if (checking[incoming.user]){
@@ -46,7 +45,7 @@
 		}
 
 		if (oldStatus !== statuses[incoming.user]){
-			this.io.sockets.emit('statuschange', statuses);			
+			this.io.sockets.emit('statuschange', statuses);
 		}
 	}
 
