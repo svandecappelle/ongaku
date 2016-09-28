@@ -13,6 +13,7 @@ var library = require("./../../middleware/library"),
     user = require("./../../model/user"),
     userlib = require("./../../model/library"),
     playlist = require("./../../model/playlist"),
+    statistics = require("./../../model/statistics"),
     mime = require("mime"),
     fs = require("fs"),
     translator = require("./../../middleware/translator"),
@@ -186,13 +187,23 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get('/api/stream/:media', function (req, res) {
         var stream = function () {
-          logger.debug("streaming audio");
+          logger.info("streaming audio");
+
           middleware.stream(req, res, req.params.media, "audio");
         };
 
         UsersRoutes.checkingAuthorization(req, res, function () {
           stream();
         });
+      });
+
+      app.post('/api/statistics/:type/:media', function(req, res){
+        if (req.params.type === 'plays'){
+          statistics.set('plays', req.params.media, 'increment', function(){
+              logger.info("set statistics");
+          });
+        }
+        middleware.json(req, res, {status: "ok"});
       });
 
       app.get('/api/user/:username/library/:page', function (req, res){
@@ -773,9 +784,36 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
-        console.log(albumart);
         res.redirect(albumart);
       });
+
+      app.get("/featured", function(req, res){
+        logger.info("Client access to featured [" + req.ip + "]");
+        middleware.render('user/featured', req, res);
+      });
+
+      app.get("/api/featured", function(req, res){
+        statistics.get("plays", function(err, values){
+          var pairsValues = _.pairs(values);
+
+          var entries = _.map(pairsValues, function(element){
+            var track = library.getByUid(element[0]);
+            track.plays = element[1];
+            return track;
+          });
+
+          entries = _.sortBy(entries, 'plays').reverse();
+          var lenght = 10;
+          entries = _.first(_.rest(entries, 0 * lenght), lenght);
+          middleware.json(req, res, {stats: entries});
+        });
+      });
+
+      app.get("/api/view/featured", function(req, res){
+        logger.info("Client access to featured [" + req.ip + "]");
+        middleware.render('api/featured', req, res);
+      });
+
     };
 
     UsersRoutes.load = function (app) {

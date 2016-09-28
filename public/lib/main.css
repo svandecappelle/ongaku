@@ -729,7 +729,7 @@ ul.group.artist span.artistname{
 	color: white;
 }
 
-.lib .group .tracklist>li:hover{
+.lib .group .tracklist>li:hover {
 	background-color: rgba(255, 255, 255, 0.82);
 }
 
@@ -1621,4 +1621,35 @@ a.link.video>.name{
 
 .sp-cancel{
 		color: #CACACA;
+}
+
+.library.featured {
+		margin-top: 15px;
+}
+.library.featured .mostplays{
+	width: 50%;
+	display: inline-block;
+	background-color: rgba(30, 30, 30, 0.84);
+	margin: 5px;
+	border-radius: 5px;
+	padding: 10px;
+}
+.library.featured .statistic-group{
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
+	border-radius: 5px;
+}
+.library.featured .track{
+	color: white;
+	margin-bottom: 1px;
+	background-color: rgba(75, 76, 76, 0.49);
+	border-radius: 3px;
+	transition: all 0.4s linear;
+	padding: 3px;
+	padding-left: 10px;
+	cursor: pointer;
+}
+
+.library.featured .track:hover{
+	background-color: rgba(187, 208, 208, 0.49);
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 }

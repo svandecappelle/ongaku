@@ -1,0 +1,50 @@
+section.sidebar.show
+  .search
+    h1 Featured
+    if (data.message !== null)
+      h1.message
+          i.fa.fa-circle-o-notch.fa-spin
+            span.text= data.message
+      .user-sidebar.library-view
+        .library
+          ul.lib.group.artist.open
+  .user-sidebar.library-view
+    .library.featured
+      ul.mostplays.tracklist
+        h1 Most played tracks
+script.
+  function FeaturedTracksList(tracks) {
+    var tracksElement = $('<ul>', {class: "tracklist"});
+    $.each(tracks, function(index, track){
+      var trackElement = $('<li>', {
+        "class": "song-track"
+      });
+      var trackDetailElement = $('<div>', {
+        class: 'track trackappend',
+        "data-uid": track.uid,
+        "data-encoding": track.encoding,
+        "data-placement": "bottom auto",
+        "data-toggle": "tooltip",
+        "data-title": "Add track to current playlist"
+      });
+
+      trackDetailElement.html(track.title);
+      trackElement.append(trackDetailElement);
+      tracksElement.append(trackElement);
+      $(trackDetailElement).tooltip();
+
+      trackDetailElement.on("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          $.ongaku.playlist.appendFromElement($(this));
+      });
+    });
+    return tracksElement;
+  }
+  function initView(){
+    $.get("/api/featured", function (data) {
+      var plays = $("<div>").addClass('statistic-group');
+      $("ul.mostplays").append(plays);
+      plays.append(new FeaturedTracksList(data.stats));
+    });
+  }

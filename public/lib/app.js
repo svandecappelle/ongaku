@@ -145,6 +145,7 @@
       }
       $(".playing").removeClass('playing');
       this.current = uid;
+      $.post('/api/statistics/plays/' + uid);
 
       $("#controls").attr("src", "/api/stream/".concat(uid));
       $("#mp3src").attr("src", "/api/stream/".concat(uid).concat(".".concat(encoding))).remove().appendTo("#controls");
