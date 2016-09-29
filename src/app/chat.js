@@ -11,7 +11,7 @@
 	Chat.load = function (served){
 		this.io = socketio(served);
 		this.start();
-	}
+	};
 
 	Chat.on = function(event, callback){
 		this.io.on(event, callback);
@@ -47,13 +47,13 @@
 		if (oldStatus !== statuses[incoming.user]){
 			this.io.sockets.emit('statuschange', statuses);
 		}
-	}
+	};
 
 	Chat.statuschange = function(incoming, socket){
 		socket.reconnectionDelay /= 1;
 		statuses[incoming.user] = incoming.status;
 		this.io.sockets.emit('statuschange', statuses);
-	}
+	};
 
 	Chat.message = function (data) {
 		try {
@@ -94,7 +94,7 @@
 		} catch(err) {
 			logger.error(err);
 		}
-	}
+	};
 
 	Chat.onConnect = function (socket) {
 		socket.emit('authenticate');
@@ -102,15 +102,15 @@
 		//console.log(users);
 
 		socket.on('checkin', function(incoming){
-			Chat.checkin(incoming, socket)
+			Chat.checkin(incoming, socket);
 		});
 		socket.on('statuschange', function(incoming){
-			 Chat.statuschange(incoming, socket)
+			 Chat.statuschange(incoming, socket);
 		});
 		socket.on('msg', function(incoming){
 			Chat.message(incoming, socket);
 		});
-	}
+	};
 
 	Chat.start = function(){
 		this.io.sockets.on('connection', Chat.onConnect);

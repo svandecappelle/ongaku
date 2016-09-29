@@ -31,7 +31,7 @@
         class: "chat-tab-link",
         id: this.id.concat("-tab")
       }));
-    };
+    }
 
     ChatPanel.prototype.tab = function () {
       console.log("#".concat(this.id));
@@ -87,7 +87,7 @@
       });
       this.opener.append($("<i>", {
         class: "fa fa-comments-o"
-      }))
+      }));
       this.opener.append($("<span>", {
         text: "Chat"
       }));
@@ -128,7 +128,7 @@
       this.chat.append(this.popup);
 
       this.bind();
-    };
+    }
 
     ChatWidget.prototype.bind = function () {
       var that = this;
@@ -153,7 +153,7 @@
 
     ChatWidget.prototype.getChat = function (from) {
       return this.chats[from];
-    }
+    };
 
     ChatWidget.prototype.incoming = function (message) {
       if (!this.popup.hasClass("show")){
@@ -197,9 +197,8 @@
 
         socket.on("statuschange", function(incoming){
           $(incoming).each(function(index, userstatus){
-            for ( username in userstatus ) {
+            for (var username in userstatus) {
               var selector = "i.fa.fa-circle.status[data-user=" + username + "]";
-              console.log(selector);
               $(selector).removeClass("away");
               $(selector).removeClass("online");
               $(selector).removeClass("busy");
@@ -219,7 +218,7 @@
         });
       }
       return this;
-    };
+    }
 
     Chat.prototype.start = function (user) {
       if (!this.chat.getChat(user)){
