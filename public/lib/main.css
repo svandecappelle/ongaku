@@ -981,7 +981,7 @@ ul.group.artist span.artistname{
 	margin-left: 90px;
 	padding-top: 50px;
 	background: url('/img/background.jpg') repeat center center;
-	background-size: cover;
+	background-size: cover !important;
 }
 
 .main-menu{
