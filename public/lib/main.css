@@ -390,11 +390,15 @@ section.song-list > .list-container .song .track-info.track, section.song-list >
 }
 
 section.song-list > .list-container .song .track-artist, section.song-list > .list-container .playlist-columns .tracks-columns .track-artist, .library.featured .track-artist{
-	width: 40%;
+	width: 30%;
 }
 
 section.song-list > .list-container .song .track-title, section.song-list > .list-container .playlist-columns .tracks-columns .track-title, .library.featured .track-title{
-	width: 60%;
+	width: 30%;
+}
+
+section.song-list > .list-container .song .track-album, section.song-list > .list-container .playlist-columns .tracks-columns .track-album, .library.featured .track-album{
+	width: 30%;
 }
 
 section.song-list > .list-container .song .track-time, section.song-list > .list-container .playlist-columns .tracks-columns .track-time, .library.featured .track-time{

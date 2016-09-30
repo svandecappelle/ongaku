@@ -1471,10 +1471,16 @@
       var trackLabels = $("<div>", {
         class: 'track-info track'
       });
+      
       var trackTitle = $("<div>", {
         class: 'track-info track-title'
       });
       trackTitle.html(val.title);
+
+      var trackAlbum = $("<div>", {
+        class: 'track-info track-album'
+      });
+      trackAlbum.html(val.album);
 
       var trackArtist = $("<div>", {
         class: 'track-info track-artist'
@@ -1483,6 +1489,7 @@
 
       trackLabels.append(trackTitle);
       trackLabels.append(trackArtist);
+      trackLabels.append(trackAlbum);
 
       trackSong.append(trackInfoNums);
       trackSong.append(trackLabels);
