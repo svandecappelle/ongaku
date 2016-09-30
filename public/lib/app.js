@@ -489,6 +489,13 @@
         });
 
       titleObj.html(title);
+      try{
+        if (title === 'duration' && (parseInt(value) > 60) ){
+          value = (parseInt(value) / 60) + ":" + (parseInt(value) % 60);
+        }
+      } catch (ex){
+        console.log("error: " + value);
+      }
       valueObj.append(valueLabel);
       valueLabel.html(value);
       label.append(titleObj);
@@ -1471,7 +1478,7 @@
       var trackLabels = $("<div>", {
         class: 'track-info track'
       });
-      
+
       var trackTitle = $("<div>", {
         class: 'track-info track-title'
       });
