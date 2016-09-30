@@ -491,7 +491,7 @@
       titleObj.html(title);
       try{
         if (title === 'duration' && (parseInt(value) > 60) ){
-          value = (parseInt(value) / 60) + ":" + (parseInt(value) % 60);
+          value = Math.trunc(parseInt(value) / 60) + ":" + (parseInt(value) % 60);
         }
       } catch (ex){
         console.log("error: " + value);
