@@ -347,18 +347,18 @@ section.song-list > .list-container .song:hover{
 	color: #E8D56B;
 }
 
-section.song-list > .list-container .song .track-info, section.song-list > .list-container .playlist-columns .tracks-columns .track-info{
+section.song-list > .list-container .song .track-info, section.song-list > .list-container .playlist-columns .tracks-columns .track-info, .library.featured .track-info{
 	display: inline-block;
 	padding-left: 15px;
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
 
-section.song-list > .list-container .song .track-info.track-px, section.song-list > .list-container .playlist-colylns .tracks-columns .track-info.track-px{
+section.song-list > .list-container .song .track-info.track-px, section.song-list > .list-container .playlist-columns .tracks-columns .track-info.track-px{
 	width: 100%;
 }
 
-section.song-list > .list-container .song .track-num, , section.song-list > .list-container .playlist-columns .tracks-columns .track-num{
+section.song-list > .list-container .song .track-num, , section.song-list > .list-container .playlist-columns .tracks-columns .track-num, .library.featured .track-num{
 	width: 56px;
 	text-align: right;
 	margin-left: 16px;
@@ -389,15 +389,15 @@ section.song-list > .list-container .song .track-info.track, section.song-list >
 	right: 63px;
 }
 
-section.song-list > .list-container .song .track-artist, section.song-list > .list-container .playlist-columns .tracks-columns .track-artist{
+section.song-list > .list-container .song .track-artist, section.song-list > .list-container .playlist-columns .tracks-columns .track-artist, .library.featured .track-artist{
 	width: 40%;
 }
 
-section.song-list > .list-container .song .track-title, section.song-list > .list-container .playlist-columns .tracks-columns .track-title{
+section.song-list > .list-container .song .track-title, section.song-list > .list-container .playlist-columns .tracks-columns .track-title, .library.featured .track-title{
 	width: 60%;
 }
 
-section.song-list > .list-container .song .track-time, section.song-list > .list-container .playlist-columns .tracks-columns .track-time{
+section.song-list > .list-container .song .track-time, section.song-list > .list-container .playlist-columns .tracks-columns .track-time, .library.featured .track-time{
 	width: 75px;
 	padding-left: 15px;
 	position: absolute;
@@ -1627,7 +1627,7 @@ a.link.video>.name{
 		margin-top: 15px;
 }
 .library.featured .mostplays{
-	width: 50%;
+	width: 70%;
 	display: inline-block;
 	background-color: rgba(30, 30, 30, 0.84);
 	margin: 5px;
@@ -1647,6 +1647,7 @@ a.link.video>.name{
 	padding: 3px;
 	padding-left: 10px;
 	cursor: pointer;
+	width: 100%;
 }
 
 .library.featured .track:hover{

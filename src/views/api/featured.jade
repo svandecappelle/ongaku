@@ -15,20 +15,49 @@ section.sidebar.show
 script.
   function FeaturedTracksList(tracks) {
     var tracksElement = $('<ul>', {class: "tracklist"});
+    var count = 1;
     $.each(tracks, function(index, track){
       var trackElement = $('<li>', {
         "class": "song-track"
       });
       var trackDetailElement = $('<div>', {
-        class: 'track trackappend',
+        class: 'track trackappend track-info',
         "data-uid": track.uid,
         "data-encoding": track.encoding,
         "data-placement": "bottom auto",
         "data-toggle": "tooltip",
         "data-title": "Add track to current playlist"
       });
-
-      trackDetailElement.html(track.title);
+      var trackElementNum = $('<div>', {
+        class: 'track-info track-num'
+      });
+      var trackElementTitle = $('<div>', {
+        class: 'track-info',
+        style: 'width: 30%'
+      });
+      var trackElementAlbum = $('<div>', {
+        class: 'track-info',
+        style: 'width: 30%'
+      });
+      var trackElementArtist = $('<div>', {
+        class: 'track-info',
+        style: 'width: 30%'
+      });
+      
+      trackDetailElement.append(trackElementNum);
+      trackDetailElement.append(trackElementTitle);
+      trackDetailElement.append(trackElementArtist);
+      trackDetailElement.append(trackElementAlbum);
+      
+      if (count < 10){
+        trackElementNum.html("0" + count);
+      } else {
+        trackElementNum.html(count);
+      }
+      trackElementTitle.html(track.title);
+      trackElementArtist.html(track.artist);
+      trackElementAlbum.html(track.album);
+      
       trackElement.append(trackDetailElement);
       tracksElement.append(trackElement);
       $(trackDetailElement).tooltip();
@@ -38,6 +67,7 @@ script.
           event.stopPropagation();
           $.ongaku.playlist.appendFromElement($(this));
       });
+      count+=1;
     });
     return tracksElement;
   }
