@@ -42,10 +42,10 @@ var getStatistics = function(name, callback){
       entries = _.map(entries, function(element){
         if (statistic.type === 'track'){
           var track = library.getByUid(element[0]);
-          track.plays = element[1];
+          track.plays = parseInt(element[1]);
           return track;
         } else {
-          return {title: element[0], plays: element[1]};
+          return {title: element[0], 'plays-genre': parseInt(element[1])};
         }
       });
 
