@@ -30,6 +30,41 @@ var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
  };
 logger.setLevel(nconf.get('logLevel'));
 
+var getStatistics = function(name, callback){
+  var statisticsValues = {};
+  async.each(name, function (statistic, next){
+    statistics.get(statistic.name, function(err, values){
+      if (err){
+        next(err);
+      }
+      var entries = _.pairs(values);
+
+      entries = _.map(entries, function(element){
+        if (statistic.type === 'track'){
+          var track = library.getByUid(element[0]);
+          track.plays = element[1];
+          return track;
+        } else {
+          return {title: element[0], plays: element[1]};
+        }
+      });
+
+      entries = _.sortBy(entries, statistic.name).reverse();
+      var lenght = 10;
+      entries = _.first(_.rest(entries, 0 * lenght), lenght);
+      statisticsValues[statistic.name] = entries;
+
+      next();
+    });
+  }, function(err){
+    if (err){
+      callback(err, null);
+    } else {
+      callback(null, statisticsValues);
+    }
+  });
+};
+
 (function (UsersRoutes) {
     "use strict";
 
@@ -200,6 +235,12 @@ logger.setLevel(nconf.get('logLevel'));
       app.post('/api/statistics/:type/:media', function(req, res){
         if (req.params.type === 'plays'){
           statistics.set('plays', req.params.media, 'increment', function(){
+              logger.info("set statistics");
+          });
+          var media = library.getByUid(req.params.media);
+          logger.info(media);
+          var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
+          statistics.set('plays-genre', genre, 'increment', function(){
               logger.info("set statistics");
           });
         }
@@ -792,19 +833,11 @@ logger.setLevel(nconf.get('logLevel'));
         middleware.render('user/featured', req, res);
       });
 
+
       app.get("/api/featured", function(req, res){
-        statistics.get("plays", function(err, values){
-          var pairsValues = _.pairs(values);
-
-          var entries = _.map(pairsValues, function(element){
-            var track = library.getByUid(element[0]);
-            track.plays = element[1];
-            return track;
-          });
-
-          entries = _.sortBy(entries, 'plays').reverse();
-          var lenght = 10;
-          entries = _.first(_.rest(entries, 0 * lenght), lenght);
+        var stats = [{name: 'plays', type: 'track'},
+                    {name: 'plays-genre'}];
+        getStatistics(stats, function(err, entries){
           middleware.json(req, res, {stats: entries});
         });
       });
