@@ -240,9 +240,11 @@ var getStatistics = function(name, callback){
           var media = library.getByUid(req.params.media);
           logger.info(media);
           var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
-          statistics.set('plays-genre', genre, 'increment', function(){
-              logger.info("set statistics");
-          });
+          if (genre){
+            statistics.set('plays-genre', genre, 'increment', function(){
+                logger.info("set statistics");
+            });
+          }
         }
         middleware.json(req, res, {status: "ok"});
       });
