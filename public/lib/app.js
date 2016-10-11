@@ -1049,6 +1049,7 @@
               var groupTitle = groupOne.artist ? groupOne.artist : (groupOne[that.getGroupBy()] ? groupOne[that.getGroupBy()].toString() : "-");
               var artistLibrary = new LibraryArtist({
                 artist: groupTitle,
+                image: groupOne.image,
                 download: groupOne.artist !== undefined
               }, that.view);
               if (groupOne.albums){
@@ -1188,7 +1189,13 @@
     Library.prototype.videoDispose = function () {
       if (this.videos !== null){
         $.each(this.videos, function(index, player){
-  				player.dispose();
+  				if (player) {
+            try {
+              player.dispose();  
+            } catch (err) {
+              // nothing to do it is a video player issue
+            }
+          }
   			});
       }
       this.videos = [];

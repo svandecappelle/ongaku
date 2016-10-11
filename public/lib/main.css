@@ -1663,3 +1663,46 @@ a.link.video>.name{
 .library.featured .mostplays.plays-genre{
 	width: 25%;
 }
+
+.search .input-group-addon{
+  color: white;
+  background-color: transparent;
+  border: none;
+  padding-top: 10px;
+}
+
+.search input.searchbox{
+  background-color: transparent;
+  color: white;
+  border: none !important;
+}
+
+input.searchbox:focus + .layer{
+  position: fixed;
+  top: 0px;
+  bottom: 65%;
+  left: 0px;
+  right: 0px;
+  background-color: rgba(0,0,0,0.8);
+  height: 100% !important;
+  z-index: 2000 !important;
+  color: white;
+  font-size: 10em;
+  vertical-align: top;
+  line-height: 10em;
+}
+
+input.searchbox:focus{
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: transparent;
+  height: 25% !important;
+  z-index: 2001 !important;
+  color: white;
+  font-size: 10em;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
