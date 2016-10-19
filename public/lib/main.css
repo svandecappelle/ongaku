@@ -123,9 +123,12 @@ nav a span{
 	-webkit-transition: all 0.3s ease 0s;
 }
 
+/*
+TODO check if this is really awesome
 nav:hover{
 	width: 130px;
 }
+*/
 
 nav:hover span{
 	transition: all 0.3s ease 0s;
