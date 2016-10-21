@@ -869,13 +869,13 @@ ul.group.artist span.artistname{
   top: 0;
   padding-top: 17px;
   box-shadow: 3px 0px 3px -3px #AAA;
-  background: #1a2226 none repeat scroll 0% 0%;
+  background: rgba(26, 34, 38, 0.77) none repeat scroll 0% 0%;
   z-index: 6;
   color: #E2E2E2;
   border-top: 1px solid;
   border-left: 1px solid;
   border-right: 1px solid;
-  border-color: #1a2226;
+  border-color: rgba(26, 34, 38, 0.77);
   box-sizing: border-box;
   line-height: 21px;
   margin-top: 0px;
@@ -883,7 +883,7 @@ ul.group.artist span.artistname{
 
 .tabs [id^="tab-"]:checked ~ [class^="tab-content"] {
   display: block;
-	background-color: #1a2226;
+	background-color: rgba(26, 34, 38, 0.77);
 	color: #FFF
 }
 
