@@ -19,5 +19,6 @@
   "track": "Track",
   "duration": "Duration",
   "track_title": "Title",
+  "album": "Album",
   "artist": "Artist"
 }

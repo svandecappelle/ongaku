@@ -163,7 +163,7 @@ html
             .menu.menu-discover
                 ul
                     li
-                        a
+                        a.view(href="/featured", data-view="featured")
                             i.glyphicon.glyphicon-star
                             div #{featured}
                     li
@@ -252,6 +252,7 @@ html
             var socket = io.connect('http://#{session.host}/');
             socket.on('connect', function () {
                 console.log("Connected");
+                $.chat.init(socket, $.ongaku.getUser());
             });
             
             socket.on('library:scanned', function () {
@@ -259,8 +260,6 @@ html
                 location.reload();
             });
             
-            $.chat.init(socket, $.ongaku.getUser());
-
             $(".nav-reload>a").on("click", function(){
 
               var message = $("<h1>", {

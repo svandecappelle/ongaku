@@ -13,6 +13,7 @@ var library = require("./../../middleware/library"),
     user = require("./../../model/user"),
     userlib = require("./../../model/library"),
     playlist = require("./../../model/playlist"),
+    statistics = require("./../../model/statistics"),
     mime = require("mime"),
     fs = require("fs"),
     translator = require("./../../middleware/translator"),
@@ -28,6 +29,41 @@ var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
    }
  };
 logger.setLevel(nconf.get('logLevel'));
+
+var getStatistics = function(name, callback){
+  var statisticsValues = {};
+  async.each(name, function (statistic, next){
+    statistics.get(statistic.name, function(err, values){
+      if (err){
+        next(err);
+      }
+      var entries = _.pairs(values);
+
+      entries = _.map(entries, function(element){
+        if (statistic.type === 'track'){
+          var track = library.getByUid(element[0]);
+          track.plays = parseInt(element[1]);
+          return track;
+        } else {
+          return {title: element[0], 'plays-genre': parseInt(element[1])};
+        }
+      });
+
+      entries = _.sortBy(entries, statistic.name).reverse();
+      var lenght = 10;
+      entries = _.first(_.rest(entries, 0 * lenght), lenght);
+      statisticsValues[statistic.name] = entries;
+
+      next();
+    });
+  }, function(err){
+    if (err){
+      callback(err, null);
+    } else {
+      callback(null, statisticsValues);
+    }
+  });
+};
 
 (function (UsersRoutes) {
     "use strict";
@@ -186,13 +222,31 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get('/api/stream/:media', function (req, res) {
         var stream = function () {
-          logger.debug("streaming audio");
+          logger.info("streaming audio");
+
           middleware.stream(req, res, req.params.media, "audio");
         };
 
         UsersRoutes.checkingAuthorization(req, res, function () {
           stream();
         });
+      });
+
+      app.post('/api/statistics/:type/:media', function(req, res){
+        if (req.params.type === 'plays'){
+          statistics.set('plays', req.params.media, 'increment', function(){
+              logger.info("set statistics");
+          });
+          var media = library.getByUid(req.params.media);
+          logger.info(media);
+          var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
+          if (genre){
+            statistics.set('plays-genre', genre, 'increment', function(){
+                logger.info("set statistics");
+            });
+          }
+        }
+        middleware.json(req, res, {status: "ok"});
       });
 
       app.get('/api/user/:username/library/:page', function (req, res){
@@ -773,7 +827,6 @@ logger.setLevel(nconf.get('logLevel'));
 
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
-        console.log(albumart);
         res.redirect(albumart);
       });
 
@@ -781,6 +834,25 @@ logger.setLevel(nconf.get('logLevel'));
         UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
           middleware.render("user/upload", req, res);
         });
+      });
+      
+      app.get("/featured", function(req, res){
+        logger.info("Client access to featured [" + req.ip + "]");
+        middleware.render('user/featured', req, res);
+      });
+
+
+      app.get("/api/featured", function(req, res){
+        var stats = [{name: 'plays', type: 'track'},
+                    {name: 'plays-genre'}];
+        getStatistics(stats, function(err, entries){
+          middleware.json(req, res, {stats: entries});
+        });
+      });
+
+      app.get("/api/view/featured", function(req, res){
+        logger.info("Client access to featured [" + req.ip + "]");
+        middleware.render('api/featured', req, res);
       });
     };
 

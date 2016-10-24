@@ -145,6 +145,7 @@
       }
       $(".playing").removeClass('playing');
       this.current = uid;
+      $.post('/api/statistics/plays/' + uid);
 
       $("#controls").attr("src", "/api/stream/".concat(uid));
       $("#mp3src").attr("src", "/api/stream/".concat(uid).concat(".".concat(encoding))).remove().appendTo("#controls");
@@ -488,6 +489,13 @@
         });
 
       titleObj.html(title);
+      try{
+        if (title === 'duration' && (parseInt(value) > 60) ){
+          value = Math.trunc(parseInt(value) / 60) + ":" + (parseInt(value) % 60);
+        }
+      } catch (ex){
+        console.log("error: " + value);
+      }
       valueObj.append(valueLabel);
       valueLabel.html(value);
       label.append(titleObj);
@@ -1041,6 +1049,7 @@
               var groupTitle = groupOne.artist ? groupOne.artist : (groupOne[that.getGroupBy()] ? groupOne[that.getGroupBy()].toString() : "-");
               var artistLibrary = new LibraryArtist({
                 artist: groupTitle,
+                image: groupOne.image,
                 download: groupOne.artist !== undefined
               }, that.view);
               if (groupOne.albums){
@@ -1180,7 +1189,13 @@
     Library.prototype.videoDispose = function () {
       if (this.videos !== null){
         $.each(this.videos, function(index, player){
-  				player.dispose();
+  				if (player) {
+            try {
+              player.dispose();  
+            } catch (err) {
+              // nothing to do it is a video player issue
+            }
+          }
   			});
       }
       this.videos = [];
@@ -1470,10 +1485,16 @@
       var trackLabels = $("<div>", {
         class: 'track-info track'
       });
+
       var trackTitle = $("<div>", {
         class: 'track-info track-title'
       });
       trackTitle.html(val.title);
+
+      var trackAlbum = $("<div>", {
+        class: 'track-info track-album'
+      });
+      trackAlbum.html(val.album);
 
       var trackArtist = $("<div>", {
         class: 'track-info track-artist'
@@ -1482,6 +1503,7 @@
 
       trackLabels.append(trackTitle);
       trackLabels.append(trackArtist);
+      trackLabels.append(trackAlbum);
 
       trackSong.append(trackInfoNums);
       trackSong.append(trackLabels);
