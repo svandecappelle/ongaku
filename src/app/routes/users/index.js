@@ -776,6 +776,12 @@ logger.setLevel(nconf.get('logLevel'));
         console.log(albumart);
         res.redirect(albumart);
       });
+
+      app.get("/upload", function(req, res){
+        UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+          middleware.render("user/upload", req, res);
+        });
+      });
     };
 
     UsersRoutes.load = function (app) {

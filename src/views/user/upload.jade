@@ -1,0 +1,8 @@
+extends ../layouts/app
+block append headpage
+  title Ongaku user
+block append library
+  include ../api/upload
+block append songlist
+  section.song-list
+    include ../layouts/playlist
