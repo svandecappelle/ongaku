@@ -863,10 +863,6 @@ ul.group.artist span.artistname{
   position: absolute;
   top: 53px;
   left: 0;
-  box-shadow: 4px -4px 2px -4px #AAA;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #1a2226;
   border-radius: 5px;
 }
 
@@ -877,23 +873,18 @@ ul.group.artist span.artistname{
 .tabs [id^="tab-"]:checked + label.tab {
   top: 0;
   padding-top: 17px;
-  box-shadow: 3px 0px 3px -3px #AAA;
   background: rgba(26, 34, 38, 0.77) none repeat scroll 0% 0%;
   z-index: 6;
   color: #E2E2E2;
-  border-top: 1px solid;
-  border-left: 1px solid;
-  border-right: 1px solid;
-  border-color: rgba(26, 34, 38, 0.77);
   box-sizing: border-box;
   line-height: 21px;
   margin-top: 0px;
 }
 
 .tabs [id^="tab-"]:checked ~ [class^="tab-content"] {
-  display: block;
-	background-color: rgba(26, 34, 38, 0.77);
-	color: #FFF
+    display: block;
+    background-color: rgba(26, 34, 38, 0.77);
+    color: #FFF
 }
 
 .form-control:focus {
