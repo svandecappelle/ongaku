@@ -18,7 +18,7 @@ var library = require("./../../middleware/library"),
     fs = require("fs"),
     translator = require("./../../middleware/translator"),
     async = require("async");
-var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../users/",
+var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../public/user/",
   DEFAULT_GROUP_BY = ['artist', 'album'],
   userFilesOpts = {
     root: DEFAULT_USER_IMAGE_DIRECTORY,
@@ -266,30 +266,6 @@ var getStatistics = function(name, callback){
           middleware.json(req, res, filteredDatas);
         });
       });
-
-      if (nconf.get("uploader")) {
-        var fs = require('fs'),
-          busboy = require('connect-busboy');
-        //...
-        app.use(busboy());
-        //...
-        app.get('/api/upload', function (req, res) {
-          middleware.render('upload', req, res);
-        });
-
-        app.post('/api/fileupload', function (req, res) {
-          var fstream;
-          req.pipe(req.busboy);
-          req.busboy.on('file', function (fieldname, file, filename) {
-            logger.warn("Uploading: " + filename);
-            fstream = fs.createWriteStream('./video/' + filename);
-            file.pipe(fstream);
-            fstream.on('close', function () {
-              res.redirect('back');
-            });
-          });
-        });
-      }
 
       app.get('/api/playlist', function (req, res) {
         logger.debug("get current playlist");
@@ -830,12 +806,86 @@ var getStatistics = function(name, callback){
         res.redirect(albumart);
       });
 
-      app.get("/upload", function(req, res){
-        UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
-          middleware.render("user/upload", req, res);
+      if (nconf.get("allowUpload")) {
+        //...
+        var onUploadView = function(req, res){
+          UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+            var username = req.session.passport.user.username;
+
+            if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
+                logger.info("User folder not exists. Create one.");
+
+                middleware.render('user/upload', req, res, {
+                  files: fs.readdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")
+                });
+            } else {
+                middleware.render('user/upload', req, res);
+            }
+          });
+        };
+
+        app.get('/api/view/upload', function (req, res) {
+          onUploadView(req, res);
         });
-      });
-      
+
+        app.get("/upload", function(req, res){
+          onUploadView(req, res);
+        });
+
+        app.post('/upload/file', function (req, res) {
+          var username = req.session.passport.user.username;
+
+          var busboy = new Busboy({ headers: req.headers });
+          req.session.save(function () {
+          res.setHeader('Access-Control-Allow-Credentials', 'true');
+          busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+            if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username)){
+              fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username);
+            }
+            
+            if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
+              fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported");
+            }
+
+            var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + filename;
+            file.pipe(fs.createWriteStream(saveTo));
+            });
+            
+            busboy.on('finish', function() {
+              middleware.redirect("/upload", res);
+            });
+
+            req.pipe(busboy);
+          });
+        });
+
+        app.get("/upload/imported/:filename", function(req, res){
+          UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+            var username = req.session.passport.user.username;
+            if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
+              res.sendFile(req.params.filename, {
+                root: DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/",
+                dotfiles: 'deny',
+                headers: {
+                  'x-timestamp': Date.now(),
+                  'x-sent': true
+                }
+              });
+            }
+          });
+        });
+
+        app.get("/upload/imported/:filename/delete", function(req, res){
+          UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+            var username = req.session.passport.user.username;
+            if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename)) {
+              fs.unlinkSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename);
+              middleware.redirect("/upload", res);
+            }
+          });
+        });
+      }
+
       app.get("/featured", function(req, res){
         logger.info("Client access to featured [" + req.ip + "]");
         middleware.render('user/featured', req, res);

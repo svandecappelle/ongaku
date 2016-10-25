@@ -1,3 +1,12 @@
+body{
+    background-color: #556E7E;
+    background-image: url("/img/background.jpg");
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 ul {
 	list-style: none outside none;
 	padding: 0;
@@ -1475,9 +1484,9 @@ a.link.video>.name{
 }
 
 .user-profile-picture {
-	display: inline-block;
-  width: 100%;
-  line-height: 128px;
+    display: inline-block;
+    width: 100%;
+    line-height: 128px;
 }
 
 .account .cover .avatar-container .status {
@@ -1707,4 +1716,27 @@ input.searchbox:focus{
     font-size: 10em;
     border: 1px solid black !important;
     box-shadow: none !important;
+}
+
+.upload{
+    width: 90%;
+    text-align: center;
+    display: block;
+    background-color: rgba(30, 30, 30, 0.84);
+    margin: 5px auto;
+    border-radius: 5px;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.upload .input-group{
+    color: white;
+}
+
+.imported-file{
+    position: relative;
+}
+
+.imported-filename{
+    margin-left: 5px;
 }
