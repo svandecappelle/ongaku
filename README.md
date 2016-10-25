@@ -16,7 +16,7 @@ Demo [Here](http://music.mizore.fr/ "here")
 * Go to your browser at: ```hostname:8000/```
 
 Screenshots:
-![Screenshot1](http://imagik.fr/image/ejJ)
-![Screenshot2](http://imagik.fr/image/ejO)
-![Screenshot3](http://imagik.fr/image/ejm)
-![Screenshot4](http://imagik.fr/image/ejx)
+![Screenshot1](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-07.png)
+![Screenshot2](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-25.png)
+![Screenshot3](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-54.png)
+![Screenshot4](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-41-15.png)
