@@ -13,8 +13,10 @@ Demo [Here](http://music.mizore.fr/ "here")
   * Run: ```npm install```
 * Configure your library dir in ```congig.json``` file
 * Start ```npm start```
-* Go to your browser at: ```hostname:8000/```
+* Go to your browser at: ```hostname:4000/```
 
 Screenshots:
-![Screenshot1](http://imagik.fr/images/2015/12/22/Capturedu2015-12-2209-38-11.png)
-![Screenshot2](http://imagik.fr/images/2015/12/22/Capturedu2015-12-2209-38-24.md.png)
+![Screenshot1](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-07.png)
+![Screenshot2](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-25.png)
+![Screenshot3](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-54.png)
+![Screenshot4](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-41-15.png)
