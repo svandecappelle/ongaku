@@ -3,6 +3,8 @@ var logger = require('log4js').getLogger("UsersRoutes"),
   nconf = require("nconf"),
   passport = require("passport"),
   _ = require("underscore"),
+  unzip = require("unzip"),
+  path = require("path"),
   Busboy = require('busboy');
 
 var library = require("./../../middleware/library"),
@@ -29,6 +31,47 @@ var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../public/user/",
    }
  };
 logger.setLevel(nconf.get('logLevel'));
+
+var rmdirAsync = function(path, callback) {
+  fs.readdir(path, function(err, files) {
+    if(err) {
+      // Pass the error on to callback
+      callback(err, []);
+      return;
+    }
+    var wait = files.length,
+      count = 0,
+      folderDone = function(err) {
+      count++;
+      // If we cleaned out all the files, continue
+      if( count >= wait || err) {
+        fs.rmdir(path,callback);
+      }
+    };
+    // Empty directory to bail early
+    if(!wait) {
+      folderDone();
+      return;
+    }
+    
+    // Remove one or more trailing slash to keep from doubling up
+    path = path.replace(/\/+$/,"");
+    files.forEach(function(file) {
+      var curPath = path + "/" + file;
+      fs.lstat(curPath, function(err, stats) {
+        if( err ) {
+          callback(err, []);
+          return;
+        }
+        if( stats.isDirectory() ) {
+          rmdirAsync(curPath, folderDone);
+        } else {
+          fs.unlink(curPath, folderDone);
+        }
+      });
+    });
+  });
+};
 
 var getStatistics = function(name, callback){
   var statisticsValues = {};
@@ -806,33 +849,40 @@ var getStatistics = function(name, callback){
         res.redirect(albumart);
       });
 
-      if (nconf.get("allowUpload")) {
-        //...
-        var onUploadView = function(req, res){
+      var onUploadView = function(req, res){
+        if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
+            var folder = req.params.folder;
 
             if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
-                logger.info("User folder not exists. Create one.");
+                var folderReading = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/";
+                if (folder){
+                  folderReading += folder + "/";
+                }
 
                 middleware.render('user/upload', req, res, {
-                  files: fs.readdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")
+                  files: fs.readdirSync(folderReading)
                 });
             } else {
                 middleware.render('user/upload', req, res);
             }
           });
-        };
+        } else {
+          middleware.redirect('403', res);
+        }
+      };
 
-        app.get('/api/view/upload', function (req, res) {
-          onUploadView(req, res);
-        });
+      app.get('/api/view/upload', function (req, res) {
+        onUploadView(req, res);
+      });
 
-        app.get("/upload", function(req, res){
-          onUploadView(req, res);
-        });
+      app.get("/upload", function(req, res){
+        onUploadView(req, res);
+      });
 
-        app.post('/upload/file', function (req, res) {
+      app.post('/upload/file', function (req, res) {
+        if (nconf.get("allowUpload") === 'true') { 
           var username = req.session.passport.user.username;
 
           var busboy = new Busboy({ headers: req.headers });
@@ -857,34 +907,71 @@ var getStatistics = function(name, callback){
 
             req.pipe(busboy);
           });
-        });
+        } else {
+          middleware.redirect('403', res);
+        }
+      });
 
-        app.get("/upload/imported/:filename", function(req, res){
+      app.get("/upload/files/imported/:filename(*)", function(req, res){
+        if (nconf.get("allowUpload") === 'true') { 
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
-              res.sendFile(req.params.filename, {
-                root: DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/",
-                dotfiles: 'deny',
-                headers: {
-                  'x-timestamp': Date.now(),
-                  'x-sent': true
-                }
-              });
+              var isDirectory = fs.statSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename).isDirectory();
+              if (isDirectory){
+                middleware.render('user/upload', req, res, {
+                  files: fs.readdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename),
+                  directory: isDirectory ? req.params.filename : false
+                });
+              } else {
+                res.sendFile(req.params.filename, {
+                  root: DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/",
+                  dotfiles: 'deny',
+                  headers: {
+                    'x-timestamp': Date.now(),
+                    'x-sent': true
+                  }
+                });
+              }
             }
           });
-        });
+        } else {
+          middleware.redirect('403', res);
+        }
+      });
 
-        app.get("/upload/imported/:filename/delete", function(req, res){
+      app.get("/upload/imported/:filename(*)/delete", function(req, res){  
+        if (nconf.get("allowUpload") === 'true') { 
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename)) {
-              fs.unlinkSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename);
+              rmdirAsync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename, function(){
+                middleware.redirect("/upload", res);  
+              });
+            }
+          });
+        } else {
+          middleware.redirect('403', res);
+        }
+      });
+      
+      app.get("/upload/imported/:filename(*)/extract", function(req, res){  
+        if (nconf.get("allowUpload") === 'true') { 
+          UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+            var username = req.session.passport.user.username;
+            var file = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename,
+              folderExtract = 'public/user/' + username + "/imported/" + path.basename(req.params.filename, path.extname(req.params.filename));
+
+            if (fs.existsSync(file)) {
+              logger.info("extract zip to: ", folderExtract);
+              fs.createReadStream(file).pipe(unzip.Extract({ path: folderExtract}));
               middleware.redirect("/upload", res);
             }
           });
-        });
-      }
+        } else {
+          middleware.redirect('403', res);
+        }
+      });
 
       app.get("/featured", function(req, res){
         logger.info("Client access to featured [" + req.ip + "]");

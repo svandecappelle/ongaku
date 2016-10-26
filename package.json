@@ -78,6 +78,7 @@
     "string": "~1.7.0",
     "uglify-js": "1.2.x",
     "underscore": "*",
+    "unzip": "^0.1.11",
     "uuid": "*",
     "vid-streamer": ">0.1.4",
     "xregexp": "~2.0.0"

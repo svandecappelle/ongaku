@@ -12,17 +12,42 @@ section.sidebar.show
         
         .panel(style="margin: 5px;")
             h2 Uploaded files:
-            ul.imported-files.list-group(style="width: 80%; margin: auto; margin-top: 10px;")
+            .container-fluid.imported-files.list-group(style="width: 80%; margin: auto; margin-top: 10px; line-height: 30px;")
+                if directory
+                    h2=directory
                 if files
+                    .row.list-group-item(style="text-align: center; font-weight: bold;")
+                        .col-md-1
+                            span Type
+                        .col-md-9
+                            span Name
+                        .col-md-1
+                            span Delete
+                        .col-md-1
+                            span Extract
                     for file in files
-                        li.file.list-group-item.imported-file
-                            if (file.indexOf('.jpg')!==-1 || file.indexOf('.JPG')!==-1 || file.indexOf('.PNG')!==-1 || file.indexOf('.png')!==-1 || file.indexOf('.gif')!==-1 || file.indexOf('.GIF')!==-1)
-                                img(src="/upload/imported/#{file}", style="height: 30px;")
-                            else
-                                i.fa.fa-file-o
-                            a.imported-filename(href="/upload/imported/#{file}")=file
-                            a.delete.imported-filename(href="/upload/imported/#{file}/delete")
-                                i.fa.fa-remove
+                        - var filename = file
+                        - var target="_self"
+                        if directory
+                            - filename = file
+                            - file=directory + "/" + file
+                        if file.indexOf('.')!==-1 
+                            - target = "_blank"
+                        .row.list-group-item
+                            .col-md-1
+                                if (file.indexOf('.jpg')!==-1 || file.indexOf('.JPG')!==-1 || file.indexOf('.PNG')!==-1 || file.indexOf('.png')!==-1 || file.indexOf('.gif')!==-1 || file.indexOf('.GIF')!==-1)
+                                    img(src="/upload/files/imported/#{file}", style="height: 30px;")
+                                else
+                                    i.fa.fa-file-o(style="font-size: 30px;")
+                            .col-md-9.file.imported-file
+                                a.imported-filename(href="/upload/files/imported/#{file}", target="#{target}")=filename
+                            .col-md-1(style="text-align: center;")
+                                a.delete.imported-filename(href="/upload/imported/#{file}/delete")
+                                    i.fa.fa-remove
+                            .col-md-1(style="text-align: center;")
+                                if (file.indexOf('.zip')!==-1 || file.indexOf('.ZIP')!==-1 || file.indexOf('.tar')!==-1 || file.indexOf('.TAR')!==-1)
+                                    a.extract.imported-filename(title="extract", href="/upload/imported/#{file}/extract")
+                                        i.fa.fa-file-archive-o
 
 
 script.

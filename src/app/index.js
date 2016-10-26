@@ -6,11 +6,13 @@ var middleware = require('./middleware/middleware');
 var routes = require('./routes');
 var library = require("./middleware/library");
 var chat = require('./chat');
+var meta = require('./meta');
 
 logger.setLevel(nconf.get('logLevel'));
 
 (function(Application) {
 	Application.load = function (app, callback) {
+		meta.settings.merge();
 		routes.load(app);
 		this.app = app;
 		served = this.app.listen(nconf.get('port'));

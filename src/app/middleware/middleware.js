@@ -159,7 +159,10 @@
 
         var serverConfig = {
             serverurl: urlServer,
-            serverport: nconf.get("port")
+            serverport: nconf.get("port"),
+            configuration: {
+              allowUpload: nconf.get("allowUpload")
+            }
         };
 
         // that's ok

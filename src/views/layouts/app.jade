@@ -189,7 +189,8 @@ html
                           a.view(href="/library", data-view="library")
                               i.glyphicon.glyphicon-book
                               div #{library}
-                      li
+                      if configuration.allowUpload === 'true'
+                        li
                           a.vew(href="/upload", data-view="upload")
                               i.glyphicon.glyphicon-upload
                               div #{upload}

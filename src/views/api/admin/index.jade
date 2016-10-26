@@ -114,6 +114,8 @@ script.
         preferences[$(val).attr("name")] = $(val).val();
       });
       
-      $.post("/api/admin/".concat(formId), preferences);
+      $.post("/api/admin/".concat(formId), preferences, function(){
+        window.location.reload();
+      });
     });
   }

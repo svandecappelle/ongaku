@@ -26,8 +26,27 @@ var fs = require('fs'),
       return mergedConfig;
     }
 
+    function mergeOnNconf(redisConfig){
+      var jsonConfiguration = nconf.get();
+      _.each(redisConfig, function(val, key){
+        nconf.set(key, val);
+      });
+    }
+
     /* Settings */
     Meta.settings = {};
+    
+    Meta.settings.merge = function(){
+        var hash = 'settings:global';
+        db.getObject(hash, function (err, settings) {
+            if (err) {
+                callback(err);
+            } else {
+                mergeOnNconf(settings || {});
+            }
+        });
+    };
+    
     Meta.settings.get = function (hash, callback) {
         hash = 'settings:' + hash;
         db.getObject(hash, function (err, settings) {
@@ -51,6 +70,7 @@ var fs = require('fs'),
 
     Meta.settings.setOne = function (hash, field, value, callback) {
         hash = 'settings:' + hash;
+        nconf.set(field, value);
         db.setObjectField(hash, field, value, callback);
     };
 
