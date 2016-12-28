@@ -1735,7 +1735,7 @@ input.searchbox:focus{
     margin-left: 5px;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1200px) {
     nav.menu{
         right: 0px;
         height: 30px;
