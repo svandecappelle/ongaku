@@ -5,8 +5,11 @@ body{
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
-    font-size: 1.4em;
 }
+
+html { font-size: 62.5%; } 
+body { font-size: 14px; font-size: 1.4rem; } /* =14px */
+h1   { font-size: 24px; font-size: 2.4rem; } /* =24px */
 
 ul {
 	list-style: none outside none;
@@ -1736,9 +1739,9 @@ input.searchbox:focus{
 }
 
 @media screen and (max-width: 1200px) {
-    body{
-        font-size: 220%;
-    }
+    html { font-size: 120%; } 
+    body { font-size: 14px; font-size: 1.4rem; } /* =14px */
+    h1   { font-size: 24px; font-size: 2.4rem; } /* =24px */
 
     #header a.header-link, #header .mini-title{
         display: none;
