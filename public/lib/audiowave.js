@@ -32,7 +32,7 @@
     // requestAnimationFrame(this.getRenderer);
     // TODO check if the timeout is necessary for the improves performances.
     //setTimeout(function(){
-      requestAnimationFrame(render);
+    requestAnimationFrame(render);
     //}, 50);
 
     // Copy frequency data to frequencyData array.
@@ -124,23 +124,25 @@
       // Set up the visualisation elements
       this.visualisation = $("#visualisation");
       this.visualisation.empty();
-      this.svgHeight = "" + this.visualisation.height();
-      this.svgWidth = "" + this.visualisation.width();
-      this.barPadding = '1';
+      if (!this.visualisation.is(":hidden")){
+        this.svgHeight = "" + this.visualisation.height();
+        this.svgWidth = "" + this.visualisation.width();
+        this.barPadding = '1';
 
-      this.svg = this.rebuildSVG('#visualisation', this.svgHeight, this.svgWidth);
+        this.svg = this.rebuildSVG('#visualisation', this.svgHeight, this.svgWidth);
 
-      // Create our initial D3 chart.
-      this.svg.selectAll('rect')
-        .data(that.frequencyData)
-        .enter()
-        .append('rect')
-        .attr('x', function(d, i) {
-          return i * (that.svgWidth / that.frequencyData.length);
-        })
-        .attr('width', that.svgWidth / that.frequencyData.length - that.barPadding);
+        // Create our initial D3 chart.
+        this.svg.selectAll('rect')
+          .data(that.frequencyData)
+          .enter()
+          .append('rect')
+          .attr('x', function(d, i) {
+            return i * (that.svgWidth / that.frequencyData.length);
+          })
+          .attr('width', that.svgWidth / that.frequencyData.length - that.barPadding);
 
-      this.render();
+        this.render();
+      }
     }
   };
 }(jQuery);
