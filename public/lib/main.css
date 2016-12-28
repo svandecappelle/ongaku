@@ -346,7 +346,6 @@ section.song-list > .list-container .song{
 	cursor: pointer;
 	width: 100%;
 	white-space: nowrap;
-	font-size: 15px;
 }
 
 section.song-list > .list-container .playlist-columns .tracks-columns{
@@ -1737,6 +1736,18 @@ input.searchbox:focus{
 }
 
 @media screen and (max-width: 1200px) {
+    body{
+        font-size: 220%;
+    }
+
+    #header a.header-link, #header .mini-title{
+        display: none;
+    }
+
+    section.song-list > .list-container {
+        margin-top: 139px;
+    }
+
     nav.menu{
         right: 0px;
         height: 30px;
@@ -1861,5 +1872,25 @@ input.searchbox:focus{
         left: 0px;
         min-width: 100%;
         background-color: rgba(30, 30, 30, 0.98);
+    }
+
+    .login-screen {
+        margin-top: 60px;     
+        width: 80%;
+        left: 0px;
+        margin-left: 0px;
+        text-align: center;
+    }
+
+    .login-screen .control-label {
+        display: none;
+    }
+
+    .login-screen .form-group{
+        text-align: left;
+    }
+
+    .login-screen input#login{
+        float: unset !important;
     }
 }
