@@ -198,6 +198,12 @@
               audioVolume: 'vertical',
               audioHeight: 50,
               features: ['progress', 'volume'],
+              // force iPad's native controls
+              iPadUseNativeControls: true,
+              // force iPhone's native controls
+              iPhoneUseNativeControls: true, 
+              // force Android's native controls
+              AndroidUseNativeControls: true,
               success: function (mediaElement) {
                   mediaElement.addEventListener('loadedmetadata', function () {
                       alertify.dismissAll();
