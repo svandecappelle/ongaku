@@ -847,6 +847,7 @@
     }
 
     function Library() {
+      this.useJscrollPane = false;
       this.videos = [];
       this.page = 0;
       this.type = "audio";
@@ -940,15 +941,23 @@
       if (this.libraryScrollPane){
         this.libraryScrollPane.unbind('jsp-scroll-y');
       }
-      this.libraryScrollPane = $('.library-view').jScrollPane();
+      if (this.useJscrollPane){
+        this.libraryScrollPane = $('.library-view').jScrollPane();
 
-      this.libraryScrollPane.bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
-        // For asynchronous loading debug
-        // console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
-        if (isAtBottom){
-          $.ongaku.library.fetch();
-        }
-      });
+        this.libraryScrollPane.bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
+          // For asynchronous loading debug
+          // console.log('Handle jsp-scroll-y', 'isAtBottom=', isAtBottom);
+          if (isAtBottom){
+            $.ongaku.library.fetch();
+          }
+        });
+      } else {
+        $('.library-view').scroll(function() {
+            if($('.library-view').scrollTop() - $('.library-view').prop('scrollHeight') === - $('.library-view').height()) {
+              $.ongaku.library.fetch();
+            }
+        });
+      }
     };
 
     Library.prototype.unbind = function () {
