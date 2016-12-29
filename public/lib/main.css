@@ -334,6 +334,8 @@ section.song-list > .list-container .songs-container ul li{
 	border-radius: 3px;
 	transition: all 0.4s linear;
     position: relative;
+    padding-bottom: 5px;
+    padding-top: 9px;
 }
 
 section.song-list > .list-container .songs-container ul li:hover{
@@ -1754,6 +1756,48 @@ input.searchbox:focus{
       transparent)
 }
 
+.toggle-menu{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 3.7em;
+    right: 0px;
+    background: #fff;
+    z-index: 3000000;    
+}
+
+.toggle-menu .line {
+    width: 20px;
+    height: 1px;
+    display: block;
+    background: #000;
+    position: absolute;
+    left: 10px;
+    -webkit-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    -moz-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    -ms-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    -o-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+}
+
+.toggle-menu.toggle .line.first {
+    top: 15px;
+}
+
+.toggle-menu.toggle .line.second {
+    top: 20px;
+}
+
+.toggle-menu.toggle .line.third {
+    top: 25px;
+}
+
+section.song-list > .list-container.shows{
+    left: 0px;
+    min-width: 100%;
+    background-color: rgba(30, 30, 30, 0.98);
+}
+
 @media screen and (max-width: 1200px) {
     html { font-size: 100%; } 
     body { font-size: 14px; font-size: 2.8rem; } /* =14px */
@@ -1779,10 +1823,20 @@ input.searchbox:focus{
         height: 3rem;
     }
 
-    section.song-list > .list-container {
-        margin-top: 9.7rem;
+    .toggle-menu{
+        top: 1.5em;
     }
 
+    section.song-list > .list-container {
+        margin-top: 9.7rem;
+        overflow: visible;
+    }
+    
+    section.song-list > .list-container .playlist{
+        overflow: auto;
+        height: 100%;
+        padding-bottom: 6em;
+    }
     nav.menu{
         right: 0px;
         height: 3rem;
@@ -1851,6 +1905,7 @@ input.searchbox:focus{
         right: 0;
         top: 0;
         height: 16px;
+        font-size: 0.5em;
     }
 
     .player .song-info .song-time{
@@ -1858,7 +1913,7 @@ input.searchbox:focus{
         position: absolute;
         left: 0;
         right: 0;
-        top: 0;
+        top: 16px;
         text-align: right;
         height: 16px;
         padding-right: 32px;
@@ -1908,18 +1963,38 @@ input.searchbox:focus{
         display: none;
     }
 
+    .library-view{
+        right: 0px;
+    }
+
+    section.song-list > .list-container{
+        left: 100%;
+    }
+
+    section.song-list > .list-container .appender{
+        right: 0px;
+        display: block;
+    }
+    
     section.song-list > .list-container:hover{
         left: 0px;
         min-width: 100%;
         background-color: rgba(30, 30, 30, 0.98);
     }
-
+    
     .login-screen {
-        margin-top: 60px;     
-        width: 80%;
+        margin-top: 9rem;     
+        width: 100%;
         left: 0px;
         margin-left: 0px;
         text-align: center;
+    }
+    .login-screen .col-sm-10{
+        width: 100%;
+    }
+
+    .login-screen .form-control{
+        height: 3rem;
     }
 
     .login-screen .control-label {

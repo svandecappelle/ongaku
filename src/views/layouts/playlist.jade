@@ -1,55 +1,62 @@
+a.toggle-menu.toggle.pulse.appender.playlist-appender
+  .line.first
+  .line.second
+  .line.third
 .list-container
-    .infos
-        .saved-playlist
-          .form-inline
-            .form-group
-              if !session.user.isAnonymous
-                .input-group
-                  label.input-group-addon #{playlist}
-                  if session.playlistname
-                    input#playlistname.form-control(type="text", value="#{session.playlistname}")
-                  else
-                    input#playlistname.form-control(type="text", placeholder="#{new_playlist}")
-                .playlists
-                    .form-group.form-group-sm
-                      .col-md-2
-                        button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{my_playlists}
-                            span.caret(style="margin-left: 5px;")
-                        ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
-                .list-actions(style="float:right;")
-                    span.button#save-current-playlist
-                        i.fa.fa-save
-                    span.button#new-playlist
-                        i.fa.fa-plus
-                    span.button#delete-playlist(style="background-color: rgba(255,120,120,0.6);")
-                        i.fa.fa-trash
-                    span.button
-                        i.fa.fa-eraser
-              else if meta.requireAuthentication
-                div #{stream_auth_required}
-              else
-                .list-actions(style="float:right;")
+  .infos
+      .saved-playlist
+        .form-inline
+          .form-group
+            if !session.user.isAnonymous
+              .input-group
+                label.input-group-addon #{playlist}
+                if session.playlistname
+                  input#playlistname.form-control(type="text", value="#{session.playlistname}")
+                else
+                  input#playlistname.form-control(type="text", placeholder="#{new_playlist}")
+              .playlists
+                  .form-group.form-group-sm
+                    .col-md-2
+                      button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{my_playlists}
+                          span.caret(style="margin-left: 5px;")
+                      ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
+              .list-actions(style="float:right;")
+                  span.button#save-current-playlist
+                      i.fa.fa-save
+                  span.button#new-playlist
+                      i.fa.fa-plus
+                  span.button#delete-playlist(style="background-color: rgba(255,120,120,0.6);")
+                      i.fa.fa-trash
                   span.button
                       i.fa.fa-eraser
-    .playlist-columns
-        .tracks-columns
-            .track-info.track-px
-                .track-info.track-num
-                    span #{track}
-                .track-info.track-time
-                    span #{duration}
-            .track-info.track
-                .track-info.track-title
-                    span #{track_title}
-                .track-info.track-artist
-                    span #{artist}
-                .track-info.track-album
-                    span #{album}
-    .songs-container
-        ul.playlist
+            else if meta.requireAuthentication
+              div #{stream_auth_required}
+            else
+              .list-actions(style="float:right;")
+                span.button
+                    i.fa.fa-eraser
+  .playlist-columns
+      .tracks-columns
+          .track-info.track-px
+              .track-info.track-num
+                  span #{track}
+              .track-info.track-time
+                  span #{duration}
+          .track-info.track
+              .track-info.track-title
+                  span #{track_title}
+              .track-info.track-artist
+                  span #{artist}
+              .track-info.track-album
+                  span #{album}
+  .songs-container
+      ul.playlist
 
 block append scripts
   script.
     $(function(){
+      $('a.toggle-menu.appender.playlist-appender').on('click', function(){
+        $('.list-container').toggleClass("shows");
+      });
       $.ongaku.playlist.loadAllPlaylists();
     });
