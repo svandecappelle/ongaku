@@ -1757,22 +1757,22 @@ input.searchbox:focus{
 }
 
 .toggle-menu{
-    width: 40px;
-    height: 40px;
+    width: 6rem;
+    height: 6rem;
     position: absolute;
-    top: 3.7em;
+    top: 3.7rem;
     right: 0px;
     background: #fff;
     z-index: 3000000;    
 }
 
 .toggle-menu .line {
-    width: 20px;
+    width: 3rem;
     height: 1px;
     display: block;
     background: #000;
     position: absolute;
-    left: 10px;
+    left: 1.5rem;
     -webkit-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
     -moz-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
     -ms-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
@@ -1781,15 +1781,15 @@ input.searchbox:focus{
 }
 
 .toggle-menu.toggle .line.first {
-    top: 15px;
+    top: 1.6rem;
 }
 
 .toggle-menu.toggle .line.second {
-    top: 20px;
+    top: 3.1rem;
 }
 
 .toggle-menu.toggle .line.third {
-    top: 25px;
+    top: 4.5rem;
 }
 
 section.song-list > .list-container.shows{
