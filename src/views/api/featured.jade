@@ -11,8 +11,16 @@ section.sidebar.show
   .user-sidebar.library-view
     .library.featured
       ul.mostplays.tracklist.plays
+        .tools
+          if !session.user.isAnonymous
+            a(href="/api/clear/statistics/plays")
+              i.fa.fa-refresh
         h1 Most played tracks
       ul.mostplays.tracklist.plays-genre
+        .tools
+          if !session.user.isAnonymous
+            a(href="/api/clear/statistics/plays-genre")
+              i.fa.fa-refresh
         h1 Most played genre
 script.
   function FeaturedTracksList(tracks) {

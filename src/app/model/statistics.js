@@ -30,6 +30,18 @@ var logger = require('log4js').getLogger('StatisticModel'),
     }
   };
 
+  Statistics.clear = function(name, callback){
+    var hash = 'statistics:' + name;
+    db.deleteObject(hash, function (err) {
+        if (err) {
+          logger.error(err);
+          callback(err);
+        } else {
+          callback(null);
+        }
+    });
+  };
+
   Statistics.get = function(name, callback){
     var hash = 'statistics:' + name;
     db.getObject(hash, function (err, set) {

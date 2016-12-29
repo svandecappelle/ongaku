@@ -1798,6 +1798,20 @@ section.song-list > .list-container.shows{
     background-color: rgba(30, 30, 30, 0.98);
 }
 
+.mostplays.tracklist{
+    position: relative;
+}
+
+.mostplays.tracklist .tools{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.mostplays.tracklist .tools a{
+    color: white;
+}
+
 @media screen and (max-width: 1200px) {
     html { font-size: 100%; } 
     body { font-size: 14px; font-size: 2.8rem; } /* =14px */

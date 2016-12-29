@@ -4,10 +4,12 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 	_ = require("underscore"),
 	middleware = require("./../../middleware/middleware"),
 	library = require("./../../middleware/library"),
+
 	meta = require("./../../meta"),
 	application = require("./../../"),
 	chat = require("./../../chat"),
-	user = require("./../../model/user");
+	user = require("./../../model/user"),
+	statistics = require("./../../model/statistics");
 
 logger.setLevel(nconf.get('logLevel'));
 
@@ -33,8 +35,16 @@ logger.setLevel(nconf.get('logLevel'));
 			logger.info("reload audio library");
 			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
 				application.reload(function(){
-				var libraryDatas = library.getAudio();
-				middleware.json(req, res, libraryDatas);
+					var libraryDatas = library.getAudio();
+					middleware.json(req, res, libraryDatas);
+				});
+			});
+		});
+
+		app.get('/api/clear/statistics/:type', function (req, res) {
+			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
+				statistics.clear(req.params.type, function(){
+					middleware.redirect("/featured", res);					
 				});
 			});
 		});

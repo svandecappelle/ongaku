@@ -18,6 +18,10 @@ module.exports = function(redisClient, module) {
 		redisClient.hgetall(key, callback);
 	};
 
+	module.deleteObject = function(key, callback) {
+		redisClient.del(key, callback);
+	};
+
 	module.getObjects = function(keys, callback) {
 		var	multi = redisClient.multi();
 
