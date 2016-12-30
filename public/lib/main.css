@@ -40,7 +40,6 @@ nav ul, nav ol{
 
 a{
 	cursor: pointer;
-	color: #13CC00;
 }
 
 a:hover{
@@ -183,7 +182,7 @@ section.song-list > .list-container {
 	left: 80%;
 	right: 0px;
 	top: 0px;
-	bottom: 100px;
+	bottom: 5rem;
 	background-color: rgba(30, 30, 30, 0.84);
 	color: #FFF;
 	transition: all 0.3s ease 0s;
@@ -291,7 +290,8 @@ section.song-list > .list-container .infos>.album>.title{
 
 section.song-list > .list-container{
 	min-width: 60%;
-	overflow: auto;
+	overflow-y: auto;
+    overflow-x: hidden;
 	margin-top: 109px;
 }
 
@@ -334,8 +334,8 @@ section.song-list > .list-container .songs-container ul li{
 	border-radius: 3px;
 	transition: all 0.4s linear;
     position: relative;
-    padding-bottom: 5px;
-    padding-top: 9px;
+    padding-bottom: 7px;
+    padding-top: 11px;
 }
 
 section.song-list > .list-container .songs-container ul li:hover{
@@ -465,11 +465,11 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	width: 100%;
 	z-index: 1000;
 	background-color: #1a2226;
+    height: 5rem;
 }
 
 .player .current-playing-image{
-	width: 30px;
-	margin-top: -5px;
+	width: 5rem;
 }
 
 .player.empty{
@@ -482,8 +482,8 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	position: fixed;
 	left: 90px;
 	right: 0px;
-	bottom: 50px;
-	height: 50px;
+	bottom: 5rem;
+	height: 3rem;
 	background-color: rgba(30, 30, 30, 0.84);
 	text-align: center;
 	color: white;
@@ -673,8 +673,8 @@ ul.group.artist.open>li>a.trackaction{
 
 ul.group.tracklist>li{
 	border-bottom: 1px solid #BEBEBE;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 7px;
+    padding-bottom: 7px;
 }
 
 ul.group.album{
@@ -779,7 +779,7 @@ ul.group.artist span.artistname{
 
 .menu.project{
 	position: absolute;
-	bottom: 50px;
+	bottom: 5rem;
 	left: 0px;
 	right: 0px;
 }
@@ -1041,8 +1041,8 @@ ul.group.artist span.artistname{
 }
 
 #header{
-	height: 50px;
-	color: #fff;
+  height: 3rem;
+  color: #fff;
   background: repeat scroll 0px 0px #1a2226;
   border: none;
   z-index: 20000;
@@ -1756,40 +1756,17 @@ input.searchbox:focus{
       transparent)
 }
 
-.toggle-menu{
-    width: 6rem;
-    height: 6rem;
+.toggle-menu {
+    width: 4.7rem;
+    height: 4.7rem;
     position: absolute;
-    top: 3.7rem;
-    right: 0px;
+    bottom: 0px;
+    right: 8rem;
     background: #fff;
-    z-index: 3000000;    
-}
-
-.toggle-menu .line {
-    width: 3rem;
-    height: 1px;
-    display: block;
-    background: #000;
-    position: absolute;
-    left: 1.5rem;
-    -webkit-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
-    -moz-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
-    -ms-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
-    -o-transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
-    transition: all 500ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
-}
-
-.toggle-menu.toggle .line.first {
-    top: 1.6rem;
-}
-
-.toggle-menu.toggle .line.second {
-    top: 3.1rem;
-}
-
-.toggle-menu.toggle .line.third {
-    top: 4.5rem;
+    z-index: 3000000;
+    font-size: 2.5rem;
+    padding: 1.2rem;
+    color: black;
 }
 
 section.song-list > .list-container.shows{
@@ -1812,10 +1789,42 @@ section.song-list > .list-container.shows{
     color: white;
 }
 
-@media screen and (max-width: 1200px) {
+.audio-player .song-info{
+    top: 5px;
+}
+
+.audio-player .song-info .song-time{
+    line-height: 5rem;
+    padding-top: 0px;
+}
+
+/*
+@media screen and (max-width: 600px) {
     html { font-size: 100%; } 
-    body { font-size: 14px; font-size: 2.8rem; } /* =14px */
-    h1   { font-size: 24px; font-size: 2.8rem; } /* =24px */
+    body { font-size: 14px; font-size: 2.8rem; }
+    h1   { font-size: 24px; font-size: 2.8rem; }
+}
+*/
+@media screen and (min-width: 1200px) {
+    html { font-size: 100%; } 
+    body { font-size: 14px; font-size: 1rem; }
+    h1   { font-size: 24px; font-size: 1rem; }
+}
+
+@media screen and (max-width: 1200px) {
+    .toggle-menu{
+        width: 5rem;
+        height: 5rem;
+        position: absolute;
+        bottom: 0px;
+        right: unset;
+        left: 5rem;
+        background: #fff;
+        z-index: 3000000;   
+        font-size: 2.5rem;
+        padding: 1.6rem;
+        color: black;
+    }
 
     #header {
         height: 3rem;
@@ -1838,7 +1847,8 @@ section.song-list > .list-container.shows{
     }
 
     .toggle-menu{
-        top: 1.5em;
+        width: 5.5rem;
+        height: 5.5rem;
     }
 
     section.song-list > .list-container {
@@ -1855,7 +1865,7 @@ section.song-list > .list-container.shows{
         right: 0px;
         height: 3rem;
         left: 0px;
-        top: 50px;
+        top: 3rem;
         width: 100%;
         padding: 0px;
         text-align: center;
@@ -1897,21 +1907,22 @@ section.song-list > .list-container.shows{
     }
 
     .player{
-        height: 100px;
+        height: 6rem;
         text-align: center;
     }
 
     .player .fa{
         font-size: 3rem;        
         vertical-align: middle;
-        line-height: 100px;
+        line-height: 6rem;
     }
 
     .audio-player .song-info{
         width: 100%;
         display: block;
+        top: 5px;
     }
-
+    
     .player .song-info .title{
         display: block;
         position: absolute;
@@ -1970,7 +1981,7 @@ section.song-list > .list-container.shows{
 
     ul.group.album{
         margin-left: 0px;
-        margin-top: 3rem;
+        margin-top: 3.5rem;
     }
 
     ul.group.album .song-track.trackaction{
