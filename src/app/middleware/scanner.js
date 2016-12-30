@@ -25,24 +25,66 @@
     Scanner.library = function (callback) {
         var audio = [],
             video = [];
-
         logger.info("loading new entries into library.");
-        async.parallel({
-          audio: function(){
-            Scanner.scanAudio(nconf.get("library"), function (err, res, isFinishedAll) {
-              logger.debug("Callback scan audio folder");
-              callback({audio: res, isFinishedAll: isFinishedAll});
-            });
-          },
-          video: function(){
-            Scanner.scanVideo(nconf.get("library"), function (err, res, isFinishedAll) {
-              logger.debug("Callback scan video folder");
-              callback({video: res, isFinishedAll: isFinishedAll});
-            });
-          }
-        }, function(){
+        if (typeof nconf.get("library") === 'String'){
+          this.scanFolder(folder, callback);
+        } else if (Array.isArray(nconf.get("library"))){
+          var folders = nconf.get("library");
+          var i = folders.length;
 
-        });
+          var scanned = {
+            audio: i,
+            video: i
+          }
+
+          async.each(folders, function(folder, next){
+            Scanner.scanFolder(folder, function(ret){
+              var finishedType = 1;
+
+              if (ret.isFinishedAll){
+                logger.info("directory scanned", folder);
+                if (ret.audio){
+                  scanned.audio -= 1;
+                  finishedType = scanned.audio;
+                  logger.info(scanned.audio);
+                } else {
+                  scanned.video -= 1;
+                  finishedType = scanned.video;
+                }
+              }
+
+              if (finishedType <= 0){
+                logger.info("scanned all lib folders", folder);                
+                ret.isFinishedAll = true;
+              } else {
+                ret.isFinishedAll = false;  
+              }
+              
+              callback(ret);
+            });
+          }, function(ret){
+            logger.info("all directories scanned");
+          });
+        }
+    };
+
+    Scanner.scanFolder = function(folder, callback) {
+      async.parallel({
+        audio: function(){
+          Scanner.scanAudio(folder, function (err, res, isFinishedAll) {
+            logger.debug("Callback scan audio folder");
+            callback({audio: res, isFinishedAll: isFinishedAll});
+          });
+        },
+        video: function(){
+          Scanner.scanVideo(folder, function (err, res, isFinishedAll) {
+            logger.debug("Callback scan video folder");
+            callback({video: res, isFinishedAll: isFinishedAll});
+          });
+        }
+      }, function(){
+
+      });
     };
 
     Scanner.Appenders = function (){
@@ -64,7 +106,7 @@
                   type: "video",
                   name: path.basename(filePath),
                   extension: path.extname(filePath).replace(".", ""),
-                  relativePath: filePath.replace(nconf.get("library"), ""),
+                  relativePath: typeof nconf.get("library") === 'String' ? filePath.replace(nconf.get("library"), "") : filePath,
               });
               cb(null, results); // asynchronously call the loop
           } else {
@@ -209,7 +251,7 @@
         return {
             artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : metadatas.artistalbum ? metadatas.artistalbum : "Unknown artist",
             file: file,
-            relativePath: file.replace(nconf.get("library"), ""),
+            relativePath: typeof nconf.get("library") === 'String' ? file.replace(nconf.get("library"), "") : file,
             title: metadatas.title ? metadatas.title : metadatas.TITLE ? metadatas.TITLE : path.basename(file.replace(nconf.get("library"), "")),
             album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
             metadatas: metadatas,
@@ -236,7 +278,7 @@
         return {
             artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : "Unknown artist",
             file: file,
-            relativePath: file.replace(nconf.get("library"), ""),
+            relativePath: typeof nconf.get("library") === 'String' ? file.replace(nconf.get("library"), ""): file,
             title: metadatas.title ? metadatas.title : metadatas.TITLE ? metadatas.TITLE : path.basename(file.replace(nconf.get("library"), "")),
             album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
             metadatas: metadatas,

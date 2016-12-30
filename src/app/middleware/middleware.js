@@ -131,7 +131,7 @@
                         "mode": "development",
                         "forceDownload": false,
                         "random": false,
-                        "rootFolder": nconf.get("library"),
+                        "rootFolder": "/.",
                         "rootPath": "stream",
                         "server": "VidStreamer.js/0.1.4"
                     },

@@ -89,8 +89,7 @@ html
                             a.view(href="/", title="Acceuil", data-view="audio")
                                 i.fa.fa-home
                                 span.text Acceuil
-                        if !session.user.isAnonymous
-                            //&& session.user.isAdmin
+                        if !session.user.isAnonymous && session.user.administrator
                             li.nav-cog
                                 a.view(href="/admin", title="Administration", data-view='admin')
                                   i.fa.fa-cog

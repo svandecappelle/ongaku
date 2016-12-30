@@ -57,22 +57,26 @@
           req.session.cookie.maxAge = duration;
         }
 
-        req.logIn({
-          uid: userData.uid,
-          username: req.body.username,
-          administrator: userData.administrator
-        }, function () {
-          if (userData.uid) {
-            //user.logIP(userData.uid, req.ip);
-            logger.info("user '" + userData.uid + "' connected on: " + req.ip);
-          }
-          if (req.session.redirectTo !== undefined) {
-            middleware.redirect(req.session.redirectTo, res);
-            req.session.redirectTo = undefined;
-          } else {
-            middleware.redirect('/', res);
-            req.session.redirectTo = undefined;
-          }
+        user.isAdministrator(userData.uid, function(err, admin){
+          userData.administrator = admin;
+          
+          req.logIn({
+            uid: userData.uid,
+            username: req.body.username,
+            administrator: userData.administrator
+          }, function () {
+            if (userData.uid) {
+              //user.logIP(userData.uid, req.ip);
+              logger.info("user '" + userData.uid + "' connected on: " + req.ip);
+            }
+            if (req.session.redirectTo !== undefined) {
+              middleware.redirect(req.session.redirectTo, res);
+              req.session.redirectTo = undefined;
+            } else {
+              middleware.redirect('/', res);
+              req.session.redirectTo = undefined;
+            }
+          });
         });
       })(req, res, next);
     };
