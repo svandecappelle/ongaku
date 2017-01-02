@@ -1182,10 +1182,24 @@ h2{
 	background-image: linear-gradient(to bottom, #92E367, #52E17C);
 }
 
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+	outline: 0px none;
+    border-radius: 0px;
+    border: none;
+    padding: 5px;
+    font-size: 1.2em;
+    border-bottom: 1px solid white;
+    background-color: transparent;
+    color: white;
+}
+
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
-	border-color: rgba(67, 243, 23, 0.8);
+	/*border-color: rgba(67, 243, 23, 0.8);
 	outline: 0px none;
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(113, 236, 82, 0.6);
+	*/
+	box-shadow: none;
+	border-color: rgba(67, 243, 23, 0.8);
 }
 
 .panel{
