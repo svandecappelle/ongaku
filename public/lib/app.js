@@ -1111,7 +1111,7 @@
 
         $.each(library, function (index, video) {
           var videoElement = $('<li>', {
-            style: "width: 465px; display: inline-block;"
+            style: "display: inline-block;"
           });
           var videoLink = $('<a>', {
             class: "link video"
@@ -1126,7 +1126,7 @@
             height: "253",
             width: "450",
             id : video.uid,
-            preload: "auto",
+            preload: "metadata",
             controls: true
           });
           var videoSource = $('<source>', {
