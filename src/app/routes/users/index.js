@@ -848,7 +848,11 @@ var getStatistics = function(name, callback){
 
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
-        res.redirect(albumart);
+        if (albumart !== null){
+          res.redirect(albumart);          
+        } else {
+          res.redirect("/img/album.jpg");
+        }
       });
 
       var onUploadView = function(req, res){

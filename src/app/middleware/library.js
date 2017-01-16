@@ -330,6 +330,9 @@
 
             if (groupbyClause[1] === "album" && Library.loadingCoverAlbums[groupObject]){
               albumObject.cover = Library.loadingCoverAlbums[groupObject][albumObject.title];
+              if (!albumObject.cover){
+                albumObject.cover = '/img/album.jpg';
+              }
             } else if (groupbyClause[1] === "artist"){
               albumObject.image = Library.loadingCoverArtists[albumObject.title];
             }
@@ -371,7 +374,7 @@
           albums: _.map(val, function(album, title){
             var albumObject = {
               title: title,
-              cover: Library.loadingCoverAlbums[artist][title],
+              cover: Library.loadingCoverAlbums[artist][title] ? Library.loadingCoverAlbums[artist][title] : "/img/album.jpg",
               tracks: _.map(album, function(tracks, index){
                 return tracks;
               })
