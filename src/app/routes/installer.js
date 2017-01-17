@@ -1,10 +1,10 @@
 /*jslint node: true */
 var middleware = require("./../middleware/middleware");
 
-(function (ErrorRoutes) {
+(function (InstallerRoutes) {
     "use strict";
 
-    ErrorRoutes.load = function (app) {
+    InstallerRoutes.load = function (app) {
       app.get('/', function (req, res) {
         middleware.render('admin/installer', req, res);
       });

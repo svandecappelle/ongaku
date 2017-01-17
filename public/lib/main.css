@@ -1812,6 +1812,26 @@ section.song-list > .list-container.shows{
     padding-top: 0px;
 }
 
+.install-panel {
+	position: absolute;
+	top: 6em;
+	left: 0px;
+	right: 0px;
+	width: 50%;
+	margin: auto;
+	color: #FFF;
+}
+
+.install-panel form{
+	background-color: rgba(0,0,0,0.5);
+	padding: 20px;
+}
+
+.install-panel h2 {
+	color: #FFF;
+	text-align: center;
+}
+
 /*
 @media screen and (max-width: 600px) {
     html { font-size: 100%; } 

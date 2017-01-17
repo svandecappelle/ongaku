@@ -17,20 +17,45 @@ html
 
         title Ongaku installation
     body.installer
-        #header.navbar.navbar-default.navbar-fixed-top.header
-            h1(style="float:left;margin:0px;")
-                a.header-link(href="/")
-                  include ../layouts/logo
-            span.mini-title(style="float:left", data-toggle="popover", data-trigger="hover", data-placement="bottom", data-content="The open-source media streaming application") v0.0.1-beta
-            div.navbar-header
-                nav.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left; width: auto;")
-                    ul.nav.navbar.varbar-nav.pull-left
-                        li
-                            a installer
-                        li
-                            a Help
-
-        h1 Welcome to the web installer.
-        h2 Step 1: Create administrator account.
-        label username
-        input(type="text", placeholder="Username")
+        .install-panel
+            #header.navbar.navbar-default.navbar-fixed-top.header
+                h1(style="float:left;margin:0px;")
+                    a.header-link(href="/")
+                      include ../layouts/logo
+                span.mini-title(style="float:left", data-toggle="popover", data-trigger="hover", data-placement="bottom", data-content="The open-source media streaming application") v0.0.1-beta
+                div.navbar-header
+                    nav.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left; width: auto;")
+                        ul.nav.navbar.varbar-nav.pull-left
+                            li
+                                a installer
+                            li
+                                a Help
+            form
+                h1 Welcome to the web installer.
+                .group
+                    h2 Step 1: Redis database.
+                    .form-group
+                        label host
+                        input.form-control(type="text", placeholder="host")
+                    .form-group
+                        label port
+                        input.form-control(type="text", placeholder="port")
+                    .form-group
+                        label database
+                        input.form-control(type="text", placeholder="database")
+                    .form-group
+                        label password
+                        input.form-control(type="password", placeholder="Password")
+                .group
+                    h2 Step 2: Create administrator account.
+                    .form-group
+                        label username
+                        input.form-control(type="text", placeholder="Username")
+                    .form-group
+                        label password
+                        input.form-control(type="password", placeholder="Password")
+                .group
+                    h2 Step 3: setup library.
+                    .form-group
+                        label library directories
+                        input.form-control(type="text", placeholder="Directories (commas separated)")
