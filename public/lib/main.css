@@ -8,7 +8,7 @@ body{
 }
 
 html { font-size: 62.5%; } 
-body { font-size: 14px; font-size: 1.4rem; } /* =14px */
+body { font-size: 14px; font-size: 2rem; } /* =14px */
 h1   { font-size: 24px; font-size: 2.4rem; } /* =24px */
 
 ul {
@@ -1203,9 +1203,9 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 }
 
 .panel{
-	background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.5);
   border-color: #140606;
-  color: black;
+  color: #FFF;
   padding: 5px;
 }
 
