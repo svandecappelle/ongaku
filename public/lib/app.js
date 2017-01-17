@@ -1126,7 +1126,7 @@
             height: "253",
             width: "450",
             id : video.uid,
-            preload: "auto",
+            preload: "metadatas",
             controls: true
           });
           var videoSource = $('<source>', {

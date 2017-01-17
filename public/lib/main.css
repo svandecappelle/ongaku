@@ -982,18 +982,18 @@ ul.group.artist span.artistname{
 }
 
 #header .navbar{
-	height: 50px;
+	height: 3rem;
 }
 
 .main-content{
 	margin-left: 90px;
-	padding-top: 50px;
+	padding-top: 6rem;
 	background: url('/img/background.jpg') repeat center center;
 	background-size: cover !important;
 }
 
 .main-menu{
-	padding-top: 50px;
+	padding-top: 6rem;
 }
 
 .open > .dropdown-menu {
@@ -1050,7 +1050,7 @@ ul.group.artist span.artistname{
 
 #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
 	color: #fff;
-	height: 50px;
+	height: 3rem;
 }
 
 h1{
@@ -1832,16 +1832,16 @@ section.song-list > .list-container.shows{
         position: absolute;
         bottom: 0px;
         right: unset;
-        left: 5rem;
+        left: 7.5rem;
         background: #fff;
         z-index: 3000000;   
-        font-size: 2.5rem;
+        font-size: 4.5rem;
         padding: 1.6rem;
         color: black;
     }
 
     #header {
-        height: 3rem;
+        height: 6rem;
     }
 
     #header a.header-link, #header .mini-title{
@@ -1861,12 +1861,12 @@ section.song-list > .list-container.shows{
     }
 
     .toggle-menu{
-        width: 5.5rem;
-        height: 5.5rem;
+        width: 7.5rem;
+        height: 7.5rem;
     }
 
     section.song-list > .list-container {
-        margin-top: 9.7rem;
+        margin-top: 12rem;
         overflow: visible;
     }
     
@@ -1877,12 +1877,13 @@ section.song-list > .list-container.shows{
     }
     nav.menu{
         right: 0px;
-        height: 3rem;
+        height: 6rem;
         left: 0px;
-        top: 3rem;
+        top: 6rem;
         width: 100%;
         padding: 0px;
         text-align: center;
+        font-size: 5rem;
     }
 
     #header .navbar-header{
@@ -1904,12 +1905,12 @@ section.song-list > .list-container.shows{
     }
     
     .main-content {
-        padding-top: 6rem;
+        padding-top: 12rem;
         margin-left: 0px;
     }
     
     section.sidebar.show{
-        margin-top: 6rem;
+        margin-top: 12rem;
     }
 
     #visualisation{
@@ -1921,14 +1922,14 @@ section.song-list > .list-container.shows{
     }
 
     .player{
-        height: 6rem;
+        height: 8rem;
         text-align: center;
     }
 
     .player .fa{
-        font-size: 3rem;        
+        font-size: 5rem;        
         vertical-align: middle;
-        line-height: 6rem;
+        line-height: 8rem;
     }
 
     .audio-player .song-info{
@@ -1945,12 +1946,14 @@ section.song-list > .list-container.shows{
         top: 0;
         height: 16px;
         font-size: 0.5em;
+        text-align: right;
+        font-size: 3rem;
+        margin-right: 2.5rem;
     }
 
     .player .song-info .song-time{
         display: block;
         position: absolute;
-        left: 0;
         right: 0;
         top: 16px;
         text-align: right;
@@ -1969,6 +1972,24 @@ section.song-list > .list-container.shows{
         width: unset;
     }
 
+    .player .current-playing-image{
+        width: 7.5rem;
+    }
+
+
+    #header ul li i{
+        font-size: 3rem;
+        padding-top: 0.3rem;
+        padding-left: 2px;
+    }
+    #header{
+      height: 6rem;
+    }
+
+    #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
+        height: 6rem;
+    }
+
     .mejs-button.mejs-volume-button.mejs-mute, .mejs-button.mejs-volume-button.mejs-unmute{
         top: 0px;
     }
@@ -1981,8 +2002,9 @@ section.song-list > .list-container.shows{
 
     input.searchbox:focus{
         left: 0px;
-        top: 80px;
-        font-size: 1.5em;
+        top: 12rem;
+        font-size: 3.5em;
+        z-index: 2000;
     }
 
     a.artist-link > img{
@@ -2019,6 +2041,10 @@ section.song-list > .list-container.shows{
         left: 0px;
         min-width: 100%;
         background-color: rgba(30, 30, 30, 0.98);
+    }
+    
+    section.sidebar .search{
+        z-index: 1;
     }
     
     .login-screen {
