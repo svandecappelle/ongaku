@@ -199,11 +199,11 @@
               audioHeight: 50,
               features: ['progress', 'volume'],
               // force iPad's native controls
-              iPadUseNativeControls: true,
+              iPadUseNativeControls: false,
               // force iPhone's native controls
-              iPhoneUseNativeControls: true, 
+              iPhoneUseNativeControls: false, 
               // force Android's native controls
-              AndroidUseNativeControls: true,
+              AndroidUseNativeControls: false,
               success: function (mediaElement) {
                   mediaElement.addEventListener('loadedmetadata', function () {
                       alertify.dismissAll();
