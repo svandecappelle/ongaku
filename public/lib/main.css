@@ -182,7 +182,7 @@ section.song-list > .list-container {
 	left: 80%;
 	right: 0px;
 	top: 0px;
-	bottom: 5rem;
+	bottom: 8rem;
 	background-color: rgba(30, 30, 30, 0.84);
 	color: #FFF;
 	transition: all 0.3s ease 0s;
@@ -1826,8 +1826,18 @@ section.song-list > .list-container.shows{
         color: black;
     }
 
-    #header {
+    #responsive-menu{
+        width: 6rem;
         height: 6rem;
+        position: absolute;
+        top: 0px;
+        right: unset;
+        left: 0rem;
+        background: #fff;
+        z-index: 3000000;   
+        font-size: 3.5rem;
+        padding: 1.6rem;
+        color: black;
     }
 
     #header a.header-link, #header .mini-title{
@@ -1863,13 +1873,14 @@ section.song-list > .list-container.shows{
     }
     nav.menu{
         right: 0px;
-        height: 6rem;
+        height: 0px;
         left: 0px;
         top: 6rem;
         width: 100%;
         padding: 0px;
         text-align: center;
         font-size: 5rem;
+        transition: all linear 0.25s;
     }
 
     #header .navbar-header{
@@ -1880,23 +1891,28 @@ section.song-list > .list-container.shows{
         margin: 0px;
     }
 
-    .main-menu li{
-        display: inline-block;
-        margin-bottom: 0px;
-        margin-left: 5px;
+    nav.menu.show {
+        height: 100%;
     }
     
     .main-menu li>a>div{
-        display: none;
+        display: inline-block;
+    }
+
+    .main-menu li>a>i{
+        display: inline-block;
+        width: auto;
+        text-align: right;
+        margin-right: 15px;
     }
     
     .main-content {
-        padding-top: 12rem;
+        padding-top: 0rem;
         margin-left: 0px;
     }
     
     section.sidebar.show{
-        margin-top: 12rem;
+        margin-top: 0rem;
     }
 
     #visualisation{
@@ -1962,14 +1978,22 @@ section.song-list > .list-container.shows{
         width: 7.5rem;
     }
 
-
     #header ul li i{
         font-size: 3rem;
         padding-top: 0.3rem;
         padding-left: 2px;
     }
     #header{
-      height: 6rem;
+        height: 0px;
+        padding-left: 6rem !important;
+        min-height: 0px;
+        opacity: 0;
+        transition: all linear 0.1s;
+    }
+
+    #header.show{
+        height: 6rem;
+        opacity: 1;
     }
 
     #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
@@ -1988,7 +2012,7 @@ section.song-list > .list-container.shows{
 
     input.searchbox:focus{
         left: 0px;
-        top: 12rem;
+        top: 6rem;
         font-size: 3.5em;
         z-index: 2000;
     }
@@ -2031,6 +2055,7 @@ section.song-list > .list-container.shows{
     
     section.sidebar .search{
         z-index: 1;
+        margin-left: 6rem;
     }
     
     .login-screen {

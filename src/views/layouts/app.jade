@@ -77,6 +77,8 @@ html
         script.
           $.ongaku.themer.setBaseColor("#{theme['base-color']}");
     body
+        a#responsive-menu
+          i.fa.fa-bars
         #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 25px;",role="navigation")
             h1(style="float:left;margin:0px;")
                 a.header-link(href="/")
@@ -210,6 +212,10 @@ html
           $.ongaku.setUser("#{session.user.username}");
           $.ongaku.library.setGroupBy("#{session.groupby}");
           $(function () {
+            $('#responsive-menu').on('click', function(){
+              $("#header").toggleClass("show");
+              $("nav.menu").toggleClass("show");
+            });
             $.ongaku.playlist.bind();
             $.ongaku.playlist.fetch();
           });
@@ -281,6 +287,8 @@ html
             });
             $("a.view").on("click", function(ev){
               loadView(ev, $(this).data("view"));
+              $("#header").removeClass("show");
+              $("nav.menu").removeClass("show");
             });
               
             // Revert to a previously saved state
