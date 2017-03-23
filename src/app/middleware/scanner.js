@@ -26,9 +26,7 @@
         var audio = [],
             video = [];
         logger.info("loading new entries into library.");
-        if (typeof nconf.get("library") === 'String'){
-          this.scanFolder(folder, callback);
-        } else if (Array.isArray(nconf.get("library"))){
+        if (Array.isArray(nconf.get("library"))){
           var folders = nconf.get("library");
           var i = folders.length;
 
@@ -65,6 +63,10 @@
           }, function(ret){
             logger.info("all directories scanned");
           });
+        } else {
+          var folder = nconf.get("library");
+          logger.info('scan unique folder:', folder);
+          this.scanFolder(folder, callback);
         }
     };
 

@@ -8,7 +8,7 @@ body{
 }
 
 html { font-size: 62.5%; } 
-body { font-size: 14px; font-size: 1.4rem; } /* =14px */
+body { font-size: 14px; font-size: 2rem; } /* =14px */
 h1   { font-size: 24px; font-size: 2.4rem; } /* =24px */
 
 ul {
@@ -1182,16 +1182,30 @@ h2{
 	background-image: linear-gradient(to bottom, #92E367, #52E17C);
 }
 
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+	outline: 0px none;
+    border-radius: 0px;
+    border: none;
+    padding: 5px;
+    font-size: 1.2em;
+    border-bottom: 1px solid white;
+    background-color: transparent;
+    color: white;
+}
+
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
-	border-color: rgba(67, 243, 23, 0.8);
+	/*border-color: rgba(67, 243, 23, 0.8);
 	outline: 0px none;
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(113, 236, 82, 0.6);
+	*/
+	box-shadow: none;
+	border-color: rgba(67, 243, 23, 0.8);
 }
 
 .panel{
-	background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.5);
   border-color: #140606;
-  color: black;
+  color: #FFF;
   padding: 5px;
 }
 
@@ -1796,6 +1810,26 @@ section.song-list > .list-container.shows{
 .audio-player .song-info .song-time{
     line-height: 5rem;
     padding-top: 0px;
+}
+
+.install-panel {
+	position: absolute;
+	top: 6em;
+	left: 0px;
+	right: 0px;
+	width: 50%;
+	margin: auto;
+	color: #FFF;
+}
+
+.install-panel form{
+	background-color: rgba(0,0,0,0.5);
+	padding: 20px;
+}
+
+.install-panel h2 {
+	color: #FFF;
+	text-align: center;
 }
 
 /*
