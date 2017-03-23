@@ -1188,7 +1188,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
     border: none;
     padding: 5px;
     font-size: 1.2em;
-    border-bottom: 1px solid white;
+    border-bottom: 2px solid white;
     background-color: transparent;
     color: white;
 }
@@ -1896,7 +1896,7 @@ section.song-list > .list-container.shows{
     }
 
     section.song-list > .list-container {
-        margin-top: 12rem;
+        margin-top: 6rem;
         overflow: visible;
     }
     
@@ -1915,6 +1915,7 @@ section.song-list > .list-container.shows{
         text-align: center;
         font-size: 5rem;
         transition: all linear 0.25s;
+        z-index: 6000;
     }
 
     #header .navbar-header{
@@ -2093,11 +2094,12 @@ section.song-list > .list-container.shows{
     }
     
     .login-screen {
-        margin-top: 9rem;     
+        margin-top: 6rem;     
         width: 100%;
         left: 0px;
         margin-left: 0px;
         text-align: center;
+        padding-top: 5rem;
     }
     .login-screen .col-sm-10{
         width: 100%;
@@ -2105,6 +2107,7 @@ section.song-list > .list-container.shows{
 
     .login-screen .form-control{
         height: 3rem;
+        padding-bottom: 1rem;
     }
 
     .login-screen .control-label {
@@ -2113,6 +2116,7 @@ section.song-list > .list-container.shows{
 
     .login-screen .form-group{
         text-align: left;
+        padding-top: 2rem;
     }
 
     .login-screen input#login{
