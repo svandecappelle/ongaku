@@ -1,9 +1,9 @@
 section.sidebar.show
-  .search(style="height:59px") 
+  .search
     .col-lg-8.col-md-8
       .input-group
         h1 #{connectTitle}
-  .col-md-8.panel.panel-default.col-md-offset-1.login-screen
+  .panel.panel-default.login-screen
     form.form-horizontal(method='post')
       .form-group
         label.col-sm-2.control-label(for="username") #{username}
@@ -19,7 +19,8 @@ section.sidebar.show
             label
               input(type="checkbox", name="remember")
               span #{remember}
-      input.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit", value="#{connect}")
+      .form-group(style='margin-right: 0px')
+        input.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit", value="#{connect}")
   script.
     function initView(){
       var sPageURL = decodeURIComponent(window.location.search.substring(1)),

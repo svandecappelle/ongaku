@@ -1,3 +1,4 @@
+doctype html
 html
     head
         block headpage
@@ -19,6 +20,7 @@ html
         link(rel="stylesheet", type="text/css", href="/lib/media-theme.css")
 
         script(src="/dependencies/jquery/jquery-2.1.1.min.js")
+        script(src="/dependencies/sticky-1.0.4.js")
         script(src="/dependencies/mediaelement/mediaelement-and-player.js")
         script(src="/dependencies/bootstrap-3.3.6-dist/js/bootstrap.js")
         script(src="/dependencies/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")
@@ -215,6 +217,7 @@ html
             $('#responsive-menu').on('click', function(){
               $("#header").toggleClass("show");
               $("nav.menu").toggleClass("show");
+              new Sticky('section.song-list > .list-container .playlist-columns');
             });
             $.ongaku.playlist.bind();
             $.ongaku.playlist.fetch();

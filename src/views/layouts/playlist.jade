@@ -1,6 +1,6 @@
 a.toggle-menu.toggle.pulse.appender.playlist-appender
   i.fa.fa-list
-.list-container
+.list-container(data-sticky-container)
   .infos
       .saved-playlist
         .form-inline
@@ -15,7 +15,7 @@ a.toggle-menu.toggle.pulse.appender.playlist-appender
               .playlists
                   .form-group.form-group-sm
                     .col-md-2
-                      button.btn.btn-default.dropdown-toggle(style="height:39px; display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{my_playlists}
+                      button.btn.btn-default.dropdown-toggle(style="display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{my_playlists}
                           span.caret(style="margin-left: 5px;")
                       ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
               .list-actions(style="float:right;")

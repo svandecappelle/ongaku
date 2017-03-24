@@ -652,7 +652,6 @@
     function LibraryArtist(artist, view){
       this.artist = artist;
       this.artistElement = $('<li>');
-
       var artistDetailElement = $("<a>", {
         class: 'link artist-link image-extensible',
         href: artist.image
@@ -1118,7 +1117,7 @@
         this.libraryScrollPane.unbind('jsp-scroll-y');
       }
       if (this.useJscrollPane){
-        this.libraryScrollPane = $('.library-view').jScrollPane();
+        this.libraryScrollPane = $('.main-content').jScrollPane();
 
         this.libraryScrollPane.bind('jsp-scroll-y', function(event, scrollPositionY, isAtTop, isAtBottom) {
           // For asynchronous loading debug
@@ -1128,8 +1127,9 @@
           }
         });
       } else {
-        $('.library-view').scroll(function() {
-            if($('.library-view').scrollTop() - $('.library-view').prop('scrollHeight') === - $('.library-view').height()) {
+        $(window).scroll(function() {
+            // console.log('Handle scroll window', $(window).scrollTop() + ' + ' + $(window).height(), $(document).height());
+            if($(window).scrollTop() + $(window).height() == $(document).height()) {
               $.ongaku.library.fetch();
             }
         });

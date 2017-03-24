@@ -17,15 +17,10 @@ ul {
 }
 
 .modal{
-    z-index: 120000;
+    z-index: 150000;
 }
 
 main{
-	position: absolute;
-	bottom: 0px;
-	top: 0px;
-	left: 0px;
-	right: 0px;
 	overflow: auto;
 }
 
@@ -172,11 +167,7 @@ nav:hover span{
 }
 
 .library-view{
-	position: absolute;
-	top: 59px;
-	bottom: 0px;
-	left: 0px;
-	right: 25%;
+    margin-top: 6rem;
 	overflow-y: auto;
 }
 
@@ -233,23 +224,19 @@ section.song-list  .list-actions {
 
 section.sidebar .search{
 	padding-left: 30px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: 0.5rem;;
+	padding-bottom: 0.5rem;;
 	background-color: rgba(30, 30, 30, 0.84);
-	position: absolute;
-	top: 0px;
+	position: fixed;
 	right: 0px;
-	left: 0px;
+    top: 3rem;
+	left: 90px;
     z-index: 2000;
 }
 
 section.sidebar.show {
-	position: absolute;
-	top: 0px;
 	margin-top: 50px;
-	bottom: 100px;
-	left: 0;
-	right: 0;
+	margin-bottom: 100px;
 }
 
 section.sidebar .user-sidebar{
@@ -295,7 +282,7 @@ section.song-list > .list-container{
 	min-width: 60%;
 	overflow-y: auto;
     overflow-x: hidden;
-	margin-top: 109px;
+	margin-top: 7rem;
 }
 
 section.song-list > .list-container .playlist{
@@ -319,6 +306,7 @@ section.song-list > .list-container .playlist-columns .track-info{
 
 section.song-list > .list-container .songs-container ul li a{
 	color: #A0FC55;
+    display: inline-block;
 }
 
 section.song-list > .list-container .songs-container{
@@ -369,6 +357,7 @@ section.song-list > .list-container .song .track-info, section.song-list > .list
 	padding-left: 15px;
 	text-overflow: ellipsis;
 	overflow: hidden;
+    vertical-align: top;
 }
 
 section.song-list > .list-container .song .track-info.track-px, section.song-list > .list-container .playlist-columns .tracks-columns .track-info.track-px{
@@ -990,9 +979,10 @@ ul.group.artist span.artistname{
 
 .main-content{
 	margin-left: 90px;
-	padding-top: 6rem;
 	background: url('/img/background.jpg') repeat center center;
 	background-size: cover !important;
+    /* TODO check if size 100% and resize playlist container*/
+    padding-right: 20%;
 }
 
 .main-menu{
@@ -1049,6 +1039,7 @@ ul.group.artist span.artistname{
   background: repeat scroll 0px 0px #1a2226;
   border: none;
   z-index: 20000;
+  margin-bottom: 0px;
 }
 
 #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
@@ -1173,11 +1164,7 @@ h2{
 }
 
 .login-screen{
-	margin: auto;
-	width: 50%;
-	left: 25%;
-	margin-top: 150px;
-	margin-left: -15%;
+    margin: 7rem 2rem;
 }
 
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
@@ -1408,9 +1395,6 @@ a.link.video>.name{
 }
 
 .account {
-	position: absolute;
-	left: 0px;
-	right: 0px;
 	margin: 0px;
 }
 
@@ -1426,7 +1410,6 @@ a.link.video>.name{
 	background-origin: content-box;
 	width: 100%;
 	top: 0px;
-	position: absolute;
 	left: auto;
 	right: 0;
 	box-shadow: #1F1E1E 0px 1px 20px 4px;
@@ -1434,8 +1417,6 @@ a.link.video>.name{
 
 .account .cover .controls {
     text-align: center;
-    height: 200px;
-    line-height: 200px;
     filter: alpha(opacity=0);
     -moz-opacity: 0;
     opacity: 0;
@@ -1465,13 +1446,13 @@ a.link.video>.name{
 }
 
 .account .avatar-container, .account .avatar-container {
-  top: 230px;
+    top: 230px;
 	width: 128px;
 	height: 128px;
 	border: 4px solid white;
 	border-radius: 50%;
 	margin: auto;
-	z-index: 1;
+    z-index: 150000;
 }
 
 .account .cover .avatar-container {
@@ -1489,13 +1470,10 @@ a.link.video>.name{
 }
 
 .account .profile{
-	position: relative;
-	margin-top: 320px;
-	margin-right: 5%;
-	margin-left: 5%;
-	left: 0;
-  right: 0px;
-	margin-bottom: 100px;
+    position: relative;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 40px;
 }
 
 .account .user-panel{
@@ -1749,11 +1727,6 @@ input.searchbox:focus{
     width: 90%;
     text-align: center;
     display: block;
-    background-color: rgba(30, 30, 30, 0.84);
-    margin: 5px auto;
-    border-radius: 5px;
-    padding: 10px;
-    vertical-align: top;
 }
 
 .upload .input-group{
@@ -1793,13 +1766,13 @@ input.searchbox:focus{
 .toggle-menu {
     width: 4.7rem;
     height: 4.7rem;
-    position: absolute;
+    position: fixed;
     bottom: 0px;
     right: 8rem;
     background: #fff;
     z-index: 3000000;
     font-size: 2.5rem;
-    padding: 1.2rem;
+    padding: 0.8rem 1rem;
     color: black;
 }
 
@@ -1866,31 +1839,48 @@ section.song-list > .list-container.shows{
 }
 
 @media screen and (max-width: 1200px) {
+    .btn{
+        font-size: 3rem;
+    }
+    .dropdown-menu>li>a {
+        font-size: 7rem;
+        padding-top: 0.3rem;
+        padding-left: 2px;
+    }
+    
+    section.song-list{
+        font-size: 3rem;        
+    }
+    .main-content{
+        padding-right: 0px;
+        font-size: 3rem;
+    }
+
     .toggle-menu{
-        width: 5rem;
-        height: 5rem;
-        position: absolute;
+        width: 8rem;
+        height: 8rem;
+        position: fixed;
         bottom: 0px;
         right: unset;
         left: 7.5rem;
         background: #fff;
         z-index: 3000000;   
-        font-size: 4.5rem;
-        padding: 1.6rem;
+        font-size: 6.5rem;
+        padding: 1.6rem 2.3rem;
         color: black;
     }
 
     #responsive-menu{
-        width: 6rem;
-        height: 6rem;
-        position: absolute;
+        width: 8rem;
+        height: 8rem;
+        position: fixed;
         top: 0px;
         right: unset;
         left: 0rem;
         background: #fff;
         z-index: 3000000;   
-        font-size: 3.5rem;
-        padding: 1.6rem;
+        font-size: 4.5rem;
+        padding: 1.3rem 2rem;
         color: black;
     }
 
@@ -1911,12 +1901,12 @@ section.song-list > .list-container.shows{
     }
 
     .toggle-menu{
-        width: 7.5rem;
-        height: 7.5rem;
+        width: 11.5rem;
+        height: 11.5rem;
     }
 
     section.song-list > .list-container {
-        margin-top: 6rem;
+        margin-top: 8rem;
         overflow: visible;
     }
     
@@ -1929,7 +1919,7 @@ section.song-list > .list-container.shows{
         right: 0px;
         height: 0px;
         left: 0px;
-        top: 6rem;
+        top: 10rem;
         width: 100%;
         padding: 0px;
         text-align: center;
@@ -1979,14 +1969,14 @@ section.song-list > .list-container.shows{
     }
 
     .player{
-        height: 8rem;
+        height: 12rem;
         text-align: center;
     }
 
     .player .fa{
-        font-size: 5rem;        
+        font-size: 6rem;        
         vertical-align: middle;
-        line-height: 8rem;
+        line-height: 12rem;
     }
 
     .audio-player .song-info{
@@ -1998,11 +1988,8 @@ section.song-list > .list-container.shows{
     .player .song-info .title{
         display: block;
         position: absolute;
-        left: 0;
         right: 0;
-        top: 0;
-        height: 16px;
-        font-size: 0.5em;
+        top: 2rem;
         text-align: right;
         font-size: 3rem;
         margin-right: 2.5rem;
@@ -2012,9 +1999,9 @@ section.song-list > .list-container.shows{
         display: block;
         position: absolute;
         right: 0;
-        top: 16px;
+        bottom: 3rem;
         text-align: right;
-        height: 16px;
+        height: 2rem;
         padding-right: 32px;
         padding-top: 0px;
         margin: 0px;
@@ -2034,7 +2021,7 @@ section.song-list > .list-container.shows{
     }
 
     #header ul li i{
-        font-size: 3rem;
+        font-size: 7rem;
         padding-top: 0.3rem;
         padding-left: 2px;
     }
@@ -2044,15 +2031,18 @@ section.song-list > .list-container.shows{
         min-height: 0px;
         opacity: 0;
         transition: all linear 0.1s;
+        top: -6rem;
     }
 
     #header.show{
-        height: 6rem;
+        height: 10rem;
         opacity: 1;
+        top: 0px;
     }
 
     #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
-        height: 6rem;
+        height: 10rem;
+        font-size: 5rem;
     }
 
     .mejs-button.mejs-volume-button.mejs-mute, .mejs-button.mejs-volume-button.mejs-unmute{
@@ -2091,6 +2081,7 @@ section.song-list > .list-container.shows{
 
     .library-view{
         right: 0px;
+        font-size: 3rem;
     }
 
     section.song-list > .list-container{
@@ -2110,7 +2101,11 @@ section.song-list > .list-container.shows{
     
     section.sidebar .search{
         z-index: 1;
-        margin-left: 6rem;
+        margin-left: 0rem;
+        left: 6rem;
+        margin: 0px;
+        top: 0px;
+        padding: 1.4rem;
     }
     
     .login-screen {

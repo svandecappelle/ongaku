@@ -4,7 +4,7 @@ section.sidebar.show
       .input-group
         h1 Fiche utilisateur
   .user-sidebar.library-view
-    div.account
+    div.account(data-sticky-container)
       div.cover.initialised(style="background-image: url(/user/#{user.username}/cover?#{token}); background-position: 47.0141% 20.4126%;")
         div.avatar-container
           div.avatar(style="z-index: 1;")
@@ -45,7 +45,7 @@ section.sidebar.show
           strong
             i.fa.fa-eye-slash(title="Email masqué")
         div.row
-          div.col-md-2.col-sm-4.text-center
+          div.col-md-2.col-sm-4.text-center#account-editions(data-margin-top="110")
             div.account-picture-block
               div.avatar-container
                 div.avatar
@@ -64,7 +64,7 @@ section.sidebar.show
                 a.list-group-item.modalview(data-toggle="modal") Changer le mot de passe
               li
                 a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
-          div.col-md-10
+          div.col-md-10(style='float: right;')
             block userpage-content
           include change-password
 script.
@@ -72,7 +72,10 @@ script.
     $('input[name=avatar]').customFile("Changer avatar");
     $('input[name=background]').customFile("Changer fond");
     $('input[name=cover]').customFile("Changer couverture");
-    
+
+    var stickyAccountEdition = new Sticky('#account-editions', {
+      'data-sticky-wrap': true
+    });
     $(".img-upload").liteUploader({
       script: "upload"
     })

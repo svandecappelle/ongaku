@@ -11,10 +11,10 @@ block append userpage-content
     .panel.panel-default
       div.small-title Playlists
       hr
-      .playlists-elements(style='max-height: 300px;')
+      .playlists-elements
       div.small-title Personal library
       hr
-      .library(style='max-height: 300px;')
+      .library
 
 block append scripts  
   script.
@@ -34,9 +34,7 @@ block append scripts
           $.each(artist.albums, function(index, album){
             $.each(album.tracks, function(index, song){
             
-              var songBlock = $("<div>", {
-                class: "song"
-              });
+              var songBlock = $("<div>");
               songBlock.text(song.title);
               $(".library").append(songBlock);
             });
