@@ -978,7 +978,7 @@ ul.group.artist span.artistname{
 }
 
 .main-content{
-	margin-left: 90px;
+	margin-left: 90px; 
     /* TODO check if size 100% and resize playlist container*/
     padding-right: 20%;
 }
@@ -1845,6 +1845,10 @@ section.song-list > .list-container.shows{
         padding-top: 0.3rem;
         padding-left: 2px;
     }
+
+    .cannot-scroll{
+        overflow: hidden;
+    }
     
     section.song-list{
         font-size: 3rem;        
@@ -1905,7 +1909,6 @@ section.song-list > .list-container.shows{
 
     section.song-list > .list-container {
         margin-top: 8rem;
-        overflow: visible;
     }
     
     section.song-list > .list-container .playlist{

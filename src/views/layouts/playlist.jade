@@ -55,6 +55,7 @@ block append scripts
     $(function(){
       $('a.toggle-menu.appender.playlist-appender').on('click', function(){
         $('.list-container').toggleClass("shows");
+        $("body").toggleClass("cannot-scroll");
       });
       $.ongaku.playlist.loadAllPlaylists();
     });
