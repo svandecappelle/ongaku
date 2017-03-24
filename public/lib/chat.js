@@ -181,10 +181,10 @@
       var that = this;
       this.socket = socket;
       if (user){
-
-        this.chat = new ChatWidget(socket);
-        $("#header .navbar-header nav ul").append(this.chat.getElement());
-
+        if (this.chat == null){
+          this.chat = new ChatWidget(socket);
+          $("#header .navbar-header nav ul").append(this.chat.getElement());
+        }
         socket.emit('checkin', {user: user});
 
         socket.on('msg', function(incoming){
@@ -241,7 +241,9 @@
     */
     $.chat = {
       init: function(socket, user){
-        $.chat.el = new Chat(socket, user);
+        if (!$.chat.el){
+          $.chat.el = new Chat(socket, user);          
+        }
       },
       start: function(user){
         $.chat.el.start(user);

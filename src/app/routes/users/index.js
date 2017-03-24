@@ -592,6 +592,13 @@ var getStatistics = function(name, callback){
           });
         });
       });
+
+
+      app.get("/api/track-download/:uid", function(req, res){
+        UsersRoutes.callIfAuthenticated(req, res, function(){
+            res.download(library.getFile(req.params.uid));
+        });
+      });
     };
 
     UsersRoutes.routes = function (app){

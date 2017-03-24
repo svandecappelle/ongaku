@@ -10,6 +10,7 @@
 .chat-container .message-box.show {
   visibility: visible;
   opacity: 1;
+  box-shadow: 2px 2px 7px #000000;
 }
 
 .chat-container .message-box{
@@ -17,7 +18,7 @@
   position: fixed;
   height: 300px;
   width: 500px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.75);
   opacity: 0;
   transition: all 0.25s linear;
 }
@@ -28,19 +29,36 @@
 }
 
 .chat-container .input-box{
+  width: 80%;
   position: absolute;
   bottom: 5px;
   left: 5px;
-  width: 80%;
+  outline: 0px none;
+  border-radius: 0px;
+  border: none;
+  right: 52px;
+  padding: 5px;
+  font-size: 1.2rem;
+  border-bottom: 2px solid white;
+  background-color: transparent;
+  color: white;
+  border-top: 2px solid white;
+  display: inline-block;
 }
 
 .msg.right{
   text-align: right;
+
+}
+
+.msg.right .from{
+  color: rgb(226, 72, 72);
 }
 
 .msg .from {
   text-decoration: underline;
   font-weight: bold;
+  color: rgb(33, 187, 62);
 }
 
 .msg .from:before {
@@ -52,30 +70,28 @@
 }
 
 .msg .value-message{
-  border-radius: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
-  padding: 0px 5px;
-  width: auto;
-  display: inline;
+  padding: 3px 10px;
+  width: auto;    
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .msg .value-message{
-  background-color: rgba(255, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .msg.right .value-message{
-  background-color: rgba(0, 255, 0, 0.5);
+  background-color: rgba(158, 165, 159, 0.6);
 }
 
 .msg .date{
-  font-size: 8px;
+  font-size: 0.7rem;
   color: #CECECE;
 }
 
 .chat-container .nav > li > a{
   padding: 5px 3px;
-  font-size: 10pt;
   color: white;
   background-color: transparent;
   border-bottom: 1px solid #000;

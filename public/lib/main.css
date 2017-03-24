@@ -16,6 +16,10 @@ ul {
 	padding: 0;
 }
 
+.modal{
+    z-index: 120000;
+}
+
 main{
 	position: absolute;
 	bottom: 0px;
@@ -24,7 +28,6 @@ main{
 	right: 0px;
 	overflow: auto;
 }
-
 
 main.default{
 	display: inline-block !important;
@@ -1243,13 +1246,30 @@ a.link.video>.name{
 }
 
 .mt-title{
-	font-weight: bold;
-	width: 80px;
-  max-width: 80px;
-	overflow: hidden;
-  white-space: nowrap;
-	text-overflow: ellipsis;
-	hyphens: auto;
+    font-weight: bold;
+    width: 80px;
+    max-width: 80px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    hyphens: auto;
+}
+
+.editable-mt-title{
+    font-weight: bold;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    hyphens: auto;
+    padding-bottom: 10px;    
+}
+
+.editable-mt-array input.form-control{
+    box-shadow: none;
+    border-bottom: 2px solid black;
+}
+
+.editable-mt-array td{
+    padding-bottom: 10px;
 }
 
 .mt-value{

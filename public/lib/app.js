@@ -482,17 +482,36 @@
       }
     };
 
-    function MetadataLabel(title, value){
+    function MetadataLabel(title, value, editable){
+      if (typeof value === 'object' && (!Array.isArray(value) || (Array.isArray(value) && value.length > 1))) {
+        value = JSON.stringify(value)
+      }
+
       var label = $("<tr>", {
         "class": "metadata"
       }),
         titleObj = $("<td>", {
-          "class": "mt-title"
+          "class": editable ? "editable-mt-title" : "mt-title"
         }),
-        valueObj = $('<td>'),
+        valueObj = $('<td>');
+      var valueLabel;
+      if (editable){
+        valueLabel = $('<input>', {
+          "class": "editable-mt-value form-control",
+          "style": "color: black;",
+          "type": "text",
+          'value': value
+        });
+
+        valueLabel.css({
+          'padding': '5px 0px;'
+        });
+
+      } else {
         valueLabel = $('<div>', {
           "class": "mt-value"
         });
+      }
 
       titleObj.html(title);
       try{
@@ -503,20 +522,25 @@
         console.log("error: " + value);
       }
       valueObj.append(valueLabel);
-      valueLabel.html(value);
+      if (!editable){
+        valueLabel.html(value);
+      }
       label.append(titleObj);
       label.append(valueObj);
       return label;
     }
 
-    function MetadatasArray(metadatas){
+    function MetadatasArray(metadatas, editable){
       var container = $('<div>', {
-        "class": "mt-array"
+        "class": editable ? "editable-mt-array" : "mt-array"
       });
-      var array = $(document.createElement('table'));
+      var array = $('<table>');
+      if (editable){
+        array.width('100%');
+      }
       if (metadatas){
         $.each(metadatas, function(index, value){
-          array.append(new MetadataLabel(index, value));
+          array.append(new MetadataLabel(index, value, editable));
         });
       }
 
@@ -833,9 +857,31 @@
         });
         trackShowDetail.append(glyphShowDetail);
         trackElement.append(trackShowDetail);
+
+        if (!$.ongaku.isAnonymous()){
+          var trackDownloader = $('<a>', {
+            class: 'trackaction track-download',
+            "data-placement": "bottom",
+            "data-toggle": "tooltip",
+            "data-original-title": "Download tracks",
+            "href": "/api/track-download/".concat(track.uuid),
+            "target": "_self"
+          });
+          var glyficonTrackDownloader = $('<i>', {
+            class: 'glyphicon glyphicon-download',
+          });
+          trackDownloader.append(glyficonTrackDownloader);
+          trackElement.append(trackDownloader);
+        }
+
         trackElement.append(trackDetailElement);
         tracksElement.append(trackElement);
         $(trackDetailElement).tooltip();
+
+        $(trackShowDetail).on("click", function(){
+          showMetadatas(track);
+        });
+
 
         trackDetailElement.on("click", function (event) {
             event.preventDefault();
@@ -845,6 +891,136 @@
       });
       return tracksElement;
     }
+
+    function showMetadatas(track){
+      var popup = new Popup(track.artist + ' / ' + track.album + ' / ' + track.title);
+      popup.append(new MetadatasArray(track.metadatas, true).html());
+      popup.actions([
+        {
+          text: 'Close',
+          callback: function(){
+            popup.hide();
+          }
+        }
+      ]);
+      popup.show();
+    }
+
+    function Popup(title) {
+        this.dom = $('<div>', {
+            class: 'modal'
+        });
+
+        this.dialog = $('<div>', {
+            class: 'modal-dialog'
+        });
+
+        this.header = $('<div>', {
+            class: 'modal-header'
+        });
+
+        this.titleElement = $('<h4>', {
+            class: 'modal-title'
+        });
+        this.titleElement.text(title);
+
+        this.content = $('<div>', {
+            class: 'modal-content'
+        });
+        this.actionsElement = $('<div>', {
+         class: 'modal-footer'
+        });
+
+        this.header.append(this.titleElement);
+        this.content.append(this.header);
+
+        this.body = $('<div>', {
+            class: 'modal-body'
+        });
+
+        this.loader = $('<div>', {
+            class: 'loader'
+        });
+        this.loader.append($('<i>', {
+            class: 'fa fa-circle-o-notch fa-spin fa-3x fa-fw'
+        }));
+
+        this.content.append(this.body);
+        this.dialog.append(this.content);
+        this.dom.append(this.dialog);
+
+
+        var that = this;
+
+        return this;
+    };
+
+    Popup.prototype.append = function (element) {
+        $(this.body).append(element);
+        return this;
+    };
+
+    Popup.prototype.get = function () {
+        return this.dom;
+    };
+
+    Popup.prototype.top = function (top) {
+        this.dialog.css({
+            'margin-top': top
+        });
+    };
+
+    Popup.prototype.getContent = function () {
+        return this.body;
+    };
+
+    Popup.prototype.show = function () {
+        $(this.dom).modal('show');
+        var that = this;
+        $(this.dom).on('hidden.bs.modal', function () {
+            $(that.dom).remove();
+        });
+    };
+
+    Popup.prototype.hide = function () {
+        $(this.dom).modal('hide');
+    };
+
+    Popup.prototype.loading = function (isLoading) {
+        if (isLoading !== undefined && isLoading || isLoading === undefined) {
+            $(this.body).append(this.loader);
+        } else {
+            this.loader.remove();
+        }
+    };
+
+    Popup.prototype.title = function (title) {
+        this.titleElement.text(title);
+    };
+
+    Popup.prototype.indice = function (indice) {
+        this.indiceElement.text(indice.value);
+        if (indice.css) {
+            this.indiceElement.css(indice.css);
+        }
+    };
+
+    Popup.prototype.actions = function (actions) {
+        var that = this;
+        $.each(actions, function (index, value) {
+          var button = $('<button>', {
+            class: 'btn btn-primary'
+          });
+
+          button.text(value.text);
+          button.on('click', value.callback);
+          button.css({
+              'float': 'right'
+          });
+          that.actionsElement.append(button);
+        });
+        this.content.append(this.actionsElement);
+    };
 
     function Library() {
       this.useJscrollPane = false;

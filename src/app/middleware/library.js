@@ -425,6 +425,10 @@
       return arrayResults;
     };
 
+    Library.getFile = function (uid){
+      return this.getRelativePath(uid);
+    };
+
     Library.getAudioFlattenById = function (ids){
       var searchResultList =  _.filter(this.flatten, function (obj) {
         return _.contains(ids, obj.uid);
