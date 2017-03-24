@@ -979,8 +979,6 @@ ul.group.artist span.artistname{
 
 .main-content{
 	margin-left: 90px;
-	background: url('/img/background.jpg') repeat center center;
-	background-size: cover !important;
     /* TODO check if size 100% and resize playlist container*/
     padding-right: 20%;
 }
