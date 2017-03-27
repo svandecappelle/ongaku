@@ -71,7 +71,7 @@
   function Audiowave() {
     this.binded = false;
 
-    this.numberFrequency = 20;
+    this.numberFrequency = 75;
 
     // TO GET A FULL RENDER (USING ONLY COLOR SET MAX FREQ TO 100)
     // Default value is 255
