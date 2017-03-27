@@ -1240,7 +1240,7 @@
               var groupTitle = groupOne.artist ? groupOne.artist : (groupOne[that.getGroupBy()] ? groupOne[that.getGroupBy()].toString() : "-");
               var artistLibrary = new LibraryArtist({
                 artist: groupTitle,
-                image: groupOne.image,
+                image: groupOne.image ? groupOne.image : groupOne.cover,
                 download: groupOne.artist !== undefined
               }, that.view);
               if (groupOne.albums){
@@ -1265,7 +1265,7 @@
                 var albumLibrary = new LibraryAlbum({
                   title: groupOne.album ? groupOne.album : "all",
                   tracks : groupOne.tracks,
-                  cover: groupOne.cover,
+                  cover: groupOne.cover ? groupOne.cover : groupOne.image,
                   artist: "all"
                 }, that.view);
                 $(".lib.group.artist.open").append(albumLibrary);
