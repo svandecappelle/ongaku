@@ -176,7 +176,7 @@ section.song-list > .list-container {
 	left: 80%;
 	right: 0px;
 	top: 0px;
-	bottom: 8rem;
+	bottom: 5rem;
 	background-color: rgba(30, 30, 30, 0.84);
 	color: #FFF;
 	transition: all 0.3s ease 0s;
@@ -473,15 +473,18 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 .pending-list{
 	position: fixed;
 	left: 90px;
-	right: 0px;
-	bottom: 5rem;
-	height: 3rem;
+	right: 20%;
+	bottom: 5rem !important;
+	min-height: 50px;
 	background-color: rgba(30, 30, 30, 0.84);
 	text-align: center;
 	color: white;
-	transition: height 0.5s linear 0.1s;
+	/*transition: height 0.5s linear 0.1s;*/
 	border-top: 6px solid #1a2226;
 	font-size: 0.8em;
+    top: auto !important;
+    box-sizing: border-box;
+    max-height: calc(100% - 190px) !important;
 }
 
 .pending-list.video{
@@ -771,7 +774,7 @@ ul.group.artist span.artistname{
 
 .menu.project{
 	position: absolute;
-	bottom: 5rem;
+	bottom: 6rem;
 	left: 0px;
 	right: 0px;
 }

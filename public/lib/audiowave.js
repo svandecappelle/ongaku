@@ -34,7 +34,6 @@
     //setTimeout(function(){
     requestAnimationFrame(render);
     //}, 50);
-
     // Copy frequency data to frequencyData array.
     audiowave.analyser.getByteFrequencyData(audiowave.frequencyData);
 
@@ -71,6 +70,8 @@
 
   function Audiowave() {
     this.binded = false;
+
+    this.numberFrequency = 200;
 
     // TO GET A FULL RENDER (USING ONLY COLOR SET MAX FREQ TO 100)
     // Default value is 255
@@ -119,15 +120,51 @@
       this.audioSrc.connect(this.audioCtx.destination);
 
       // Create the analyser
-      this.frequencyData = new Uint8Array(200);
+      this.frequencyData = new Uint8Array(that.numberFrequency);
 
       // Set up the visualisation elements
       this.visualisation = $("#visualisation");
       this.visualisation.empty();
+
+      $("#ticks-frequency").slider({
+        step: 5,
+        min: 1,
+        max: 200,
+        value: 200
+      }).on( "slidechange", function( event, ui ) {
+        console.log("ui change slide:" + ui.value);
+        that.numberFrequency = ui.value;
+        that.frequencyData = new Uint8Array(that.numberFrequency);
+        that.svg.selectAll('rect').remove();
+        that.svg.selectAll('rect')
+          .data(that.frequencyData)
+            .enter()
+            .append('rect')
+            .attr('x', function(d, i) {
+              return i * (that.svgWidth / that.frequencyData.length);
+            })
+            .attr('width', that.svgWidth / that.frequencyData.length - that.barPadding);
+
+      });
+      $(".pending-list").resizable({
+        handles: {
+            'n': '#handle'
+        }
+      });
+      $(".pending-list").on("resize", function(){
+        that.svgHeight = "" + that.visualisation.height();
+        $("#visualisation svg").attr('height', that.svgHeight);
+      });
       if (!this.visualisation.is(":hidden")){
-        this.svgHeight = "" + this.visualisation.height();
-        this.svgWidth = "" + this.visualisation.width();
+
+        this.svgHeight = this.visualisation.height();
+        this.svgWidth = this.visualisation.width();
         this.barPadding = '1';
+        console.log(this.visualisation.height());
+
+        if (this.svgHeight === 0){
+          this.svgHeight = 50;
+        }
 
         this.svg = this.rebuildSVG('#visualisation', this.svgHeight, this.svgWidth);
 
