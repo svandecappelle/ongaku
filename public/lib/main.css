@@ -823,6 +823,7 @@ ul.group.artist span.artistname{
 	position: relative;
 	margin: 10px 4px 0px 10px;
 	text-align: left;
+	height: 100%;
 }
 .tabs li {
 	float: left;
@@ -854,7 +855,6 @@ ul.group.artist span.artistname{
 .tabs .tab-content {
   z-index: 2;
   display: none;
-  overflow: hidden;
   width: 100%;
   line-height: 25px;
   padding: 25px;
@@ -862,6 +862,8 @@ ul.group.artist span.artistname{
   top: 53px;
   left: 0;
   border-radius: 5px;
+  overflow: auto;
+  bottom: 0;
 }
 
 .tabs li:first-child .tab-content{
@@ -987,7 +989,7 @@ ul.group.artist span.artistname{
 }
 
 .main-menu{
-	padding-top: 6rem;
+	padding-top: 1rem;
 }
 
 .open > .dropdown-menu {
@@ -1804,6 +1806,15 @@ section.song-list > .list-container.shows{
 .audio-player .song-info .song-time{
     line-height: 5rem;
     padding-top: 0px;
+}
+
+.global-administration{
+	position: absolute;
+	right: 20%;
+	left: 90px;
+	bottom: 8rem;
+	top: 7rem;
+	overflow: hidden;
 }
 
 .install-panel {

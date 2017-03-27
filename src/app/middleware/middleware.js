@@ -85,6 +85,7 @@
             });
 
             logger.debug(middlewareObject.objs.session);
+            logger.info("meta: ", middlewareObject.objs.meta);
             res.render(view, middlewareObject.objs);
         });
     };
@@ -198,9 +199,7 @@
           }
 
           // config
-          middlewareObject.objs.meta = {
-              requireAuthentication: false
-          };
+          middlewareObject.objs.meta.requireAuthentication = false;
 
           meta.settings.getOne("global", "requireLogin", function (err, curValue) {
               if (err) {
@@ -328,7 +327,18 @@
                 meta: {}
             };
         }
-        next(null, middlewareObject);
+
+        meta.settings.get(["global"], function (err, allvalues) {
+          if (!err && allvalues){
+            allvalues.database = "******";
+            allvalues.redis = "******";
+            allvalues.secret = "******";
+            middlewareObject.objs.meta = allvalues;
+          }
+          next(null, middlewareObject);
+        });
+
+
     };
 
 

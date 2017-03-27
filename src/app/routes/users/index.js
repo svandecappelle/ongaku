@@ -185,8 +185,17 @@ var getStatistics = function(name, callback){
           middleware.stream(req, res, req.params.media, "video");
         };
 
-        UsersRoutes.checkingAuthorization(req, res, function () {
-          stream();
+        meta.settings.getOne("global", "videoStream", function(err, value){
+          if (value === 'true') {
+            UsersRoutes.checkingAuthorization(req, res, function () {
+              stream();
+            });
+          } else {
+            res.json({
+              error: 'Operation not allowed',
+              code: 403
+            });
+          }
         });
       });
 
@@ -630,13 +639,31 @@ var getStatistics = function(name, callback){
       });
 
       app.get("/api/view/video", function(req, res){
-        logger.debug("Client access to videos api renderer [" + req.ip + "]");
-        middleware.render('api/videos', req, res);
+        meta.settings.getOne("global", "videoStream", function(err, value){
+          if (value === 'true') {
+            logger.debug("Client access to videos api renderer [" + req.ip + "]");
+            middleware.render('api/videos', req, res);
+          } else {
+            res.json({
+              error: 'Operation not allowed',
+              code: 403
+            });
+          }
+        });
       });
 
       app.get('/video', function (req, res) {
-        logger.debug("Client access to videos [" + req.ip + "]");
-        middleware.render('library/videos', req, res);
+        meta.settings.getOne("global", "videoStream", function(err, value){
+          if (value === 'true') {
+            logger.debug("Client access to videos [" + req.ip + "]");
+            middleware.render('library/videos', req, res);
+          } else {
+            res.json({
+              error: 'Operation not allowed',
+              code: 403
+            });
+          }
+        });
       });
 
       app.get('/api/view/library', function (req, res){

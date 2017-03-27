@@ -176,10 +176,11 @@ html
                         a.view(href="/", data-view="audio")
                             i.glyphicon.glyphicon-music
                             div #{music}
-                    li
-                        a.view(href="/video", data-view="video")
-                            i.glyphicon.glyphicon-facetime-video
-                            div #{video}
+                    if meta.videoStream === 'true'
+                      li
+                          a.view(href="/video", data-view="video")
+                              i.glyphicon.glyphicon-facetime-video
+                              div #{video}
                     li
                         a.view(href="/users", data-view="users")
                             i.glyphicon.glyphicon-user
@@ -196,7 +197,7 @@ html
                           a.view(href="/library", data-view="library")
                               i.glyphicon.glyphicon-book
                               div #{library}
-                      if configuration.allowUpload === 'true'
+                      if meta.allowUpload === 'true'
                         li
                           a.vew(href="/upload", data-view="upload")
                               i.glyphicon.glyphicon-upload

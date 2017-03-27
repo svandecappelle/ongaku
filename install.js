@@ -54,17 +54,17 @@ var logger = require('log4js').getLogger('Installer'),
             logger.error("Error while create user: " + err);
           } else {
             logger.info("Success create user: " + uuid);
-            user.getUsers(["admin@domain.fr"], function (err, data) {
-              logger.info("Installed");
-            });
-
-            groups.join("administrators", "admin@domain.fr", function(err){
-              if (err){
-                logger.error(err);
-              }
-              logger.info("User admin configured as administrator");
-            });
           }
+          user.getUsers(["admin@domain.fr"], function (err, data) {
+            logger.info("Installed");
+          });
+
+          groups.join("administrators", "admin@domain.fr", function(err){
+            if (err){
+              logger.error(err);
+            }
+            logger.info("User admin configured as administrator");
+          });
         });
 
         user.create({email: "demo@domain.fr", username: "demo", password: "demo"}, function (err, uuid) {
