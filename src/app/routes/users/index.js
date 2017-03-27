@@ -204,10 +204,17 @@ var getStatistics = function(name, callback){
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
 
         var libraryDatas;
+        var opts = {
+          filter: req.params.search,
+          type: 'video',
+          groupby: groupby
+        };
         if (req.params.page === "all"){
-          libraryDatas = library.search(req.params.search, "video", groupby);
+          libraryDatas = library.search(opts);
         } else {
-          libraryDatas = library.searchPage(req.params.search, "video", req.params.page, 3, groupby);
+          opts.page = req.params.page;
+          opts.lenght = 3;
+          libraryDatas = library.searchPage(opts);
         }
 
         middleware.json(req, res, libraryDatas);
@@ -219,10 +226,17 @@ var getStatistics = function(name, callback){
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
 
         var libraryDatas;
+        var opts = {
+          filter: req.params.search,
+          type: 'audio',
+          groupby: groupby
+        };
         if (req.params.page === "all"){
-          libraryDatas = library.search(req.params.search, "audio", groupby);
+          libraryDatas = library.search(opts);
         } else {
-          libraryDatas = library.searchPage(req.params.search, "audio", req.params.page, 3, groupby);
+          opts.page = req.params.page;
+          opts.lenght= 3;
+          libraryDatas = library.searchPage(opts);
         }
 
         middleware.json(req, res, libraryDatas);
@@ -253,6 +267,7 @@ var getStatistics = function(name, callback){
 
         logger.debug("Get all one page of library ".concat(req.params.page));
         var libraryDatas = null;
+        
         if (req.params.page === "all"){
           libraryDatas = library.getAudio(groupby);
         } else {
@@ -316,7 +331,11 @@ var getStatistics = function(name, callback){
         userlib.get(username, function (err, uids){
           var libraryDatas = library.getAudioFlattenById(uids);
 
-          var filteredDatas = library.search(req.params.search, "audio", undefined, libraryDatas);
+          var filteredDatas = library.search({
+            filter: req.params.search, 
+            type: "audio", 
+            groupby: undefined
+          }, libraryDatas);
           middleware.json(req, res, filteredDatas);
         });
       });
@@ -569,10 +588,17 @@ var getStatistics = function(name, callback){
           groupby = ["artist", "album"];
 
           var libraryDatas;
+          var opts = {
+            filter: req.params.search,
+            type: 'audio',
+            groupby: groupby
+          };
           if (req.params.page === "all"){
-            libraryDatas = library.search(req.params.search, "audio", groupby);
+            libraryDatas = library.search(opts);
           } else {
-            libraryDatas = library.searchPage(req.params.search, "audio", req.params.page, 3, groupby);
+            opts.page = req.params.page;
+            opts.lenght = 3;
+            libraryDatas = library.searchPage(opts);
           }
 
           exporter.toZip(libraryDatas, username, function(filename){

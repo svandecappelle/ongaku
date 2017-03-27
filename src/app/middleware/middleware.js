@@ -85,7 +85,7 @@
             });
 
             logger.debug(middlewareObject.objs.session);
-            logger.info("meta: ", middlewareObject.objs.meta);
+            logger.debug("meta: ", middlewareObject.objs.meta);
             res.render(view, middlewareObject.objs);
         });
     };
