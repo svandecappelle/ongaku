@@ -130,7 +130,7 @@
         step: 5,
         min: 1,
         max: 200,
-        value: 200
+        value: that.numberFrequency
       }).on( "slidechange", function( event, ui ) {
         console.log("ui change slide:" + ui.value);
         that.numberFrequency = ui.value;
