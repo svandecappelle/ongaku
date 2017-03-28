@@ -908,7 +908,7 @@ var getStatistics = function(name, callback){
 
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
-        if (albumart !== null){
+        if (albumart){
           res.redirect(albumart);          
         } else {
           res.redirect("/img/album.jpg");
