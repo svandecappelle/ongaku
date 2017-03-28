@@ -63,6 +63,10 @@ script.
   function initView(){
     $('.toggle-icon').on('click', function () {
       $(this).children('input').val(!$(this).hasClass('on'));
+      var value = !$(this).hasClass('on');
+      console.log("visibility changed to: ", value);
+      console.log("POST: " + "/api/#{directory}?value=" + value);
+      $.post("/api/files/set-properties/imported/#{directory}?public=" + value);
       if ($(this).hasClass('on')) {
         return $(this).removeClass('on');
       } else {
