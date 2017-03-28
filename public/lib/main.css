@@ -1736,9 +1736,9 @@ input.searchbox:focus{
 }
 
 .upload{
-    width: 90%;
     text-align: center;
     display: block;
+    margin: 5px;
 }
 
 .upload .input-group{
