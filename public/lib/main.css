@@ -236,7 +236,7 @@ section.sidebar .search{
 
 section.sidebar.show {
 	margin-top: 50px;
-	margin-bottom: 100px;
+	margin-bottom: 8rem;
 }
 
 section.sidebar .user-sidebar{
@@ -953,6 +953,12 @@ ul.group.artist span.artistname{
 .icon.on.red {
   background: #FF3333;
 }
+.icon.on.blue{
+ background: #337ab7;
+}
+.icon.on.blue .handle{
+ color: #337ab7;
+}
 .icon.on.red .handle {
   color: #FF3333;
 }
@@ -1202,8 +1208,11 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
   padding: 5px;
 }
 
-.panel .library .song, .panel h1, .panel h2 {
-	color: black;
+.panel .library .song, .panel h1{
+    color: black;
+}
+.panel h2 {
+	color: white;
 }
 
 .panel hr{
@@ -1837,6 +1846,15 @@ section.song-list > .list-container.shows{
 	text-align: center;
 }
 
+.imported-files {
+    color: #000;
+}
+.imported-files h2{
+    color: #FFF;
+}
+.row.list-group-item .col-md-1{
+    text-align: center
+}
 /*
 @media screen and (max-width: 600px) {
     html { font-size: 100%; } 
