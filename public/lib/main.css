@@ -182,7 +182,6 @@ section.song-list > .list-container {
 	transition: all 0.3s ease 0s;
 	-moz-transition: all 0.3s ease 0s;
 	-webkit-transition: all 0.3s ease 0s;
-	z-index: 1000;
 }
 
 section.song-list > .list-container.video {
@@ -595,17 +594,15 @@ a.artist-link > img{
 }
 
 a.image-extensible.extended > img{
-	position: fixed;
-	top: 6rem;
-	width: 60%;
-	width: auto;
-	text-align: center;
-	margin-left: -30%;
-	z-index: 60000;
-	box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
-	left: 50%;
-	max-height: 500px;
-	height: auto;
+    position: fixed;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+    bottom: 6rem;
+    left: 50%;
+    right: 12rem;
+    height: calc(100% - 12rem);
+    width: auto;
+    margin-left: -25%;
+    display: block;
 }
 
 ul.group>li{
