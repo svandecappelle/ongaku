@@ -12,7 +12,7 @@ section.sidebar.show
 				a.btn.btn-default.downloader(href="#", style="margin-left: 5px; display: none; height:39px; padding-top: 8px;") search result
 					i.glyphicon.glyphicon-download(style="padding-left: 5px;")
 			.btn-group
-				button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown" aria-expanded="false") Group by
+				button.btn.btn-default.dropdown-toggle.groupby-button(type="button", data-toggle="dropdown" aria-expanded="false")="Group by"
 					span.caret(style="margin-left: 5px;")
 				ul.dropdown-menu.groupby.groupby-menu(role="menu")
 					li
@@ -22,7 +22,7 @@ section.sidebar.show
 						a(data-groupby="genre") Genre
 						a(data-groupby="genre,artist") Genre / Artists
 			.btn-group(style="margin-left: 5px;")
-				button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown" aria-expanded="false") Sort by
+				button.btn.btn-default.dropdown-toggle.sortby-button(type="button", data-toggle="dropdown" aria-expanded="false")="Sort by"
 					span.caret(style="margin-left: 5px;")
 				ul.dropdown-menu.sortby.sortby-menu(role="menu")
 					li
@@ -40,6 +40,8 @@ section.sidebar.show
 script.
 	function initView(){	
 		$('.dropdown-toggle').dropdown();
+		$.ongaku.library.setGroupBy("#{session.groupby}");
+		$.ongaku.library.setSortBy("#{session.sortby}");
 		$.ongaku.library.reset();
 		$.ongaku.library.clear();
 		$.ongaku.library.setPage(0);
