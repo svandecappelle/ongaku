@@ -1146,7 +1146,15 @@ h2{
 .status.offline {
 	color: #808080;
 }
+.user-status li span{
+    line-height: 34px;
+    vertical-align: top;
+}
 
+.user-status li a{
+    line-height: 34px;
+    vertical-align: top;
+}
 .small-title {
     font-size: 1.3rem;
     font-weight: 700;
