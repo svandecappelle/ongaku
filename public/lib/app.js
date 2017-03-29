@@ -397,7 +397,6 @@
       var savedColor = Cookies.get("base-color");
       if (savedColor) {
         this.color = savedColor;
-        $.ongaku.audiowave.setColor(this.color);
       }
     };
 

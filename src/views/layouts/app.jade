@@ -248,6 +248,11 @@ html
           
           $(function () {
             var basecolor = Cookies.get("base-color");
+            if (basecolor){
+              setTimeout(function(){
+                $.ongaku.themer.setBaseColor(basecolor);
+              }, 500);
+            }
             $("#base-color").spectrum({
               color:  basecolor ? basecolor : "#0f0",
               "body": "input.colorpicker",
