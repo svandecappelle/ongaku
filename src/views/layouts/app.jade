@@ -79,9 +79,6 @@ html
             border-left: 1px solid #{theme['base-color']};
             border-right: 1px solid #{theme['base-color']};
           }
-          
-        script.
-          $.ongaku.themer.setBaseColor("#{theme['base-color']}");
     body
         a#responsive-menu
           i.fa.fa-bars
@@ -249,12 +246,12 @@ html
           $(function () {
             var basecolor = Cookies.get("base-color");
             if (basecolor){
-              setTimeout(function(){
-                $.ongaku.themer.setBaseColor(basecolor);
-              }, 500);
+              $.ongaku.themer.setBaseColor(basecolor);
+            } else {
+              $.ongaku.themer.setBaseColor("#{theme['base-color']}");
             }
             $("#base-color").spectrum({
-              color:  basecolor ? basecolor : "#0f0",
+              color:  basecolor ? basecolor : "#{theme['base-color']}",
               "body": "input.colorpicker",
               "showAlpha": true,
               "preferredFormat": "rgb",
