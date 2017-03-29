@@ -22,6 +22,7 @@ var library = require("./../../middleware/library"),
     async = require("async");
 var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../public/user/",
   DEFAULT_GROUP_BY = ['artist', 'album'],
+  DEFAULT_SORT_BY = 'artist',
   userFilesOpts = {
     root: DEFAULT_USER_IMAGE_DIRECTORY,
    dotfiles: 'deny',
@@ -224,7 +225,7 @@ var getStatistics = function(name, callback){
         logger.debug("Search filtering audio library");
 
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
-        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
+        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
 
         var libraryDatas;
         var opts = {
@@ -247,7 +248,7 @@ var getStatistics = function(name, callback){
       app.get('/api/audio/library', function (req, res) {
         logger.debug("Get all audio library");
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
-        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
+        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
 
         var libraryDatas = library.getAudio(groupby, sortby);
         middleware.json(req, res, libraryDatas);
@@ -278,7 +279,7 @@ var getStatistics = function(name, callback){
       app.get('/api/audio/library/:page', function (req, res) {
         // load by page of 3 artists.
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
-        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
+        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
 
         logger.debug("Get all one page of library ".concat(req.params.page));
         var libraryDatas = null;
@@ -345,7 +346,7 @@ var getStatistics = function(name, callback){
 
         userlib.get(username, function (err, uids){
           var libraryDatas = library.getAudioFlattenById(uids);
-          var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
+          var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
 
           var filteredDatas = library.search({
             filter: req.params.search, 
