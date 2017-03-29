@@ -412,7 +412,7 @@
           color = color.replace(")", ", 1)");
         }
       }
-      Cookies.set("base-color", color);
+      Cookies.set("base-color", color, { expires: 365 });
 
       $(".mejs-time-loaded").css({
         "background" : color
