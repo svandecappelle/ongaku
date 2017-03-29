@@ -224,12 +224,14 @@ var getStatistics = function(name, callback){
         logger.debug("Search filtering audio library");
 
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
+        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
 
         var libraryDatas;
         var opts = {
           filter: req.params.search,
           type: 'audio',
-          groupby: groupby
+          groupby: groupby,
+          sortby: sortby
         };
         if (req.params.page === "all"){
           libraryDatas = library.search(opts);
@@ -245,8 +247,9 @@ var getStatistics = function(name, callback){
       app.get('/api/audio/library', function (req, res) {
         logger.debug("Get all audio library");
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
+        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
 
-        var libraryDatas = library.getAudio(groupby);
+        var libraryDatas = library.getAudio(groupby, sortby);
         middleware.json(req, res, libraryDatas);
       });
 
@@ -261,17 +264,29 @@ var getStatistics = function(name, callback){
         });
       });
 
+      app.get('/api/audio/sortby/:sortby', function(req, res){
+        req.session.sortby = req.params.sortby;
+        req.session.save(function () {
+
+          logger.info("changed sortby: ", req.session.sortby);
+
+          res.setHeader('Access-Control-Allow-Credentials', 'true');
+          res.json({status: "ok"});
+        });
+      });
+
       app.get('/api/audio/library/:page', function (req, res) {
         // load by page of 3 artists.
         var groupby = req.session.groupby ? req.session.groupby : DEFAULT_GROUP_BY;
+        var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
 
         logger.debug("Get all one page of library ".concat(req.params.page));
         var libraryDatas = null;
         
         if (req.params.page === "all"){
-          libraryDatas = library.getAudio(groupby);
+          libraryDatas = library.getAudio(groupby, sortby);
         } else {
-          libraryDatas = library.getAudio(req.params.page, 3, groupby);
+          libraryDatas = library.getAudio(req.params.page, 3, groupby, sortby);
         }
         middleware.json(req, res, libraryDatas);
       });
@@ -330,11 +345,13 @@ var getStatistics = function(name, callback){
 
         userlib.get(username, function (err, uids){
           var libraryDatas = library.getAudioFlattenById(uids);
+          var sortby = req.session.sortby ? req.session.sortby : DEFAULT_GROUP_BY;
 
           var filteredDatas = library.search({
             filter: req.params.search, 
             type: "audio", 
-            groupby: undefined
+            groupby: undefined,
+            sortby: sortby
           }, libraryDatas);
           middleware.json(req, res, filteredDatas);
         });

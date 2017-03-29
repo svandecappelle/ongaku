@@ -8,17 +8,27 @@ section.sidebar.show
 					, placeholder='#{search}', style="height:3rem", data-type="audio")
 				.layer
 		.col-lg-4.col-md-4.col-xs-4
-			button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown" aria-expanded="false") Group by
-				span.caret(style="margin-left: 5px;")
-			ul.dropdown-menu.groupby(role="menu", style="margin-left: 15px;")
-				li
-					a(data-groupby="artist,album") Artists / Albums
-					a(data-groupby="artist") Artists
-					a(data-groupby="album") Albums
-					a(data-groupby="genre") Genre
-					a(data-groupby="genre,artist") Genre / Artists
+			.btn-group
 				a.btn.btn-default.downloader(href="#", style="margin-left: 5px; display: none; height:39px; padding-top: 8px;") search result
 					i.glyphicon.glyphicon-download(style="padding-left: 5px;")
+			.btn-group
+				button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown" aria-expanded="false") Group by
+					span.caret(style="margin-left: 5px;")
+				ul.dropdown-menu.groupby.groupby-menu(role="menu")
+					li
+						a(data-groupby="artist,album") Artists / Albums
+						a(data-groupby="artist") Artists
+						a(data-groupby="album") Albums
+						a(data-groupby="genre") Genre
+						a(data-groupby="genre,artist") Genre / Artists
+			.btn-group(style="margin-left: 5px;")
+				button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown" aria-expanded="false") Sort by
+					span.caret(style="margin-left: 5px;")
+				ul.dropdown-menu.sortby.sortby-menu(role="menu")
+					li
+						a(data-sortby="artist") Artists
+						a(data-sortby="album") Albums
+						a(data-sortby="genre") Genre
 
 	if (data.message !== null)
 		h1.message
@@ -28,7 +38,7 @@ section.sidebar.show
 		.library
 			ul.lib.group.artist.open
 script.
-	function initView(){
+	function initView(){	
 		$('.dropdown-toggle').dropdown();
 		$.ongaku.library.reset();
 		$.ongaku.library.clear();

@@ -250,8 +250,12 @@
         if (metadatas.genre && metadatas.genre.length === 0) {
           metadatas.genre = ["Unknown"];
         }
+        var artist = metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : metadatas.artistalbum ? metadatas.artistalbum : "Unknown artist";
+        if (Array.isArray(artist) && artist.length === 1){
+          artist = artist[0];
+        }
         return {
-            artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : metadatas.artistalbum ? metadatas.artistalbum : "Unknown artist",
+            artist: artist,
             file: file,
             relativePath: typeof nconf.get("library") === 'String' ? file.replace(nconf.get("library"), "") : file,
             title: metadatas.title ? metadatas.title : metadatas.TITLE ? metadatas.TITLE : path.basename(file.replace(nconf.get("library"), "")),

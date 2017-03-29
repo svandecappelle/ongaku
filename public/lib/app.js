@@ -1095,6 +1095,8 @@
 
       $(".dropdown-menu.groupby a").on("click", function(){
         that.setGroupBy($(this).data("groupby"));
+        $(".dropdown-menu.groupby a").off("click");
+        $(".dropdown-menu.sortby a").off("click");
         $.get("/api/audio/groupby/" + $(this).data("groupby"), {
           success: function(){
             setTimeout(function(){
@@ -1104,6 +1106,23 @@
           		$.ongaku.library.bind();
           		$.ongaku.library.fetch();
             }, 500);
+          }
+        });
+      });
+
+      $(".dropdown-menu.sortby a").on("click", function(){
+        that.setSortBy($(this).data("sortby"));
+        $(".dropdown-menu.sortby a").off("click");
+        $(".dropdown-menu.groupby a").off("click");
+        $.get("/api/audio/sortby/" + $(this).data("sortby"), {
+          success: function(){
+            setTimeout(function(){
+              $.ongaku.library.reset();
+              $.ongaku.library.clear();
+              $.ongaku.library.setPage(0);
+              $.ongaku.library.bind();
+              $.ongaku.library.fetch();
+            });
           }
         });
       });
@@ -1182,6 +1201,14 @@
 
     Library.prototype.getGroupBy = function () {
       return this.groupBy;
+    };
+
+    Library.prototype.setSortBy = function (sortBy) {
+      this.sortBy = sortBy;
+    };
+
+    Library.prototype.getSortBy = function () {
+      return this.sortBy;
     };
 
     Library.prototype.append = function (library) {

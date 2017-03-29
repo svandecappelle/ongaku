@@ -1722,7 +1722,7 @@ input.searchbox:focus + .layer{
 
 input.searchbox:focus{
     position: fixed;
-    top: 0px;
+    top: 3rem;
     bottom: 0;
     left: 90px;
     right: 0px;
