@@ -619,6 +619,10 @@ ul.group.album > li {
 	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.82);
 }
 
+.dark-theme ul.group.album > li{
+    background: none repeat scroll 0% 0% rgba(75, 76, 76, 0.49);
+}
+
 ul.group{
 	padding: 10px;
 	transition: all 0.3s ease-in-out 0s;
@@ -658,6 +662,10 @@ ul.group .album, ul.group .album a, ul.group .tracklist .track{
 	color: #404040;
 }
 
+.dark-theme ul.group .album, .dark-theme ul.group .album a, .dark-theme ul.group .tracklist .track{
+    color: #FFF;
+}
+
 ul.group.artist.open>li>a.trackaction{
 	color: white;
 }
@@ -666,6 +674,10 @@ ul.group.artist.open>li>a.trackaction{
 	color: #13CC00;
 	text-shadow: 1px 1px rgba(255,255,255,0.7);
 	font-weight: 400;
+}
+
+.dark-theme .albumtitle{
+    text-shadow: 1px 1px rgba(0,0,0,0.7);    
 }
 
 ul.group.tracklist>li{
@@ -736,8 +748,16 @@ ul.group.artist span.artistname{
 	transition: all 0.3s ease-in-out 0s;
 }
 
+.dark-theme .trackaction{
+    color: #FFF;
+}
+
 .trackaction:hover{
 	color: #BEBEBE;
+}
+
+.dark-theme .trackaction:hover{
+    color: #DEDEDE;
 }
 
 .lib .group .track{
@@ -747,6 +767,11 @@ ul.group.artist span.artistname{
 
 .lib .group .tracklist>li:hover {
 	background-color: rgba(255, 255, 255, 0.82);
+}
+
+
+.dark-theme .lib .group .tracklist>li:hover {
+    background-color: rgba(63, 63, 63, 0.8);
 }
 
 .notrackplaying{
