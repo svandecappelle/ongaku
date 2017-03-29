@@ -598,11 +598,13 @@ a.image-extensible.extended > img{
     box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
     bottom: 6rem;
     left: 50%;
-    right: 12rem;
-    height: calc(100% - 12rem);
-    width: auto;
-    margin-left: -25%;
+    right: 50%;
+    width: calc(60% - 12rem);
+    margin-left: calc(-24rem - 5% );
     display: block;
+    max-height: calc(100% - 12rem);
+    top: 7rem;
+    height: auto;
 }
 
 ul.group>li{
