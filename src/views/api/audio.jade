@@ -38,8 +38,7 @@ section.sidebar.show
 		.library
 			ul.lib.group.artist.open
 script.
-	function initView(){	
-		$('.dropdown-toggle').dropdown();
+	function initView(){
 		$.ongaku.library.setGroupBy("#{session.groupby}");
 		$.ongaku.library.setSortBy("#{session.sortby}");
 		$.ongaku.library.reset();

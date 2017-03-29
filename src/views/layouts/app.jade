@@ -237,6 +237,7 @@ html
             $.get("/api/view/".concat(view), function(html){
               processAjaxData(".main-content", html, view);
               window.history.pushState(view, "", "/".concat(view));
+              $('.dropdown-toggle').dropdown();
               if (initView){
                 initView();
               }
@@ -319,6 +320,7 @@ html
         script.
           $(function(){
             try{
+              $('.dropdown-toggle').dropdown();
               initView();
             } catch (e){
               
