@@ -995,6 +995,30 @@ var getStatistics = function(name, callback){
         }
       });
 
+      app.post("/api/files/set-properties/imported/:filename(*)", function(req, res){
+        if (nconf.get("allowUpload") === 'true') { 
+          UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
+            var username = req.session.passport.user.username;
+            var file = req.params.filename;
+            var isPublic = req.query.public;
+            var folder = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + file;
+
+            logger.info("Set to public[" + isPublic + "] for user[" + username + "] folder: ", file);
+            console.log("Folder " + folder + " scanning");
+            var type = ['audio', 'video'];
+            library.addFolder(folder, function(scanResult){
+              console.log("Folder added");
+              type = _.without(type, scanResult.type);
+              if (type.lenght === 0){
+                res.send({
+                  message: 'ok'
+                });
+              }              
+            });
+          });
+        }
+      });
+
       app.get("/upload/files/imported/:filename(*)", function(req, res){
         if (nconf.get("allowUpload") === 'true') { 
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {

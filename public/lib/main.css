@@ -596,14 +596,16 @@ a.artist-link > img{
 
 a.image-extensible.extended > img{
 	position: fixed;
-	top: 100px;
-	height: 75%;
+	top: 6rem;
+	width: 60%;
 	width: auto;
 	text-align: center;
-	margin: auto;
-	margin-left: -25%;
-	z-index: 1;
+	margin-left: -30%;
+	z-index: 60000;
 	box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+	left: 50%;
+	max-height: 500px;
+	height: auto;
 }
 
 ul.group>li{

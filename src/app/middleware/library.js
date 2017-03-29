@@ -51,6 +51,25 @@
         });
     };
 
+    Library.addFolder = function(path, callback){
+      var that = this;
+      scan.scanFolder(path, function result(folderContent) {
+        if (folderContent.audio){
+          that.populate("audio", folderContent, function (){
+            callback({
+              type: 'audio'
+            });
+          });
+        } else if (folderContent.video){
+          that.populate("video", folderContent, function (){
+            callback({
+              type: 'video'
+            });
+          });
+        }
+      })
+    };
+
     Library.populate = function (type, libObject, callback) {
 
         var lib = libObject[type];
