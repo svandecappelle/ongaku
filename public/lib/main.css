@@ -1822,7 +1822,6 @@ input.searchbox:focus{
 
 section.song-list > .list-container.shows{
     left: 90px;
-    min-width: 100%;
     background-color: rgba(30, 30, 30, 0.98);
 }
 
