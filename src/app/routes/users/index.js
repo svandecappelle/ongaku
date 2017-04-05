@@ -360,7 +360,7 @@ var getStatistics = function(name, callback){
 
       app.get('/api/playlist', function (req, res) {
         logger.debug("get current playlist");
-        res.send({all: req.session.playlist, name: req.session.playlistname});
+        res.send({all: _.compact(req.session.playlist), name: req.session.playlistname});
       });
 
       app.post('/api/playlist/add/:uid', function (req, res) {
