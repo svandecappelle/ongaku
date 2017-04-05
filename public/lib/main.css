@@ -176,7 +176,7 @@ section.song-list > .list-container {
 	left: 80%;
 	right: 0px;
 	top: 0px;
-	bottom: 5rem;
+	bottom: calc(5rem + 71px);
 	background-color: rgba(30, 30, 30, 0.84);
 	color: #FFF;
 	transition: all 0.3s ease 0s;
@@ -472,7 +472,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 .pending-list{
 	position: fixed;
 	left: 90px;
-	right: 20%;
+	right: 0px;
 	bottom: 5rem !important;
 	min-height: 50px;
 	background-color: rgba(30, 30, 30, 0.84);
@@ -487,7 +487,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 }
 
 .pending-list.video{
-	right: 10%;
+	right: 0px;
 }
 
 /* TREE VIEW */
