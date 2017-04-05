@@ -1675,7 +1675,7 @@
     var Track = function (tracknumber, val){
       var track = $("<li>");
 
-
+      console.log(val);
       var trackSong = $("<a>", {
         class: "song",
         "data-uid": val.uid
