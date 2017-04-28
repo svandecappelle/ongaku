@@ -873,6 +873,19 @@
           trackElement.append(trackDownloader);
         }
 
+        var trackNoElement = $('<div>', {
+          class: 'track trackno',
+          "data-uid": track.uid,
+          "data-encoding": track.encoding,
+          "data-placement": "bottom auto",
+          "data-toggle": "tooltip",
+          "data-title": "Add track to current playlist"
+        });
+        trackNoElement.text(track.metadatas.track.no);
+
+        trackElement.append(trackNoElement);
+        
+
         trackElement.append(trackDetailElement);
         tracksElement.append(trackElement);
         $(trackDetailElement).tooltip();

@@ -379,6 +379,10 @@
             } else if (groupbyClause[1] === "artist"){
               albumObject.image = Library.loadingCoverArtists[albumObject.title];
             }
+            
+            albumObject.tracks = _.sortBy( albumObject.tracks, function(element){
+              return element.metadatas.track.no;
+            });
 
             return albumObject;
           });
@@ -391,6 +395,10 @@
 
         } else {
           rootGroupObject[groupbyClause[0]] = groupObject;
+
+          val = _.sortBy( val, function(element){
+            return element.metadatas.track.no;
+          });
           rootGroupObject.tracks = val;
         }
 
