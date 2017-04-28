@@ -2,25 +2,25 @@ section.sidebar.show
   .search
     .col-lg-8.col-md-8
       .input-group
-        h1 #{connectTitle}
+        h1 #{i18n.connectTitle}
   .panel.panel-default.login-screen
     form.form-horizontal(method='post')
       .form-group
-        label.col-sm-2.control-label(for="username") #{username}
+        label.col-sm-2.control-label(for="username") #{i18n.username}
         .col-sm-10
-          input.form-control(type="text", id="username", name="username", placeholder="#{username}")
+          input.form-control(type="text", id="username", name="username", placeholder="#{i18n.username}")
       .form-group
-        label.col-sm-2.control-label(for="password") #{password}
+        label.col-sm-2.control-label(for="password") #{i18n.password}
         .col-sm-10
-          input.form-control(type="password", id="password", name="password", placeholder="#{password}")
+          input.form-control(type="password", id="password", name="password", placeholder="#{i18n.password}")
       .form-group
         .col-sm-offset-2.col-sm-10
             .checkbox
             label
               input(type="checkbox", name="remember")
-              span #{remember}
+              span #{i18n.remember}
       .form-group(style='margin-right: 0px')
-        input.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit", value="#{connect}")
+        input.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit", value="#{i18n.connect}")
   script.
     function initView(){
       var sPageURL = decodeURIComponent(window.location.search.substring(1)),

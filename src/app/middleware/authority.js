@@ -16,7 +16,8 @@
     Authority.logout = function (req, res) {
       if (req.isAuthenticated()) {
         logger.info('[Auth] Session ' + req.sessionID + ' logout (uid: ' + req.session.passport.user + ')');
-
+        req.session.locale = nconf.get("defaultLocale");
+        
         // use it for alert disconnect of other sessions (and users)
         /*
             var ws = require('../socket.io');
@@ -55,6 +56,12 @@
         } else {
           duration = 1000 * 60 * 60;
           req.session.cookie.maxAge = duration;
+        }
+        logger.info("Connecting: " , userData);
+        if (userData.settings && userData.settings.locale){
+          req.session.locale = userData.settings.locale;
+        } else {
+          req.session.locale = nconf.get("defaultLocale");
         }
 
         user.isAdministrator(userData.uid, function(err, admin){
@@ -177,9 +184,12 @@
 
             user.auth.clearLoginAttempts(uid);
 
-            done(null, {
-              uid: uid
-            }, '[[success:authentication-successful]]');
+            user.getSettings(uid, function(err, settings){
+              done(null, {
+                uid: uid,
+                settings: settings
+              }, '[[success:authentication-successful]]');
+            });
           });
         });
       });

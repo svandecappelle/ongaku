@@ -7,15 +7,15 @@ a.toggle-menu.toggle.pulse.appender.playlist-appender
           .form-group
             if !session.user.isAnonymous
               .input-group
-                label.input-group-addon #{playlist}
+                label.input-group-addon #{i18n.playlist}
                 if session.playlistname
                   input#playlistname.form-control(type="text", value="#{session.playlistname}")
                 else
-                  input#playlistname.form-control(type="text", placeholder="#{new_playlist}")
+                  input#playlistname.form-control(type="text", placeholder="#{i18n.new_playlist}")
               .playlists
                   .form-group.form-group-sm
                     .col-md-2
-                      button.btn.btn-default.dropdown-toggle(style="display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{my_playlists}
+                      button.btn.btn-default.dropdown-toggle(style="display: inline-block;", type="button", data-toggle="dropdown" aria-expanded="false") #{i18n.my_playlists}
                           span.caret(style="margin-left: 5px;")
                       ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
               .list-actions(style="float:right;")
@@ -28,7 +28,7 @@ a.toggle-menu.toggle.pulse.appender.playlist-appender
                   span.button
                       i.fa.fa-eraser
             else if meta.requireAuthentication
-              div #{stream_auth_required}
+              div #{i18n.stream_auth_required}
             else
               .list-actions(style="float:right;")
                 span.button
@@ -37,16 +37,16 @@ a.toggle-menu.toggle.pulse.appender.playlist-appender
       .tracks-columns
           .track-info.track-px
               .track-info.track-num
-                  span #{track}
+                  span #{i18n.track}
               .track-info.track-time
-                  span #{duration}
+                  span #{i18n.duration}
           .track-info.track
               .track-info.track-title
-                  span #{track_title}
+                  span #{i18n.track_title}
               .track-info.track-artist
-                  span #{artist}
+                  span #{i18n.artist}
               .track-info.track-album
-                  span #{album}
+                  span #{i18n.album}
   .songs-container
       ul.playlist
 

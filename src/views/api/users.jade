@@ -1,7 +1,7 @@
 section.sidebar.show
-  .search(style="height: 59px")
+  .search
     .col-lg-8.col-md-8
-      h2(style="color: #FFF;") All users
+      h1(style="color: #FFF;") All users
   .user-sidebar.library-view(style="top:70px;")
     each user in users  
       div(class="panel panel-default user-vignette #{user.status}", data-user="#{user.username}")

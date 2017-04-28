@@ -128,6 +128,24 @@ var bcrypt = require('bcryptjs'),
         db.setObject('user:' + uid, data, callback);
     };
 
+    User.getSingleSetting = function (uid, field, callback) {
+        db.getObjectField('settings:' + uid, field, callback);
+    };
+
+    User.getSettings = function (uid, callback) {
+        var field;
+        db.getObject('settings:' + uid, callback);
+    };
+
+    User.setSingleSetting = function (uid, field, value, callback) {
+        db.setObjectField('settings:' + uid, field, value, callback);
+    };
+
+    User.setSettings = function (uid, data, callback) {
+        var field;
+        db.setObject('settings:' + uid, data, callback);
+    };
+
     User.getUsersFromSet = function (set, start, stop, callback) {
         async.waterfall([
             function (next) {
@@ -203,7 +221,16 @@ var bcrypt = require('bcryptjs'),
                         user.status = 'offline';
                     }
                     next(null, user);
-                }
+                },
+                function (user, next){
+                    User.getSettings(user.uid, function(err, settings){
+                        if (err){
+                            logger.error(err);
+                        }
+                        user.settings = settings;
+                        next(null, user);
+                    });
+                },
             ], callback);
         }
 

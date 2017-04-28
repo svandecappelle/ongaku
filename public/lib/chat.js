@@ -101,17 +101,19 @@
       this.input = $("<input>", {
         class: "input-box form-control"
       });
-      this.input.change(function () {
-        var message = {
-          from: $.ongaku.getUser(),
-          to: $(".message-box li.active a").data("to"),
-          message: $(this).val(),
-          date: new Date()
-        };
-        socket.emit("msg", message);
-        that.incoming(message);
+      this.button = $("<a>", {
+        class: 'chat-message-send-button'
+      });
+      this.button.text("send");
 
-        $(this).val("");
+      this.button.on('click', function(){
+        that.send();
+      });
+
+      this.input.on('keyup', function (e) {
+        if (e.keyCode == 13) {
+          that.send();
+        }
       });
 
       this.chatsElements = $('<ul>', {
@@ -125,10 +127,24 @@
       this.popup.append(this.chatsElements);
       this.popup.append(this.tabContent);
       this.popup.append(this.input);
+      this.popup.append(this.button);
       this.chat.append(this.popup);
 
       this.bind();
     }
+
+    ChatWidget.prototype.send = function() {
+      var message = {
+        from: $.ongaku.getUser(),
+        to: $(".message-box li.active a").data("to"),
+        message: $(this.input).val(),
+        date: new Date()
+      };
+      this.socket.emit("msg", message);
+      this.incoming(message);
+
+      $(this.input).val("");
+    };
 
     ChatWidget.prototype.bind = function () {
       var that = this;

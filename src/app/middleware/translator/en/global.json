@@ -3,6 +3,15 @@
     "fr": "French",
     "en": "English"
   },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "away": "Away",
+    "busy": "Busy"
+  },
+  "all": "All",
+  "admin_zone": "Admin zone",
+  "home": "Home",
   "music": "Music",
   "video": "Video",
   "featured": "Featured",
@@ -20,5 +29,9 @@
   "duration": "Duration",
   "track_title": "Title",
   "album": "Album",
-  "artist": "Artist"
+  "artist": "Artist",
+  "language": "Language",
+  "logout": "Logout",
+  "login": "Sign in",
+  "register": "Register"
 }

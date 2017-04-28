@@ -74,7 +74,7 @@ html
             border-bottom: 1px solid #{theme['base-color']};
           }
 
-          .chat-container .nav > li > a{
+          .chat-container .nav > li{
             border-top: 1px solid #{theme['base-color']};
             border-left: 1px solid #{theme['base-color']};
             border-right: 1px solid #{theme['base-color']};
@@ -93,12 +93,12 @@ html
                         li.nav-home
                             a.view(href="/", title="Acceuil", data-view="audio")
                                 i.fa.fa-home
-                                span.text Acceuil
+                                span.text= i18n.home
                         if !session.user.isAnonymous && session.user.administrator
                             li.nav-cog
                                 a.view(href="/admin", title="Administration", data-view='admin')
                                   i.fa.fa-cog
-                                  span.text Admin
+                                  span.text= i18n.admin_zone
                             li.nav-reload
                                 a(href="#reload", title="Reload library")
                                   i.fa.fa-book
@@ -107,6 +107,13 @@ html
               input#base-color(type="text")
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
+                  li.dropdown#language-chooser(style="float: left; margin-left: 5px;")
+                      a.dropdown-toggle(data-toggle="dropdown", data-original-title="#{i18n.language}")
+                        i.fa.fa-fw.fa-flag(title="#{i18n.language}")
+                      ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
+                        for language in languages
+                          li
+                            a.language(data-locale="#{language}")= i18n.i18n_languages[language]
                     unless session.user.isAnonymous
                         li.dropdown(style="float: left;")
                             a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
@@ -114,12 +121,11 @@ html
                             ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
                                 if session.notifications.count > 0
                                     li
-                                        a(href="all") Tous
+                                        a(href="all")= i18n.all
                                     li.divider
                                         each notif in session.notifications.datas
                                             li
                                                 a(href="/notification")= notif
-
                     li.dropdown(style="float: left; margin-left: 5px;")
                         a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
                             if session.user.avatar
@@ -133,34 +139,34 @@ html
                           if session.user.isAnonymous
                             li
                               a.view(href="/login", data-view="login")
-                                span Connection
+                                span= i18n.login
                             li
                               a.view(href="/register", data-view="register")
-                                span Register
+                                span= i18n.register
                           else
                             li
                               a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
                                   i.fa.fa-circle.status.online
                                   span#username(style="margin-left:10px;") #{session.user.username}
                             li
-                              a(href="/logout") Deconnection
+                              a(href="/logout")= i18n.logout
                             li.divider
                             li
                               a(data-status="online")
                                 i.fa.fa-circle.status.online
-                                span(style="margin-left:10px;") En ligne
+                                span(style="margin-left:10px;")= i18n.status.online
                             li
                               a(data-status="away")
                                 i.fa.fa-circle.status.away
-                                span(style="margin-left:10px;") Absent
+                                span(style="margin-left:10px;")= i18n.status.away
                             li
                               a(data-status="busy")
                                 i.fa.fa-circle.status.busy
-                                span(style="margin-left:10px;") Occupé
+                                span(style="margin-left:10px;")= i18n.status.busy
                             li
                               a(data-status="offline")
                                 i.fa.fa-circle.status.offline
-                                span(style="margin-left:10px;") Hors ligne
+                                span(style="margin-left:10px;")= i18n.status.offline
 
         nav.menu.main-menu
             .menu.menu-discover
@@ -168,24 +174,24 @@ html
                     li
                         a.view(href="/featured", data-view="featured")
                             i.glyphicon.glyphicon-star
-                            div #{featured}
+                            div #{i18n.featured}
                     li
                         a.view(href="/", data-view="audio")
                             i.glyphicon.glyphicon-music
-                            div #{music}
+                            div #{i18n.music}
                     if meta.videoStream === 'true'
                       li
                           a.view(href="/video", data-view="video")
                               i.glyphicon.glyphicon-facetime-video
-                              div #{video}
+                              div #{i18n.video}
                     li
                         a.view(href="/users", data-view="users")
                             i.glyphicon.glyphicon-user
-                            div #{ongaku_users}
+                            div #{i18n.ongaku_users}
                     li
                         a
                             i.glyphicon.glyphicon-tasks
-                            div #{radios}
+                            div #{i18n.radios}
             if !session.user.isAnonymous
               .menu.me
                   ul
@@ -193,18 +199,18 @@ html
                           //TODO active view layer
                           a.view(href="/library", data-view="library")
                               i.glyphicon.glyphicon-book
-                              div #{library}
+                              div #{i18n.library}
                       if meta.allowUpload === 'true'
                         li
                           a.vew(href="/upload", data-view="upload")
                               i.glyphicon.glyphicon-upload
-                              div #{upload}
+                              div #{i18n.upload}
             .menu.project
                 ul
                     li
                         a(href="https://github.com/svandecappelle/ongaku", target="_blank")
                             i.fa.fa-github(style="font-size: 20pt;")
-                            div #{project}
+                            div #{i18n.project}
 
         main.main-content
             block library
@@ -308,12 +314,23 @@ html
               var view = event.state !== null ? event.state : "audio";
               $.get("/api/view/".concat(view), function(html){
                 processAjaxData(".main-content", html, view);
-                  if (initView){
-                    initView();
-                  }
-                });
+                if (initView){
+                  initView();
+                }
               });
             });
+
+            $('#language-chooser .language').on('click', function(){
+              var lang = $(this).data('locale');
+              $.post('http://#{session.host}/user/set-locale', {
+                lang: lang
+              }, function(response){
+                if (response.status === 200){
+                  window.location.reload();
+                }
+              });
+            });
+          });
 
         block scripts
 
