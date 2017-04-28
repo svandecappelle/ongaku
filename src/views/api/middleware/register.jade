@@ -23,9 +23,9 @@ section.sidebar.show
         .col-md-6
           input.form-control(type="email", name="email")
       .form-group
-        label.col-md-4.control-label Language
+        label.col-md-4.control-label= i18n.language
         .col-md-6
           select.form-control(name="lang")
             for language in languages
-              option(value="#{language}")= i18n_languages[language]
+              option(value="#{language}")= i18n.i18n_languages[language]
       button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit") Register
