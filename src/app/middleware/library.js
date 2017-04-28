@@ -104,6 +104,7 @@
                       'artist' : artist.artist,
                   }, function (err, art) {
                       if (err) {
+                          console.log('\n');
                           logger.warn("artist '" + artist.artist + "' not found");
                           Library.loadingCoverArtists[artist.artist] = null;
                       } else if (art.image) {
@@ -125,6 +126,7 @@
                             'album' : album.title
                         }, function (err, alb) {
                             if (err) {
+                                console.log('\n');
                                 logger.warn("[" + artist.artist + "] -> album:: '" + album.title + "' not found");
                                 Library.loadingCoverAlbums[artist.artist][album.title] = null;
                             } else if (alb.image) {
@@ -156,10 +158,12 @@
         }
 
         if (type === "audio" && libObject.isFinishedAll){
+          console.log('\n');
           logger.info("audio scanned");
           //Library.data["audio"] = _.sortBy(Library.data["audio"], DEFAULT_SORT);
           this.audioScanned = true;
         } else if(libObject.isFinishedAll) {
+          console.log('\n');
           logger.info("video scanned");
           this.videoScanned = true;
         }
@@ -340,8 +344,7 @@
         arrayResults = searchResultList;
       }
 
-      logger.debug(arrayResults);
-
+      
       return arrayResults;
     };
 
@@ -433,7 +436,6 @@
                 return tracks;
               })
             };
-            logger.debug(albumObject);
             return albumObject;
           })
         };
@@ -462,7 +464,6 @@
             albums: arrayResults,
           });
         });
-        logger.info(albumsObject);
         return albumsObject;
       } else {
         arrayResults = this.groupby(this.flatten);
@@ -475,7 +476,6 @@
         });
         arrayResults.albums = albumSearched;
       }
-      logger.warn(arrayResults);
       return arrayResults;
     };
 
