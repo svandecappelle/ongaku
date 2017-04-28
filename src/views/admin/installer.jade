@@ -30,7 +30,7 @@ html
                                 a installer
                             li
                                 a Help
-            form
+            form(method='post')
                 h1 Welcome to the web installer.
                 .group
                     h2 Step 1: Redis database.
@@ -59,3 +59,5 @@ html
                     .form-group
                         label library directories
                         input.form-control(type="text", placeholder="Directories (commas separated)")
+                .footer(style="text-align: center;")
+                    button.btn.btn-success(type='submit') Install

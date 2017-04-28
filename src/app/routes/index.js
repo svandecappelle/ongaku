@@ -15,22 +15,24 @@ var users = require("./users"),
       authentication.initialize(app);
       authentication.load(app);
 
-      //group.get("administrators", {truncateUserList: true}, function(err, admins){
-        /*if (!admins || !admins.users || admins.users.length){
+      group.get("administrators", {truncateUserList: true}, function(err, admin_group){
+        if (!admin_group || !admin_group.members || admin_group.members.length === 0){
           logger.info("Not installed");
-          installer.load(app);
-        } else {*/
+          installer.load(app, function(){
+            Routes.load(app);
+          });
+        } else {
           // users routes
           users.load(app);
 
           // admins routes
           admins.load(app);
-        // }
+         }
 
         // errors views
         errors.load(app);
 
-      //});
+      });
     };
 
 }(exports));
