@@ -3,6 +3,23 @@
     "fr": "French",
     "en": "English"
   },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "away": "Away",
+    "busy": "Busy"
+  },
+  "all_users": "All users",
+  "group_by": "Group by:",
+  "sort_by": "Sort by:",
+  "artist_and_albums": "Artists / Albums",
+  "artists": "Artists",
+  "Albums": "Albums",
+  "Genre": "Genres",
+  "genre_and_artists": "Genres / Artists",
+  "all": "All",
+  "admin_zone": "Admin zone",
+  "home": "Home",
   "music": "Music",
   "video": "Video",
   "featured": "Featured",
@@ -20,5 +37,12 @@
   "duration": "Duration",
   "track_title": "Title",
   "album": "Album",
-  "artist": "Artist"
+  "artist": "Artist",
+  "language": "Language",
+  "logout": "Logout",
+  "login": "Sign in",
+  "register": "Register",
+  "most_played_tracks": "Most played tracks",
+  "most_played_genre": "Most played genre",
+  "featured_tracks": "Currently featured"
 }

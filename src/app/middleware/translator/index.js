@@ -99,7 +99,7 @@
 		if (view.startsWith("api/")){
 			view = view.replace("api/", "");
 		}
-		logger.debug("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
+		logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
     var output = this.datas['global'];
     output = _.extend(output, this.datas[view]);
     return output;

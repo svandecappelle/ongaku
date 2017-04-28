@@ -368,12 +368,13 @@
     Middleware.translate = function(middlewareObject, next){
     	// Add I18n values
     	var locale = nconf.get('defaultLanguage');
+
     	if (middlewareObject.req && middlewareObject.req.session && middlewareObject.req.session.locale){
     		locale = middlewareObject.req.session.locale;
     	}
 
     	var i18nValues = new translator.Language(locale);
-    	_.extend(middlewareObject.objs, i18nValues.get(middlewareObject.view));
+    	_.extend(middlewareObject.objs, {i18n: i18nValues.get(middlewareObject.view)});
     	next(null, middlewareObject);
     };
 }(exports));

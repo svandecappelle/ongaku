@@ -873,6 +873,14 @@
           trackElement.append(trackDownloader);
         }
 
+        var trackNoElement = $('<div>', {
+          class: 'trackno'
+        });
+        trackNoElement.text(track.metadatas.track.no);
+
+        trackElement.append(trackNoElement);
+        
+
         trackElement.append(trackDetailElement);
         tracksElement.append(trackElement);
         $(trackDetailElement).tooltip();
@@ -1092,9 +1100,13 @@
       $.each(this.handlers(), function (type, handler){
         handler.bind();
       });
-      $(".groupby-button").text("Group by: " + that.getGroupBy());
-      $(".sortby-button").text("Sort by: " + that.getSortBy());
-
+      if (that.getGroupBy()){
+        $(".groupby-button span.value").text(that.getGroupBy());
+      }
+      if (that.getSortBy()){
+        $(".sortby-button span.value").text(that.getSortBy());  
+      }
+      
       $(".dropdown-menu.groupby a").on("click", function(){
         that.setGroupBy($(this).data("groupby"));
         $(".dropdown-menu.groupby a").off("click");

@@ -6,6 +6,10 @@
 .chat-opener{
 
 }
+.message-box li.active{
+  background-color: #FFF;
+  color: #000;
+}
 
 .chat-container .message-box.show {
   visibility: visible;
@@ -90,16 +94,57 @@
   color: #CECECE;
 }
 
-.chat-container .nav > li > a{
-  padding: 5px 3px;
-  color: white;
-  background-color: transparent;
+.chat-container .nav > li{
   border-bottom: 1px solid #000;
   border-radius: 0px;
   cursor: pointer !important;
 }
 
-.chat-container .nav > li > a:hover{
-  border: 1px solid #000;
-  background-color: black !important;
+.chat-container .nav > li:hover{
+  background-color: #000;
+}
+
+.chat-container .nav > li > a, .chat-container .nav > li > a:focus{
+  padding: 5px 3px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.chat-container .nav > li > a:hover, .chat-container .nav > li > a:focus{
+  border: none !important;
+  background-color: transparent !important;
+  cursor: pointer;
+}
+
+.chat-container .nav > li.active, .chat-container .nav > li.active > a{
+  color: #000;
+  border: none;
+}
+
+.chat-container .nav > li.active:hover, .chat-container .nav > li.active > a:hover{
+  color: #fff;
+  border: none;
+}
+
+.chat-message-send-button{
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  outline: 0px none;
+  border: none;
+  padding: 3px 7px;
+  font-size: 1.2rem;
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+  display: inline-block;
+  border-radius: 3px;
+  transition: all ease-out 0.3s;
+}
+
+.chat-message-send-button:hover{
+  background-color: #FFF;
+  color: #000;
+  transition: all ease-out 0.3s;
 }

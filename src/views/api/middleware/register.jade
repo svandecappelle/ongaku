@@ -1,31 +1,32 @@
 section.sidebar.show
-  .search(style="height:59px") 
+  .search
     .col-lg-8.col-md-8
       .input-group
-        h1 Register
-  .col-md-12.panel.panel-default.col-md-offset-1.login-screen
-    h2 Remaining user registeration count #{registerLeft}
+        h1= i18n.register
+  .col-md-11.panel.panel-default.col-md-offset-1.login-screen
+    h2= i18n.remaining_message
+      span.left-user #{registerLeft}
     form.form-horizontal(method='post')
       .form-group
-        label.col-md-4.control-label Username
+        label.col-md-4.control-label= i18n.username
         .col-md-6
           input.form-control(type="text", name="username")
       .form-group
-        label.col-md-4.control-label Password
+        label.col-md-4.control-label= i18n.password
         .col-md-6
           input.form-control(type="password", name="password")
       .form-group
-        label.col-md-4.control-label Confirm password
+        label.col-md-4.control-label= i18n.retype_password
         .col-md-6
           input.form-control(type="password", name="password-confirm")
       .form-group
-        label.col-md-4.control-label email
+        label.col-md-4.control-label= i18n.email
         .col-md-6
           input.form-control(type="email", name="email")
       .form-group
-        label.col-md-4.control-label Language
+        label.col-md-4.control-label= i18n.language
         .col-md-6
           select.form-control(name="lang")
             for language in languages
-              option(value="#{language}")= i18n_languages[language]
-      button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit") Register
+              option(value="#{language}")= i18n.i18n_languages[language]
+      button.btn.btn-success.btn-lg.pull-right(id="login", style="margin-bottom: 15px;", type="submit")= i18n.register

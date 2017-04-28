@@ -1,3 +1,9 @@
 {
-	
+    "group_by": "Regrouper par:",
+    "sort_by": "Trier par:",
+    "artist_and_albums": "Artistes / Albums",
+    "artists": "Artistes",
+    "albums": "Albums",
+    "genre": "Genres",
+    "genre_and_artists": "Genres / Artistes"
 }

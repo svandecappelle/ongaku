@@ -755,13 +755,31 @@ var getStatistics = function(name, callback){
         });
       });
 
-      app.post("/user/:username/edit", function (req, res){
+      app.post("/user/set-locale", function (req, res){
         var lang = req.body.lang;
         req.session.locale = lang;
+        req.session.save(function () {
+          res.json({
+            message: 'locale changed',
+            status: 200
+          });
+        });
+      });
+
+      app.post("/user/:username/edit", function (req, res){
+        var lang = req.query.lang;
+        req.session.locale = lang;
+
+        // save settings to user settings db.
+
+        user.setSingleSetting(req.session.passport.user.uid, 'locale', lang, function(){
+          logger.info("Setting locale saved to db");
+        });
 
         var busboy = new Busboy({ headers: req.headers });
         req.session.save(function () {
           res.setHeader('Access-Control-Allow-Credentials', 'true');
+          
           busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
             if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username)){
               fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username);
@@ -769,7 +787,8 @@ var getStatistics = function(name, callback){
 
             var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
             file.pipe(fs.createWriteStream(saveTo));
-            });
+          });
+          
           busboy.on('finish', function() {
             res.redirect("back");
           });
