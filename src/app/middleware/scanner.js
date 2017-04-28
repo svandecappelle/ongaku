@@ -158,8 +158,11 @@
                 parser.on("done", function(err){
                   if (err){
                     // in error call the loopback
-                    logger.warn("Error on parsing metadata:", err);
-                    cb(null, results);
+                    logger.warn("Error on parsing metadata on " + filePath);
+                    var libElement = Scanner.song(filePath, {}, null);
+                    results.push(libElement);
+                  
+                    return cb(null, results);
                   }
                 });
               }
