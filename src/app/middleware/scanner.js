@@ -41,11 +41,11 @@
               var finishedType = 1;
 
               if (ret.isFinishedAll){
+                console.log('');
                 logger.info("directory scanned", folder);
                 if (ret.audio){
                   scanned.audio -= 1;
                   finishedType = scanned.audio;
-                  logger.info(scanned.audio);
                 } else {
                   scanned.video -= 1;
                   finishedType = scanned.video;
@@ -53,6 +53,7 @@
               }
 
               if (finishedType <= 0){
+                console.log('');
                 logger.info("scanned all lib folders", folder);                
                 ret.isFinishedAll = true;
               } else {
@@ -125,6 +126,7 @@
               if (groove){
                 groove.open(filePath, function (err, file) {
                     if (err) {
+                        console.log('');
                         logger.error("filePath: " + filePath, err);
                         return cb(err, results);
                         //throw err;
@@ -159,6 +161,7 @@
                 parser.on("done", function(err){
                   if (err){
                     // in error call the loopback
+                    console.log('');
                     logger.warn("Error on parsing metadata on " + filePath);
                     var libElement = Scanner.song(filePath, {}, null);
                     results.push(libElement);
@@ -195,6 +198,7 @@
             total: files.length
           });
             if (files === undefined){
+              console.log('');
               logger.warn("Not any files found on your library folder.");
               if (callback !== libraryCallBack) {
                 callback(err, results);

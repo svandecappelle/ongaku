@@ -104,7 +104,7 @@
                       'artist' : artist.artist,
                   }, function (err, art) {
                       if (err) {
-                          console.log('\n');
+                          console.log('');
                           logger.warn("artist '" + artist.artist + "' not found");
                           Library.loadingCoverArtists[artist.artist] = null;
                       } else if (art.image) {
@@ -126,7 +126,7 @@
                             'album' : album.title
                         }, function (err, alb) {
                             if (err) {
-                                console.log('\n');
+                                console.log('');
                                 logger.warn("[" + artist.artist + "] -> album:: '" + album.title + "' not found");
                                 Library.loadingCoverAlbums[artist.artist][album.title] = null;
                             } else if (alb.image) {
@@ -158,12 +158,12 @@
         }
 
         if (type === "audio" && libObject.isFinishedAll){
-          console.log('\n');
+          console.log('');
           logger.info("audio scanned");
           //Library.data["audio"] = _.sortBy(Library.data["audio"], DEFAULT_SORT);
           this.audioScanned = true;
         } else if(libObject.isFinishedAll) {
-          console.log('\n');
+          console.log('');
           logger.info("video scanned");
           this.videoScanned = true;
         }
