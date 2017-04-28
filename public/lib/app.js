@@ -874,12 +874,7 @@
         }
 
         var trackNoElement = $('<div>', {
-          class: 'track trackno',
-          "data-uid": track.uid,
-          "data-encoding": track.encoding,
-          "data-placement": "bottom auto",
-          "data-toggle": "tooltip",
-          "data-title": "Add track to current playlist"
+          class: 'trackno'
         });
         trackNoElement.text(track.metadatas.track.no);
 
