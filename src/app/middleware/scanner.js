@@ -1,7 +1,7 @@
 /*jslint node: true */
 (function (Scanner) {
     "use strict";
-
+    
     var fs = require("fs"),
         logger = require("log4js").getLogger("Scanner"),
         async = require("async"),
@@ -10,6 +10,7 @@
         nconf = require("nconf"),
         uuid = require('uuid'),
         crypto = require('crypto'),
+        ProgressBar = require('progress'),
         mm,
         groove;
     // groove seems to be better than mm
@@ -184,8 +185,15 @@
 
     Scanner.scan = function (apath, callback, appender, libraryCallBack) {
         var results = [];
-        logger.info("Scanning " + appender.type + " directory: ".concat(apath));
+        logger.debug("Scanning " + appender.type + " directory: ".concat(apath));
+        
         fs.readdir(apath, function (err, files) {
+          var bar = new ProgressBar('  "Scanning ' + apath + '" [:bar] :rate/bps :percent :etas', {
+            complete: '=',
+            incomplete: ' ',
+            width: 20,
+            total: files.length
+          });
             if (files === undefined){
               logger.warn("Not any files found on your library folder.");
               if (callback !== libraryCallBack) {
@@ -203,6 +211,7 @@
             }, function (cb) {
                 var file = files[counter++],
                     newpath = path.join(apath, file);
+                bar.tick(1);
 
                 fs.stat(newpath, function (err, stat) {
                     if (err) {
@@ -222,7 +231,7 @@
                 });
             }, function (err) {
               if (results.length){
-                logger.info("All files " + appender.type + " scanned into " + apath + " finished: " + results.length + " elements found.");
+                logger.debug("All files " + appender.type + " scanned into " + apath + " finished: " + results.length + " elements found.");
               }
               if (callback !== libraryCallBack){
                 callback(err, results);
