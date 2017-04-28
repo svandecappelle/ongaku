@@ -12,23 +12,27 @@ section.sidebar.show
 				a.btn.btn-default.downloader(href="#", style="margin-left: 5px; display: none; height:39px; padding-top: 8px;") search result
 					i.glyphicon.glyphicon-download(style="padding-left: 5px;")
 			.btn-group
-				button.btn.btn-default.dropdown-toggle.groupby-button(type="button", data-toggle="dropdown" aria-expanded="false")="Group by"
+				a.btn.btn-default.dropdown-toggle.groupby-button(type="button", data-toggle="dropdown" aria-expanded="false")
+					span(style="margin-right: 5px;")= i18n.group_by
+					span.value
 					span.caret(style="margin-left: 5px;")
 				ul.dropdown-menu.groupby.groupby-menu(role="menu")
 					li
-						a(data-groupby="artist,album") Artists / Albums
-						a(data-groupby="artist") Artists
-						a(data-groupby="album") Albums
-						a(data-groupby="genre") Genre
-						a(data-groupby="genre,artist") Genre / Artists
+						a(data-groupby="artist,album", data-label="#{i18n.artist_and_albums}")= i18n.artist_and_albums
+						a(data-groupby="artist", data-label="#{i18n.artists}")= i18n.artists
+						a(data-groupby="album", data-label="#{i18n.albums}")= i18n.albums
+						a(data-groupby="genre", data-label="#{i18n.genre}")= i18n.genre
+						a(data-groupby="genre,artist", data-label="#{i18n.genre_and_artists}")= i18n.genre_and_artists
 			.btn-group(style="margin-left: 5px;")
-				button.btn.btn-default.dropdown-toggle.sortby-button(type="button", data-toggle="dropdown" aria-expanded="false")="Sort by"
+				a.btn.btn-default.dropdown-toggle.sortby-button(type="button", data-toggle="dropdown" aria-expanded="false")
+					span(style="margin-right: 5px;")= i18n.sort_by
+					span.value
 					span.caret(style="margin-left: 5px;")
 				ul.dropdown-menu.sortby.sortby-menu(role="menu")
 					li
-						a(data-sortby="artist") Artists
-						a(data-sortby="album") Albums
-						a(data-sortby="genre") Genre				
+						a(data-sortby="artist", data-label="{i18n.artists}")= i18n.artists
+						a(data-sortby="album", data-label="{i18n.albums}")= i18n.albums
+						a(data-sortby="genre", data-label="{i18n.genre}")= i18n.genre				
 
 	if (data.message !== null)
 		h1.message

@@ -1,3 +1,9 @@
 {
-
+    "group_by": "Group by:",
+    "sort_by": "Sort by:",
+    "artist_and_albums": "Artists / Albums",
+    "artists": "Artists",
+    "Albums": "Albums",
+    "Genre": "Genres",
+    "genre_and_artists": "Genres / Artists"
 }

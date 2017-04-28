@@ -1,6 +1,6 @@
 section.sidebar.show
   .search
-    .title(style="color: #F8F8F8; font-size: 1.5em; margin-bottom:5px; margin-top:4px;") Featured tracks
+    .title(style="color: #F8F8F8; font-size: 1.5em; margin-bottom:5px; margin-top:4px;")= i18n.featured_tracks
     if (data.message !== null)
       h1.message
           i.fa.fa-circle-o-notch.fa-spin
@@ -15,13 +15,13 @@ section.sidebar.show
           if !session.user.isAnonymous && session.user.administrator
             a(href="/api/clear/statistics/plays")
               i.fa.fa-refresh
-        h1 Most played tracks
+        h1= i18n.most_played_tracks
       ul.mostplays.tracklist.plays-genre
         .tools
           if !session.user.isAnonymous && session.user.administrator
             a(href="/api/clear/statistics/plays-genre")
               i.fa.fa-refresh
-        h1 Most played genre
+        h1= i18n.most_played_genre
 script.
   function FeaturedTracksList(tracks) {
     var tracksElement = $('<ul>', {class: "tracklist"});

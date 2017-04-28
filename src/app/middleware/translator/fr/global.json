@@ -10,6 +10,14 @@
     "busy": "Occupé"
   },
   "all": "Tous",
+  "all_users": "Tous les utilisateurs",
+  "group_by": "Regrouper par:",
+  "sort_by": "Trier par:",
+  "artist_and_albums": "Artistes / Albums",
+  "artists": "Artistes",
+  "albums": "Albums",
+  "genre": "Genres",
+  "genre_and_artists": "Genres / Artistes",
   "admin_zone": "Zone d'administration",
   "home": "Accueil",
   "music": "Musique",
@@ -33,5 +41,8 @@
   "language": "Langue",
   "logout": "Déconnection",
   "login": "Connection",
-  "register": "S'enregistrer"
+  "register": "S'enregistrer",
+  "most_played_tracks": "Morceaux les plus joués",
+  "most_played_genre": "Genre les plus populaires",
+  "featured_tracks": "Tendances actuelles"
 }
