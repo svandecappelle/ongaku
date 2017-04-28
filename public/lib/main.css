@@ -665,7 +665,6 @@ ul.group.album>li{
 
 ul.group .album, ul.group .album a, ul.group .tracklist .track{
 	color: #404040;
-    padding-left: 15px;
 }
 
 .dark-theme ul.group .album, .dark-theme ul.group .album a, .dark-theme ul.group .tracklist .track{
