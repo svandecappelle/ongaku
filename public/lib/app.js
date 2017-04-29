@@ -876,7 +876,7 @@
         var trackNoElement = $('<div>', {
           class: 'trackno'
         });
-        trackNoElement.text(track.metadatas.track.no);
+        trackNoElement.text(track.metadatas && track.metadatas.track ? track.metadatas.track.no : '-');
 
         trackElement.append(trackNoElement);
         
