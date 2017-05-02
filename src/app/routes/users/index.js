@@ -259,7 +259,7 @@ var getStatistics = function(name, callback){
         req.session.groupby = req.params.groupby.split(",");
         req.session.save(function () {
 
-          logger.info("changed groupby: ", req.session.groupby);
+          logger.debug("changed groupby: ", req.session.groupby);
 
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           res.json({status: "ok"});
@@ -270,7 +270,7 @@ var getStatistics = function(name, callback){
         req.session.sortby = req.params.sortby;
         req.session.save(function () {
 
-          logger.info("changed sortby: ", req.session.sortby);
+          logger.debug("changed sortby: ", req.session.sortby);
 
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           res.json({status: "ok"});
@@ -308,7 +308,7 @@ var getStatistics = function(name, callback){
 
       app.get('/api/stream/:media', function (req, res) {
         var stream = function () {
-          logger.info("streaming audio");
+          logger.debug("streaming audio");
 
           middleware.stream(req, res, req.params.media, "audio");
         };
@@ -321,14 +321,14 @@ var getStatistics = function(name, callback){
       app.post('/api/statistics/:type/:media', function(req, res){
         if (req.params.type === 'plays'){
           statistics.set('plays', req.params.media, 'increment', function(){
-              logger.info("set statistics");
+              logger.debug("set statistics");
           });
           var media = library.getByUid(req.params.media);
-          logger.info(media);
+          logger.debug(media);
           var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
           if (genre){
             statistics.set('plays-genre', genre, 'increment', function(){
-                logger.info("set statistics");
+                logger.debug("set statistics");
             });
           }
         }
@@ -419,7 +419,7 @@ var getStatistics = function(name, callback){
 
       app.post('/api/playlist/addgroup', function (req, res) {
         var firstTrack;
-        logger.info("Add group of file to playlist", req.body.elements);
+        logger.debug("Add group of file to playlist", req.body.elements);
         if (req.session.playlist === undefined) {
           req.session.playlist = [];
         }
