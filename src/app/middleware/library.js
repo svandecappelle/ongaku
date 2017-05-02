@@ -381,7 +381,7 @@
             }
             
             albumObject.tracks = _.sortBy( albumObject.tracks, function(element){
-              return element.metadatas.track.no;
+              return element.metadatas ? element.metadatas.track.no : 0;
             });
 
             return albumObject;
@@ -397,7 +397,7 @@
           rootGroupObject[groupbyClause[0]] = groupObject;
 
           val = _.sortBy( val, function(element){
-            return element.metadatas.track.no;
+            return element.metadatas ? element.metadatas.track.no : 0;
           });
           rootGroupObject.tracks = val;
         }

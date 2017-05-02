@@ -84,11 +84,14 @@
   Translator.languageCollectonInstance = new Translator.LanguageCollecton();
 
   Translator.Language = function(lang){
-      this._lang = lang;
-      if (!Translator.languageCollectonInstance.has(this)){
-          Translator.languageCollectonInstance.load(this);
-      }
-      this.datas = Translator.languageCollectonInstance.get(this);
+    if (!lang || lang === 'undefined'){
+      lang = nconf.get("defaultLanguage");
+    }
+    this._lang = lang;
+    if (!Translator.languageCollectonInstance.has(this)){
+        Translator.languageCollectonInstance.load(this);
+    }
+    this.datas = Translator.languageCollectonInstance.get(this);
   };
 
   Translator.Language.prototype.getLang = function(){
@@ -101,7 +104,11 @@
 		}
 		logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
     var output = this.datas['global'];
-    output = _.extend(output, this.datas[view]);
+    if (this.datas[view] !== undefined){
+      output = _.extend(output, this.datas[view]);  
+    }
+    
+    logger.debug("views i18n fields: ", output);
     return output;
   };
 }(exports));

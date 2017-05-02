@@ -16,6 +16,7 @@ var library = require("./../../middleware/library"),
     userlib = require("./../../model/library"),
     playlist = require("./../../model/playlist"),
     statistics = require("./../../model/statistics"),
+    security = require("./../../model/security"),
     mime = require("mime"),
     fs = require("fs"),
     translator = require("./../../middleware/translator"),
@@ -626,7 +627,9 @@ var getStatistics = function(name, callback){
       });
 
       app.get("/api/album-download/:artist/:album", function(req, res){
-        UsersRoutes.callIfAuthenticated(req, res, function(){
+
+
+        var download = function(req, res){
           var groupby = req.session.groupby;
           //var username = req.session.passport.user.username;
 
@@ -643,7 +646,27 @@ var getStatistics = function(name, callback){
           exporter.toZip(libraryDatas, zipName, function(filename){
             res.download(filename);
           });
-        });
+        };
+
+        if (req.query.key){
+          security.isAllowed(req.query.key, function(err, access_ganted){
+            if (err){
+              return res.json({});
+            }
+
+            if (access_ganted) {
+              download(req, res);
+            } else {
+              res.status(403).json({message: 'access forbidden without a valid key'});
+            }
+          });
+
+        } else {
+          UsersRoutes.callIfAuthenticated(req, res, function(){
+            download(req, res);
+          });
+        }
+
       });
 
 
@@ -767,13 +790,21 @@ var getStatistics = function(name, callback){
       });
 
       app.post("/user/:username/edit", function (req, res){
-        var lang = req.query.lang;
+        logger.info(req.body);
+        var lang = req.body.lang;
         req.session.locale = lang;
 
         // save settings to user settings db.
 
         user.setSingleSetting(req.session.passport.user.uid, 'locale', lang, function(){
           logger.info("Setting locale saved to db");
+        });
+
+        security.set(req.session.passport.user.uid, req.body.access_id, function(err){
+          if (err){
+            return logger.error("Error adding grant access by key", err);
+          }
+          logger.info("security access granted");
         });
 
         var busboy = new Busboy({ headers: req.headers });

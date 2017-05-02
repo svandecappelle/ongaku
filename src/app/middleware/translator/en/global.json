@@ -9,6 +9,7 @@
     "away": "Away",
     "busy": "Busy"
   },
+  "all": "All",
   "all_users": "All users",
   "group_by": "Group by:",
   "sort_by": "Sort by:",
@@ -17,7 +18,6 @@
   "Albums": "Albums",
   "Genre": "Genres",
   "genre_and_artists": "Genres / Artists",
-  "all": "All",
   "admin_zone": "Admin zone",
   "home": "Home",
   "music": "Music",
@@ -44,5 +44,6 @@
   "register": "Register",
   "most_played_tracks": "Most played tracks",
   "most_played_genre": "Most played genre",
-  "featured_tracks": "Currently featured"
+  "featured_tracks": "Currently featured",
+  "save": "Save"
 }

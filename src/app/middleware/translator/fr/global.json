@@ -44,5 +44,6 @@
   "register": "S'enregistrer",
   "most_played_tracks": "Morceaux les plus joués",
   "most_played_genre": "Genre les plus populaires",
-  "featured_tracks": "Tendances actuelles"
+  "featured_tracks": "Tendances actuelles",
+  "save": "Sauvegarder"
 }
