@@ -765,9 +765,19 @@ var getStatistics = function(name, callback){
                 user.getGroupsByUsername(username, function (groups){
                   userData = _.extend(userData, { groups: groups });
                   userData.status = chat.status(userData.username);
-                  middleware.render('user/edit', req, res, {
-                    user: userData,
-                    token: new Date().getTime()
+
+                  security.getAccessId(req.session.passport.user.uid, function(err, key){
+                    if (err){
+                      logger.error(err);
+                      return res.json(500, {error: 'Internal error'});
+                    }
+                    
+                    middleware.render('user/edit', req, res, {
+                      user: userData,
+                      token: new Date().getTime(),
+                      key: key
+                    });
+                    // http://music.mizore.fr/api/album-download/Acus%20Vacuum/Tempus%20Consumens?key=TtMjOReVhJI8
                   });
                 });
               });

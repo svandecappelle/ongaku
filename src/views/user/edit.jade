@@ -11,7 +11,7 @@ block append userpage-content
         .form-group
             label.col-md-2.control-label access key
             .col-md-4
-                input(type='text', name='access_id')
+                input(type='text', name='access_id', value='#{key}')
         .form-group
             .col-md-4(style='text-align: center')
                 button.btn.btn-success.btn-lg(id="login", type="submit", style='width: 100%')= i18n.save

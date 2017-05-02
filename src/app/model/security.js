@@ -10,14 +10,7 @@ var logger = require('log4js').getLogger('LibraryModel'),
 
   Security.getAccessId = function (username, callback){
     var hash = 'security:accesses';
-    db.getObjectField(hash, username, function (err, access) {
-        if (err) {
-          logger.error(err);
-          callback(err);
-        } else {
-          callback(null, access);
-        }
-    });
+    db.getObjectField(hash, username, callback);
   };
 
   Security.set = function (username, access_id, callback){
