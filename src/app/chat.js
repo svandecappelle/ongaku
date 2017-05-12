@@ -98,9 +98,8 @@
 
 	Chat.onConnect = function (socket) {
 		socket.emit('authenticate');
-		logger.warn("socket need authenticate: " + socket);
-		//console.log(users);
-
+		logger.debug("socket need authenticate: " + socket);
+		
 		socket.on('checkin', function(incoming){
 			Chat.checkin(incoming, socket);
 		});

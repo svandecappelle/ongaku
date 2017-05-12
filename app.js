@@ -14,17 +14,18 @@ var application_root = __dirname,
 /*jslint node: true */
 
 process.title = "Ongaku";
-
 if (process.argv[2] === "dev"){
-  logger.info("entering dev mode");
   log4js.configure('logger-dev.json', {});
-
+  log4js.getLogger("LoggerConfigure").info("Dev mode");
 } else {
   log4js.configure('logger.json', {});
 }
 
+var logger = log4js.getLogger('Server');
+
 (function (ApplicationRoot) {
     "use strict";
+
     ApplicationRoot.preload = function () {
         nconf.argv().env();
 
