@@ -2,6 +2,7 @@
 (function (Transcoder) {
     "use strict";
     var childProcess = require("child_process"),
+        ora = require("ora"),
         logger = require('log4js').getLogger("Transcoder"),
         fs = require("fs"),
         assert = require('assert'),
@@ -128,10 +129,13 @@
               });
           });
         } else {
+          var spinner = ora('Transcoding file to mp3...').start();
+
           exportToMp3(params, function(){
-            logger.debug("encoding file")
+
           }, function(){
             if (!streamStarted) {
+              spinner.stop();
               streamStarted = true;
               that.startStream(req, res, outputFile, params.sessionId);
             }

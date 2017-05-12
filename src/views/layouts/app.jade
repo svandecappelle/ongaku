@@ -219,7 +219,8 @@ html
         include pending-play
 
         script.
-          $.ongaku.setUser("#{session.user.username}");
+          $.ongaku.setUser(!{JSON.stringify(session.user)});
+          $.ongaku.setProperties(!{JSON.stringify(meta)});
           $.ongaku.library.setGroupBy("#{session.groupby}");
           $(function () {
             $('#responsive-menu').on('click', function(){
@@ -275,7 +276,7 @@ html
             var socket = io.connect('http://#{session.host}/');
             socket.on('connect', function () {
                 console.log("Connected");
-                $.chat.init(socket, $.ongaku.getUser());
+                $.chat.init(socket, $.ongaku.getUser().username);
             });
             
             socket.on('library:scanned', function () {

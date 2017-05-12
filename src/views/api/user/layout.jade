@@ -84,15 +84,15 @@ script.
     })
     .on("lu:success", function (e, response) {
       var uploadedimage = $(this).attr("name");
-      if (uploadedimage === "avatar" && "#{session.user.username}" === $.ongaku.getUser()){
+      if (uploadedimage === "avatar" && "#{session.user.username}" === $.ongaku.getUser().username){
         $("img.user-profile-picture").attr("src", "avatar?" + new Date().getTime());
         $(this).parent().find("button").text("Changer avatar");
-      } else if (uploadedimage === "cover" && "#{session.user.username}" === $.ongaku.getUser()){
+      } else if (uploadedimage === "cover" && "#{session.user.username}" === $.ongaku.getUser().username){
         $("div.cover").css({
           "background-image": "url('/user/#{session.user.username}/cover?" + new Date().getTime() + "')"
         });
         $(this).parent().find("button").text("Changer couverture");
-      } else if (uploadedimage === "background" && "#{session.user.username}" === $.ongaku.getUser()) {
+      } else if (uploadedimage === "background" && "#{session.user.username}" === $.ongaku.getUser().username) {
         $(".main-content").css({
           "background-image": "url('/user/#{session.user.username}/background?" + new Date().getTime() + "')"  
         });

@@ -55,7 +55,7 @@ var rmdirAsync = function(path, callback) {
       folderDone();
       return;
     }
-    
+
     // Remove one or more trailing slash to keep from doubling up
     path = path.replace(/\/+$/,"");
     files.forEach(function(file) {
@@ -163,8 +163,20 @@ var getStatistics = function(name, callback){
           if (middleware.isAuthenticated(req)) {
             callback();
           } else {
-            logger.warn("Anonymous access forbidden: authentication required to stream");
-            middleware.redirect('/login', res);
+            if (req.query.key) {
+              security.isAllowed(req.query.key, function(err, access_ganted){
+                if (access_ganted) {
+                  logger.info("access granted to stream");
+                  callback();
+                } else {
+                  logger.warn("Anonymous access forbidden: Using a wrong query access key");
+                  middleware.redirect('/login', res);
+                }
+              });
+            } else {
+              logger.warn("Anonymous access forbidden: authentication required to stream");
+              middleware.redirect('/login', res);
+            }
           }
         } else {
           logger.debug("userauth is not required to listen");
@@ -284,7 +296,7 @@ var getStatistics = function(name, callback){
 
         logger.debug("Get all one page of library ".concat(req.params.page));
         var libraryDatas = null;
-        
+
         if (req.params.page === "all"){
           libraryDatas = library.getAudio(groupby, sortby);
         } else {
@@ -312,7 +324,6 @@ var getStatistics = function(name, callback){
 
           middleware.stream(req, res, req.params.media, "audio");
         };
-
         UsersRoutes.checkingAuthorization(req, res, function () {
           stream();
         });
@@ -350,8 +361,8 @@ var getStatistics = function(name, callback){
           var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
 
           var filteredDatas = library.search({
-            filter: req.params.search, 
-            type: "audio", 
+            filter: req.params.search,
+            type: "audio",
             groupby: undefined,
             sortby: sortby
           }, libraryDatas);
@@ -771,7 +782,7 @@ var getStatistics = function(name, callback){
                       logger.error(err);
                       return res.json(500, {error: 'Internal error'});
                     }
-                    
+
                     middleware.render('user/edit', req, res, {
                       user: userData,
                       token: new Date().getTime(),
@@ -820,7 +831,7 @@ var getStatistics = function(name, callback){
         var busboy = new Busboy({ headers: req.headers });
         req.session.save(function () {
           res.setHeader('Access-Control-Allow-Credentials', 'true');
-          
+
           busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
             if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username)){
               fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username);
@@ -829,7 +840,7 @@ var getStatistics = function(name, callback){
             var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
             file.pipe(fs.createWriteStream(saveTo));
           });
-          
+
           busboy.on('finish', function() {
             res.redirect("back");
           });
@@ -987,7 +998,7 @@ var getStatistics = function(name, callback){
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
         if (albumart){
-          res.redirect(albumart);          
+          res.redirect(albumart);
         } else {
           res.redirect("/img/album.jpg");
         }
@@ -1026,7 +1037,7 @@ var getStatistics = function(name, callback){
       });
 
       app.post('/upload/file', function (req, res) {
-        if (nconf.get("allowUpload") === 'true') { 
+        if (nconf.get("allowUpload") === 'true') {
           var username = req.session.passport.user.username;
 
           var busboy = new Busboy({ headers: req.headers });
@@ -1036,7 +1047,7 @@ var getStatistics = function(name, callback){
             if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username)){
               fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username);
             }
-            
+
             if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
               fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported");
             }
@@ -1044,7 +1055,7 @@ var getStatistics = function(name, callback){
             var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + filename;
             file.pipe(fs.createWriteStream(saveTo));
             });
-            
+
             busboy.on('finish', function() {
               middleware.redirect("/upload", res);
             });
@@ -1057,7 +1068,7 @@ var getStatistics = function(name, callback){
       });
 
       app.post("/api/files/set-properties/imported/:filename(*)", function(req, res){
-        if (nconf.get("allowUpload") === 'true') { 
+        if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             var file = req.params.filename;
@@ -1074,14 +1085,14 @@ var getStatistics = function(name, callback){
                 res.send({
                   message: 'ok'
                 });
-              }              
+              }
             });
           });
         }
       });
 
       app.get("/upload/files/imported/:filename(*)", function(req, res){
-        if (nconf.get("allowUpload") === 'true') { 
+        if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
@@ -1108,13 +1119,13 @@ var getStatistics = function(name, callback){
         }
       });
 
-      app.get("/upload/imported/:filename(*)/delete", function(req, res){  
-        if (nconf.get("allowUpload") === 'true') { 
+      app.get("/upload/imported/:filename(*)/delete", function(req, res){
+        if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename)) {
               rmdirAsync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename, function(){
-                middleware.redirect("/upload", res);  
+                middleware.redirect("/upload", res);
               });
             }
           });
@@ -1122,9 +1133,9 @@ var getStatistics = function(name, callback){
           middleware.redirect('403', res);
         }
       });
-      
-      app.get("/upload/imported/:filename(*)/extract", function(req, res){  
-        if (nconf.get("allowUpload") === 'true') { 
+
+      app.get("/upload/imported/:filename(*)/extract", function(req, res){
+        if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             var file = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename,

@@ -121,8 +121,17 @@
       return this.user;
     };
 
+    Player.prototype.setProperties = function (meta) {
+      this.meta = meta;
+    };
+
+    Player.prototype.getProperties = function () {
+      return this.meta;
+    };
+
+
     Player.prototype.isAnonymous = function () {
-      return this.user === undefined || this.user === "";
+      return this.user === undefined || this.user.isAnonymous;
     };
 
     Player.prototype.isFirst = function () {
@@ -201,7 +210,7 @@
               // force iPad's native controls
               iPadUseNativeControls: false,
               // force iPhone's native controls
-              iPhoneUseNativeControls: false, 
+              iPhoneUseNativeControls: false,
               // force Android's native controls
               AndroidUseNativeControls: false,
               success: function (mediaElement) {
@@ -773,6 +782,38 @@
           class: 'glyphicon glyphicon-download',
         });
         albumDownloader.append(glyficonAlbumDownloader);
+
+        if ($.ongaku.getUser().tokenId){
+          var shareLink = "http://" + $.ongaku.getProperties().hostname + ':' + $.ongaku.getProperties().port + "/api/album-download/".concat(album.artist).concat("/").concat(album.title) + "?key=" + $.ongaku.getUser().tokenId;
+          var albumShare = $('<a>', {
+            "tabindex": 0,
+            "title": "Album permalink",
+            "class": "trackaction metadatas-details",
+            "data-placement": "left",
+            "data-toggle": "popover",
+            "data-html": "true",
+            "data-content": '<a href="' + shareLink + '">Link</a>',
+            "data-trigger": "focus",
+            "data-delay": 100
+          });
+          var glyphShare = $('<i>', {
+            "class": 'fa fa-share-alt' // metadata-track,
+          });
+          albumShare.append(glyphShare);
+          albumShare.on('click', function(){
+            copyTextToClipboard(shareLink, function(err){
+              if (!err){
+                albumShare.text("copied");
+                setTimeout(function(){
+                  albumShare.text("");
+                  albumShare.append(glyphShare);
+                }, 1000);
+              }
+            });
+          });
+        }
+
+
       }
       albumAppender.append(glyficonAlbumAppender);
       albumElement.append(albumAppender);
@@ -780,6 +821,7 @@
       if (!$.ongaku.isAnonymous()){
         if (album.download !== false){
           albumElement.append(albumDownloader);
+          albumElement.append(albumShare);
         }
         if (view){
           new UserLib().remover(albumElement);
@@ -814,6 +856,69 @@
 
       return albumElement;
     }
+
+
+    function copyTextToClipboard(text, callback) {
+      var textArea = document.createElement("textarea");
+
+      //
+      // *** This styling is an extra step which is likely not required. ***
+      //
+      // Why is it here? To ensure:
+      // 1. the element is able to have focus and selection.
+      // 2. if element was to flash render it has minimal visual impact.
+      // 3. less flakyness with selection and copying which **might** occur if
+      //    the textarea element is not visible.
+      //
+      // The likelihood is the element won't even render, not even a flash,
+      // so some of these are just precautions. However in IE the element
+      // is visible whilst the popup box asking the user for permission for
+      // the web page to copy to the clipboard.
+      //
+
+      // Place in top-left corner of screen regardless of scroll position.
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+
+      // Ensure it has a small width and height. Setting to 1px / 1em
+      // doesn't work as this gives a negative w/h on some browsers.
+      textArea.style.width = '2em';
+      textArea.style.height = '2em';
+
+      // We don't need padding, reducing the size if it does flash render.
+      textArea.style.padding = 0;
+
+      // Clean up any borders.
+      textArea.style.border = 'none';
+      textArea.style.outline = 'none';
+      textArea.style.boxShadow = 'none';
+
+      // Avoid flash of white box if rendered for any reason.
+      textArea.style.background = 'transparent';
+
+
+      textArea.value = text;
+
+      document.body.appendChild(textArea);
+
+      textArea.select();
+
+      try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        if (successful) {
+          callback()
+        }else{
+          callback(new Error("Error copying to clipboard"));
+        }
+      } catch (err) {
+        callback(new Error("Cannot copy to clipboard"));
+      }
+
+      document.body.removeChild(textArea);
+    }
+
 
     function LibraryTracksList(tracks, view) {
       var tracksElement = $('<ul>', {class: "group tracklist"});
@@ -857,6 +962,37 @@
         trackShowDetail.append(glyphShowDetail);
         trackElement.append(trackShowDetail);
 
+        if ($.ongaku.getUser().tokenId){
+          var shareLink = "http://" + $.ongaku.getProperties().hostname + ':' + $.ongaku.getProperties().port + "/api/stream/".concat(track.uuid) + "?key=" + $.ongaku.getUser().tokenId;
+          var trackShare = $('<a>', {
+            "tabindex": 0,
+            "title": "Track permalink",
+            "class": "trackaction metadatas-details",
+            "data-placement": "left",
+            "data-toggle": "popover",
+            "data-html": "true",
+            "data-content": '<a href="' + shareLink + '">Link</a>',
+            "data-trigger": "focus",
+            "data-delay": 100
+          });
+          var glyphShare = $('<i>', {
+            "class": 'fa fa-share-alt' // metadata-track,
+          });
+          trackShare.append(glyphShare);
+          trackElement.append(trackShare);
+          trackShare.on('click', function(){
+            copyTextToClipboard(shareLink, function(err){
+              if (!err){
+                trackShare.text("copied");
+                setTimeout(function(){
+                  trackShare.text("");
+                  trackShare.append(glyphShare);
+                }, 1000);
+              }
+            });
+          });
+        }
+
         if (!$.ongaku.isAnonymous()){
           var trackDownloader = $('<a>', {
             class: 'trackaction track-download',
@@ -879,7 +1015,7 @@
         trackNoElement.text(track.metadatas && track.metadatas.track ? track.metadatas.track.no : '-');
 
         trackElement.append(trackNoElement);
-        
+
 
         trackElement.append(trackDetailElement);
         tracksElement.append(trackElement);
@@ -1035,6 +1171,7 @@
       this.page = 0;
       this.type = "audio";
       this.loader = new Loader(".library .lib");
+      this.tokenId = null;
     }
 
     Library.prototype.setPage = function (page) {
@@ -1104,9 +1241,9 @@
         $(".groupby-button span.value").text(that.getGroupBy());
       }
       if (that.getSortBy()){
-        $(".sortby-button span.value").text(that.getSortBy());  
+        $(".sortby-button span.value").text(that.getSortBy());
       }
-      
+
       $(".dropdown-menu.groupby a").on("click", function(){
         that.setGroupBy($(this).data("groupby"));
         $(".dropdown-menu.groupby a").off("click");
@@ -1423,7 +1560,7 @@
         $.each(this.videos, function(index, player){
   				if (player) {
             try {
-              player.dispose();  
+              player.dispose();
             } catch (err) {
               // nothing to do it is a video player issue
             }

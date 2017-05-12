@@ -215,7 +215,10 @@
                   middlewareObject.objs.session.user.cover = Middleware.getCover(middlewareObject.req.user.username);
 
                   middlewareObject.objs.session.user.isAnonymous = false;
-
+                  
+                  if (middlewareObject.objs.session.passport.user.tokenId) {
+                    middlewareObject.objs.session.user.tokenId = middlewareObject.objs.session.passport.user.tokenId;
+                  }
                   // Retrieve role type
                   next(null, middlewareObject);
               } else {

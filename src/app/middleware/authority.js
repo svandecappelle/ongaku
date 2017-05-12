@@ -5,19 +5,21 @@
     bcrypt = require('bcryptjs'),
     nconf = require('nconf'),
     logger = require('log4js').getLogger("authority"),
+    async = require("async"),
 
     middleware = require("./middleware"),
     chat = require("./../chat"),
     meta = require('./../meta'),
     user = require('./../model/user'),
     db = require('./../model/database'),
+    security = require('./../model/security'),
     utils = require('./../utils');
 
     Authority.logout = function (req, res) {
       if (req.isAuthenticated()) {
         logger.info('[Auth] Session ' + req.sessionID + ' logout (uid: ' + req.session.passport.user + ')');
         req.session.locale = nconf.get("defaultLocale");
-        
+
         // use it for alert disconnect of other sessions (and users)
         /*
             var ws = require('../socket.io');
@@ -66,10 +68,11 @@
 
         user.isAdministrator(userData.uid, function(err, admin){
           userData.administrator = admin;
-          
+
           req.logIn({
             uid: userData.uid,
             username: req.body.username,
+            tokenId: userData.security,
             administrator: userData.administrator
           }, function () {
             if (userData.uid) {
@@ -184,12 +187,21 @@
 
             user.auth.clearLoginAttempts(uid);
 
-            user.getSettings(uid, function(err, settings){
+            async.auto({
+              settings: function(next) {
+                user.getSettings(uid, next);
+              },
+              security: function(next) {
+                security.getAccessId(uid, next);
+              }
+            }, function(err, results){
               done(null, {
                 uid: uid,
-                settings: settings
+                settings: results.settings,
+                security: results.security
               }, '[[success:authentication-successful]]');
             });
+
           });
         });
       });

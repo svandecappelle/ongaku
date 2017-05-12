@@ -53,7 +53,7 @@
     ChatPanel.prototype.add = function (message) {
 
       var messageElement = $("<div>", {
-        class: message.from === $.ongaku.getUser() ? 'msg right' : 'msg'
+        class: message.from === $.ongaku.getUser().username ? 'msg right' : 'msg'
       });
       messageElement.append($("<div>", {
         class: "from",
@@ -135,7 +135,7 @@
 
     ChatWidget.prototype.send = function() {
       var message = {
-        from: $.ongaku.getUser(),
+        from: $.ongaku.getUser().username,
         to: $(".message-box li.active a").data("to"),
         message: $(this.input).val(),
         date: new Date()
@@ -177,7 +177,7 @@
       }
       var userChat;
 
-      if (message.from === $.ongaku.getUser()){
+      if (message.from === $.ongaku.getUser().username){
         userChat = this.getChat(message.to);
       } else {
         userChat = this.getChat(message.from);
@@ -227,7 +227,7 @@
         $(".user-status li a").on("click", function(){
           if ($(this).data("status")){
               socket.emit("statuschange", {
-              user: $.ongaku.getUser(),
+              user: $.ongaku.getUser().username,
               status: $(this).data("status")
             });
           }
@@ -240,7 +240,7 @@
       if (!this.chat.getChat(user)){
         this.chat.add({
           from: user,
-          to: $.ongaku.getUser(),
+          to: $.ongaku.getUser().username,
           start: true
         });
       } else {
@@ -258,7 +258,7 @@
     $.chat = {
       init: function(socket, user){
         if (!$.chat.el){
-          $.chat.el = new Chat(socket, user);          
+          $.chat.el = new Chat(socket, user);
         }
       },
       start: function(user){
