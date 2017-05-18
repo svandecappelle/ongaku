@@ -599,12 +599,13 @@ a.image-extensible.extended > img{
     bottom: 6rem;
     left: 50%;
     right: 50%;
-    width: calc(60% - 12rem);
+    max-width: calc(60% - 12rem);
     margin-left: calc(-24rem - 5% );
     display: block;
-    max-height: calc(100% - 12rem);
+    max-height: calc(100% - 16rem);
     top: 7rem;
     height: auto;
+    width: auto;
 }
 
 ul.group>li{

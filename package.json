@@ -90,5 +90,13 @@
     "dev-start": "node app.js dev"
   },
   "name": "ongaku",
-  "single-instance": true
+  "single-instance": true,
+  "devDependencies": {
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-cssmin": "^2.2.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-docco-dir": "^0.1.5"
+  }
 }

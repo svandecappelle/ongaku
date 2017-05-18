@@ -12,7 +12,9 @@ Demo [Here](http://music.mizore.fr/ "here")
 * Clone the project
 * Install project dependencies
   * Install libgroove ***(optional, if not installed ffmpeg is used to convert non streamable files)***: [Instruction here](https://github.com/andrewrk/libgroove#installation "Instruction here")
+  * Install Grunt: ```npm install -g grunt-cli```
   * Run: ```npm install```
+  * Run ```grunt```
 * Configure your library dir in ```congig.json``` file
 * Start ```npm start```
 * Go to your browser at: ```hostname:4000/```
