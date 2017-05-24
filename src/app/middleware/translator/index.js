@@ -63,14 +63,14 @@
   Translator.LanguageLoader.prototype.load = function(lang){
       var views = {};
 
-      utils.walk(path.join(__dirname, './', lang), function (err, data) {
+      utils.walk(path.join(__dirname, lang), function (err, data) {
 
           for (var d in data) {
               if (data.hasOwnProperty(d)) {
                   // Only load .json files
                   if (path.extname(data[d]) === '.json') {
                       logger.trace("Data:: ", require(data[d]));
-											var view = path.relative(__dirname, data[d]).replace(lang.concat("/"), "").replace('.json', '');
+											var view = path.resolve(__dirname, data[d]).replace(path.resolve(__dirname, lang), "").substring(1).replace('.json', '');
                       logger.debug("loaded language file: " + path.relative(__dirname, data[d]) + " :: " + view);
                       views[view] = require(data[d]);
                   }
@@ -105,9 +105,9 @@
 		logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
     var output = this.datas['global'];
     if (this.datas[view] !== undefined){
-      output = _.extend(output, this.datas[view]);  
+      output = _.extend(output, this.datas[view]);
     }
-    
+
     logger.debug("views i18n fields: ", output);
     return output;
   };

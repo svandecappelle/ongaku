@@ -137,7 +137,12 @@
                         "server": "VidStreamer.js/0.1.4"
                     },
                     vidStreamer = require("vid-streamer").settings(settings);
+                if (nconf.get("ostype") === "windows"){
+                    // Windows doesn't have save same root definitions that unix / linux
+                    src = src.substring("C:\\".length);
+                }
                 reqStreaming.url = "/stream/" + src;
+                logger.info("Stream: ", reqStreaming.url);
                 vidStreamer(reqStreaming, res);
             }
         }
@@ -215,7 +220,7 @@
                   middlewareObject.objs.session.user.cover = Middleware.getCover(middlewareObject.req.user.username);
 
                   middlewareObject.objs.session.user.isAnonymous = false;
-                  
+
                   if (middlewareObject.objs.session.passport.user.tokenId) {
                     middlewareObject.objs.session.user.tokenId = middlewareObject.objs.session.passport.user.tokenId;
                   }
