@@ -164,7 +164,7 @@
       $("#controls")[0].play();
       $.ongaku.audiowave.rebuild();
       if (['mp3', 'ogg', 'wav'].indexOf(encoding) === -1) {
-        iziToast.info({title: 'Transcoder', message: 'Transcoding track...', position: 'topCenter'});
+        iziToast.info({title: 'Transcoder', message: 'Transcoding track...', position: 'topCenter', id: "transcoding-message", timeout: false});
       }
 
       $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing').css({
@@ -214,7 +214,7 @@
               AndroidUseNativeControls: false,
               success: function (mediaElement) {
                   mediaElement.addEventListener('loadedmetadata', function () {
-
+                    $("#transcoding-message").remove();
                   });
                   mediaElement.addEventListener('ended', function () {
                       $.ongaku.next();
