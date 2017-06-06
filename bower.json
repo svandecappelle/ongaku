@@ -1,0 +1,35 @@
+{
+  "name": "ongaku",
+  "description": "Streaming library app",
+  "main": "index.html",
+  "authors": [
+    "Steeve Vandecappelle"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "html5",
+    "app",
+    "streaming",
+    "audio",
+    "library"
+  ],
+  "homepage": "https://github.com/svandecappelle/ongaku",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-touchspin": "^3.1.2",
+    "bootstrap": "^3.3.7",
+    "jquery-sticky": "sticky#^1.0.4",
+    "jquery-ui": "^1.12.1",
+    "jquery": "^3.2.1",
+    "video-js": "^6.2.0",
+    "socket.io": "^2.0.2",
+    "spectrum": "^1.8.0",
+    "material-design-lite": "^1.3.0"
+  }
+}

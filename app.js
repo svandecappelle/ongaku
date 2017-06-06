@@ -65,6 +65,8 @@ var logger = log4js.getLogger('Server');
         app.set('views', __dirname + '/src/views');
         app.set('view engine', 'jade');
         app.use(express.static(__dirname + '/public'));
+        app.use('/bower_components', express.static(__dirname + '/bower_components'));
+
         app.use(bodyParser({uploadDir:'./uploads'}));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({     // to support URL-encoded bodies

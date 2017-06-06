@@ -9,6 +9,7 @@
         _ = require("underscore"),
         path = require("path"),
         logger = require('log4js').getLogger("Middleware"),
+        scanner = require("./scanner"),
         library = require("./library"),
         transcoder = require("./transcoder"),
         meta = require("./../meta"),
@@ -73,7 +74,7 @@
             }
 
             if (library.scanning()) {
-                message = "Scanning library";
+                message = `Scanning library: ${scanner.status()}%`;
             }
 
             _.extend(middlewareObject.objs, {
