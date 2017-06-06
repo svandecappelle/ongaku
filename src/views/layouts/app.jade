@@ -16,8 +16,7 @@ html
         link(rel="stylesheet", type="text/css", href="/dependencies/jquery-ui-1.12.1/jquery-ui.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/jquery-ui-1.12.1/jquery-ui.theme.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/jquery-ui-1.12.1/jquery-ui.structure.min.css")
-        link(rel="stylesheet", type="text/css", href="/bower_components/material-design-lite/material.min.css")
-        link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
+        link(rel="stylesheet", type="text/css", href="/bower_components/izitoast/dist/css/iziToast.min.css")
 
         link(rel="stylesheet", type="text/css", href="/assets/application.min.css")
 
@@ -36,7 +35,7 @@ html
         script(src="/dependencies/d3.js")
         script(src="/bower_components/spectrum/spectrum.js")
         script(src="/dependencies/jquery.liteuploader.min.js")
-        script(src="/bower_components/material-design-lite/material.min.js")
+        script(src="/bower_components/izitoast/dist/js/iziToast.min.js")
 
         script(src="/assets/application.min.js")
         
@@ -279,12 +278,43 @@ html
             });
             
             socket.on('library:scanned', function () {
-                console.log("Library scanned");
-                location.reload();
+              iziToast.show({
+                close: false,
+                position: 'topCenter',
+                message: '<a href="/">Library was reloaded: click here to refresh</a>',
+                transitionIn: 'flipInX',
+                transitionOut: 'flipOutX',
+                progressBarColor: 'rgb(0, 255, 184)',
+                image: '/img/album.jpg',
+                imageWidth: 70,
+                layout:2,
+                timeout: false,
+                icon: 'icon-contacts',
+                title: 'Library is loading:',
+                iconColor: 'rgb(0, 255, 184)'
+              });
             });
             socket.on('library-scanner:progress', function(ev){
-              console.log('scanning progress: ', ev.value);
-              $("h1.message").text(ev.value + "%");
+              if ($("#progress-loading-message").length === 0){
+                iziToast.show({
+                  close: false,
+                  position: 'topCenter',
+                  id: 'progress-loading-message',
+                  message: '<div class="progress" style="min-width: 300px; height: 10px;"> <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>',
+                  transitionIn: 'flipInX',
+                  transitionOut: 'flipOutX',
+                  progressBarColor: 'rgb(0, 255, 184)',
+                  image: '/img/album.jpg',
+                  imageWidth: 70,
+                  layout:2,
+                  timeout: false,
+                  color: 'dark',
+                  icon: 'icon-contacts',
+                  title: 'Library is loading:',
+                  iconColor: 'rgb(0, 255, 184)'
+                });
+              }
+              $("#progress-loading-message .iziToast-body p.slideIn").html('<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
             });
             
             $(".nav-reload>a").on("click", function(){

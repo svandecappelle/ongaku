@@ -88,7 +88,7 @@
             }
 
             logger.debug(scanned);
-            callback(ret);
+
             if (scanned.audio.indexOf(folder) !== -1 && scanned.video.indexOf(folder) !== -1){
               ret.isFinishedAll = true;
               console.log('');
@@ -102,10 +102,12 @@
             } else {
               ret.isFinishedAll = false;
             }
-
+            logger.error("test", folder);
+            callback(ret);
           });
         }, function(ret){
           logger.info("all directories scanned", ret);
+
         });
       } else {
         var folder = nconf.get("library");
@@ -119,19 +121,19 @@
 
     Scanner.scanFolder = function(folder, callback) {
       async.parallel({
-        audio: function(){
+        audio: function(next){
           Scanner.scanAudio(folder, function (err, res, isFinishedAll) {
-            logger.debug("Callback scan audio folder");
+            logger.debug("Callback scan audio folder", folder);
             callback({audio: res, isFinishedAll: isFinishedAll});
           });
         },
-        video: function(){
+        video: function(next){
           Scanner.scanVideo(folder, function (err, res, isFinishedAll) {
             logger.debug("Callback scan video folder");
             callback({video: res, isFinishedAll: isFinishedAll});
           });
         }
-      }, function(){
+      }, function(err, obj){
 
       });
     };
@@ -185,7 +187,7 @@
                             throw err;
                         }
                     });
-                    cb(null, results); // asynchronously call the loop
+                    return cb(null, results); // asynchronously call the loop
                 });
               } else {
                 logger.debug("Loading using mm: ", filePath);
@@ -216,7 +218,7 @@
                 });
               }
           } else {
-              cb(null, results); // asynchronously call the loop
+              return cb(null, results); // asynchronously call the loop
           }
 
           // callback(null, results, false);
@@ -274,8 +276,7 @@
                     if (appender) {
                         appender.append(newpath, cb, results);
                     }
-                }
-                if (stat.isDirectory()) {
+                } else if (stat.isDirectory()) {
                     Scanner.scan(newpath, cb, appender, libraryCallBack); // recursion loop
                 }
 

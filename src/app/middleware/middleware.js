@@ -72,11 +72,11 @@
             if (req.session.playlist) {
                 play = _.first(req.session.playlist);
             }
-
+/*
             if (library.scanning()) {
                 message = `Scanning library: ${scanner.status()}%`;
             }
-
+*/
             _.extend(middlewareObject.objs, {
                 data: {
                     playing: play,

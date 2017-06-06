@@ -164,8 +164,7 @@
       $("#controls")[0].play();
       $.ongaku.audiowave.rebuild();
       if (['mp3', 'ogg', 'wav'].indexOf(encoding) === -1) {
-        alertify.dismissAll();
-        alertify.success('Transcoding...', 0);
+        iziToast.info({title: 'Transcoder', message: 'Transcoding track...', position: 'topCenter'});
       }
 
       $(".list-container").find("[data-uid='" + this.current + "']").addClass('playing').css({
@@ -215,7 +214,7 @@
               AndroidUseNativeControls: false,
               success: function (mediaElement) {
                   mediaElement.addEventListener('loadedmetadata', function () {
-                      alertify.dismissAll();
+
                   });
                   mediaElement.addEventListener('ended', function () {
                       $.ongaku.next();
@@ -229,7 +228,7 @@
                   mediaElement.addEventListener('play', function () {
                       //$.ongaku.getPlayer.volume = 1;
                       if ($.ongaku.isFirst()) {
-                          alertify.warning('Add a track to play', 2);
+                          iziToast.warning({message: 'Add a track to play', position: 'topCenter', position: 'topCenter'});
                           $.ongaku.stop();
                       } else if ( $(".playing").length === 0) {
                           $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
@@ -253,8 +252,7 @@
                   });
 
                   mediaElement.addEventListener('error', function failed(e) {
-                    alertify.dismissAll();
-                    alertify.error("Error reading file: \n Check authentication rights.");
+                    iziToast.error({title: 'Error', message: "Error reading file: \n Check authentication rights.", position: 'topCenter'});
                   });
 
                   // add event listener
@@ -662,12 +660,16 @@
       this.artist = artist;
       this.artistElement = $('<li>');
       var artistDetailElement = $("<a>", {
-        class: 'link artist-link image-extensible',
+        class: 'link artist-link',
         href: artist.image
       }).on("click", function(ev){
         ev.stopPropagation();
         ev.preventDefault();
-        $(this).toggleClass("extended");
+        //$(this).toggleClass("extended");
+        var imageDetail = new Popup();
+        imageDetail.defaultActions();
+        imageDetail.append($('<img>', {src: artist.image[artist.image.length - 1]}).css('width', '100%'));
+        imageDetail.show();
       });
 
       var artistImage = $('<img>', {class: 'artist', src: artist.image});
@@ -752,10 +754,16 @@
       var baseThemeColor = $.ongaku.themer.getBaseColor(),
         albumElement = $('<li>');
 
-      var albumDetailElement = $("<a>", {class: 'link image-extensible'}).on("click", function(ev){
+      var albumDetailElement = $("<a>", {class: 'link'}).on("click", function(ev){
         ev.stopPropagation();
         ev.preventDefault();
-        $(this).toggleClass("extended");
+        // $(this).toggleClass("extended");
+
+        var imageDetail = new Popup();
+        imageDetail.defaultActions();
+        imageDetail.append($('<img>', {src: album.cover[album.cover.length - 1]}).css('width', '100%'));
+        imageDetail.show();
+
       });
       var albumImage = $('<img>', {class: 'album', src: album.cover});
       var albumTitle = $('<span>', {class: 'albumtitle'});
@@ -1038,14 +1046,7 @@
     function showMetadatas(track){
       var popup = new Popup(track.artist + ' / ' + track.album + ' / ' + track.title);
       popup.append(new MetadatasArray(track.metadatas, true).html());
-      popup.actions([
-        {
-          text: 'Close',
-          callback: function(){
-            popup.hide();
-          }
-        }
-      ]);
+      popup.defaultActions();
       popup.show();
     }
 
@@ -1147,6 +1148,18 @@
             this.indiceElement.css(indice.css);
         }
     };
+
+    Popup.prototype.defaultActions = function (actions) {
+      var that = this;
+      this.actions([
+        {
+          text: 'Close',
+          callback: function(){
+            that.hide();
+          }
+        }
+      ]);
+    }
 
     Popup.prototype.actions = function (actions) {
         var that = this;
@@ -1744,7 +1757,7 @@
                 }
             });
           } else {
-            alertify.error('Playlist name could not be empty');
+            iziToast.error({title: 'Error', message: 'Playlist name could not be empty', position: 'topCenter'});
           }
         }),
         "new-playlist" : new HandlerRegisteration("#new-playlist", "click", function () {
@@ -1763,7 +1776,7 @@
               $.ongaku.playlist.loadAllPlaylists();
             });
           } else {
-            alertify.error('Select a playlist to delete before.');
+            iziToast.error({title: 'Error', message: 'Select a playlist to delete before.', position: 'topCenter'});
           }
         })
       };
