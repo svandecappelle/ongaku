@@ -22,11 +22,15 @@
       mm = require('musicmetadata');
     }
 
-    const walkSync = (dir, filelist = []) => {
+    const walkSync = (dir, filelist) => {
+      if ( ! filelist ){
+        filelist = [];
+      }
       fs.readdirSync(dir).forEach(file => {
-        filelist = fs.statSync(path.join(dir, file)).isDirectory()
-          ? walkSync(path.join(dir, file), filelist)
-          : filelist.concat(path.join(dir, file));
+        filelist = filelist.concat(path.join(dir, file));
+        if (fs.statSync(path.join(dir, file)).isDirectory()){
+          filelist = walkSync(path.join(dir, file), filelist);
+        }
       });
       return filelist;
     }
@@ -38,6 +42,7 @@
     Scanner.status = function(){
       // twice because of scanning directory for audio and video files.
       // TODO search a better method to scan only one time the directories.
+    //  logger.error(this.scanned_files_count);
       return this.scanned_files_count * 100 / (this.all_files_count * 2);
     };
 
@@ -53,46 +58,58 @@
         var i = folders.length;
 
         var scanned = {
-          audio: i,
-          video: i
+          audio: [],
+          video: []
+        }
+
+        for (var fold_index = 0; fold_index < folders.length; fold_index++) {
+          Scanner.all_files_count += walkSync(folders[fold_index]).length;
         }
 
         async.each(folders, function(folder, next){
+
+          logger.error(Scanner.all_files_count);
+
           Scanner.scanFolder(folder, function(ret){
-            Scanner.all_files_count += walkSync(folder).length;
-            logger.debug(all_files_count);
+            logger.debug(Scanner.all_files_count);
 
             var finishedType = 1;
 
             if (ret.isFinishedAll){
               console.log('');
-              logger.info("directory scanned", folder);
+              logger.debug("directory scanned", folder);
               if (ret.audio){
-                scanned.audio -= 1;
+                scanned.audio.push(folder);
                 finishedType = scanned.audio;
               } else {
-                scanned.video -= 1;
+                scanned.video.push(folder)
                 finishedType = scanned.video;
               }
             }
 
-            if (finishedType <= 0){
-              console.log('');
-              logger.info("scanned all lib folders", folder);
+            logger.debug(scanned);
+            callback(ret);
+            if (scanned.audio.indexOf(folder) !== -1 && scanned.video.indexOf(folder) !== -1){
               ret.isFinishedAll = true;
+              console.log('');
+
+
+              delete scanned.video[scanned.video.indexOf(folder)];
+              delete scanned.audio[scanned.audio.indexOf(folder)];
+
+              logger.debug("scanned all lib folders", folder);
+              next(ret);
             } else {
               ret.isFinishedAll = false;
             }
 
-            next(ret);
           });
         }, function(ret){
-          logger.info("all directories scanned");
-          callback(ret);
+          logger.info("all directories scanned", ret);
         });
       } else {
         var folder = nconf.get("library");
-        logger.info('scan unique folder:', folder);
+        logger.debug('scan unique folder:', folder);
         this.all_files_count = walkSync(folder).length;
         logger.error(this.all_files_count);
 
