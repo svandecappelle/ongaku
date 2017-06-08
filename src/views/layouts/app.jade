@@ -356,7 +356,7 @@ html
 
             $('#language-chooser .language').on('click', function(){
               var lang = $(this).data('locale');
-              $.post('http://#{session.host}/user/set-locale', {
+              $.post('/user/set-locale', {
                 lang: lang
               }, function(response){
                 if (response.status === 200){

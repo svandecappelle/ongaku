@@ -81,7 +81,6 @@ a:focus{
 }
 
 nav{
-	color: white;
 	width: 45px;
 	height: 100%;
 	float: left;
@@ -104,7 +103,7 @@ nav .menu{
 }
 
 nav a{
-	color: white;
+	color: #cecece;
 	text-decoration: none;
 	overflow: hidden;
 	transition: all 0.3s ease 0s;
@@ -114,7 +113,7 @@ nav a{
 }
 
 nav a:hover{
-	color: #A0FC55;
+	color: #fff;
 	text-decoration: none;
 }
 
@@ -474,7 +473,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	left: 90px;
 	right: 0px;
 	bottom: 5rem !important;
-	min-height: 50px;
+	min-height: 4.5rem;
 	background-color: rgba(30, 30, 30, 0.84);
 	text-align: center;
 	color: white;
@@ -633,7 +632,7 @@ ul.group.artist{
 }
 
 ul.group.artist>li{
-  box-shadow: 0px 0px 5px rgba(131, 127, 127, 0.5);
+  /*box-shadow: 0px 0px 5px rgba(131, 127, 127, 0.5);*/
 	margin: 7px;
 	padding: 6px;
 	background-color: rgba(30, 30, 30, 0.40);
@@ -662,7 +661,7 @@ ul.group.album>li{
 	/*border-bottom: 4px solid rgba(72, 212, 63, 0.3);*/
 	margin-bottom: 4px;
   padding-top: 6px;
-	box-shadow: 0px -4px 0px 0px rgba(72, 212, 63, 0.3) inset;
+	/*box-shadow: 0px -4px 0px 0px rgba(72, 212, 63, 0.3) inset;*/
 }
 
 ul.group .album, ul.group .album a, ul.group .tracklist .track{
@@ -684,7 +683,7 @@ ul.group.artist.open>li>a.trackaction{
 }
 
 .dark-theme .albumtitle{
-    text-shadow: 1px 1px rgba(0,0,0,0.7);
+    text-shadow: 1px 1px rgb(12, 83, 128);
 }
 
 ul.group.tracklist>li{
@@ -1696,6 +1695,7 @@ a.link.video>.name{
 
 .library.featured {
 		margin-top: 15px;
+    margin-bottom: 20px;
 }
 
 .library.featured .mostplays{

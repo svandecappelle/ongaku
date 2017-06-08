@@ -19,10 +19,10 @@
     "bcrypt_rounds": 12,
     "gravatar": true,
     "local": false,
-    "requireLogin": true,
+    "requireLogin": false,
     "allowUpload": true,
     "allowRegisteration": 0,
     "theme": {
-      "base-color": "rgb(168, 156, 119)"
+      "base-color": "rgb(45, 182, 230)"
     }
 }
