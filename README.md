@@ -15,9 +15,9 @@ Demo [Here](http://music.mizore.fr/ "here")
   * Install Grunt: ```npm install -g grunt-cli```
   * Run: ```npm install```
   * Run ```grunt```
-* Configure your library dir in ```congig.json``` file
+* Configure your library dir and redis database in ```config.yml``` file
 * Start ```npm start```
-* Go to your browser at: ```hostname:4000/```
+* Go to your browser at: ```hostname:4000/``` and create an admin user using the web installer.
 
 Screenshots:
 ![Screenshot1](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-07.png)
