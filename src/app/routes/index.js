@@ -14,14 +14,19 @@ var users = require("./users"),
     Routes.load = function (app) {
       authentication.initialize(app);
       authentication.load(app);
-/*
+
       group.get("administrators", {truncateUserList: true}, function(err, admin_group){
         if (!admin_group || !admin_group.members || admin_group.members.length === 0){
           logger.info("Not installed");
           installer.load(app, function(){
-            Routes.load(app);
+            // users routes
+            users.load(app);
+
+            // admins routes
+            admins.load(app);
           });
         } else {
+          logger.info("Application already installed");
           // users routes
           users.load(app);
 
@@ -31,16 +36,7 @@ var users = require("./users"),
 
         // errors views
         errors.load(app);
-
-      });*/
-
-      users.load(app);
-
-      // admins routes
-      admins.load(app);
-
-      // errors views
-      errors.load(app);
+      });
     };
 
 }(exports));

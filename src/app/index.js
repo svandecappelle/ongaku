@@ -11,7 +11,7 @@ var meta = require('./meta');
 logger.setLevel(nconf.get('logLevel'));
 
 (function(Application) {
-	Application.load = function (app, callback) {
+	Application.load = function (app, callback, restart) {
 		meta.settings.merge();
 		routes.load(app);
 		this.app = app;

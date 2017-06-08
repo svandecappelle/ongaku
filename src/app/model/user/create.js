@@ -17,7 +17,7 @@ module.exports = function (User) {
         this.exists(userData.username, function (err, exists) {
             if (exists) {
                 logger.error("User: " + userData.username + " already exists");
-                return callback("already exists usersname");
+                return callback("already exists username");
             }
 
             db.setObject('user:' + uid, userData, function (err) {

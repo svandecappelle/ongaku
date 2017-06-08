@@ -3,19 +3,24 @@ html
         link(rel="stylesheet", type="text/css", href="/dependencies/font-awesome-4.2.0/css/font-awesome.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/bootstrap-3.3.6-dist/css/bootstrap.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css")
-        link(rel="stylesheet", type="text/css", href="/dependencies/alertifyjs-0.10.2/css/alertify.min.css")
-        link(rel="stylesheet", type="text/css", href="/dependencies/alertifyjs-0.10.2/css/themes/default.min.css")
-
+        link(rel="stylesheet", type="text/css", href="/bower_components/izitoast/dist/css/iziToast.min.css")
         link(rel="stylesheet", type="text/css", href="/lib/main.css")
 
         script(src="/dependencies/jquery/jquery-2.1.1.min.js")
         script(src="/dependencies/bootstrap-3.3.6-dist/js/bootstrap.js")
         script(src="/dependencies/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js")
-        script(src="/dependencies/alertifyjs-0.10.2/alertify.min.js")
-        script(src="/dependencies/socket.io/socket.io.js")
-        script(src="/dependencies/jquery.liteuploader.min.js")
-
+        script(src="/bower_components/izitoast/dist/js/iziToast.min.js")
+        
         title Ongaku installation
+        style.
+          .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+            background-color: transparent;
+            color: grey;
+          }
+          .iziToast-body{
+            min-height: unset !important;
+            height: unset !important;
+          }
     body.installer
         .install-panel
             #header.navbar.navbar-default.navbar-fixed-top.header
@@ -30,34 +35,64 @@ html
                                 a installer
                             li
                                 a Help
-            form(method='post')
+            form#installer-form(method='post')
                 h1 Welcome to the web installer.
                 .group
-                    h2 Step 1: Redis database.
+                    h2 Step 1: Redis database (readonly -> view configuration file).
                     .form-group
                         label host
-                        input.form-control(type="text", placeholder="host")
+                        input.form-control(type="text", placeholder="host", value="#{redis.host}", disabled)
                     .form-group
                         label port
-                        input.form-control(type="text", placeholder="port")
+                        input.form-control(type="text", placeholder="port", value="#{redis.port}", disabled)
                     .form-group
                         label database
-                        input.form-control(type="text", placeholder="database")
-                    .form-group
-                        label password
-                        input.form-control(type="password", placeholder="Password")
+                        input.form-control(type="text", placeholder="database", value="#{redis.database}", disabled)
                 .group
                     h2 Step 2: Create administrator account.
                     .form-group
+                        label email
+                        input.form-control(type="email", placeholder="E-mail", name="email")
+                    .form-group
                         label username
-                        input.form-control(type="text", placeholder="Username")
+                        input.form-control(type="text", placeholder="Username", name="username")
                     .form-group
                         label password
-                        input.form-control(type="password", placeholder="Password")
+                        input.form-control(type="password", placeholder="Password", name="password")
+                    .form-group
+                        label password-confirmation
+                        input.form-control(type="password", placeholder="Password", name="password-confirmation")
                 .group
                     h2 Step 3: setup library.
                     .form-group
                         label library directories
-                        input.form-control(type="text", placeholder="Directories (commas separated)")
+                        input.form-control(type="text", placeholder="Directories (commas separated)", name="library")
                 .footer(style="text-align: center;")
                     button.btn.btn-success(type='submit') Install
+          script.
+            $("#installer-form").submit(function(event){
+              event.preventDefault();
+              var $inputs = $( this ).find( "input" );
+
+              // not sure if you wanted this, but I thought I'd add it.
+              // get an associative array of just the values.
+              var values = {};
+              $inputs.each(function() {
+                  values[this.name] = $(this).val();
+              });
+              $.post( "/install", values ).done(function(response){
+                if( response.status === 'installed'){
+                  window.location = response.redirectTo;
+                }
+              }).fail(function($xhr){
+                var data = $xhr.responseJSON;
+                iziToast.error({
+                  position: 'topCenter',
+                  message: data.error,
+                  transitionIn: 'flipInX',
+                  transitionOut: 'flipOutX',
+                  title: 'Error:'
+                });
+              });
+              
+            });

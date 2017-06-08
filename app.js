@@ -3,7 +3,6 @@ var application_root = __dirname,
     path = require('path'),
     http = require('http'),
     log4js = require("log4js"),
-    app = express(),
     fs = require('fs'),
     os = require('os'),
     logger = require('log4js').getLogger('Server'),
@@ -35,7 +34,7 @@ var logger = log4js.getLogger('Server');
         nconf.argv().env();
 
         // Alternate configuration file support
-        var configFile = __dirname + '/config.json',
+        var configFile = __dirname + '/config.yml',
             configExists;
         if (nconf.get('config')) {
             configFile = path.resolve(__dirname, nconf.get('config'));
@@ -47,7 +46,8 @@ var logger = log4js.getLogger('Server');
             process.exit(code = 0);
         } else {
             nconf.file({
-                file: configFile
+                file: configFile,
+                format: require('nconf-yaml')
             });
 
             nconf.defaults({
@@ -60,11 +60,12 @@ var logger = log4js.getLogger('Server');
     };
 
     ApplicationRoot.start = function (callback) {
-        var bodyParser = require('body-parser'),
-            session = require('express-session'),
-            cookieParser = require('cookie-parser'),
-            passport = require('passport'),
-            morgan  = require('morgan');
+        var app = express(),
+          bodyParser = require('body-parser'),
+          session = require('express-session'),
+          cookieParser = require('cookie-parser'),
+          passport = require('passport'),
+          morgan  = require('morgan');
 
         // public PATHS
         app.set('views', __dirname + '/src/views');
