@@ -50,6 +50,7 @@
   }
 
   Authenticator.initialize = function (app) {
+    logger.info("sssssssssssssssssssssssssssssssssssssssssssss");
     app.use(passport.initialize());
     app.use(passport.session());
   };

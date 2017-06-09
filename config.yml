@@ -2,7 +2,7 @@ port: 4000
 hostname: localhost
 uploader: false
 logLevel: INFO
-library: /home/svandecappelle/Musique
+library: /home/svandecappelle/mu2
 ostype: windows,
 audio: [mp3,  wav, wma, ogg, flac]
 video: [mp4, webm, flv, ogv]

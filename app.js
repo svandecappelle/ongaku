@@ -9,6 +9,7 @@ var application_root = __dirname,
     path = require('path'),
     pkg = require('./package.json'),
     nconf = require('nconf');
+var app = express();
 
 /*jslint node: true */
 
@@ -60,8 +61,7 @@ var logger = log4js.getLogger('Server');
     };
 
     ApplicationRoot.start = function (callback) {
-        var app = express(),
-          bodyParser = require('body-parser'),
+        var bodyParser = require('body-parser'),
           session = require('express-session'),
           cookieParser = require('cookie-parser'),
           passport = require('passport'),
