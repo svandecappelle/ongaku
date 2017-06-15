@@ -53,6 +53,9 @@
       var audio = [],
           video = [];
       logger.info("loading new entries into library.");
+
+
+
       if (Array.isArray(nconf.get("library"))){
         var folders = nconf.get("library");
         var i = folders.length;

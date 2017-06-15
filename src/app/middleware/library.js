@@ -161,7 +161,7 @@
               logger.warn("[" + artist.artist + "] -> album:: '" + album.title + "' not found");
               Library.loadingCoverAlbums[artist.artist][album.title] = null;
           } else if (alb.image) {
-              album.cover = parseLastFm(alb.image, 'big');
+              album.cover = parseLastFm(alb.image);
               Library.loadingCoverAlbums[artist.artist][album.title] = album.cover;
               logger.debug("album cover '" + album.title + "': " + album.cover);
           }
@@ -171,12 +171,15 @@
     function parseLastFm (imageList) {
       var imageSource;
       var sizes = ['small', 'medium', 'large', 'extralarge', 'mega'];
-      var images = _.map(_.sortBy(imageList, function(image){
-        return sizes.indexOf(image.size);
-      }), function (image){
-        return image['#text'] ? image['#text'] : null;
-      });
-
+      var images = null;
+      if (imageList){
+        images = _.map(_.sortBy(imageList, function(image){
+          return sizes.indexOf(image.size);
+        }), function (image){
+          return image['#text'] ? image['#text'] : null;
+        });
+      }
+      images = _.compact(images);
       return images;
     }
 

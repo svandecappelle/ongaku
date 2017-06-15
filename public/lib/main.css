@@ -473,16 +473,23 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 	left: 90px;
 	right: 0px;
 	bottom: 5rem !important;
-	min-height: 4.5rem;
+	min-height: 66px;
 	background-color: rgba(30, 30, 30, 0.84);
 	text-align: center;
 	color: white;
 	/*transition: height 0.5s linear 0.1s;*/
 	border-top: 6px solid #1a2226;
 	font-size: 0.8em;
-    top: auto !important;
-    box-sizing: border-box;
-    max-height: calc(100% - 190px) !important;
+  top: auto !important;
+  box-sizing: border-box;
+  max-height: calc(100% - 190px) !important;
+}
+
+#visualisation svg{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .pending-list.video{

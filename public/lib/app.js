@@ -149,7 +149,8 @@
     Player.prototype.play = function (uid, encoding) {
       if ($.ongaku.themer.getBaseColor()){
         $(".playing").css({
-          color: $.ongaku.themer.getBaseColor()
+          color: $.ongaku.themer.getBaseColor(),
+          "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
         });
       }
       $(".playing").removeClass('playing');
@@ -411,14 +412,19 @@
       return this.color;
     };
 
+    Themer.prototype.getTextShadow = function () {
+      return this.color.replace(", 1)", ", 0.3)");
+    };
+
     Themer.prototype.setBaseColor = function (color) {
-      this.color = color;
       if (color.match("rgb.*")){
         if (!color.match("rgba.*")) {
           color = color.replace("rgb", "rgba");
           color = color.replace(")", ", 1)");
         }
       }
+      this.color = color;
+      
       Cookies.set("base-color", color, { expires: 365 });
 
       $(".mejs-time-loaded").css({
@@ -427,10 +433,12 @@
 
       // fonts:
       $(".song:not(.playing)").css({
-        color: color
+        color: color,
+        "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
       });
       $(".albumtitle").css({
-        color: color
+        color: color,
+        "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
       });
 
       $("ul.group.album > li").css({
@@ -858,7 +866,8 @@
           "box-shadow": '0px -4px 0px 0px ' + baseThemeColor + 'inset'
         });
         albumTitle.css({
-          color: baseThemeColor
+          color: baseThemeColor,
+          "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
         });
       }
 
@@ -1844,7 +1853,8 @@
       });
       if ($.ongaku.themer.getBaseColor()){
         trackSong.css({
-          color: $.ongaku.themer.getBaseColor()
+          color: $.ongaku.themer.getBaseColor(),
+          "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
         });
       }
       track.append(trackSong);
