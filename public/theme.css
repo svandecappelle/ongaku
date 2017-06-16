@@ -1,0 +1,41 @@
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+  border-bottom-color: #{color};
+  box-shadow: none;
+}
+.form-control:focus {
+  border-bottom-color: #{color};
+  box-shadow: none;
+}
+.loading-slide .slide{
+  background: #{color};
+}
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+  background-color: #{color};
+}
+
+a {
+  color: #{color};
+}
+
+nav a:hover {
+  color: #{color};
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
+  color: white;
+  background: #{color};
+}
+
+.message-box .nav-tabs{
+  border-bottom: 1px solid #{color};
+}
+
+.chat-container .nav > li{
+  border-top: 1px solid #{color};
+  border-left: 1px solid #{color};
+  border-right: 1px solid #{color};
+}
+
+.fab {
+  background-color: #{color};
+}
