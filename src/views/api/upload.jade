@@ -19,7 +19,7 @@ section.sidebar.show
                             .col-md-8 Set folder public
                             .col-md-4(style='font-size:1rem')
                                 .toggle-icon.icon.blue
-                                    input(name="setPublic", type="checkbox", value="false")
+                                    input(name="setPublic", type="checkbox", value="#{isShared}")
                                     .handle
                                       .glyphicon.glyphicon-gift
                 if files

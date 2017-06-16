@@ -57,6 +57,7 @@
     "express-session": "1.2.1",
     "forever": "^0.15.1",
     "gravatar": "1.0.6",
+    "he": "^1.1.1",
     "jade": "*",
     "jszip": "2.6.0",
     "lastfmapi": "0.0.6",

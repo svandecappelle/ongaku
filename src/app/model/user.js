@@ -31,6 +31,31 @@ var bcrypt = require('bcryptjs'),
         db.getObjectFields('user:' + uid, fields, callback);
     };
 
+    User.isSharedFolder = function (uid, folder, callback){
+      db.getObjectField('user:folders:' + uid, folder, callback);
+    };
+
+    User.setSharedFolder = function (uid, folder, isShared, callback){
+      if (isShared){
+        db.setAdd('users:shared-folders', uid + '[' + folder + ']', function(err){
+          if (err){
+            callback(err);
+          } else {
+            db.setObjectField('user:folders:' + uid, folder, isShared, callback);
+          }
+        });
+      } else {
+        db.setRemove('users:shared-folders', uid + '[' + folder + ']', function(err){
+          if (err){
+            callback(err);
+          } else {
+            db.setObjectField('user:folders:' + uid, folder, isShared, callback);
+          }
+        });
+      }
+
+    };
+
     User.getMultipleUserFields = function (uids, fields, callback) {
 
         if (!Array.isArray(uids) || !uids.length) {

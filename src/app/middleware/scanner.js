@@ -42,9 +42,17 @@
     Scanner.status = function(){
       // twice because of scanning directory for audio and video files.
       // TODO search a better method to scan only one time the directories.
-    //  logger.error(this.scanned_files_count);
+      //  logger.error(this.scanned_files_count);
       return this.scanned_files_count * 100 / (this.all_files_count * 2);
     };
+
+    Scanner.addToScan = function(folder){
+      Scanner.all_files_count += walkSync(folder).length;
+    }
+
+    Scanner.removeToScan = function(folder){
+      Scanner.all_files_count -= walkSync(folder).length;
+    }
 
     Scanner.library = function (callback) {
       Scanner.all_files_count = 0;
@@ -53,8 +61,6 @@
       var audio = [],
           video = [];
       logger.info("loading new entries into library.");
-
-
 
       if (Array.isArray(nconf.get("library"))){
         var folders = nconf.get("library");
