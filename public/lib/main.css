@@ -1728,42 +1728,12 @@ a.link.video>.name{
   color: white;
   background-color: transparent;
   border: none;
-  padding-top: 10px;
 }
 
 .search input.searchbox{
   background-color: transparent;
   color: white;
-  border: none !important;
-}
-
-input.searchbox:focus + .layer{
-    position: fixed;
-    top: 0px;
-    bottom: 100px;
-    left: 90px;
-    right: 0px;
-    background-color: rgba(0,0,0,0.8);
-    z-index: 2000 !important;
-    color: white;
-    font-size: 10em;
-    vertical-align: top;
-    line-height: 10em;
-}
-
-input.searchbox:focus{
-    position: fixed;
-    top: 3rem;
-    bottom: 0;
-    left: 90px;
-    right: 0px;
-    background-color: rgba(12, 12, 12, 0.59);
-    height: 25% !important;
-    z-index: 2001 !important;
-    color: white;
-    font-size: 10em;
-    border: 1px solid black !important;
-    box-shadow: none !important;
+  /*border: none !important;*/
 }
 
 .upload{
