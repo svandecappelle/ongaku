@@ -247,6 +247,7 @@ html
               iziToast.show({
                 close: false,
                 position: 'topCenter',
+                id: 'finished-loading-library',
                 message: '<a href="/">Library was reloaded: click here to refresh</a>',
                 transitionIn: 'flipInX',
                 transitionOut: 'flipOutX',
@@ -261,6 +262,25 @@ html
               });
             });
             socket.on('library-scanner:progress', function(ev){
+              if (ev.value >= 100){
+                $("#finished-loading-library").remove();
+                iziToast.show({
+                  close: false,
+                  id: 'finished-loading-library',
+                  position: 'topCenter',
+                  message: '<a href="/">Library was reloaded: click here to refresh</a>',
+                  transitionIn: 'flipInX',
+                  transitionOut: 'flipOutX',
+                  progressBarColor: 'rgb(0, 255, 184)',
+                  image: '/img/album.jpg',
+                  imageWidth: 70,
+                  layout:2,
+                  timeout: false,
+                  icon: 'icon-contacts',
+                  title: 'Library is loading:',
+                  iconColor: 'rgb(0, 255, 184)'
+                });
+              }
               if ($("#progress-loading-message").length === 0){
                 iziToast.show({
                   close: false,
