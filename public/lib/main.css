@@ -174,7 +174,7 @@ section.song-list > .list-container {
 	left: 80%;
 	right: 0px;
 	top: 0px;
-	bottom: calc(5rem + 71px);
+	bottom: calc(5rem + 4rem);
 	background-color: rgba(30, 30, 30, 0.84);
 	color: #FFF;
 	transition: all 0.3s ease 0s;
