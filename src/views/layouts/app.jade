@@ -44,49 +44,16 @@ html
             body{
               background-image: url('/user/#{session.user.username}/background');
             }
-        style.
-          textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
-            border-bottom-color: #{theme['base-color']};
-            box-shadow: none;
-          }
-          .form-control:focus {
-            border-bottom-color: #{theme['base-color']};
-            box-shadow: none;
-          }
-          .loading-slide .slide{
-            background: #{theme['base-color']};
-          }
-          .navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
-            background-color: #{theme['base-color']};
-          }
-          nav a:hover {
-            color: #{theme['base-color']};
-          }
-          
-          .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
-            color: white;
-            background: #{theme['base-color']};
-          }
-          
-          .message-box .nav-tabs{
-            border-bottom: 1px solid #{theme['base-color']};
-          }
-
-          .chat-container .nav > li{
-            border-top: 1px solid #{theme['base-color']};
-            border-left: 1px solid #{theme['base-color']};
-            border-right: 1px solid #{theme['base-color']};
-          }
     body
         a#responsive-menu
           i.fa.fa-bars
-        #header.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 25px;",role="navigation")
+        #header.nav.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 25px;",role="navigation")
             h1(style="float:left;margin:0px;")
                 a.header-link(href="/")
                   include logo
             span.mini-title(style="float:left", data-toggle="popover", data-trigger="hover", data-placement="bottom", data-content="The open-source media streaming application") v0.0.1-beta
             div.navbar-header
-                nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left; width: auto;")
+                nav.nav.hidden-text.navbar-collapse.collapse.navbar-ex1-collapse(style="float:left; width: auto;")
                     ul.nav.navbar.varbar-nav.pull-left
                         li.nav-home
                             a.view(href="/", title="Acceuil", data-view="audio")
@@ -101,8 +68,6 @@ html
                                 a(href="#reload", title="Reload library")
                                   i.fa.fa-book
                                   span.text Reload lib
-            div.pull-right(style="padding-top: 6px;")
-              input#base-color(type="text")
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
                   li.dropdown#language-chooser(style="float: left; margin-left: 5px;")
@@ -124,7 +89,7 @@ html
                                         each notif in session.notifications.datas
                                             li
                                                 a(href="/notification")= notif
-                    li.dropdown(style="float: left; margin-left: 5px;")
+                    li.dropdown(style="float: left;margin-left: 0.8rem;")
                         a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
                             if session.user.avatar
                                 img.user-avatar(src="/user/#{session.user.username}/avatar")
@@ -165,7 +130,8 @@ html
                               a(data-status="offline")
                                 i.fa.fa-circle.status.offline
                                 span(style="margin-left:10px;")= i18n.status.offline
-
+            div.pull-right(style="padding-top: 6px;")
+              input#base-color(type="text")
         nav.menu.main-menu
             .menu.menu-discover
                 ul

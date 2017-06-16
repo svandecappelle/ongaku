@@ -424,7 +424,7 @@
         }
       }
       this.color = color;
-      
+
       Cookies.set("base-color", color, { expires: 365 });
 
       $(".mejs-time-loaded").css({
@@ -445,6 +445,8 @@
         "box-shadow": '0px -4px 0px 0px ' + color + 'inset'
       });
       $.ongaku.audiowave.setColor(color);
+
+      $('head').append('<link rel="stylesheet" href="/css/theme.css?color=' + this.color + '" type="text/css" />');
     };
 
     $.ongaku.themer = new Themer();

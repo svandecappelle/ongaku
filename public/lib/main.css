@@ -103,7 +103,7 @@ nav .menu{
 }
 
 nav a{
-	color: #cecece;
+	color: #fff;
 	text-decoration: none;
 	overflow: hidden;
 	transition: all 0.3s ease 0s;
@@ -117,8 +117,7 @@ nav a:hover{
 	text-decoration: none;
 }
 
-
-nav a i{
+nav.menu.main-menu a i{
 	margin-bottom: 10px;
 }
 
@@ -1016,10 +1015,9 @@ ul.group.artist span.artistname{
 	text-decoration: none;
 }
 
-#header ul li i{
+#header .nav>ul>li>a>i{
 	font-size: 1.5rem;
-	padding-top: 0.3rem;
-	padding-left: 2px;
+	padding: 0.8rem;
 }
 
 #header .navbar{
@@ -1028,8 +1026,8 @@ ul.group.artist span.artistname{
 
 .main-content{
 	margin-left: 90px;
-    /* TODO check if size 100% and resize playlist container*/
-    padding-right: 20%;
+  /* TODO check if size 100% and resize playlist container*/
+  padding-right: 20%;
 }
 
 .main-menu{
@@ -1063,10 +1061,6 @@ ul.group.artist span.artistname{
     right: 0px;
 }
 
-#header .nav.navbar-nav{
-	padding-top: 8px;
-}
-
 #header .navbar-nav > li > .dropdown-menu {
     margin-top: 0px;
     border-top-right-radius: 0px;
@@ -1091,7 +1085,7 @@ ul.group.artist span.artistname{
 
 #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
 	color: #fff;
-	height: 3rem;
+  padding: 0px;
 }
 
 h1{
@@ -1113,11 +1107,9 @@ h2{
 	height: 100%;
 }
 
-
 #header h2 {
-	color: #cacaca;
+	color: #fff;
 }
-
 
 .btn.btn-danger, .btn.btn-close, .btn.btn-remove {
     color: #FFF;
@@ -1159,15 +1151,7 @@ h2{
 .status.offline {
 	color: #808080;
 }
-.user-status li span{
-    line-height: 34px;
-    vertical-align: top;
-}
 
-.user-status li a{
-    line-height: 34px;
-    vertical-align: top;
-}
 .small-title {
     font-size: 1.3rem;
     font-weight: 700;
@@ -1390,7 +1374,7 @@ a.link.video>.name{
 	width: 130px;
 	margin: 5px;
 	display: inline-block;
-	height: 250px;
+	height: 248px;
 	vertical-align: top;
 	background-color: rgba(0,0,0,0.6);
 	color: white;
@@ -1414,15 +1398,15 @@ a.link.video>.name{
 	border-radius: 50%;
 }
 
-.user-vignette.online:hover .avatar-vignette{
+.user-vignette.online:hover .avatar-vignette, .user-vignette.online .avatar-vignette{
 	border-color: #060;
 }
 
-.user-vignette.away:hover .avatar-vignette{
+.user-vignette.away:hover .avatar-vignette, .user-vignette.away .avatar-vignette{
 	border-color: #CC0;
 }
 
-.user-vignette.busy:hover .avatar-vignette{
+.user-vignette.busy:hover .avatar-vignette, .user-vignette.busy .avatar-vignette{
 	border-color: #900;
 }
 
@@ -1615,7 +1599,7 @@ a.link.video>.name{
 	padding-right: 3px;
 }
 .user-avatar{
-		height: 36px;
+		height: 3.1rem;
 }
 
 .btn-default {
@@ -2100,7 +2084,7 @@ section.song-list > .list-container.shows{
         width: 7.5rem;
     }
 
-    #header ul li i{
+    #header .nav>ul>li>a>i{
         font-size: 7rem;
         padding-top: 0.3rem;
         padding-left: 2px;

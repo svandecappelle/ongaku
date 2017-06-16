@@ -699,6 +699,22 @@ var getStatistics = function(name, callback){
         middleware.render('library/index', req, res, {library: libraryDatas});
       });
 
+      app.get('/css/theme.css', function(req, res){
+        res.writeHead(200, {"Content-Type": "text/css"});
+        function replaceAll(str, find, replace) {
+          return str.replace(new RegExp(find, 'g'), replace);
+        }
+
+        var fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/theme.css"), 'utf-8');
+        var color = nconf.get("theme")['base-color'];
+        if (req.query.color){
+          color = req.query.color;
+        }
+        fileContent = replaceAll(fileContent, '#{color}', color);
+        res.write(fileContent);
+        res.end();
+      });
+
       app.get('/audio', function (req, res) {
         logger.info("Client access to index [" + req.ip + "]");
         // Get first datas fetch is defined into client side.
@@ -960,7 +976,7 @@ var getStatistics = function(name, callback){
         if (middleware.hasAvatar(username)) {
           res.sendFile(avatar, userFilesOpts);
         } else {
-          res.redirect(avatar);
+          res.redirect(middleware.getImageFile(username, 'avatar'));
         }
       });
 
