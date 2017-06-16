@@ -77,7 +77,7 @@
 
         async.each(folders, function(folder, next){
 
-          logger.error(Scanner.all_files_count);
+          logger.debug(Scanner.all_files_count);
 
           Scanner.scanFolder(folder, function(ret){
             logger.debug(Scanner.all_files_count);

@@ -3,7 +3,7 @@
     {
       "type": "file",
       "filename": "logs/output.log",
-      "maxLogSize": 20480,
+      "maxLogSize": 350000,
       "backups": 3
     },
     {
