@@ -73,7 +73,7 @@
   Library.removeFolder = function(folder){
     scan.removeToScan(folder.path);
     Library.flatten = _.filter(Library.flatten, function(track){
-      if (track.username && track.username === folder.username){
+      if (track.username && track.username === folder.username && folder.path === track.userfolder){
         console.log(`remove track ${track.uuid}`);
         return false;
       }
@@ -95,6 +95,7 @@
         // library is a user private but shared folder.
         _.extend(libraryElement, {username: folder.username});
         libraryElement.metadatas.sharedBy = folder.username;
+        libraryElement.userfolder = folder.path;
       }
 
       return libraryElement;
