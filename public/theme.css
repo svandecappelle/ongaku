@@ -40,3 +40,7 @@ nav a:hover {
 .fab {
   background-color: #{color};
 }
+
+section.song-list > .list-container .playlist-columns .tracks-columns{
+  background-color: #{color};
+}

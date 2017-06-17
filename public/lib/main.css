@@ -284,7 +284,6 @@ section.song-list > .list-container{
 
 section.song-list > .list-container .playlist{
 	margin: 0px;
-	padding: 10px;
 	margin-bottom: 40px;
 }
 
@@ -297,7 +296,6 @@ section.song-list > .list-container .playlist-columns{
 }
 
 section.song-list > .list-container .playlist-columns .track-info{
-	color: #30743C;
 	font-weight: bold;
 }
 
@@ -307,7 +305,6 @@ section.song-list > .list-container .songs-container ul li a{
 }
 
 section.song-list > .list-container .songs-container{
-	margin: 10px;
 	top: 70px;
 	bottom: 0px;
 	left: 0px;
