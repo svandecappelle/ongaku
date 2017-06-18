@@ -20,6 +20,7 @@ var library = require("./../../middleware/library"),
     mime = require("mime"),
     fs = require("fs"),
     he = require('he'),
+    tinycolor = require("tinycolor2"),
     translator = require("./../../middleware/translator"),
     async = require("async");
 var DEFAULT_USERS__DIRECTORY = path.join(__dirname, "/../../../../public/user/"),
@@ -703,14 +704,27 @@ var getStatistics = function(name, callback){
         res.writeHead(200, {"Content-Type": "text/css"});
         function replaceAll(str, find, replace) {
           return str.replace(new RegExp(find, 'g'), replace);
-        }
+        };
 
-        var fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/theme.css"), 'utf-8');
         var color = nconf.get("theme")['base-color'];
+
         if (req.query.color){
           color = req.query.color;
         }
-        fileContent = replaceAll(fileContent, '#{color}', color);
+        var text_shadow = color.replace(", 1)", ", 0.3)");
+        
+        var fileContent;
+        if (tinycolor(color).getBrightness() >= 70){
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
+          // fileContent = replaceAll(fileContent, '#{font_background_main_color}', "rgb(0,0,0)");
+        } else {
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/light-theme.css"), 'utf-8');
+          // fileContent = replaceAll(fileContent, '#{font_background_main_color}', "rgb(255, 255, 255)");
+        }
+
+        fileContent = replaceAll(fileContent, '#{main_color}', color);
+        fileContent = replaceAll(fileContent, '#{text_shadow}', text_shadow);
+        
         res.write(fileContent);
         res.end();
       });
@@ -1015,6 +1029,10 @@ var getStatistics = function(name, callback){
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
         if (albumart){
+          if (req.query.quality === 'best'){
+            albumart = _.last(albumart);
+          }
+
           res.redirect(albumart);
         } else {
           res.redirect("/img/album.jpg");

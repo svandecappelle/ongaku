@@ -325,8 +325,9 @@
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
-
-    return Library.loadingCoverAlbums[_.find(this.flatten, {uid: uuid}).artist][_.find(this.flatten, {uid: uuid}).album];
+    console.log(_.find(this.flatten, {uuid: uuid}));
+    
+    return Library.loadingCoverAlbums[_.find(this.flatten, {uuid: uuid}).artist][_.find(this.flatten, {uuid: uuid}).album];
   };
 
   Library.search = function (opts, fromList) {

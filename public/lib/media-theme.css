@@ -19,3 +19,10 @@
 .mejs-controls .mejs-time-rail .mejs-time-buffering{
 
 }
+
+.mejs-button.mejs-volume-button.mejs-mute, .mejs-button.mejs-volume-button.mejs-unmute{
+  top: 1.3rem;
+  position: absolute;
+  right: 5rem;
+  top: 1.3rem;
+}

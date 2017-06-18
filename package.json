@@ -81,6 +81,7 @@
     "semver": "~2.2.1",
     "socket.io": "1.3.5",
     "string": "~1.7.0",
+    "tinycolor2": "^1.4.1",
     "uglify-js": "1.2.x",
     "underscore": "*",
     "unzip": "^0.1.11",

@@ -436,6 +436,7 @@
         color: color,
         "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
       });
+
       $(".albumtitle").css({
         color: color,
         "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
@@ -445,8 +446,8 @@
         "box-shadow": '0px -4px 0px 0px ' + color + 'inset'
       });
       $.ongaku.audiowave.setColor(color);
-
-      $('head').append('<link rel="stylesheet" href="/css/theme.css?color=' + this.color + '" type="text/css" />');
+      $("#theme-file").remove();
+      $('head').append('<link id="theme-file" rel="stylesheet" href="/css/theme.css?color=' + this.color + '" type="text/css" />');
     };
 
     $.ongaku.themer = new Themer();
@@ -473,7 +474,14 @@
     Controls.prototype.handlers = function () {
       this.handles = {
         "song": new HandlerRegisteration("a.song", "click", function () {
-            $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
+          $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
+        }),
+        'current-playing-image': new HandlerRegisteration('.current-playing-image', 'click', function(){
+          var imageDetail = new Popup(),
+            src = $(this).attr('src');
+          imageDetail.defaultActions();
+          imageDetail.append($('<img>', {src: src + "?quality=best"}).css('width', '100%'));
+          imageDetail.show();
         })
       };
       return this.handles;
@@ -1322,10 +1330,10 @@
         });
       } else {
         $(window).scroll(function() {
-            // console.log('Handle scroll window', $(window).scrollTop() + ' + ' + $(window).height(), $(document).height());
-            if($(window).scrollTop() + $(window).height() == $(document).height()) {
-              $.ongaku.library.fetch();
-            }
+          // console.log('Handle scroll window', $(window).scrollTop() + ' + ' + $(window).height(), $(document).height());
+          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            $.ongaku.library.fetch();
+          }
         });
       }
     };
