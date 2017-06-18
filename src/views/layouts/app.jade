@@ -225,10 +225,10 @@ html
             $("#base-color").spectrum({
               color:  basecolor ? basecolor : "#{theme['base-color']}",
               "body": "input.colorpicker",
-              "showAlpha": true,
+              "showAlpha": false,
               "preferredFormat": "rgb",
               move: function(color) {
-                  $.ongaku.themer.setBaseColor(color.toRgbString());
+                $.ongaku.themer.setBaseColor(color.toRgbString());
               }
             });
             
@@ -244,6 +244,7 @@ html
             });
             
             socket.on('library:scanned', function () {
+              $("#finished-loading-library").remove();
               iziToast.show({
                 close: false,
                 position: 'topCenter',
@@ -258,7 +259,8 @@ html
                 timeout: false,
                 icon: 'icon-contacts',
                 title: 'Library is loading:',
-                iconColor: 'rgb(0, 255, 184)'
+                iconColor: 'rgb(0, 255, 184)',
+                color: 'dark',
               });
             });
             socket.on('library-scanner:progress', function(ev){
@@ -278,7 +280,8 @@ html
                   timeout: false,
                   icon: 'icon-contacts',
                   title: 'Library is loading:',
-                  iconColor: 'rgb(0, 255, 184)'
+                  iconColor: 'rgb(0, 255, 184)',
+                  color: 'dark',
                 });
               }
               if ($("#progress-loading-message").length === 0){
@@ -286,7 +289,7 @@ html
                   close: false,
                   position: 'topCenter',
                   id: 'progress-loading-message',
-                  message: '<div class="progress" style="min-width: 300px; height: 10px;"> <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>',
+                  message: '<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>',
                   transitionIn: 'flipInX',
                   transitionOut: 'flipOutX',
                   progressBarColor: 'rgb(0, 255, 184)',

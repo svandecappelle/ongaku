@@ -1851,6 +1851,13 @@ section.song-list > .list-container.shows{
 .row.list-group-item .col-md-1{
     text-align: center
 }
+
+.sp-button-container {
+  display: none;
+}
+.sp-container {
+  position: fixed !important;
+}
 /*
 @media screen and (max-width: 600px) {
     html { font-size: 100%; }

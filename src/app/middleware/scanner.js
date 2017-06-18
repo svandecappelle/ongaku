@@ -111,7 +111,6 @@
             } else {
               ret.isFinishedAll = false;
             }
-            logger.error("test", folder);
             callback(ret);
           });
         }, function(ret){
@@ -122,7 +121,6 @@
         var folder = nconf.get("library");
         logger.debug('scan unique folder:', folder);
         this.all_files_count = walkSync(folder).length;
-        logger.error(this.all_files_count);
 
         this.scanFolder(folder, callback);
       }
@@ -328,12 +326,27 @@
         if (Array.isArray(artist) && artist.length === 1){
           artist = artist[0];
         }
+
+        if (metadatas.ALBUM){
+          metadatas.album = metadatas.ALBUM;
+        }
+
+        if ( metadatas.TITLE ){
+          metadatas.title = metadatas.TITLE;
+        }
+
+        if (metadatas.disk && metadatas.disk.of > 1){
+          metadatas.album_origin = metadatas.album;
+          metadatas.album = `${metadatas.album} Disk - ${metadatas.disk.no}/${metadatas.disk.of}`;
+        }
+
+
         return {
             artist: artist,
             file: file,
             relativePath: typeof nconf.get("library") === 'String' ? file.replace(nconf.get("library"), "") : file,
-            title: metadatas.title ? metadatas.title : metadatas.TITLE ? metadatas.TITLE : path.basename(file.replace(nconf.get("library"), "")),
-            album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
+            title: metadatas.title ? metadatas.title : path.basename(file.replace(nconf.get("library"), "")),
+            album: metadatas.album ? metadatas.album : "Uknown album",
             metadatas: metadatas,
             duration: durationMin.toString().concat(":").concat(durationSec),
             uid: shasum.digest('hex'),

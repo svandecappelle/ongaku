@@ -74,7 +74,6 @@
     scan.removeToScan(folder.path);
     Library.flatten = _.filter(Library.flatten, function(track){
       if (track.username && track.username === folder.username && folder.path === track.userfolder){
-        console.log(`remove track ${track.uuid}`);
         return false;
       }
       return true;
@@ -112,6 +111,7 @@
             }
             return {
               title: title,
+              album_origin: tracks[0].metadatas.album_origin,
               tracks: tracks
             };
           });
@@ -168,8 +168,9 @@
   };
 
   Library.getArtistCover = function (artist){
+    // logger.info(artist);
     lfm.artist.getInfo({
-        'artist' : artist.artist,
+        'artist' : artist.artist.trim(),
     }, function (err, art) {
       if (err) {
         console.log('');
@@ -185,8 +186,8 @@
 
   Library.getAlbumCover = function (artist, album){
     lfm.album.getInfo({
-      'artist' : artist.artist,
-      'album' : album.title
+      'artist' : artist.artist.trim(),
+      'album' : album.album_origin ? album.album_origin.trim() : album.title.trim()
     }, function (err, alb) {
       if (err) {
         console.log('');
@@ -325,7 +326,6 @@
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
-    console.log(_.find(this.flatten, {uuid: uuid}));
     
     return Library.loadingCoverAlbums[_.find(this.flatten, {uuid: uuid}).artist][_.find(this.flatten, {uuid: uuid}).album];
   };
