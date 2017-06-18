@@ -16,7 +16,6 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 a {
   color: #{main_color};
-  text-shadow: 1px 1px #{text_shadow};
 }
 
 nav a:hover {
