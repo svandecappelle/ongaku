@@ -99,8 +99,9 @@ var getStatistics = function(name, callback){
       });
 
       entries = _.sortBy(entries, statistic.name).reverse();
+      console.log(entries);
       var lenght = 10;
-      entries = _.first(_.rest(entries, 0 * lenght), lenght);
+      entries = _.first(_.compact(entries), lenght);
       statisticsValues[statistic.name] = entries;
 
       next();
