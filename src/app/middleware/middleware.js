@@ -132,6 +132,7 @@
                     settings = {
                         "mode": "development",
                         "forceDownload": false,
+                        "insertContentDisposition": false,
                         "random": false,
                         "rootFolder": "/",
                         "rootPath": "stream",
@@ -148,7 +149,6 @@
                 var vidStreamer = require("vid-streamer").settings(settings);
 
                 reqStreaming.url = "/stream/" + src;
-                logger.info(`Stream: ${nconf.get("ostype")}`, reqStreaming.url);
                 vidStreamer(reqStreaming, res);
             }
         }
