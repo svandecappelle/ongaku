@@ -1,0 +1,62 @@
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+  border-bottom-color: #{main_color};
+  box-shadow: none;
+}
+.form-control:focus, input.searchbox:focus {
+  border-bottom-color: #{main_color};
+  box-shadow: none;
+}
+
+.loading-slide .slide{
+  background: #{main_color};
+}
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+  background-color: #{main_color};
+}
+
+a {
+  color: #{main_color};
+}
+
+nav a:hover {
+  color: #{main_color};
+  text-shadow: 1px 1px #{text_shadow};
+}
+
+.albumtitle{
+  color: #{main_color};
+  text-shadow: 1px 1px #{text_shadow};
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
+  color: white;
+  background: #{main_color};
+}
+
+.message-box .nav-tabs{
+  border-bottom: 1px solid #{main_color};
+}
+
+.chat-container .nav > li{
+  border-top: 1px solid #{main_color};
+  border-left: 1px solid #{main_color};
+  border-right: 1px solid #{main_color};
+}
+
+.fab {
+  background-color: #{main_color};
+}
+
+section.song-list > .list-container .playlist-columns .tracks-columns{
+  background-color: #{main_color};
+  color: black;
+}
+
+ul.group.album > li {
+  background: none repeat scroll 0 0 rgba(75,76,76,.49);
+  box-shadow: 0px -4px 0px 0px #{main_color} inset;
+}
+
+.mejs-time-loaded{
+	background-color: #{main_color};
+}

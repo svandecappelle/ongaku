@@ -149,7 +149,8 @@
     Player.prototype.play = function (uid, encoding) {
       if ($.ongaku.themer.getBaseColor()){
         $(".playing").css({
-          color: $.ongaku.themer.getBaseColor()
+          color: $.ongaku.themer.getBaseColor(),
+          "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
         });
       }
       $(".playing").removeClass('playing');
@@ -411,14 +412,19 @@
       return this.color;
     };
 
+    Themer.prototype.getTextShadow = function () {
+      return this.color.replace(", 1)", ", 0.3)");
+    };
+
     Themer.prototype.setBaseColor = function (color) {
-      this.color = color;
       if (color.match("rgb.*")){
         if (!color.match("rgba.*")) {
           color = color.replace("rgb", "rgba");
           color = color.replace(")", ", 1)");
         }
       }
+      this.color = color;
+
       Cookies.set("base-color", color, { expires: 365 });
 
       $(".mejs-time-loaded").css({
@@ -427,16 +433,21 @@
 
       // fonts:
       $(".song:not(.playing)").css({
-        color: color
+        color: color,
+        "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
       });
+
       $(".albumtitle").css({
-        color: color
+        color: color,
+        "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
       });
 
       $("ul.group.album > li").css({
         "box-shadow": '0px -4px 0px 0px ' + color + 'inset'
       });
       $.ongaku.audiowave.setColor(color);
+      $("#theme-file").remove();
+      $('head').append('<link id="theme-file" rel="stylesheet" href="/css/theme.css?color=' + this.color + '" type="text/css" />');
     };
 
     $.ongaku.themer = new Themer();
@@ -463,7 +474,14 @@
     Controls.prototype.handlers = function () {
       this.handles = {
         "song": new HandlerRegisteration("a.song", "click", function () {
-            $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
+          $.ongaku.play($(this).data("uid"), $(this).data("encoding"));
+        }),
+        'current-playing-image': new HandlerRegisteration('.current-playing-image', 'click', function(){
+          var imageDetail = new Popup(),
+            src = $(this).attr('src');
+          imageDetail.defaultActions();
+          imageDetail.append($('<img>', {src: src + "?quality=best"}).css('width', '100%'));
+          imageDetail.show();
         })
       };
       return this.handles;
@@ -858,7 +876,8 @@
           "box-shadow": '0px -4px 0px 0px ' + baseThemeColor + 'inset'
         });
         albumTitle.css({
-          color: baseThemeColor
+          color: baseThemeColor,
+          "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
         });
       }
 
@@ -1311,10 +1330,10 @@
         });
       } else {
         $(window).scroll(function() {
-            // console.log('Handle scroll window', $(window).scrollTop() + ' + ' + $(window).height(), $(document).height());
-            if($(window).scrollTop() + $(window).height() == $(document).height()) {
-              $.ongaku.library.fetch();
-            }
+          // console.log('Handle scroll window', $(window).scrollTop() + ' + ' + $(window).height(), $(document).height());
+          if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            $.ongaku.library.fetch();
+          }
         });
       }
     };
@@ -1844,7 +1863,8 @@
       });
       if ($.ongaku.themer.getBaseColor()){
         trackSong.css({
-          color: $.ongaku.themer.getBaseColor()
+          color: $.ongaku.themer.getBaseColor(),
+          "text-shadow": "1px 1px " + $.ongaku.themer.getTextShadow()
         });
       }
       track.append(trackSong);

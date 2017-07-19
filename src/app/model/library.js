@@ -24,4 +24,8 @@ var logger = require('log4js').getLogger('LibraryModel'),
     db.setRemove(username + ':library', uid, callback);
   };
 
+  Library.getSharedFolders = function(callback){
+    db.getSetMembers('users:shared-folders', callback);
+  };
+
 }(exports));

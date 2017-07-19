@@ -21,7 +21,6 @@
           logger.warn("identicon disabled");
         }
 
-    logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
     var USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
@@ -132,18 +131,23 @@
                     settings = {
                         "mode": "development",
                         "forceDownload": false,
+                        "insertContentDisposition": false,
                         "random": false,
-                        "rootFolder": "/.",
+                        "rootFolder": "/",
                         "rootPath": "stream",
                         "server": "VidStreamer.js/0.1.4"
-                    },
-                    vidStreamer = require("vid-streamer").settings(settings);
-                if (nconf.get("ostype") === "windows"){
-                    // Windows doesn't have save same root definitions that unix / linux
-                    src = src.substring("C:\\".length);
+                    };
+
+                //if (nconf.get("ostype") == 'windows'){
+                //  logger.info('os is windows');
+                // Windows doesn't have save same rootPatht definitions that unix / linux
+                if (process.platform.indexOf('win') !== -1){
+                  src = src.replace("C:\\", "");
+                  settings.rootFolder = "C:\\";
                 }
+                var vidStreamer = require("vid-streamer").settings(settings);
+
                 reqStreaming.url = "/stream/" + src;
-                logger.info("Stream: ", reqStreaming.url);
                 vidStreamer(reqStreaming, res);
             }
         }

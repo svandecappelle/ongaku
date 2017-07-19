@@ -2,6 +2,7 @@ var application_root = __dirname,
     express = require('express'),
     path = require('path'),
     http = require('http'),
+    yaml_config = require('node-yaml-config'),
     log4js = require("log4js"),
     fs = require('fs'),
     os = require('os'),
@@ -9,16 +10,14 @@ var application_root = __dirname,
     path = require('path'),
     pkg = require('./package.json'),
     nconf = require('nconf');
+var app = express();
 
 /*jslint node: true */
 
 process.title = "Ongaku";
-if (process.argv[2] === "dev"){
-  log4js.configure('logger-dev.json', {});
-  log4js.getLogger("LoggerConfigure").info("Dev mode");
-} else {
-  log4js.configure('logger.json', {});
-}
+
+var logOptions = yaml_config.load(path.resolve(__dirname, './logger.yml'));
+log4js.configure(logOptions);
 
 var logger = log4js.getLogger('Server');
 
@@ -60,8 +59,7 @@ var logger = log4js.getLogger('Server');
     };
 
     ApplicationRoot.start = function (callback) {
-        var app = express(),
-          bodyParser = require('body-parser'),
+        var bodyParser = require('body-parser'),
           session = require('express-session'),
           cookieParser = require('cookie-parser'),
           passport = require('passport'),
@@ -70,7 +68,9 @@ var logger = log4js.getLogger('Server');
         // public PATHS
         app.set('views', __dirname + '/src/views');
         app.set('view engine', 'jade');
-        app.use(express.static(__dirname + '/public'));
+        app.use('/dependencies', express.static(__dirname + '/public/dependencies'));
+        app.use('/assets', express.static(__dirname + '/public/assets'));
+        app.use('/img', express.static(__dirname + '/public/img'));
         app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
         app.use(bodyParser({uploadDir:'./uploads'}));

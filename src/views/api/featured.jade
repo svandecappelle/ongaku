@@ -76,6 +76,11 @@ script.
           });
         }
         
+        var trackElementPlaysCount = $('<div>', {
+          class: 'track-info track-num'
+        }).text(track.plays);
+        trackDetailElement.append(trackElementPlaysCount);
+
         if (count < 10){
           trackElementNum.html("0" + count);
         } else {

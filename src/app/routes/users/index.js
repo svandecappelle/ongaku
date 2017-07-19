@@ -19,20 +19,21 @@ var library = require("./../../middleware/library"),
     security = require("./../../model/security"),
     mime = require("mime"),
     fs = require("fs"),
+    he = require('he'),
+    tinycolor = require("tinycolor2"),
     translator = require("./../../middleware/translator"),
     async = require("async");
-var DEFAULT_USER_IMAGE_DIRECTORY = path.join(__dirname, "/../../../../public/user/"),
+var DEFAULT_USERS__DIRECTORY = path.join(__dirname, "/../../../../public/user/"),
   DEFAULT_GROUP_BY = ['artist', 'album'],
   DEFAULT_SORT_BY = 'artist',
   userFilesOpts = {
-    root: DEFAULT_USER_IMAGE_DIRECTORY,
+    root: DEFAULT_USERS__DIRECTORY,
    dotfiles: 'deny',
    headers: {
        'x-timestamp': Date.now(),
        'x-sent': true
    }
  };
-logger.setLevel(nconf.get('logLevel'));
 
 var rmdirAsync = function(path, callback) {
   fs.readdir(path, function(err, files) {
@@ -97,8 +98,9 @@ var getStatistics = function(name, callback){
       });
 
       entries = _.sortBy(entries, statistic.name).reverse();
+
       var lenght = 10;
-      entries = _.first(_.rest(entries, 0 * lenght), lenght);
+      entries = _.first(_.compact(entries), lenght);
       statisticsValues[statistic.name] = entries;
 
       next();
@@ -698,6 +700,35 @@ var getStatistics = function(name, callback){
         middleware.render('library/index', req, res, {library: libraryDatas});
       });
 
+      app.get('/css/theme.css', function(req, res){
+        res.writeHead(200, {"Content-Type": "text/css"});
+        function replaceAll(str, find, replace) {
+          return str.replace(new RegExp(find, 'g'), replace);
+        };
+
+        var color = nconf.get("theme")['base-color'];
+
+        if (req.query.color){
+          color = req.query.color;
+        }
+        var text_shadow = color.replace(", 1)", ", 0.3)");
+
+        var fileContent;
+        if (tinycolor(color).getBrightness() >= 70){
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
+          // fileContent = replaceAll(fileContent, '#{font_background_main_color}', "rgb(0,0,0)");
+        } else {
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/light-theme.css"), 'utf-8');
+          // fileContent = replaceAll(fileContent, '#{font_background_main_color}', "rgb(255, 255, 255)");
+        }
+
+        fileContent = replaceAll(fileContent, '#{main_color}', color);
+        fileContent = replaceAll(fileContent, '#{text_shadow}', text_shadow);
+
+        res.write(fileContent);
+        res.end();
+      });
+
       app.get('/audio', function (req, res) {
         logger.info("Client access to index [" + req.ip + "]");
         // Get first datas fetch is defined into client side.
@@ -833,11 +864,11 @@ var getStatistics = function(name, callback){
           res.setHeader('Access-Control-Allow-Credentials', 'true');
 
           busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-            if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username)){
-              fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username);
+            if (!fs.existsSync(DEFAULT_USERS__DIRECTORY + req.params.username)){
+              fs.mkdirSync(DEFAULT_USERS__DIRECTORY + req.params.username);
             }
 
-            var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
+            var saveTo = DEFAULT_USERS__DIRECTORY + req.params.username + "/" + fieldname;
             file.pipe(fs.createWriteStream(saveTo));
           });
 
@@ -859,11 +890,11 @@ var getStatistics = function(name, callback){
               req.session.save(function () {
                 res.setHeader('Access-Control-Allow-Credentials', 'true');
                 busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-                  if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username)){
-                    fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + req.params.username);
+                  if (!fs.existsSync(DEFAULT_USERS__DIRECTORY + req.params.username)){
+                    fs.mkdirSync(DEFAULT_USERS__DIRECTORY + req.params.username);
                   }
 
-                  var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + req.params.username + "/" + fieldname;
+                  var saveTo = DEFAULT_USERS__DIRECTORY + req.params.username + "/" + fieldname;
                   file.pipe(fs.createWriteStream(saveTo));
                   });
                 busboy.on('finish', function() {
@@ -959,7 +990,7 @@ var getStatistics = function(name, callback){
         if (middleware.hasAvatar(username)) {
           res.sendFile(avatar, userFilesOpts);
         } else {
-          res.redirect(avatar);
+          res.redirect(middleware.getImageFile(username, 'avatar'));
         }
       });
 
@@ -998,6 +1029,10 @@ var getStatistics = function(name, callback){
       app.get("/song-image/:songid", function(req, res){
         var albumart = library.getAlbumArtImage(req.params.songid);
         if (albumart){
+          if (req.query.quality === 'best'){
+            albumart = _.last(albumart);
+          }
+
           res.redirect(albumart);
         } else {
           res.redirect("/img/album.jpg");
@@ -1010,8 +1045,8 @@ var getStatistics = function(name, callback){
             var username = req.session.passport.user.username;
             var folder = req.params.folder;
 
-            if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
-                var folderReading = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/";
+            if (fs.existsSync(DEFAULT_USERS__DIRECTORY + username + "/imported")) {
+                var folderReading = DEFAULT_USERS__DIRECTORY + username + "/imported/";
                 if (folder){
                   folderReading += folder + "/";
                 }
@@ -1044,15 +1079,15 @@ var getStatistics = function(name, callback){
           req.session.save(function () {
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-            if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username)){
-              fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username);
+            if (!fs.existsSync(DEFAULT_USERS__DIRECTORY + username)){
+              fs.mkdirSync(DEFAULT_USERS__DIRECTORY + username);
             }
 
-            if (!fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
-              fs.mkdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported");
+            if (!fs.existsSync(DEFAULT_USERS__DIRECTORY + username + "/imported")) {
+              fs.mkdirSync(DEFAULT_USERS__DIRECTORY + username + "/imported");
             }
 
-            var saveTo = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + filename;
+            var saveTo = DEFAULT_USERS__DIRECTORY + username + "/imported/" + filename;
             file.pipe(fs.createWriteStream(saveTo));
             });
 
@@ -1072,16 +1107,33 @@ var getStatistics = function(name, callback){
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
             var file = req.params.filename;
-            var isPublic = req.query.public;
-            var folder = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + file;
-
+            var isPublic = req.query.public === 'true';
+            var folder = DEFAULT_USERS__DIRECTORY + username + "/imported/" + file;
+            folder = he.decode(folder);
             logger.info("Set to public[" + isPublic + "] for user[" + username + "] folder: ", file);
-            console.log("Folder " + folder + " scanning");
-            var type = ['audio', 'video'];
-            library.addFolder(folder, function(scanResult){
-              console.log("Folder added");
-              type = _.without(type, scanResult.type);
-              if (type.lenght === 0){
+
+            user.setSharedFolder(username, he.decode(file), isPublic, function(){
+              if (isPublic){
+                console.log("Folder " + folder + " scanning");
+                var type = ['audio', 'video'];
+
+                library.addFolder({
+                  path: folder,
+                  username: username
+                }, function(scanResult){
+                  console.log("Folder added");
+                  type = _.without(type, scanResult.type);
+                  if (type.lenght === 0){
+                    res.send({
+                      message: 'ok'
+                    });
+                  }
+                });
+              } else {
+                library.removeFolder({
+                  path: folder,
+                  username: username
+                });
                 res.send({
                   message: 'ok'
                 });
@@ -1095,16 +1147,21 @@ var getStatistics = function(name, callback){
         if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
-            if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported")) {
-              var isDirectory = fs.statSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename).isDirectory();
+            if (fs.existsSync(DEFAULT_USERS__DIRECTORY + username + "/imported")) {
+              var isDirectory = fs.statSync(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename).isDirectory();
               if (isDirectory){
-                middleware.render('user/upload', req, res, {
-                  files: fs.readdirSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename),
-                  directory: isDirectory ? req.params.filename : false
+                var folder = he.decode(req.params.filename);
+                user.isSharedFolder(username, folder, function(err, isShared){
+                  logger.info("folder: " + folder, err, isShared);
+                  middleware.render('user/upload', req, res, {
+                    files: fs.readdirSync(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename),
+                    directory: isDirectory ? req.params.filename : false,
+                    isShared: isShared
+                  });
                 });
               } else {
                 res.sendFile(req.params.filename, {
-                  root: DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/",
+                  root: DEFAULT_USERS__DIRECTORY + username + "/imported/",
                   dotfiles: 'deny',
                   headers: {
                     'x-timestamp': Date.now(),
@@ -1123,8 +1180,8 @@ var getStatistics = function(name, callback){
         if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
-            if (fs.existsSync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename)) {
-              rmdirAsync(DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename, function(){
+            if (fs.existsSync(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename)) {
+              rmdirAsync(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename, function(){
                 middleware.redirect("/upload", res);
               });
             }
@@ -1138,7 +1195,7 @@ var getStatistics = function(name, callback){
         if (nconf.get("allowUpload") === 'true') {
           UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
             var username = req.session.passport.user.username;
-            var file = DEFAULT_USER_IMAGE_DIRECTORY + username + "/imported/" + req.params.filename,
+            var file = DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename,
               folderExtract = 'public/user/' + username + "/imported/" + path.basename(req.params.filename, path.extname(req.params.filename));
 
             if (fs.existsSync(file)) {
@@ -1174,14 +1231,15 @@ var getStatistics = function(name, callback){
       app.get("/api/waveform/:uid", function(req, res){
         var src = library.getRelativePath(path.basename(req.params.uid));
         var options = {
-            waveColor: "#F0FF0F"
+            // waveColor: "#F0FF0F"
         };
         var Waveform = require('node-wave');
 
         res.writeHead(200, {'Content-Type': 'image/png'});
 
         Waveform(src, options, function(err , buffer) {
-          res.pipe(buffer);
+          res.write(buffer);
+          res.end();
         });
       });
     };

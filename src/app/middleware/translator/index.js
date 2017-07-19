@@ -9,7 +9,6 @@
 
   var availableLanguages;
 
-	logger.setLevel('INFO');
 
   Translator.preload = function(){
       var rootDir = path.resolve(__dirname);
@@ -102,7 +101,7 @@
 		if (view.startsWith("api/")){
 			view = view.replace("api/", "");
 		}
-		logger.info("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
+		logger.debug("get lang ".concat(this.getLang()).concat(" for view: ").concat(view));
     var output = this.datas['global'];
     if (this.datas[view] !== undefined){
       output = _.extend(output, this.datas[view]);
