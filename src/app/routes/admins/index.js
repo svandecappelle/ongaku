@@ -11,7 +11,6 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 	user = require("./../../model/user"),
 	statistics = require("./../../model/statistics");
 
-logger.setLevel(nconf.get('logLevel'));
 
 (function(AdministratorsRoutes) {
 
@@ -44,7 +43,7 @@ logger.setLevel(nconf.get('logLevel'));
 		app.get('/api/clear/statistics/:type', function (req, res) {
 			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
 				statistics.clear(req.params.type, function(){
-					middleware.redirect("/featured", res);					
+					middleware.redirect("/featured", res);
 				});
 			});
 		});

@@ -37,8 +37,6 @@
     Scanner.all_files_count = 0;
     Scanner.scanned_files_count = 0;
 
-    logger.setLevel(nconf.get('logLevel'));
-
     Scanner.status = function(){
       // twice because of scanning directory for audio and video files.
       // TODO search a better method to scan only one time the directories.

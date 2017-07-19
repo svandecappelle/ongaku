@@ -1,0 +1,15 @@
+default:
+  appenders:
+    console:
+      type: console
+    file:
+      type: file
+      filename: logs/output.log
+      maxLogSize: 50000000
+      backups: 3
+  categories:
+    default:
+      level: INFO
+      appenders:
+        - console
+        - file

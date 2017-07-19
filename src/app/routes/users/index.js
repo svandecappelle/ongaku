@@ -34,7 +34,6 @@ var DEFAULT_USERS__DIRECTORY = path.join(__dirname, "/../../../../public/user/")
        'x-sent': true
    }
  };
-logger.setLevel(nconf.get('logLevel'));
 
 var rmdirAsync = function(path, callback) {
   fs.readdir(path, function(err, files) {
@@ -99,7 +98,7 @@ var getStatistics = function(name, callback){
       });
 
       entries = _.sortBy(entries, statistic.name).reverse();
-      
+
       var lenght = 10;
       entries = _.first(_.compact(entries), lenght);
       statisticsValues[statistic.name] = entries;
@@ -713,7 +712,7 @@ var getStatistics = function(name, callback){
           color = req.query.color;
         }
         var text_shadow = color.replace(", 1)", ", 0.3)");
-        
+
         var fileContent;
         if (tinycolor(color).getBrightness() >= 70){
           fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
@@ -725,7 +724,7 @@ var getStatistics = function(name, callback){
 
         fileContent = replaceAll(fileContent, '#{main_color}', color);
         fileContent = replaceAll(fileContent, '#{text_shadow}', text_shadow);
-        
+
         res.write(fileContent);
         res.end();
       });

@@ -9,7 +9,6 @@
 
   var availableLanguages;
 
-	logger.setLevel('INFO');
 
   Translator.preload = function(){
       var rootDir = path.resolve(__dirname);

@@ -15,7 +15,6 @@
     'secret' : '7ccaec2093e33cded282ec7bc81c6fca'
   });
 
-  logger.setLevel(nconf.get('logLevel'));
   Library.data  = {audio: [], video: []};
   Library.flatten = {};
 
@@ -326,7 +325,7 @@
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
-    
+
     return Library.loadingCoverAlbums[_.find(this.flatten, {uuid: uuid}).artist][_.find(this.flatten, {uuid: uuid}).album];
   };
 

@@ -8,7 +8,6 @@ var library = require("./middleware/library");
 var chat = require('./chat');
 var meta = require('./meta');
 
-logger.setLevel(nconf.get('logLevel'));
 
 (function(Application) {
 	Application.load = function (app, callback, restart) {

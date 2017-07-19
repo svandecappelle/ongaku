@@ -21,7 +21,6 @@
           logger.warn("identicon disabled");
         }
 
-    logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
     var USERS_IMAGE_DIRECTORY = __dirname + "/../../../public/user/";

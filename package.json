@@ -70,6 +70,8 @@
     "morgan": "*",
     "musicmetadata": "0.6.3",
     "nconf": "~0.6.7",
+    "nconf-yaml": "^1.0.2",
+    "node-yaml-config": "0.0.4",
     "nodemailer": "0.7.0",
     "object-assign": "^4.0.1",
     "ora": "^1.2.0",

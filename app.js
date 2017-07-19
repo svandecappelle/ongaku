@@ -2,6 +2,7 @@ var application_root = __dirname,
     express = require('express'),
     path = require('path'),
     http = require('http'),
+    yaml_config = require('node-yaml-config'),
     log4js = require("log4js"),
     fs = require('fs'),
     os = require('os'),
@@ -14,12 +15,9 @@ var app = express();
 /*jslint node: true */
 
 process.title = "Ongaku";
-if (process.argv[2] === "dev"){
-  log4js.configure('logger-dev.json', {});
-  log4js.getLogger("LoggerConfigure").info("Dev mode");
-} else {
-  log4js.configure('logger.json', {});
-}
+
+var logOptions = yaml_config.load(path.resolve(__dirname, './logger.yml'));
+log4js.configure(logOptions);
 
 var logger = log4js.getLogger('Server');
 
