@@ -21,7 +21,7 @@ var library = require("./../../middleware/library"),
     fs = require("fs"),
     translator = require("./../../middleware/translator"),
     async = require("async");
-var DEFAULT_USER_IMAGE_DIRECTORY = __dirname + "/../../../../public/user/",
+var DEFAULT_USER_IMAGE_DIRECTORY = path.join(__dirname, "/../../../../public/user/"),
   DEFAULT_GROUP_BY = ['artist', 'album'],
   DEFAULT_SORT_BY = 'artist',
   userFilesOpts = {
@@ -849,7 +849,7 @@ var getStatistics = function(name, callback){
         });
       });
 
-      app.post("/user/:username/upload", function (req, res){
+      app.post(["/user/:username/upload", "/user/:username/info/upload"], function (req, res){
         var username = req.params.username;
 
         UsersRoutes.redirectIfNotAuthenticated(req, res, function () {
@@ -1169,6 +1169,20 @@ var getStatistics = function(name, callback){
       app.get("/api/view/featured", function(req, res){
         logger.info("Client access to featured [" + req.ip + "]");
         middleware.render('api/featured', req, res);
+      });
+
+      app.get("/api/waveform/:uid", function(req, res){
+        var src = library.getRelativePath(path.basename(req.params.uid));
+        var options = {
+            waveColor: "#F0FF0F"
+        };
+        var Waveform = require('node-wave');
+
+        res.writeHead(200, {'Content-Type': 'image/png'});
+
+        Waveform(src, options, function(err , buffer) {
+          res.pipe(buffer);
+        });
       });
     };
 

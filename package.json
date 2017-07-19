@@ -67,6 +67,7 @@
     "morgan": "*",
     "musicmetadata": "0.6.3",
     "nconf": "~0.6.7",
+    "node-wave": "0.0.4",
     "nodemailer": "0.7.0",
     "object-assign": "^4.0.1",
     "ora": "^1.2.0",

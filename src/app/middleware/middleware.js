@@ -24,7 +24,7 @@
     logger.setLevel(nconf.get("logLevel"));
     var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
-    var USERS_IMAGE_DIRECTORY = __dirname + "/../../../users/";
+    var USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
     if (!fs.existsSync(USERS_IMAGE_DIRECTORY)) {
         fs.mkdirSync(USERS_IMAGE_DIRECTORY);
         logger.info("User folder not exists. Create one.");
