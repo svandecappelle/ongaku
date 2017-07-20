@@ -1229,19 +1229,23 @@ var getStatistics = function(name, callback){
       });
 
       app.get("/api/waveform/:uid", function(req, res){
-        var src = library.getRelativePath(path.basename(req.params.uid));
-        var options = {
-            waveColor: "white",
-            backgroundColor: "rgba(0,0,0,0)"
-        };
-        var Waveform = require('node-wave');
+        try {
+          var src = library.getRelativePath(path.basename(req.params.uid));
+          var options = {
+              waveColor: "white",
+              backgroundColor: "rgba(0,0,0,0)"
+          };
+          var Waveform = require('node-wave');
 
-        res.writeHead(200, {'Content-Type': 'image/png'});
+          res.writeHead(200, {'Content-Type': 'image/png'});
 
-        Waveform(src, options, function(err , buffer) {
-          res.write(buffer);
-          res.end();
-        });
+          Waveform(src, options, function(err , buffer) {
+            res.write(buffer);
+            res.end();
+          });
+        } catch(error){
+          logger.error("Not compatible canvas generation wave.");
+        }
       });
     };
 
