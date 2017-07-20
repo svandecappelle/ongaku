@@ -1231,7 +1231,8 @@ var getStatistics = function(name, callback){
       app.get("/api/waveform/:uid", function(req, res){
         var src = library.getRelativePath(path.basename(req.params.uid));
         var options = {
-            // waveColor: "#F0FF0F"
+            waveColor: "white",
+            backgroundColor: "rgba(0,0,0,0)"
         };
         var Waveform = require('node-wave');
 

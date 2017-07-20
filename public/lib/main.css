@@ -488,6 +488,27 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   bottom: 0;
 }
 
+#waveform{
+  display: inline-block;
+  max-width: 600px;
+}
+
+.waveform{
+  position: relative;
+  display: inline-block;
+  max-width: 600px;
+}
+
+.playing-wave {
+  position: absolute;
+  display: inline-block;
+  width: 0px;
+  left: 0;
+  bottom: 0px;
+  height: 5px;
+  background-color: white;
+}
+
 .pending-list.video{
   right: 0px;
 }
@@ -1805,12 +1826,33 @@ section.song-list > .list-container.shows{
 }
 
 .audio-player .song-info{
-    top: 5px;
+  top: 5px;
+  position: relative;
+  width: auto;
+  padding-left: 5px;
+  margin-right: 50px;
+  display: inline-block;
+}
+
+.audio-player .media{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.mejs-container{
+  background: transparent;
+}
+
+.mejs-container .mejs-controls{
+  height: 5px;
+  top: 0px;
 }
 
 .audio-player .song-info .song-time{
-    line-height: 5rem;
-    padding-top: 0px;
+  line-height: 5rem;
+  padding-top: 0px;
 }
 
 .global-administration{

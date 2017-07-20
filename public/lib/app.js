@@ -216,6 +216,7 @@
               success: function (mediaElement) {
                   mediaElement.addEventListener('loadedmetadata', function () {
                     $("#transcoding-message").remove();
+                    $('#waveform').attr('src', '/api/waveform/' + $.ongaku.getCurrent());
                   });
                   mediaElement.addEventListener('ended', function () {
                       $.ongaku.next();
@@ -265,6 +266,8 @@
 
                       if (currentTime > 0.5 && currentTime <= duration) {
                         $(this).closest('.audio-player').find(".progress-bar").css("width", percentage);
+                        $(".waveform .playing-wave").css("width", percentage);
+
                         parent.find('.song-current-time').html(secondsToMinutes(currentTime) + ' / ');
                       }
                   }, false);
@@ -488,7 +491,6 @@
     };
 
     Controls.prototype.bind = function () {
-        console.log("Controls.bind");
         this.unbind();
 
         $.each(this.handlers(), function (eventName, handler){
@@ -499,9 +501,7 @@
 
     Controls.prototype.unbind = function () {
       if (this.handles){
-        console.log("Controls.unbind");
         $.each(this.handles, function (index, value){
-          console.log("Controls.unbind(".concat(index).concat(")"), value);
           value.unbind();
         });
       }
@@ -586,7 +586,7 @@
           dataType: 'json',
           async: false,
           success: function() {
-            console.log("added");
+            // console.log("added");
           }
       });
     };
@@ -616,7 +616,6 @@
           dataType: 'json',
           async: false,
           success: function() {
-            console.log("removed");
             $.ongaku.library.reset();
             $.ongaku.library.setPage(0);
             $.ongaku.library.fetch();
@@ -1555,7 +1554,6 @@
 
         this.page += 1;
         this.loader.toggle();
-        console.log("fetching page: " + genericUrl);
         $.get(genericUrl, function(output){
           // For asynchronous loading debug
           // console.log("append lib: "+ output);
@@ -1770,7 +1768,6 @@
                 dataType: 'json',
                 async: false,
                 success: function() {
-                  console.log("saved");
                   $("#save-current-playlist").prop('disabled', true);
                   $.ongaku.playlist.loadAllPlaylists();
                 }
@@ -1856,7 +1853,6 @@
     var Track = function (tracknumber, val){
       var track = $("<li>");
 
-      console.log(val);
       var trackSong = $("<a>", {
         class: "song",
         "data-uid": val.uid
