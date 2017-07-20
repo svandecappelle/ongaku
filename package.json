@@ -45,7 +45,7 @@
     "identicon": "2.0.1",
     "lame": ">=1.2.4",
     "speaker": ">=0.3.0",
-    "canvas": "^1.6.5",
+    "canvas": "^1.6.5"
   },
   "dependencies": {
     "async": "^2.5.0",
