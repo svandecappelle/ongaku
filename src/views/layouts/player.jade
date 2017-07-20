@@ -14,11 +14,14 @@ block player
 				.song-current-time
 				.song-duration
 		.waveform
-			.playing-wave
 			if (data.playing)
 				img#waveform(src="/api/waveform/#{data.playing.uid}")
+				.playing-wave-container
+					img#playing-wave(src="/api/waveform/#{data.playing.uid}?color=blue")
 			else
 				img#waveform
+				.playing-wave-container
+					img#playing-wave
 		.media
 			if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
 				audio#controls(controls="controls", width="100%;")

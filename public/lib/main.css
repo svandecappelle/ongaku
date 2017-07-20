@@ -499,14 +499,14 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   max-width: 600px;
 }
 
-.playing-wave {
+.playing-wave-container {
   position: absolute;
   display: inline-block;
-  width: 0px;
-  left: 0;
+  width: 49.2606%;
+  top: 0px;
   bottom: 0px;
-  height: 5px;
-  background-color: white;
+  overflow: hidden;
+  left: 0px;
 }
 
 .pending-list.video{

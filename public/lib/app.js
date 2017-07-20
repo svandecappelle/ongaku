@@ -217,6 +217,8 @@
                   mediaElement.addEventListener('loadedmetadata', function () {
                     $("#transcoding-message").remove();
                     $('#waveform').attr('src', '/api/waveform/' + $.ongaku.getCurrent());
+                    $('#playing-wave').attr('src', '/api/waveform/' + $.ongaku.getCurrent() + '?color=' + $.ongaku.themer.getBaseColor());
+
                   });
                   mediaElement.addEventListener('ended', function () {
                       $.ongaku.next();
@@ -266,7 +268,7 @@
 
                       if (currentTime > 0.5 && currentTime <= duration) {
                         $(this).closest('.audio-player').find(".progress-bar").css("width", percentage);
-                        $(".waveform .playing-wave").css("width", percentage);
+                        $(".waveform .playing-wave-container").css("width", percentage);
 
                         parent.find('.song-current-time').html(secondsToMinutes(currentTime) + ' / ');
                       }
