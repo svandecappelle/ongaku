@@ -502,7 +502,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 .playing-wave-container {
   position: absolute;
   display: inline-block;
-  width: 49.2606%;
+  width: 0;
   top: 0px;
   bottom: 0px;
   overflow: hidden;
