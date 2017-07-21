@@ -14,6 +14,8 @@ block player
 				.song-current-time
 				.song-duration
 		.waveform
+			.play-position
+			.play-position-switcher
 			if (data.playing)
 				img#waveform(src="/api/waveform/#{data.playing.uid}")
 				.playing-wave-container

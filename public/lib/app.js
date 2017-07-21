@@ -190,6 +190,16 @@
       return minutes + ":" + seconds;
     }
 
+    Player.prototype.setCurrentTime = function(time_seconds){
+      console.log(time_seconds);
+      this.player.setCurrentTime(time_seconds);
+    };
+
+    Player.prototype.getDuration = function(){
+      console.log(this.player.media.duration);
+      return this.player.media.duration;
+    };
+
     Player.prototype.build = function (callback) {
       if ($('.player .media > audio').children().length > 0 && !this.isInitialised()) {
 
@@ -269,7 +279,7 @@
                       if (currentTime > 0.5 && currentTime <= duration) {
                         $(this).closest('.audio-player').find(".progress-bar").css("width", percentage);
                         $(".waveform .playing-wave-container").css("width", percentage);
-
+                        $('.waveform .play-position').css("width", percentage);
                         parent.find('.song-current-time').html(secondsToMinutes(currentTime) + ' / ');
                       }
                   }, false);
@@ -487,6 +497,21 @@
           imageDetail.defaultActions();
           imageDetail.append($('<img>', {src: src + "?quality=best"}).css('width', '100%'));
           imageDetail.show();
+        }),
+        "playing-wave-container": new HandlerRegisteration('.waveform', 'mousemove', function(e){
+          var relX = e.pageX - $(this).offset().left;
+          $(this).find('.play-position-switcher').css({width: relX + 'px', display: 'block'});
+        }),
+        "playing-wave-container-leave": new HandlerRegisteration('.waveform', 'mouseleave', function(e){
+          $(this).find('.play-position-switcher').css({width: '0px', display: 'none'});
+        }),
+        "playing-wave-container-click": new HandlerRegisteration('.waveform', 'click', function(e){
+          var relX = e.pageX - $(this).offset().left;
+          $(this).find('.play-position-switcher').css({width: relX + 'px'});
+          var duration = $.ongaku.getDuration();
+          var currentTime = relX * duration / $(this).width();
+          $.ongaku.setCurrentTime(currentTime);
+
         })
       };
       return this.handles;

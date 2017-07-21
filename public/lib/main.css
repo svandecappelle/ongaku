@@ -497,16 +497,31 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   position: relative;
   display: inline-block;
   max-width: 600px;
+  margin-top: 5px !important;
+  z-index: 1;
 }
 
 .playing-wave-container {
   position: absolute;
   display: inline-block;
-  width: 0;
+  width: 0px;
   top: 0px;
   bottom: 0px;
   overflow: hidden;
   left: 0px;
+}
+
+.waveform .play-position-switcher, .waveform .play-position{
+  position: absolute;
+  width: 0px;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  border-right: 2px solid white;
+}
+
+.waveform .play-position-switcher {
+  display: none;
 }
 
 .pending-list.video{
