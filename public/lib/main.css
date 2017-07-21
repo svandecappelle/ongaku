@@ -1841,7 +1841,7 @@ section.song-list > .list-container.shows{
 }
 
 .audio-player .song-info{
-  top: 5px;
+  top: 0px;
   position: relative;
   width: auto;
   padding-left: 5px;
