@@ -19,4 +19,4 @@ requireLogin: false
 allowUpload: true
 allowRegisteration: 0
 theme:
-  base-color: rgb(45, 182, 230)
+  base-color: rgb(230, 217, 45)
