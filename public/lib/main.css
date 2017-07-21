@@ -499,6 +499,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   max-width: 600px;
   margin-top: 5px !important;
   z-index: 1;
+  cursor: pointer;
 }
 
 .playing-wave-container {
@@ -522,6 +523,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 
 .waveform .play-position-switcher {
   display: none;
+  background-color: rgba(0,0,0,0.35);
 }
 
 .pending-list.video{
