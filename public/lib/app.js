@@ -224,136 +224,135 @@
               // force Android's native controls
               AndroidUseNativeControls: false,
               success: function (mediaElement) {
-                  mediaElement.addEventListener('loadedmetadata', function () {
-                    $("#transcoding-message").remove();
-                    $('#waveform').attr('src', '/api/waveform/' + $.ongaku.getCurrent());
-                    $('#playing-wave').attr('src', '/api/waveform/' + $.ongaku.getCurrent() + '?color=' + $.ongaku.themer.getBaseColor());
+                mediaElement.addEventListener('loadedmetadata', function () {
+                  $("#transcoding-message").remove();
+                  $('#waveform').attr('src', '/api/waveform/' + $.ongaku.getCurrent());
+                  $('#playing-wave').attr('src', '/api/waveform/' + $.ongaku.getCurrent() + '?color=' + $.ongaku.themer.getBaseColor());
+                });
+                mediaElement.addEventListener('ended', function () {
+                  $.ongaku.next();
 
-                  });
-                  mediaElement.addEventListener('ended', function () {
-                      $.ongaku.next();
-
-                      var parent = $(this).closest('.audio-player');
-                      $(this).closest('.audio-player').find(".progress-bar").css("width", "100%");
-                      parent.find('.playpause').removeClass('is-playing').addClass('is-paused');
-                      parent.find('.playpause').find('.fa').removeClass('fa-pause').addClass('fa-play');
-                      parent.removeClass('is-playing').addClass('is-paused').addClass('already-played');
-                  });
-                  mediaElement.addEventListener('play', function () {
-                      //$.ongaku.getPlayer.volume = 1;
-                      if ($.ongaku.isFirst()) {
-                          iziToast.warning({message: 'Add a track to play', position: 'topCenter', position: 'topCenter'});
-                          $.ongaku.stop();
-                      } else if ( $(".playing").length === 0) {
-                          $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
-                      }
-
-                      var otherPlayers =  $('audio').not(this);
-                      var parent = $(this).closest('.audio-player');
-                      var playButton = parent.find('.playpause');
-
-                      $(this).removeClass('is-paused').addClass('is-playing');
-                      playButton.find('.fa').removeClass('fa-play').addClass('fa-pause');
-                      parent.removeClass('is-paused').addClass('is-playing');
-                      if ($.ongaku.getCurrent()){
-                        var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
-                        $.ongaku.titleScroller.configure({
-                            text: title,
-                            speed: 500,
-                            forceReset: true
-                        });
-                      }
-                  });
-
-                  mediaElement.addEventListener('error', function failed(e) {
-                    iziToast.error({title: 'Error', message: "Error reading file: \n Check authentication rights.", position: 'topCenter'});
-                  });
-
-                  // add event listener
-                  mediaElement.addEventListener('timeupdate', function(e) {
-                      var parent = $(this).closest('.audio-player');
-                      var currentTime = mediaElement.currentTime;
-                      var duration = mediaElement.duration;
-                      var percentage = (currentTime / duration) * 100 + "%";
-
-                      if (currentTime > 0.5 && currentTime <= duration) {
-                        $(this).closest('.audio-player').find(".progress-bar").css("width", percentage);
-                        $(".waveform .playing-wave-container").css("width", percentage);
-                        $('.waveform .play-position').css("width", percentage);
-                        parent.find('.song-current-time').html(secondsToMinutes(currentTime) + ' / ');
-                      }
-                  }, false);
-
-                  mediaElement.addEventListener('canplay', function(e){
-                    $.ongaku.audiowave.rebuild();
-                    if ($.ongaku.getCurrent()){
-                      var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
-                      $(".song-info .title").text(title);
-                    }
-
-                    if ($.ongaku.themer.getBaseColor()){
-                      $(".mejs-time-loaded").css({
-                        "background" : $.ongaku.themer.getBaseColor()
-                      });
-                    }
-
-                    var parent = $(this).closest('.audio-player');
-                    var playButton = parent.find('.playpause');
-                    var duration = mediaElement.duration;
-
-                    parent.find('.song-duration').html(secondsToMinutes(duration));
-                    playButton.prop('disabled', false);
-
-                    playButton.on('click', function(e){
-                      if (parent.hasClass('is-paused')) {
-                        mediaElement.play();
-                      } else if (parent.hasClass('is-playing')) {
-                        mediaElement.pause();
-                      }
-                    });
-
-                    if ($.ongaku.getNextSong()){
-                        $(".audio-player .next").prop('disabled', false);
-                    }else{
-                      $(".audio-player .next").prop('disabled', true);
-                    }
-
-                    if ($.ongaku.getPreviousSong()){
-                        $(".audio-player .previous").prop('disabled', false);
-                    }else{
-                      $(".audio-player .previous").prop('disabled', true);
-                    }
-                  });
-
-                  mediaElement.addEventListener('pause', function(e){
-                      var parent = $(this).closest('.audio-player');
-                      var playButton = parent.find('.playpause');
-                      playButton.removeClass('is-playing').addClass('is-paused');
-                      playButton.find('.fa').removeClass('fa-pause').addClass('fa-play');
-                      parent.removeClass('is-playing').addClass('is-paused');
-                  });
-
-                  if (callback !== undefined) {
-                      callback();
+                  var parent = $(this).closest('.audio-player');
+                  $(this).closest('.audio-player').find(".progress-bar").css("width", "100%");
+                  parent.find('.playpause').removeClass('is-playing').addClass('is-paused');
+                  parent.find('.playpause').find('.fa').removeClass('fa-pause').addClass('fa-play');
+                  parent.removeClass('is-playing').addClass('is-paused').addClass('already-played');
+                });
+                mediaElement.addEventListener('play', function () {
+                  //$.ongaku.getPlayer.volume = 1;
+                  if ($.ongaku.isFirst()) {
+                      iziToast.warning({message: 'Add a track to play', position: 'topCenter', position: 'topCenter'});
+                      $.ongaku.stop();
+                  } else if ( $(".playing").length === 0) {
+                      $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
                   }
-              },
-              error: function (me) {
-                console.log("failure build musique player:", me);
-              }
+
+                  var otherPlayers =  $('audio').not(this);
+                  var parent = $(this).closest('.audio-player');
+                  var playButton = parent.find('.playpause');
+
+                  $(this).removeClass('is-paused').addClass('is-playing');
+                  playButton.find('.fa').removeClass('fa-play').addClass('fa-pause');
+                  parent.removeClass('is-paused').addClass('is-playing');
+                  if ($.ongaku.getCurrent()){
+                    var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
+                    $.ongaku.titleScroller.configure({
+                        text: title,
+                        speed: 500,
+                        forceReset: true
+                    });
+                  }
+                });
+
+                mediaElement.addEventListener('error', function failed(e) {
+                  iziToast.error({title: 'Error', message: "Error reading file: \n Check authentication rights.", position: 'topCenter'});
+                });
+
+                // add event listener
+                mediaElement.addEventListener('timeupdate', function(e) {
+                  var parent = $(this).closest('.audio-player');
+                  var currentTime = mediaElement.currentTime;
+                  var duration = mediaElement.duration;
+                  var percentage = (currentTime / duration) * 100 + "%";
+
+                  if (currentTime > 0.5 && currentTime <= duration) {
+                    $(this).closest('.audio-player').find(".progress-bar").css("width", percentage);
+                    $(".waveform .playing-wave-container").css("width", percentage);
+                    $('.waveform .play-position').css("width", percentage);
+                    parent.find('.song-current-time').html(secondsToMinutes(currentTime) + ' / ');
+                  }
+                }, false);
+
+                mediaElement.addEventListener('canplay', function(e){
+                  $.ongaku.audiowave.rebuild();
+                  if ($.ongaku.getCurrent()){
+                    var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
+                    $(".song-info .title").text(title);
+                  }
+
+                  if ($.ongaku.themer.getBaseColor()){
+                    $(".mejs-time-loaded").css({
+                      "background" : $.ongaku.themer.getBaseColor()
+                    });
+                  }
+
+                  var parent = $(this).closest('.audio-player');
+                  var playButton = parent.find('.playpause');
+                  var duration = mediaElement.duration;
+
+                  parent.find('.song-duration').html(secondsToMinutes(duration));
+                  playButton.prop('disabled', false);
+
+                  playButton.on('click', function(e){
+                    if (parent.hasClass('is-paused')) {
+                      mediaElement.play();
+                    } else if (parent.hasClass('is-playing')) {
+                      mediaElement.pause();
+                    }
+                  });
+
+                  if ($.ongaku.getNextSong()){
+                      $(".audio-player .next").prop('disabled', false);
+                  }else{
+                    $(".audio-player .next").prop('disabled', true);
+                  }
+
+                  if ($.ongaku.getPreviousSong()){
+                      $(".audio-player .previous").prop('disabled', false);
+                  }else{
+                    $(".audio-player .previous").prop('disabled', true);
+                  }
+                });
+
+                mediaElement.addEventListener('pause', function(e){
+                  var parent = $(this).closest('.audio-player');
+                  var playButton = parent.find('.playpause');
+                  playButton.removeClass('is-playing').addClass('is-paused');
+                  playButton.find('.fa').removeClass('fa-pause').addClass('fa-play');
+                  parent.removeClass('is-playing').addClass('is-paused');
+                });
+
+                if (callback !== undefined) {
+                  callback();
+                }
+            },
+            error: function (me) {
+              console.log("failure build musique player:", me);
+            }
           });
           $('.player .media > audio').show();
       } else {
-          this.initialised = false;
-          $('.player .media > audio').hide();
+        this.initialised = false;
+        $('.player .media > audio').hide();
       }
     };
 
     Player.prototype.isInitialised = function () {
-        return this.initialised;
+      return this.initialised;
     };
 
     Player.prototype.setInitialized = function (initialised) {
-        this.initialised = initialised;
+      this.initialised = initialised;
     };
 
     Player.prototype.getNextSong = function(){

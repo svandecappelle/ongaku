@@ -207,7 +207,7 @@
                   var libElement = Scanner.song(filePath, metadata, metadata.duration);
                   results.push(libElement);
                   logger.debug(libElement);
-                  return cb(null, results);
+                  //return cb(null, results);
                 });
 
                 parser.on("done", function(err){
@@ -218,8 +218,8 @@
                     var libElement = Scanner.song(filePath, {}, null);
                     results.push(libElement);
 
-                    return cb(null, results);
                   }
+                  return cb(null, results);
                 });
               }
           } else {
@@ -279,10 +279,10 @@
                 if (stat.isFile()) {
                     logger.debug("File found".concat(newpath));
                     if (appender) {
-                        appender.append(newpath, cb, results);
+                        return appender.append(newpath, cb, results);
                     }
                 } else if (stat.isDirectory()) {
-                    Scanner.scan(newpath, cb, appender, libraryCallBack); // recursion loop
+                    return Scanner.scan(newpath, cb, appender, libraryCallBack); // recursion loop
                 }
 
             });

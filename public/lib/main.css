@@ -518,7 +518,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   top: 0px;
   bottom: 0px;
   left: 0px;
-  border-right: 2px solid white;
+  box-shadow: 1px 0px 0px #FFF;
 }
 
 .waveform .play-position-switcher {
