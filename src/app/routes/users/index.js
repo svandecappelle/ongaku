@@ -3,7 +3,7 @@ var logger = require('log4js').getLogger("UsersRoutes"),
   nconf = require("nconf"),
   passport = require("passport"),
   _ = require("underscore"),
-  unzip = require("unzip"),
+  unzip = require("node-unzip-2"),
   path = require("path"),
   Busboy = require('busboy');
 

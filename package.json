@@ -73,6 +73,7 @@
     "musicmetadata": "0.6.3",
     "nconf": "~0.6.7",
     "nconf-yaml": "^1.0.2",
+    "node-unzip-2": "^0.2.1",
     "node-yaml-config": "0.0.4",
     "nodemailer": "0.7.0",
     "object-assign": "^4.0.1",
@@ -88,7 +89,6 @@
     "tinycolor2": "^1.4.1",
     "uglify-js": "1.2.x",
     "underscore": "*",
-    "unzip": "^0.1.11",
     "uuid": "^3.1.0",
     "vid-streamer": ">0.1.4",
     "xregexp": "~2.0.0"
