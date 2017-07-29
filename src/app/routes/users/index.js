@@ -9,6 +9,7 @@ var logger = require('log4js').getLogger("UsersRoutes"),
 
 var library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
+    player = require("./../../middleware/desktop-player"),
     exporter = require("./../../middleware/exporter"),
     meta = require("./../../meta"),
     chat = require("./../../chat"),
@@ -328,6 +329,50 @@ var getStatistics = function(name, callback){
         };
         UsersRoutes.checkingAuthorization(req, res, function () {
           stream();
+        });
+      });
+
+      /* ## Used to plays using speakers desktop mode (plays on server side) ## */
+      app.get('/api/desktop-play/:media', function (req, res) {
+        var play = function () {
+          logger.debug("play desktop audio");
+
+          player.desktop(req, res, library.getRelativePath(path.basename(req.params.media)));
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          play();
+        });
+      });
+      app.get('/api/desktop-play/:media/stop', function (req, res) {
+        var stop = function () {
+          logger.debug("stop desktop audio");
+
+          player.end(req, res);
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          stop();
+        });
+      });
+
+      app.get('/api/desktop-play/:media/pause', function (req, res) {
+        var pause = function () {
+          logger.debug("stop desktop audio");
+
+          player.pause(req, res);
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          pause();
+        });
+      });
+
+      app.get('/api/desktop-play/:media/resume', function (req, res) {
+        var resume = function () {
+          logger.debug("stop desktop audio");
+
+          player.resume(req, res);
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          resume();
         });
       });
 

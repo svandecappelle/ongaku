@@ -243,6 +243,15 @@ html
                 $.chat.init(socket, $.ongaku.getUser().username);
             });
             
+            socket.on('desktop-playing:started', function (obj) {
+                console.log("plays started", obj);
+                $.ongaku.setWaveform(obj.uuid);
+            });
+            
+            socket.on('desktop-playing:playing', function (obj) {
+                console.log("playing", obj);
+            });
+            
             socket.on('library:scanned', function () {
               $("#finished-loading-library").remove();
               iziToast.show({

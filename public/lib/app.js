@@ -347,6 +347,11 @@
       }
     };
 
+    Player.prototype.setWaveform = function (uuid) {
+      $('#waveform').attr('src', '/api/waveform/' + uuid);
+      $('#playing-wave').attr('src', '/api/waveform/' + uuid + '?color=' + $.ongaku.themer.getBaseColor());
+    };
+
     Player.prototype.isInitialised = function () {
       return this.initialised;
     };
