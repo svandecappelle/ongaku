@@ -129,6 +129,9 @@
       return this.meta;
     };
 
+    Player.prototype.setPlayType = function (type) {
+      this.playsType = type;
+    };
 
     Player.prototype.isAnonymous = function () {
       return this.user === undefined || this.user.isAnonymous;
@@ -138,15 +141,18 @@
         return this.current === undefined;
     };
 
-    Player.prototype.setCurrent = function (currentId) {
-        this.current = currentId;
+    Player.prototype.setCurrent = function (currentId, encoding, forceRebuild) {
+      this.current = currentId;
+      if (forceRebuild) {
+        this.play(currentId, encoding, false);
+      }
     };
 
     Player.prototype.getCurrent = function () {
         return this.current;
     };
 
-    Player.prototype.play = function (uid, encoding) {
+    Player.prototype.play = function (uid, encoding, autoplay) {
       if ($.ongaku.themer.getBaseColor()){
         $(".playing").css({
           color: $.ongaku.themer.getBaseColor(),
@@ -155,14 +161,16 @@
       }
       $(".playing").removeClass('playing');
       this.current = uid;
-      $.post('/api/statistics/plays/' + uid);
 
       $("#controls").attr("src", "/api/stream/".concat(uid));
       $("#mp3src").attr("src", "/api/stream/".concat(uid).concat(".".concat(encoding))).remove().appendTo("#controls");
 
       $("#controls")[0].pause();
       $("#controls")[0].load();
-      $("#controls")[0].play();
+
+      if (autoplay === undefined || autoplay === true) {
+        $("#controls")[0].play();
+      }
       $.ongaku.audiowave.rebuild();
       if (['mp3', 'ogg', 'wav'].indexOf(encoding) === -1) {
         iziToast.info({title: 'Transcoder', message: 'Transcoding track...', position: 'topCenter', id: "transcoding-message", timeout: false});
@@ -244,7 +252,8 @@
                       iziToast.warning({message: 'Add a track to play', position: 'topCenter', position: 'topCenter'});
                       $.ongaku.stop();
                   } else if ( $(".playing").length === 0) {
-                      $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
+                    $.post('/api/statistics/plays/' + uid);
+                    $(".play").find("[data-uid='" + $.ongaku.getCurrent() + "']").parent().parent().addClass('playing');
                   }
 
                   var otherPlayers =  $('audio').not(this);

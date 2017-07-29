@@ -15,10 +15,82 @@ function loadView(ev, view){
   });
 }
 
+function Connection(opts){
+  this.opts = opts;
+  this.socket = io.connect('http://' + opts.session.host + '/');
+}
+
+Connection.prototype.notify = function (id, title, msg) {
+  iziToast.show({
+    close: true,
+    position: 'topCenter',
+    id: id,
+    message: msg,
+    transitionIn: 'flipInX',
+    transitionOut: 'flipOutX',
+    progressBarColor: 'rgb(0, 255, 184)',
+    image: '/img/album.jpg',
+    imageWidth: 70,
+    layout: 2,
+    timeout: false,
+    icon: 'icon-contacts',
+    title: title,
+    iconColor: 'rgb(0, 255, 184)',
+    color: 'dark',
+  });
+};
+
+Connection.prototype.bind = function () {
+  var that = this;
+  this.socket.on('connect', function () {
+    $.chat.init(that.socket, $.ongaku.getUser().username);
+    socket.join(that.opts.session.sessionID);
+  });
+
+  this.socket.on('application:connected', function () {
+    var location = window.location.href;
+
+    that.notify("application-message", 'You signed in with another tab or window. <a href="'+location+'">Reload</a> to refresh your session.', '');
+  });
+
+  this.socket.on('desktop-playing:started', function (obj) {
+    console.log("plays started", obj);
+    $.ongaku.setWaveform(obj.uuid);
+  });
+
+  this.socket.on('streaming-playing:started', function (obj) {
+    if ($.ongaku.getCurrent() !== obj.uuid) {
+      $.ongaku.setCurrent(obj.uuid, obj.encoding, true);
+      that.notify("application-message", 'Another tab is streaming media.', '');
+    }
+  });
+
+  this.socket.on('desktop-playing:playing', function (obj) {
+    console.log("playing", obj);
+  });
+
+  this.socket.on('library:scanned', function () {
+    $("#finished-loading-library").remove();
+    that.notify('finished-loading-library', "Library was reloaded:", '<a href="/">click here to refresh</a>');
+  });
+  this.socket.on('library-scanner:progress', function(ev){
+    if (ev.value >= 100){
+      $("#finished-loading-library").remove();
+      that.notify('finished-loading-library', "Library was reloaded:", '<a href="/">click here to refresh</a>');
+    }
+    if ($("#progress-loading-message").length === 0){
+      that.notify('progress-loading-message', "Library is reloading:", '<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
+    }
+    $("#progress-loading-message .iziToast-body p.slideIn").html('<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
+  });
+};
+
 function initApplication(opts){
   $.ongaku.setUser(opts.user);
   $.ongaku.setProperties(opts.meta);
   $.ongaku.library.setGroupBy(opts.session.groupby);
+  console.log(opts.session);
+
   $(function () {
     $('#responsive-menu').on('click', function(){
       $("#header").toggleClass("show");
@@ -31,7 +103,6 @@ function initApplication(opts){
   });
 
   videojs.options.flash.swf = "http://" + opts.session.host + "/video-js/video-js.swf";
-
 
   var basecolor = Cookies.get("base-color");
   if (basecolor){
@@ -54,102 +125,13 @@ function initApplication(opts){
   $('.scroll-pane').jScrollPane();
   $.ongaku.build();
   $.ongaku.controls.bind();
-  var socket = io.connect('http://' + opts.session.host + '/');
-  socket.on('connect', function () {
-      console.log("Connected");
-      $.chat.init(socket, $.ongaku.getUser().username);
-  });
 
-  socket.on('desktop-playing:started', function (obj) {
-      console.log("plays started", obj);
-      $.ongaku.setWaveform(obj.uuid);
-  });
-
-  socket.on('desktop-playing:playing', function (obj) {
-      console.log("playing", obj);
-  });
-
-  socket.on('library:scanned', function () {
-    $("#finished-loading-library").remove();
-    iziToast.show({
-      close: false,
-      position: 'topCenter',
-      id: 'finished-loading-library',
-      message: '<a href="/">Library was reloaded: click here to refresh</a>',
-      transitionIn: 'flipInX',
-      transitionOut: 'flipOutX',
-      progressBarColor: 'rgb(0, 255, 184)',
-      image: '/img/album.jpg',
-      imageWidth: 70,
-      layout:2,
-      timeout: false,
-      icon: 'icon-contacts',
-      title: 'Library is loading:',
-      iconColor: 'rgb(0, 255, 184)',
-      color: 'dark',
-    });
-  });
-  socket.on('library-scanner:progress', function(ev){
-    if (ev.value >= 100){
-      $("#finished-loading-library").remove();
-      iziToast.show({
-        close: false,
-        id: 'finished-loading-library',
-        position: 'topCenter',
-        message: '<a href="/">Library was reloaded: click here to refresh</a>',
-        transitionIn: 'flipInX',
-        transitionOut: 'flipOutX',
-        progressBarColor: 'rgb(0, 255, 184)',
-        image: '/img/album.jpg',
-        imageWidth: 70,
-        layout:2,
-        timeout: false,
-        icon: 'icon-contacts',
-        title: 'Library is loading:',
-        iconColor: 'rgb(0, 255, 184)',
-        color: 'dark',
-      });
-    }
-    if ($("#progress-loading-message").length === 0){
-      iziToast.show({
-        close: false,
-        position: 'topCenter',
-        id: 'progress-loading-message',
-        message: '<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>',
-        transitionIn: 'flipInX',
-        transitionOut: 'flipOutX',
-        progressBarColor: 'rgb(0, 255, 184)',
-        image: '/img/album.jpg',
-        imageWidth: 70,
-        layout:2,
-        timeout: false,
-        color: 'dark',
-        icon: 'icon-contacts',
-        title: 'Library is loading:',
-        iconColor: 'rgb(0, 255, 184)'
-      });
-    }
-    $("#progress-loading-message .iziToast-body p.slideIn").html('<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
-  });
+  var connection = new Connection(opts);
+  connection.bind();
 
   $(".nav-reload>a").on("click", function(){
-
-    var message = $("<h1>", {
-      class: "message"
-    });
-    message.append($("<i>", {
-      class: "fa fa-circle-o-notch fa-spin"
-    }));
-    var loadingText = $("<span>", {
-      class: "text"
-    });
-    message.append(loadingText);
-    loadingText.html("Reloading library");
-    $(".sidebar.show").append(message);
-
     $.get("/api/reload/audio/library", function(output){
-      $(".sidebar.show>.message").remove();
-      $.ongaku.library.rebuild(output, "audio");
+      // $.ongaku.library.rebuild(output, "audio");
     });
   });
   $("a.view").on("click", function(ev){

@@ -59,7 +59,7 @@ html
                             a.view(href="/", title="Acceuil", data-view="audio")
                                 i.fa.fa-home
                                 span.text= i18n.home
-                        if !session.user.isAnonymous && session.user.administrator
+                        if !session.user.isAnonymous && session.user.administrator || meta.type == "desktop"
                             li.nav-cog
                                 a.view(href="/admin", title="Administration", data-view='admin')
                                   i.fa.fa-cog
@@ -77,59 +77,60 @@ html
                         for language in languages
                           li
                             a.language(data-locale="#{language}")= i18n.i18n_languages[language]
-                    unless session.user.isAnonymous
-                        li.dropdown(style="float: left;")
-                            a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
-                                i.fa.fa-fw.fa-bell-o(title="Notifications")
-                            ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
-                                if session.notifications.count > 0
-                                    li
-                                        a(href="all")= i18n.all
-                                    li.divider
-                                        each notif in session.notifications.datas
-                                            li
-                                                a(href="/notification")= notif
-                    li.dropdown(style="float: left;margin-left: 0.8rem;")
-                        a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
-                            if session.user.avatar
-                                img.user-avatar(src="/user/#{session.user.username}/avatar")
+                    if meta.type == "browser"
+                      unless session.user.isAnonymous
+                          li.dropdown(style="float: left;")
+                              a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
+                                  i.fa.fa-fw.fa-bell-o(title="Notifications")
+                              ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
+                                  if session.notifications.count > 0
+                                      li
+                                          a(href="all")= i18n.all
+                                      li.divider
+                                          each notif in session.notifications.datas
+                                              li
+                                                  a(href="/notification")= notif
+                      li.dropdown(style="float: left;margin-left: 0.8rem;")
+                          a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
+                              if session.user.avatar
+                                  img.user-avatar(src="/user/#{session.user.username}/avatar")
+                              else
+                                  if session.user.isAnonymous
+                                      i.fa.fa-fw.fa-sign-in
+                                  else
+                                      i.fa.fa-fw.fa-user
+                          ul.dropdown-menu.user-status(role="menu")
+                            if session.user.isAnonymous
+                              li
+                                a.view(href="/login", data-view="login")
+                                  span= i18n.login
+                              li
+                                a.view(href="/register", data-view="register")
+                                  span= i18n.register
                             else
-                                if session.user.isAnonymous
-                                    i.fa.fa-fw.fa-sign-in
-                                else
-                                    i.fa.fa-fw.fa-user
-                        ul.dropdown-menu.user-status(role="menu")
-                          if session.user.isAnonymous
-                            li
-                              a.view(href="/login", data-view="login")
-                                span= i18n.login
-                            li
-                              a.view(href="/register", data-view="register")
-                                span= i18n.register
-                          else
-                            li
-                              a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
+                              li
+                                a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
+                                    i.fa.fa-circle.status.online
+                                    span#username(style="margin-left:10px;") #{session.user.username}
+                              li
+                                a(href="/logout")= i18n.logout
+                              li.divider
+                              li
+                                a(data-status="online")
                                   i.fa.fa-circle.status.online
-                                  span#username(style="margin-left:10px;") #{session.user.username}
-                            li
-                              a(href="/logout")= i18n.logout
-                            li.divider
-                            li
-                              a(data-status="online")
-                                i.fa.fa-circle.status.online
-                                span(style="margin-left:10px;")= i18n.status.online
-                            li
-                              a(data-status="away")
-                                i.fa.fa-circle.status.away
-                                span(style="margin-left:10px;")= i18n.status.away
-                            li
-                              a(data-status="busy")
-                                i.fa.fa-circle.status.busy
-                                span(style="margin-left:10px;")= i18n.status.busy
-                            li
-                              a(data-status="offline")
-                                i.fa.fa-circle.status.offline
-                                span(style="margin-left:10px;")= i18n.status.offline
+                                  span(style="margin-left:10px;")= i18n.status.online
+                              li
+                                a(data-status="away")
+                                  i.fa.fa-circle.status.away
+                                  span(style="margin-left:10px;")= i18n.status.away
+                              li
+                                a(data-status="busy")
+                                  i.fa.fa-circle.status.busy
+                                  span(style="margin-left:10px;")= i18n.status.busy
+                              li
+                                a(data-status="offline")
+                                  i.fa.fa-circle.status.offline
+                                  span(style="margin-left:10px;")= i18n.status.offline
             div.pull-right(style="padding-top: 6px;")
               input#base-color(type="text")
         nav.menu.main-menu
@@ -183,6 +184,7 @@ html
         include pending-play
 
         script.
+          console.log('#{meta.type}');
           $(function(){
             initApplication({
               user: !{JSON.stringify(session.user)},

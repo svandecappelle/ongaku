@@ -6,6 +6,8 @@ audio: [mp3,  wav, wma, ogg, flac]
 video: [mp4, webm, flv, ogv]
 defaultLanguage: fr
 database: redis
+type: browser
+playingtype: streaming
 redis:
     host: 127.0.0.1
     port: 6379

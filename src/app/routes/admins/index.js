@@ -24,8 +24,13 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 				}
 			});
 		} else {
-			logger.warn("Anonymous access forbidden: authentication required.");
-			middleware.redirect('/login', res);
+			if (nconf.get('type') === "desktop") {
+				logger.info("Desktop mode all access is granted.");
+				callback();
+			} else {
+				logger.warn("Anonymous access forbidden: authentication required.");
+				middleware.redirect('/login', res);
+			}
 		}
 	};
 

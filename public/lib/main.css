@@ -456,6 +456,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
 
 .player .current-playing-image{
   width: 5rem;
+  cursor: pointer;
 }
 
 .player.empty{
@@ -879,15 +880,6 @@ ul.group.artist span.artistname{
   height: 34px !important;
 }
 
-.toggle-icon>.handle>.glyphicon{
-  box-sizing: border-box;
-  line-height: 24px;
-}
-
-.toggle-icon>input{
-  display: none;
-}
-
 .tabs {
   float: none;
   list-style: none;
@@ -965,11 +957,11 @@ ul.group.artist span.artistname{
 /* Toggle buttons */
 .icon {
   position: relative;
-  border-radius: 70px;
+  border-radius: 1.5rem;
   background-color: #EFF4FF;
   width: 65px;
-  height: 29px;
-  margin-right: 20px;
+  height: 1.5rem;
+  margin-right: 0.25rem;
   overflow: hidden;
   -webkit-transition: all .25s linear;
   -moz-transition: all .25s linear;
@@ -984,9 +976,9 @@ ul.group.artist span.artistname{
   user-select: none;
 }
 .icon .handle {
-  width: 27px;
-  height: 27px;
-  border-radius: 18px;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
   position: absolute;
   top: 1px;
   background: #FFF;
@@ -995,9 +987,9 @@ ul.group.artist span.artistname{
   color: #6D808E;
   text-decoration: none;
   color: #D8DAD9;
-  line-height: 27px;
+  line-height: 1.4rem;
   text-align: center;
-  left: 1px;
+  left: 0px;
   -webkit-transition: all 0.4s cubic-bezier(0.33, 1.6, 0.66, 1);
   -moz-transition: all 0.4s cubic-bezier(0.33, 1.6, 0.66, 1);
   -o-transition: all 0.4s cubic-bezier(0.33, 1.6, 0.66, 1);
@@ -1013,12 +1005,27 @@ ul.group.artist span.artistname{
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   position: absolute;
   left: -28px;
+  font-size: 0.8rem;
+  vertical-align: middle;
+  line-height: 1.6rem;
 }
+
+.toggle-icon>.handle>.glyphicon{
+  box-sizing: border-box;
+  line-height: 1.20rem;
+  font-size: 0.8rem;
+  vertical-align: middle;
+}
+
+.toggle-icon>input{
+  display: none;
+}
+
 .icon.on {
   background: #FFA400;
 }
 .icon.on .handle {
-  left: 36px;
+  left: calc(65px - 1.5rem);
   color: #FFA400;
 }
 .icon.on.red {

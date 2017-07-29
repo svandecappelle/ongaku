@@ -78,6 +78,7 @@
             if (userData.uid) {
               //user.logIP(userData.uid, req.ip);
               logger.info("user '" + userData.uid + "' connected on: " + req.ip);
+              chat.emitMyself('application:connected', req.sessionID);
             }
             if (req.session.redirectTo !== undefined) {
               middleware.redirect(req.session.redirectTo, res);

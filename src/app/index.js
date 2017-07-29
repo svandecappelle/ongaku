@@ -10,12 +10,12 @@ var meta = require('./meta');
 
 
 (function(Application) {
-	Application.load = function (app, callback, restart) {
+	Application.load = function (app, callback, session) {
 		meta.settings.merge();
 		routes.load(app);
 		this.app = app;
 		served = this.app.listen(nconf.get('port'));
-		chat.load(served);
+		chat.load(served, session);
 		var urlService = "http://".concat(nconf.get("hostname")).concat(":").concat(nconf.get("port"));
 		logger.info("Service is ready and listening on: " + urlService);
 		if (callback){

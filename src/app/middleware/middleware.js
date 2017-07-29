@@ -193,6 +193,9 @@
         if (middlewareObject.req.session.chats === undefined) {
             middlewareObject.req.session.chats = [];
         }
+
+        middlewareObject.objs.session.sessionID = middlewareObject.req.sessionID;
+
         middlewareObject.objs.session.chats = middlewareObject.req.session.chats;
 
         meta.settings.getOne("global", "notifications", function (err, curValue) {

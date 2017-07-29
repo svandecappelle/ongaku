@@ -157,35 +157,40 @@ var getStatistics = function(name, callback){
     };
 
     UsersRoutes.checkingAuthorization = function (req, res, callback) {
-      meta.settings.getOne("global", "requireLogin", function (err, curValue) {
-        if (err) {
-          logger.debug("userauth error checking");
-          middleware.redirect('/login', res);
-        } else if (curValue === "true") {
-          logger.debug("userauth is required to listen");
-          if (middleware.isAuthenticated(req)) {
-            callback();
-          } else {
-            if (req.query.key) {
-              security.isAllowed(req.query.key, function(err, access_ganted){
-                if (access_ganted) {
-                  logger.info("access granted to stream");
-                  callback();
-                } else {
-                  logger.warn("Anonymous access forbidden: Using a wrong query access key");
-                  middleware.redirect('/login', res);
-                }
-              });
+      if (nconf.get('type') === 'desktop'){
+        logger.info("desktop mode all access granted");
+        callback();
+      } else {
+        meta.settings.getOne("global", "requireLogin", function (err, curValue) {
+          if (err) {
+            logger.debug("userauth error checking");
+            middleware.redirect('/login', res);
+          } else if (curValue === "true") {
+            logger.debug("userauth is required to listen");
+            if (middleware.isAuthenticated(req)) {
+              callback();
             } else {
-              logger.warn("Anonymous access forbidden: authentication required to stream");
-              middleware.redirect('/login', res);
+              if (req.query.key) {
+                security.isAllowed(req.query.key, function(err, access_ganted){
+                  if (access_ganted) {
+                    logger.info("access granted to stream");
+                    callback();
+                  } else {
+                    logger.warn("Anonymous access forbidden: Using a wrong query access key");
+                    middleware.redirect('/login', res);
+                  }
+                });
+              } else {
+                logger.warn("Anonymous access forbidden: authentication required to stream");
+                middleware.redirect('/login', res);
+              }
             }
+          } else {
+            logger.debug("userauth is not required to listen");
+            callback();
           }
-        } else {
-          logger.debug("userauth is not required to listen");
-          callback();
-        }
-      });
+        });
+      }
     };
 
     UsersRoutes.api = function (app){
@@ -377,7 +382,7 @@ var getStatistics = function(name, callback){
       });
 
       app.post('/api/statistics/:type/:media', function(req, res){
-        if (req.params.type === 'plays'){
+        if (req.params.type === 'plays') {
           statistics.set('plays', req.params.media, 'increment', function(){
               logger.debug("set statistics");
           });
@@ -389,6 +394,12 @@ var getStatistics = function(name, callback){
                 logger.debug("set statistics");
             });
           }
+
+          chat.emitMyself('streaming-playing:started', req.sessionID, {
+            uuid: req.params.media,
+            encoding: library.getAudioById(req.params.media).encoding
+          });
+
         }
         middleware.json(req, res, {status: "ok"});
       });
@@ -740,7 +751,6 @@ var getStatistics = function(name, callback){
         logger.info("Client access to index [" + req.ip + "]");
         // Get first datas fetch is defined into client side.
         var libraryDatas = library.getAudio(0, 3);
-
         logger.debug(libraryDatas);
         middleware.render('library/index', req, res, {library: libraryDatas});
       });
