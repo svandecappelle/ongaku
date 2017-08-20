@@ -145,13 +145,14 @@ var getStatistics = function(name, callback){
     };
 
     UsersRoutes.renderLibraryPage = function (username, req, res){
-      userlib.get(username, function (err, uids){
+      userlib.get(username, function (err, uids) {
         var libraryDatas = null;
         if (req.params.page === "all"){
-          libraryDatas = library.getAudioById(uids);
+          libraryDatas = library.getUserLibrary(uids, null, null, username, req.params.search);
         } else {
-          libraryDatas = library.getAudioById(uids, req.params.page, 3);
+          libraryDatas = library.getUserLibrary(uids, req.params.page, 3, username, req.params.search);
         }
+
         middleware.json(req, res, libraryDatas);
       });
     };
@@ -409,23 +410,10 @@ var getStatistics = function(name, callback){
         UsersRoutes.renderLibraryPage(username, req, res);
       });
 
-      app.get('/api/user/library/filter/:search', function (req, res) {
+      app.get('/api/user/:username/library/filter/:search/:page', function (req, res) {
         logger.debug("Search filtering audio library");
-
-        var username = req.session.passport.user.username;
-
-        userlib.get(username, function (err, uids){
-          var libraryDatas = library.getAudioFlattenById(uids);
-          var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
-
-          var filteredDatas = library.search({
-            filter: req.params.search,
-            type: "audio",
-            groupby: undefined,
-            sortby: sortby
-          }, libraryDatas);
-          middleware.json(req, res, filteredDatas);
-        });
+        var username = req.params.username;
+        UsersRoutes.renderLibraryPage(username, req, res);
       });
 
       app.get('/api/playlist', function (req, res) {

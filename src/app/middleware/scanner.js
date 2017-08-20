@@ -125,22 +125,27 @@
     };
 
     Scanner.scanFolder = function(folder, callback) {
-      async.parallel({
-        audio: function(next){
-          Scanner.scanAudio(folder, function (err, res, isFinishedAll) {
-            logger.debug("Callback scan audio folder", folder);
-            callback({audio: res, isFinishedAll: isFinishedAll});
-          });
-        },
-        video: function(next){
-          Scanner.scanVideo(folder, function (err, res, isFinishedAll) {
-            logger.debug("Callback scan video folder");
-            callback({video: res, isFinishedAll: isFinishedAll});
-          });
-        }
-      }, function(err, obj){
+      if (fs.existsSync(folder)){
+        async.parallel({
+          audio: function(next){
+            Scanner.scanAudio(folder, function (err, res, isFinishedAll) {
+              logger.debug("Callback scan audio folder", folder);
+              callback({audio: res, isFinishedAll: isFinishedAll});
+            });
+          },
+          video: function(next){
+            Scanner.scanVideo(folder, function (err, res, isFinishedAll) {
+              logger.debug("Callback scan video folder");
+              callback({video: res, isFinishedAll: isFinishedAll});
+            });
+          }
+        }, function(err, obj){
 
-      });
+        });
+      } else {
+        callback({audio: null, isFinishedAll: true});
+        callback({audio: null, isFinishedAll: true});
+      }
     };
 
     Scanner.Appenders = function (){

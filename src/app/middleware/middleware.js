@@ -15,9 +15,9 @@
         meta = require("./../meta"),
         translator = require("./translator"),
         gravatar = require("gravatar");
-        try{
+        try {
           var identicon = require("identicon");
-        }catch (err){
+        } catch (err){
           logger.warn("identicon disabled");
         }
 
@@ -357,7 +357,13 @@
 
     };
 
-
+    Middleware.sessionSave = function(req, callback) {
+      req.session.save(function () {
+        if (callback) {
+          callback();
+        }
+      });
+    }
     /*
      * Post a method (test if user is authenticated)
      */
