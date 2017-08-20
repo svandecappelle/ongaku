@@ -1397,7 +1397,7 @@
           $(".downloader").attr("href", "#");
           $(".downloader").hide();
 
-          this.page = -1;
+          this.page = 0;
           this.searching = false;
         }
 
