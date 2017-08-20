@@ -1937,6 +1937,12 @@ section.song-list > .list-container.shows{
     h1   { font-size: 24px; font-size: 1rem; }
 }
 
+.panel > .list-group .list-group-item, .panel > .panel-collapse > .list-group .list-group-item {
+    border-width: 1px 0;
+    border-radius: 0;
+    background: none repeat scroll 0 0 rgba(75,76,76,.49);
+    color: #fff;
+}
 
 .cannot-scroll{
     overflow: hidden;
