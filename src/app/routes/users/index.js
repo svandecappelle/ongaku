@@ -9,7 +9,6 @@ var logger = require('log4js').getLogger("UsersRoutes"),
 
 var library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
-    player = require("./../../middleware/desktop-player"),
     exporter = require("./../../middleware/exporter"),
     meta = require("./../../meta"),
     chat = require("./../../chat"),
@@ -24,6 +23,11 @@ var library = require("./../../middleware/library"),
     tinycolor = require("tinycolor2"),
     translator = require("./../../middleware/translator"),
     async = require("async");
+try {
+  var player = require("./../../middleware/desktop-player");
+} catch (err) {
+  logger.warn('Application cannot be used using desktop player.');
+}
 var DEFAULT_USERS__DIRECTORY = path.join(__dirname, "/../../../../public/user/"),
   DEFAULT_GROUP_BY = ['artist', 'album'],
   DEFAULT_SORT_BY = 'artist',
