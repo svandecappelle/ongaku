@@ -66,14 +66,18 @@
           });
         }, folder);
       } else if (folderContent.video){
-        that.populate("video", {
+        callback({
+          type: 'video'
+        });
+        // TODO desactivate at now scan video. Should be reactivated
+        /*that.populate("video", {
           folder: folder,
           content: folderContent
         }, function (){
           callback({
             type: 'video'
           });
-        }, folder);
+        }, folder);*/
       }
     })
   };
