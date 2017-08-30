@@ -52,6 +52,7 @@
     var that = this;
 
     scan.addToScan(folder.path);
+    Library.removeFolder(folder);
     scan.scanFolder(folder.path, function result(folderContent) {
       folderContent.private = folder.isPrivate
 
