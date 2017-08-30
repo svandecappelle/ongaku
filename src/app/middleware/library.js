@@ -112,6 +112,10 @@
         user: folderScanResult.folder ? folderScanResult.folder.username : null
       });
 
+      if (!libraryElement.metadatas) {
+        libraryElement.metadatas = {};
+      }
+      
       if (folder && folder.username){
         // library is a user private but shared folder.
         _.extend(libraryElement, {username: folder.username});
