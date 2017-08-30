@@ -115,7 +115,7 @@
       if (!libraryElement.metadatas) {
         libraryElement.metadatas = {};
       }
-      
+
       if (folder && folder.username){
         // library is a user private but shared folder.
         _.extend(libraryElement, {username: folder.username});
@@ -538,7 +538,7 @@
         albums: _.map(val, function(album, title){
           var albumObject = {
             title: title,
-            cover: Library.loadingCoverAlbums[artist][title] ? Library.loadingCoverAlbums[artist][title] : "/img/album.jpg",
+            cover: artist && title && Library.loadingCoverAlbums[artist][title] ? Library.loadingCoverAlbums[artist][title] : "/img/album.jpg",
             tracks: _.map(album, function(tracks, index){
               return tracks;
             })
