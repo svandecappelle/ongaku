@@ -538,7 +538,7 @@
         albums: _.map(val, function(album, title){
           var albumObject = {
             title: title,
-            cover: artist && title && Library.loadingCoverAlbums[artist][title] ? Library.loadingCoverAlbums[artist][title] : "/img/album.jpg",
+            cover: artist && title && Library.loadingCoverAlbums[artist] && Library.loadingCoverAlbums[artist][title] ? Library.loadingCoverAlbums[artist][title] : "/img/album.jpg",
             tracks: _.map(album, function(tracks, index){
               return tracks;
             })
