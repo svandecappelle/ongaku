@@ -3,7 +3,7 @@ hostname: localhost
 uploader: false
 library: /home/svandecappelle/Musique
 audio: [mp3,  wav, wma, ogg, flac]
-video: [mp4, webm, flv, ogv]
+video: [mp4, webm, flv, ogv, mpg]
 defaultLanguage: fr
 database: redis
 redis:
