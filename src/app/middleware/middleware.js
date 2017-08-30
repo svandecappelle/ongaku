@@ -15,9 +15,9 @@
         meta = require("./../meta"),
         translator = require("./translator"),
         gravatar = require("gravatar");
-        try{
+        try {
           var identicon = require("identicon");
-        }catch (err){
+        } catch (err){
           logger.warn("identicon disabled");
         }
 
@@ -193,6 +193,9 @@
         if (middlewareObject.req.session.chats === undefined) {
             middlewareObject.req.session.chats = [];
         }
+
+        middlewareObject.objs.session.sessionID = middlewareObject.req.sessionID;
+
         middlewareObject.objs.session.chats = middlewareObject.req.session.chats;
 
         meta.settings.getOne("global", "notifications", function (err, curValue) {
@@ -354,7 +357,13 @@
 
     };
 
-
+    Middleware.sessionSave = function(req, callback) {
+      req.session.save(function () {
+        if (callback) {
+          callback();
+        }
+      });
+    }
     /*
      * Post a method (test if user is authenticated)
      */

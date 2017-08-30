@@ -53,14 +53,22 @@
 
     scan.addToScan(folder.path);
     scan.scanFolder(folder.path, function result(folderContent) {
+      folderContent.private = folder.isPrivate
+
       if (folderContent.audio){
-        that.populate("audio", folderContent, function (){
+        that.populate("audio", {
+          folder: folder,
+          content: folderContent
+        }, function (){
           callback({
             type: 'audio'
           });
         }, folder);
       } else if (folderContent.video){
-        that.populate("video", folderContent, function (){
+        that.populate("video", {
+          folder: folder,
+          content: folderContent
+        }, function (){
           callback({
             type: 'video'
           });
@@ -79,14 +87,28 @@
     });
   }
 
-  Library.populate = function (type, libObject, callback, folder) {
-    var lib = libObject[type];
+  Library.populate = function (type, folderScanResult, callback, folder) {
+    var destination = Library.data;
+    var flattenDestination = Library.flatten;
+    var lib;
+    var isPrivate = false;
+
+    if (folderScanResult.content){
+      lib = folderScanResult.content[type];
+      if (folderScanResult.folder.private) {
+        isPrivate = true;
+      }
+    } else {
+      lib = folderScanResult[type];
+    }
 
     Library.flatten = _.union(Library.flatten, _.map(_.groupBy(lib, 'uid'), function(track, uuid){
 
       var libraryElement = _.extend(track[0], {
         uuid: uuid,
-        type: type
+        type: type,
+        private: isPrivate,
+        user: folderScanResult.folder ? folderScanResult.folder.username : null
       });
 
       if (folder && folder.username){
@@ -157,10 +179,10 @@
       Library.data[type] = _.union(Library.data[type], lib);
     }
 
-    if (type === "audio" && libObject.isFinishedAll){
+    if (type === "audio" && (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll)) ) {
       this.audioScanned = true;
       callback();
-    } else if(libObject.isFinishedAll) {
+    } else if (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll)) {
       this.videoScanned = true;
       callback();
     }
@@ -292,7 +314,12 @@
   };
 
   Library.getAudio = function (page, lenght, groupby, sortby) {
-    var audios = this.data.audio;
+    var audios = this.search({
+      filter: "",
+      type: "audio"
+    });
+
+
     if (groupby){
       audios = this.search({
         filter: "",
@@ -359,6 +386,13 @@
 
     if (!fromList){
       fromList = this.flatten;
+      if (opts.user) {
+        fromList = _.union(fromList, this.flattenDestination[opts.user]);
+      } else {
+        fromList = _.filter(fromList, function(track){
+          return track.private === undefined || !track.private;
+        });
+      }
     }
 
     searchResultList =  _.filter(fromList, function (obj) {
@@ -477,7 +511,46 @@
     return _.first(_.rest(that.search(opts), opts.page * opts.lenght), opts.lenght);
   };
 
-  Library.getAudioById = function (ids, page, length){
+  Library.getUserLibrary = function (ids, page, length, username, filter) {
+    var searchResultList =  _.filter(this.flatten, function (obj) {
+      return _.contains(ids, obj.uid) || (obj.private && obj.user === username);
+    });
+
+    if (filter) {
+      searchResultList = Library.search({
+        filter: filter,
+        type: 'audio'
+      }, searchResultList);
+    }
+
+    searchResultList = _.groupByMulti(searchResultList, ['artist', 'album']);
+
+    var arrayResults = [];
+    arrayResults = _.map(searchResultList, function(val, artist){
+      var artistObject = {
+        artist: artist,
+        image: Library.loadingCoverArtists[artist],
+        albums: _.map(val, function(album, title){
+          var albumObject = {
+            title: title,
+            cover: Library.loadingCoverAlbums[artist][title] ? Library.loadingCoverAlbums[artist][title] : "/img/album.jpg",
+            tracks: _.map(album, function(tracks, index){
+              return tracks;
+            })
+          };
+          return albumObject;
+        })
+      };
+
+      return artistObject;
+    });
+    if (page){
+      return _.first(_.rest(arrayResults, page * length), length);
+    }
+    return arrayResults;
+  }
+
+  Library.getAudioById = function (ids, page, length, username, filter) {
     var searchResultList =  _.filter(this.flatten, function (obj) {
       return _.contains(ids, obj.uid);
     });

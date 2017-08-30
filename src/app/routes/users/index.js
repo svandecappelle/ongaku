@@ -23,6 +23,11 @@ var library = require("./../../middleware/library"),
     tinycolor = require("tinycolor2"),
     translator = require("./../../middleware/translator"),
     async = require("async");
+try {
+  var player = require("./../../middleware/desktop-player");
+} catch (err) {
+  logger.warn('Application cannot be used using desktop player.');
+}
 var DEFAULT_USERS__DIRECTORY = path.join(__dirname, "/../../../../public/user/"),
   DEFAULT_GROUP_BY = ['artist', 'album'],
   DEFAULT_SORT_BY = 'artist',
@@ -144,47 +149,53 @@ var getStatistics = function(name, callback){
     };
 
     UsersRoutes.renderLibraryPage = function (username, req, res){
-      userlib.get(username, function (err, uids){
+      userlib.get(username, function (err, uids) {
         var libraryDatas = null;
         if (req.params.page === "all"){
-          libraryDatas = library.getAudioById(uids);
+          libraryDatas = library.getUserLibrary(uids, null, null, username, req.params.search);
         } else {
-          libraryDatas = library.getAudioById(uids, req.params.page, 3);
+          libraryDatas = library.getUserLibrary(uids, req.params.page, 3, username, req.params.search);
         }
+
         middleware.json(req, res, libraryDatas);
       });
     };
 
     UsersRoutes.checkingAuthorization = function (req, res, callback) {
-      meta.settings.getOne("global", "requireLogin", function (err, curValue) {
-        if (err) {
-          logger.debug("userauth error checking");
-          middleware.redirect('/login', res);
-        } else if (curValue === "true") {
-          logger.debug("userauth is required to listen");
-          if (middleware.isAuthenticated(req)) {
-            callback();
-          } else {
-            if (req.query.key) {
-              security.isAllowed(req.query.key, function(err, access_ganted){
-                if (access_ganted) {
-                  logger.info("access granted to stream");
-                  callback();
-                } else {
-                  logger.warn("Anonymous access forbidden: Using a wrong query access key");
-                  middleware.redirect('/login', res);
-                }
-              });
+      if (nconf.get('type') === 'desktop'){
+        logger.info("desktop mode all access granted");
+        callback();
+      } else {
+        meta.settings.getOne("global", "requireLogin", function (err, curValue) {
+          if (err) {
+            logger.debug("userauth error checking");
+            middleware.redirect('/login', res);
+          } else if (curValue === "true") {
+            logger.debug("userauth is required to listen");
+            if (middleware.isAuthenticated(req)) {
+              callback();
             } else {
-              logger.warn("Anonymous access forbidden: authentication required to stream");
-              middleware.redirect('/login', res);
+              if (req.query.key) {
+                security.isAllowed(req.query.key, function(err, access_ganted){
+                  if (access_ganted) {
+                    logger.info("access granted to stream");
+                    callback();
+                  } else {
+                    logger.warn("Anonymous access forbidden: Using a wrong query access key");
+                    middleware.redirect('/login', res);
+                  }
+                });
+              } else {
+                logger.warn("Anonymous access forbidden: authentication required to stream");
+                middleware.redirect('/login', res);
+              }
             }
+          } else {
+            logger.debug("userauth is not required to listen");
+            callback();
           }
-        } else {
-          logger.debug("userauth is not required to listen");
-          callback();
-        }
-      });
+        });
+      }
     };
 
     UsersRoutes.api = function (app){
@@ -331,8 +342,52 @@ var getStatistics = function(name, callback){
         });
       });
 
+      /* ## Used to plays using speakers desktop mode (plays on server side) ## */
+      app.get('/api/desktop-play/:media', function (req, res) {
+        var play = function () {
+          logger.debug("play desktop audio");
+
+          player.desktop(req, res, library.getRelativePath(path.basename(req.params.media)));
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          play();
+        });
+      });
+      app.get('/api/desktop-play/:media/stop', function (req, res) {
+        var stop = function () {
+          logger.debug("stop desktop audio");
+
+          player.end(req, res);
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          stop();
+        });
+      });
+
+      app.get('/api/desktop-play/:media/pause', function (req, res) {
+        var pause = function () {
+          logger.debug("stop desktop audio");
+
+          player.pause(req, res);
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          pause();
+        });
+      });
+
+      app.get('/api/desktop-play/:media/resume', function (req, res) {
+        var resume = function () {
+          logger.debug("stop desktop audio");
+
+          player.resume(req, res);
+        };
+        UsersRoutes.checkingAuthorization(req, res, function () {
+          resume();
+        });
+      });
+
       app.post('/api/statistics/:type/:media', function(req, res){
-        if (req.params.type === 'plays'){
+        if (req.params.type === 'plays') {
           statistics.set('plays', req.params.media, 'increment', function(){
               logger.debug("set statistics");
           });
@@ -344,6 +399,12 @@ var getStatistics = function(name, callback){
                 logger.debug("set statistics");
             });
           }
+
+          chat.emitMyself('streaming-playing:started', req.sessionID, {
+            uuid: req.params.media,
+            encoding: library.getAudioById(req.params.media).encoding
+          });
+
         }
         middleware.json(req, res, {status: "ok"});
       });
@@ -353,23 +414,10 @@ var getStatistics = function(name, callback){
         UsersRoutes.renderLibraryPage(username, req, res);
       });
 
-      app.get('/api/user/library/filter/:search', function (req, res) {
+      app.get('/api/user/:username/library/filter/:search/:page', function (req, res) {
         logger.debug("Search filtering audio library");
-
-        var username = req.session.passport.user.username;
-
-        userlib.get(username, function (err, uids){
-          var libraryDatas = library.getAudioFlattenById(uids);
-          var sortby = req.session.sortby ? req.session.sortby : DEFAULT_SORT_BY;
-
-          var filteredDatas = library.search({
-            filter: req.params.search,
-            type: "audio",
-            groupby: undefined,
-            sortby: sortby
-          }, libraryDatas);
-          middleware.json(req, res, filteredDatas);
-        });
+        var username = req.params.username;
+        UsersRoutes.renderLibraryPage(username, req, res);
       });
 
       app.get('/api/playlist', function (req, res) {
@@ -695,7 +743,6 @@ var getStatistics = function(name, callback){
         logger.info("Client access to index [" + req.ip + "]");
         // Get first datas fetch is defined into client side.
         var libraryDatas = library.getAudio(0, 3);
-
         logger.debug(libraryDatas);
         middleware.render('library/index', req, res, {library: libraryDatas});
       });

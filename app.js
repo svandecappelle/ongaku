@@ -85,6 +85,7 @@ var logger = log4js.getLogger('Server');
         }));
         app.use(passport.initialize());
         app.use(passport.session());
+
         var httplog = morgan(':req[X-Forwarded-For] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
           "stream": {
             write: function(str) {
@@ -96,7 +97,7 @@ var logger = log4js.getLogger('Server');
 
         // ROUTES
         var application = require('./src/app/');
-        application.load(app, callback);
+        application.load(app, callback, session);
         application.start();
     };
 

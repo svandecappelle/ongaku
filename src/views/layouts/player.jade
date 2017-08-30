@@ -32,7 +32,30 @@ block player
 			else
 				.player.empty
 					span #{stream_auth_required}
-			
+		if meta.type == "desktop"
+			#plays-type(style='position: absolute; right: 8rem; vertical-align: middle; bottom: 0; top: 0; margin-top: 1.5rem;', title="Streaming")
+				.toggle-icon.icon.red
+					- valuedesktop = meta.playingtype === 'streaming'
+					input(name="streaming", type="checkbox", value="#{valuedesktop}")
+					.handle
+						.glyphicon.glyphicon-music
+	script.
+		$(function(){
+			$('#plays-type .toggle-icon').on('click', function () {
+				$(this).children('input').val(!$(this).hasClass('on'));
+				$.ongaku.setPlayType(!$(this).hasClass('on') ? 'browser' : 'desktop');
+				if ($(this).hasClass('on')) {
+					return $(this).removeClass('on');
+				} else {
+					return $(this).addClass('on');
+				}
+			});
+			$.each($("#plays-type input[type='checkbox']"), function(index, val){
+				if ($(val).val() === "true"){
+					$(this).parents(".toggle-icon.icon").addClass('on');
+				}
+			});
+		});
 	if (data.playing)
 		script.
 			$(function(){

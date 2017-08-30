@@ -14,7 +14,7 @@ module.exports = function (grunt) {
         dest: 'public/assets/application.min.css'
       },
       js: {
-        src: ['public/assets/app.min.js', 'public/assets/chat.min.js', 'public/assets/audiowave.min.js'],
+        src: ['public/assets/app.min.js', 'public/assets/chat.min.js', 'public/assets/audiowave.min.js', 'public/assets/init.min.js'],
         dest: 'public/assets/application.min.js'
       }
     },

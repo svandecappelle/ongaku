@@ -3,6 +3,7 @@
 
   var passport = require('passport'),
     bcrypt = require('bcryptjs'),
+    path = require('path'),
     nconf = require('nconf'),
     logger = require('log4js').getLogger("authority"),
     async = require("async"),
@@ -12,8 +13,10 @@
     meta = require('./../meta'),
     user = require('./../model/user'),
     db = require('./../model/database'),
+    library = require('./library'),
     security = require('./../model/security'),
     utils = require('./../utils');
+const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
 
     Authority.logout = function (req, res) {
       if (req.isAuthenticated()) {
@@ -68,17 +71,33 @@
 
         user.isAdministrator(userData.uid, function(err, admin){
           userData.administrator = admin;
-
-          req.logIn({
+          var userBean = {
             uid: userData.uid,
             username: req.body.username,
             tokenId: userData.security,
             administrator: userData.administrator
-          }, function () {
+          };
+          req.logIn(userBean, function () {
             if (userData.uid) {
               //user.logIP(userData.uid, req.ip);
               logger.info("user '" + userData.uid + "' connected on: " + req.ip);
+              chat.emitMyself('application:connected', req.sessionID);
             }
+
+            var folderScanning = {
+              private: true,
+              path: USERS_IMAGE_DIRECTORY + userBean.username,
+              username: userBean.username
+            }
+
+            library.addFolder(folderScanning, (scanResults) => {
+              if ( scanResults.audio ) {
+                req.session.library = scanResults;
+                logger.info(scanResults);
+                middleware.sessionSave(req);
+              }
+            });
+
             if (req.session.redirectTo !== undefined) {
               middleware.redirect(req.session.redirectTo, res);
               req.session.redirectTo = undefined;

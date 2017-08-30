@@ -8,9 +8,14 @@
 		logger = require("log4js").getLogger("Chat"),
 		socketio = require('socket.io');
 
-	Chat.load = function (served){
+	Chat.load = function (served, session){
 		this.io = socketio(served);
 		this.start();
+
+		var sharedsession = require("express-socket.io-session");
+		this.io.use(sharedsession(session, {
+			autoSave:true
+		}));
 	};
 
 	Chat.on = function(event, callback){
@@ -19,6 +24,10 @@
 
 	Chat.emit = function(event, params){
 		this.io.emit(event, params);
+	};
+
+	Chat.emitMyself = function(event, user, params){
+		this.io.to(user).emit(event, params);
 	};
 
 	Chat.checkin = function(incoming, socket){
@@ -98,8 +107,11 @@
 
 	Chat.onConnect = function (socket) {
 		socket.emit('authenticate');
+
+		socket.join(socket.id);
+
 		logger.debug("socket need authenticate: " + socket);
-		
+
 		socket.on('checkin', function(incoming){
 			Chat.checkin(incoming, socket);
 		});
