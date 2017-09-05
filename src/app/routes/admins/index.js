@@ -7,7 +7,7 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 
 	meta = require("./../../meta"),
 	application = require("./../../"),
-	chat = require("./../../chat"),
+	communication = require("./../../communication"),
 	user = require("./../../model/user"),
 	statistics = require("./../../model/statistics");
 
@@ -102,7 +102,7 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 					userData.cover = middleware.getCover(userData.username);
 					user.getGroupsByUsername(userData.username, function (groups){
 						userData = _.extend(userData, {groups: groups});
-						userData.status = chat.status(userData.username);
+						userData.status = communication.status(userData.username);
 						next(null, userData);
 					});
 				}, function (err, usersDatas){

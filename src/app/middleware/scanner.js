@@ -6,7 +6,7 @@
         logger = require("log4js").getLogger("Scanner"),
         async = require("async"),
         _  = require("underscore"),
-        chat = require('../chat'),
+        communication = require('../communication'),
         path = require("path"),
         nconf = require("nconf"),
         uuid = require('uuid'),
@@ -292,7 +292,15 @@
 
             });
         }, function (err) {
-          chat.emit("library-scanner:progress", {value: Scanner.status()});
+          setTimeout( () => {
+            var message = `<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width:${Scanner.status()}%"></div></div>`;
+
+            communication.broadcast("library:scanner:progress", {
+              close: false,
+              message: message,
+              value: Scanner.status()
+            });
+          }, 250);
           if (results.length){
             logger.debug("All files " + appender.type + " scanned into " + apath + " finished: " + results.length + " elements found.");
           }

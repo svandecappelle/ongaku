@@ -1,6 +1,6 @@
 .chat-container{
   display: inline-block;
-  background-color: rgba(255, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .chat-opener{
@@ -14,7 +14,9 @@
 .chat-container .message-box.show {
   visibility: visible;
   opacity: 1;
-  box-shadow: 2px 2px 7px #000000;
+  box-shadow: 5px 5px 16px #000;
+  border-radius: 5px;
+  padding-top: 5px;
 }
 
 .chat-container .message-box{
@@ -22,9 +24,8 @@
   position: fixed;
   height: 300px;
   width: 500px;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(255, 255, 255, 0.95);
   opacity: 0;
-  transition: all 0.25s linear;
 }
 
 .chat-container .message-inbox{
@@ -43,10 +44,10 @@
   right: 52px;
   padding: 5px;
   font-size: 1.2rem;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid #000;
   background-color: transparent;
-  color: white;
-  border-top: 2px solid white;
+  color: #000;
+  border-top: 2px solid #000;
   display: inline-block;
 }
 
@@ -56,13 +57,15 @@
 }
 
 .msg.right .from{
-  color: rgb(226, 72, 72);
+  color: #fef9f9;
 }
 
 .msg .from {
   text-decoration: underline;
   font-weight: bold;
-  color: rgb(33, 187, 62);
+  color: #fbfbfb;
+  background-color: rgba(0,0,0,0.5);
+  padding: 5px;
 }
 
 .msg .from:before {
@@ -75,33 +78,26 @@
 
 .msg .value-message{
   padding: 3px 10px;
-  width: auto;    
+  width: auto;
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
-}
-
-.msg .value-message{
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.msg.right .value-message{
-  background-color: rgba(158, 165, 159, 0.6);
+  background-color: rgba(255,255,255,.5);
+  color: #000;
 }
 
 .msg .date{
   font-size: 0.7rem;
-  color: #CECECE;
+  color: #474545;
+  padding: 2px;
 }
 
 .chat-container .nav > li{
   border-bottom: 1px solid #000;
   border-radius: 0px;
+  padding: 5px;
   cursor: pointer !important;
-}
-
-.chat-container .nav > li:hover{
-  background-color: #000;
+  transition: none;
 }
 
 .chat-container .nav > li > a, .chat-container .nav > li > a:focus{
@@ -109,22 +105,32 @@
   color: white;
   border: none;
   cursor: pointer;
+  transition: none;
 }
 
 .chat-container .nav > li > a:hover, .chat-container .nav > li > a:focus{
   border: none !important;
   background-color: transparent !important;
   cursor: pointer;
+  transition: none;
 }
 
 .chat-container .nav > li.active, .chat-container .nav > li.active > a{
   color: #000;
   border: none;
+  transition: none;
 }
 
 .chat-container .nav > li.active:hover, .chat-container .nav > li.active > a:hover{
   color: #fff;
   border: none;
+  transition: none;
+}
+
+.chat-container .nav > li:hover, .chat-container .nav > li:hover a{
+  background-color: #000;
+  color: #fff;
+  transition: none;
 }
 
 .chat-message-send-button{
@@ -136,8 +142,8 @@
   padding: 3px 7px;
   font-size: 1.2rem;
   background-color: transparent;
-  color: white;
-  border: 2px solid white;
+  color: #000;
+  border: 2px solid #000;
   display: inline-block;
   border-radius: 3px;
   transition: all ease-out 0.3s;

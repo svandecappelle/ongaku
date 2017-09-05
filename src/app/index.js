@@ -5,7 +5,7 @@ var async = require("async");
 var middleware = require('./middleware/middleware');
 var routes = require('./routes');
 var library = require("./middleware/library");
-var chat = require('./chat');
+var communication = require('./communication');
 var meta = require('./meta');
 
 
@@ -15,7 +15,8 @@ var meta = require('./meta');
 		routes.load(app);
 		this.app = app;
 		served = this.app.listen(nconf.get('port'));
-		chat.load(served, session);
+		communication.listen(served);
+
 		var urlService = "http://".concat(nconf.get("hostname")).concat(":").concat(nconf.get("port"));
 		logger.info("Service is ready and listening on: " + urlService);
 		if (callback){
@@ -36,21 +37,14 @@ var meta = require('./meta');
 		});
 	};
 
-	Application.on = function(event, callback){
-		chat.on(event, callback);
-	};
-
 	Application.emit = function(event, params){
-		chat.emit(event, params);
+		communication.emit(event, params);
 	};
 
 	Application.start = function (){
 		var that = this;
 		logger.info("Ready to serve on " + nconf.get('port') + " port");
-		that.on('connection', function(socket){
-			logger.debug("User connected to socket.io");
-		});
-
+		
 		var q = async.queue(function (task, callback){
 			logger.info("Launch task: ".concat(task.name));
 			callback();

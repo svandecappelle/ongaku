@@ -17,24 +17,25 @@ function loadView(ev, view){
 
 function Connection(opts){
   this.opts = opts;
-  this.socket = io.connect('http://' + opts.session.host + '/');
+  this.socket = io();
+  // this.socket = io.connect('http://' + opts.session.host + '/');
 }
 
-Connection.prototype.notify = function (id, title, msg) {
+Connection.prototype.notify = function (id, opts) {
   iziToast.show({
-    close: true,
+    close: opts.close !== undefined ? opts.close : true,
     position: 'topCenter',
     id: id,
-    message: msg,
+    message: opts.message,
     transitionIn: 'flipInX',
     transitionOut: 'flipOutX',
     progressBarColor: 'rgb(0, 255, 184)',
-    image: '/img/album.jpg',
-    imageWidth: 70,
+    // image: '/img/album.jpg',
+    // imageWidth: 70,
     layout: 2,
-    timeout: false,
+    timeout:  opts.close !== undefined ? opts.close : true,
     icon: 'icon-contacts',
-    title: title,
+    title: 'Notification',
     iconColor: 'rgb(0, 255, 184)',
     color: 'dark',
   });
@@ -43,14 +44,24 @@ Connection.prototype.notify = function (id, title, msg) {
 Connection.prototype.bind = function () {
   var that = this;
   this.socket.on('connect', function () {
+    if ($.ongaku.getUser().username){
+      that.socket.emit('room:join', $.ongaku.getUser().username);
+      that.socket.emit('room:join', that.opts.session.sessionID);
+    } else {
+      that.socket.emit('room:join', that.opts.session.sessionID);
+    }
     $.chat.init(that.socket, $.ongaku.getUser().username);
-    socket.join(that.opts.session.sessionID);
+    // that.socket.join(that.opts.session.sessionID);
+  });
+
+  this.socket.on('notification', function (data) {
+    that.notify("application-message", data);
   });
 
   this.socket.on('application:connected', function () {
     var location = window.location.href;
-
-    that.notify("application-message", 'You signed in with another tab or window. <a href="'+location+'">Reload</a> to refresh your session.', '');
+    ev.location = location;
+    that.notify("application-message", ev);
   });
 
   this.socket.on('desktop-playing:started', function (obj) {
@@ -71,17 +82,22 @@ Connection.prototype.bind = function () {
 
   this.socket.on('library:scanned', function () {
     $("#finished-loading-library").remove();
+    $("#progress-loading-message").remove();
     that.notify('finished-loading-library', "Library was reloaded:", '<a href="/">click here to refresh</a>');
   });
-  this.socket.on('library-scanner:progress', function(ev){
-    if (ev.value >= 100){
+  this.socket.on('library:scanner:progress', function(ev){
+    if (ev.value >= 100) {
       $("#finished-loading-library").remove();
-      that.notify('finished-loading-library', "Library was reloaded:", '<a href="/">click here to refresh</a>');
+      $("#progress-loading-message").remove();
+      that.notify('finished-loading-library', {
+        message: 'Library was reloaded: <a href="/">click here to refresh</a>'
+      });
+    } else {
+      if ($("#progress-loading-message").length === 0){
+        that.notify('progress-loading-message', ev);
+      }
+      $("#progress-loading-message .iziToast-body p.slideIn").html('Reloading library: <div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
     }
-    if ($("#progress-loading-message").length === 0){
-      that.notify('progress-loading-message', "Library is reloading:", '<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
-    }
-    $("#progress-loading-message .iziToast-body p.slideIn").html('<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width: ' + ev.value + '%"></div></div>');
   });
 };
 

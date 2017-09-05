@@ -9,7 +9,7 @@
     async = require("async"),
 
     middleware = require("./middleware"),
-    chat = require("./../chat"),
+    communication = require("./../communication"),
     meta = require('./../meta'),
     user = require('./../model/user'),
     db = require('./../model/database'),
@@ -23,12 +23,10 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
         logger.info('[Auth] Session ' + req.sessionID + ' logout (uid: ' + req.session.passport.user + ')');
         req.session.locale = nconf.get("defaultLocale");
 
-        // use it for alert disconnect of other sessions (and users)
-        /*
-            var ws = require('../socket.io');
-            ws.logoutUser(req.user.uid);
-        */
-        chat.disconnect(req.user);
+        setTimeout(function(){
+          communication.emit(req.session.sessionID, "notification", { message: 'disconnected from application' });
+        }, 1500);
+
         req.logout();
       }
 
@@ -81,7 +79,11 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
             if (userData.uid) {
               //user.logIP(userData.uid, req.ip);
               logger.info("user '" + userData.uid + "' connected on: " + req.ip);
-              chat.emitMyself('application:connected', req.sessionID);
+              communication.setStatus(userBean.username, 'online');
+              setTimeout(function(){
+                communication.emit(req.session.sessionID, 'application:connected', req.sessionID);
+              }, 1500);
+
             }
 
             var folderScanning = {

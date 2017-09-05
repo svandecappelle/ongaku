@@ -11,7 +11,7 @@ var library = require("./../../middleware/library"),
     middleware = require("./../../middleware/middleware"),
     exporter = require("./../../middleware/exporter"),
     meta = require("./../../meta"),
-    chat = require("./../../chat"),
+    communication = require("./../../communication"),
     user = require("./../../model/user"),
     userlib = require("./../../model/library"),
     playlist = require("./../../model/playlist"),
@@ -399,12 +399,11 @@ var getStatistics = function(name, callback){
                 logger.debug("set statistics");
             });
           }
-
-          chat.emitMyself('streaming-playing:started', req.sessionID, {
+          // TODO communication change this.
+          communication.emit(req.session.sessionID, 'streaming-playing:started', {
             uuid: req.params.media,
             encoding: library.getAudioById(req.params.media).encoding
           });
-
         }
         middleware.json(req, res, {status: "ok"});
       });
@@ -853,7 +852,7 @@ var getStatistics = function(name, callback){
               user.getUserDataByUsername(username, function (err, userData){
                 user.getGroupsByUsername(username, function (groups){
                   userData = _.extend(userData, { groups: groups });
-                  userData.status = chat.status(userData.username);
+                  userData.status = communication.status(userData.username);
 
                   security.getAccessId(req.session.passport.user.uid, function(err, key){
                     if (err){
@@ -965,7 +964,7 @@ var getStatistics = function(name, callback){
           user.getUserDataByUsername(username, function (err, userData){
             user.getGroupsByUsername(username, function (groups){
               userData = _.extend(userData, { groups: groups });
-              userData.status = chat.status(userData.username);
+              userData.status = communication.status(userData.username);
               logger.debug("Check user: ", username, userData);
               if (apiView) {
                 middleware.render('api/user/info', req, res, {user: userData, token: new Date().getTime()});

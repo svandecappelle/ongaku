@@ -33,10 +33,6 @@ nav a:hover {
   background: #{main_color};
 }
 
-.message-box .nav-tabs{
-  border-bottom: 1px solid #{main_color};
-}
-
 .chat-container .nav > li{
   border-top: 1px solid #{main_color};
   border-left: 1px solid #{main_color};

@@ -140,7 +140,7 @@
         message: $(this.input).val(),
         date: new Date()
       };
-      this.socket.emit("msg", message);
+      this.socket.emit("chat:message", message);
       this.incoming(message);
 
       $(this.input).val("");
@@ -201,32 +201,29 @@
           this.chat = new ChatWidget(socket);
           $("#header .navbar-header nav ul").append(this.chat.getElement());
         }
-        socket.emit('checkin', {user: user});
 
-        socket.on('msg', function(incoming){
+        socket.on('chat:message', function(incoming){
           that.chat.incoming(incoming);
         });
 
-        socket.on("checkin", function(incoming){
-          socket.emit('checkin', incoming);
-        });
+        socket.on("status:change", function(data){
+          var selector = "i.fa.fa-circle.status[data-user=" + data.user + "]";
+          $('.user-vignette[data-user=' + data.user + ']').removeClass('offline');
+          $('.user-vignette[data-user=' + data.user + ']').removeClass('online');
+          $('.user-vignette[data-user=' + data.user + ']').removeClass('away');
+          $('.user-vignette[data-user=' + data.user + ']').removeClass('busy');
 
-        socket.on("statuschange", function(incoming){
-          $(incoming).each(function(index, userstatus){
-            for (var username in userstatus) {
-              var selector = "i.fa.fa-circle.status[data-user=" + username + "]";
-              $(selector).removeClass("away");
-              $(selector).removeClass("online");
-              $(selector).removeClass("busy");
-              $(selector).removeClass("offline");
-              $(selector).addClass(userstatus[username]);
-            }
-          });
+          $(selector).removeClass("away");
+          $(selector).removeClass("online");
+          $(selector).removeClass("busy");
+          $(selector).removeClass("offline");
+          $(selector).addClass(data.status);
+          $('.user-vignette[data-user=' + data.user + ']').addClass(data.status);
         });
 
         $(".user-status li a").on("click", function(){
           if ($(this).data("status")){
-              socket.emit("statuschange", {
+              socket.emit("status:change", {
               user: $.ongaku.getUser().username,
               status: $(this).data("status")
             });
@@ -259,6 +256,7 @@
       init: function(socket, user){
         if (!$.chat.el){
           $.chat.el = new Chat(socket, user);
+          $('.message-box').draggable();
         }
       },
       start: function(user){
