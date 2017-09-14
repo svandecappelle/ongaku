@@ -1,45 +1,44 @@
 /*jslint node: true */
-(function (Middleware) {
-    "use strict";
+const async = require('async');
+const nconf = require('nconf');
+const fs = require('fs');
+const _ = require("underscore");
+const path = require("path");
+const logger = require('log4js').getLogger("Middleware");
+const scanner = require("./scanner");
+const library = require("./library");
+const transcoder = require("./transcoder");
+const meta = require("./../meta");
+const translator = require("./translator");
+const gravatar = require("gravatar");
+try {
+    const identicon = require("identicon");
+} catch (err){
+  logger.warn("identicon disabled");
+}
 
-    var middleware = {},
-        async = require('async'),
-        nconf = require('nconf'),
-        fs = require('fs'),
-        _ = require("underscore"),
-        path = require("path"),
-        logger = require('log4js').getLogger("Middleware"),
-        scanner = require("./scanner"),
-        library = require("./library"),
-        transcoder = require("./transcoder"),
-        meta = require("./../meta"),
-        translator = require("./translator"),
-        gravatar = require("gravatar");
-        try {
-          var identicon = require("identicon");
-        } catch (err){
-          logger.warn("identicon disabled");
-        }
+var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
-    var allowedStreamingAudioTypes = ["mp3", "ogg"];
+var USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
+if (!fs.existsSync(USERS_IMAGE_DIRECTORY)) {
+    fs.mkdirSync(USERS_IMAGE_DIRECTORY);
+    logger.info("User folder not exists. Create one.");
+}
 
-    var USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
-    if (!fs.existsSync(USERS_IMAGE_DIRECTORY)) {
-        fs.mkdirSync(USERS_IMAGE_DIRECTORY);
-        logger.info("User folder not exists. Create one.");
-    }
+new translator.preload();
+try {
+    identicon = require('identicon');
+} catch (expect) {
+    logger.warn("Not installed optional extension: identicon it will not be used.");
+}
 
-    new translator.preload();
-    try {
-        identicon = require('identicon');
-    } catch (expect) {
-        logger.warn("Not installed optional extension: identicon it will not be used.");
-    }
+
+class Middleware {
 
     /*
      * Render a view. Control if rights are valid to access the view and if user is authenticated (if needed).
      */
-    Middleware.render = function (view, req, res, objs) {
+    render (view, req, res, objs) {
         var viewParams = objs,
             middlewareObject = {
                 req: req,
@@ -47,7 +46,13 @@
                 view: view,
                 objs: viewParams
             },
-            call = async.compose(this.session, this.meta, this.translate);
+            call = async.compose((middlewareObject, next) => {
+                if (middlewareObject.req.isAuthenticated()) {
+                    middlewareObject.objs.session.user.avatar = this.getAvatar(middlewareObject.req.user.username);
+                    middlewareObject.objs.session.user.cover = this.getCover(middlewareObject.req.user.username);
+                }
+                next(null, middlewareObject);
+            }, this.session, this.meta, this.translate);
 
         if (viewParams === undefined) {
             viewParams = {};
@@ -63,7 +68,7 @@
         middlewareObject.objs.theme = nconf.get("theme");
         middlewareObject.objs.languages = translator.getAvailableLanguages();
 
-        call(middlewareObject, function (err, middlewareObject) {
+        call(middlewareObject, (err, middlewareObject) => {
 
             var play = null,
                 message = null;
@@ -71,11 +76,7 @@
             if (req.session.playlist) {
                 play = _.first(req.session.playlist);
             }
-/*
-            if (library.scanning()) {
-                message = `Scanning library: ${scanner.status()}%`;
-            }
-*/
+
             _.extend(middlewareObject.objs, {
                 data: {
                     playing: play,
@@ -90,18 +91,18 @@
         });
     };
 
-    Middleware.json = function (req, res, json) {
+    json (req, res, json) {
         res.json(json);
     };
 
     /*
      * Send redirect to client.
      */
-    Middleware.redirect = function (view, res) {
+    redirect (view, res) {
         res.redirect(view);
     };
 
-    Middleware.stream = function (req, res, uuid, type) {
+    stream (req, res, uuid, type) {
         logger.debug("start stream file: " + uuid);
         if (this.requireAuthentication(req)) {
             // need an auth
@@ -156,7 +157,7 @@
     /*
      * Add session objs in view params
      */
-    Middleware.session = function (middlewareObject, next) {
+    session (middlewareObject, next) {
         logger.debug(middlewareObject.objs);
         middlewareObject.objs.session = middlewareObject.req.session;
 
@@ -198,7 +199,7 @@
 
         middlewareObject.objs.session.chats = middlewareObject.req.session.chats;
 
-        meta.settings.getOne("global", "notifications", function (err, curValue) {
+        meta.settings.getOne("global", "notifications", (err, curValue) => {
           if (!err && curValue){
             middlewareObject.objs.session.notifications = {
               count: curValue.split(";").length,
@@ -214,7 +215,7 @@
           // config
           middlewareObject.objs.meta.requireAuthentication = false;
 
-          meta.settings.getOne("global", "requireLogin", function (err, curValue) {
+          meta.settings.getOne("global", "requireLogin", (err, curValue) => {
               if (err) {
                   logger.debug("userauth error checking");
               } else if (curValue === "true") {
@@ -223,9 +224,6 @@
 
               if (middlewareObject.req.isAuthenticated()) {
                   middlewareObject.objs.session.user = middlewareObject.req.user;
-
-                  middlewareObject.objs.session.user.avatar = Middleware.getAvatar(middlewareObject.req.user.username);
-                  middlewareObject.objs.session.user.cover = Middleware.getCover(middlewareObject.req.user.username);
 
                   middlewareObject.objs.session.user.isAnonymous = false;
 
@@ -249,7 +247,7 @@
     /**
     * Checking user file served or not depending of the file type [cover/avatar...].
     */
-    Middleware.hasImageFile = function (username, type){
+    hasImageFile (username, type){
       var imageFile = USERS_IMAGE_DIRECTORY + username + "/" + type;
       return fs.existsSync(imageFile);
     };
@@ -257,20 +255,20 @@
     /**
     * Check if user has a served avatar.
     */
-    Middleware.hasAvatar = function (username){
+    hasAvatar (username){
       return this.hasImageFile(username, "avatar");
     };
     /**
     * Check if user has a served cover.
     */
-    Middleware.hasCover = function (username){
+    hasCover (username){
       return this.hasImageFile(username, "cover");
     };
 
     /**
     * Get generic file location depending of the type.
     */
-    Middleware.getImageFile = function (username, type){
+    getImageFile (username, type){
       var urlUser = null;
       var imageFile = "/user/" + username + "/" + type;
       urlUser = path.resolve(imageFile);
@@ -295,7 +293,7 @@
     /**
     * Get the avatar file location of a user for serving.
     */
-    Middleware.getAvatar = function (username) {
+    getAvatar (username) {
       var urlUser = this.getImageFile(username, "avatar");
       var imageFile = "/user/" + username + "/avatar";
       if (urlUser === null){
@@ -321,21 +319,21 @@
     /**
     * Get the cover file of a user.
     */
-    Middleware.getCover = function (username) {
+    getCover (username) {
       return this.getImageFile(username, "cover");
     };
 
     /**
     * Get the cover file of a user.
     */
-    Middleware.getBackground = function (username) {
+    getBackground (username) {
       return this.getImageFile(username, "background");
     };
 
     /*
      * Add meta config of user in view params
      */
-    Middleware.meta = function (middlewareObject, next) {
+    meta (middlewareObject, next) {
         if (middlewareObject.objs !== undefined) {
             middlewareObject.objs.meta = {};
         } else {
@@ -357,7 +355,7 @@
 
     };
 
-    Middleware.sessionSave = function(req, callback) {
+    sessionSave (req, callback) {
       req.session.save(function () {
         if (callback) {
           callback();
@@ -367,7 +365,7 @@
     /*
      * Post a method (test if user is authenticated)
      */
-    Middleware.post = function (req, res, callback) {
+    post (req, res, callback) {
         if (!req.isAuthenticated()) {
             res.send('403', 'You need to be logged');
         } else {
@@ -375,19 +373,19 @@
         }
     };
 
-    Middleware.requireAuthentication = function (req) {
+    requireAuthentication (req) {
         return false;
         //return !req.isAuthenticated();
     };
 
-    Middleware.isAuthenticated = function (req) {
+    isAuthenticated (req) {
         return req.isAuthenticated();
     };
 
     /*
      * Translate view
      */
-    Middleware.translate = function(middlewareObject, next){
+    translate (middlewareObject, next) {
     	// Add I18n values
     	var locale = nconf.get('defaultLanguage');
 
@@ -399,4 +397,6 @@
     	_.extend(middlewareObject.objs, {i18n: i18nValues.get(middlewareObject.view)});
     	next(null, middlewareObject);
     };
-}(exports));
+}
+
+module.exports = new Middleware();

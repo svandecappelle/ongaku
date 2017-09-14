@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function(redisClient, module) {	
+module.exports = function(redisClient, module) {
 	module.setObject = function(key, data, callback) {
 		// TODO: this crashes if callback isnt supplied -baris
 		redisClient.hmset(key, data, function(err, res) {

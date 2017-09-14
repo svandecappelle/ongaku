@@ -1,22 +1,21 @@
-var logger = require('log4js').getLogger("AdministratorsRoutes"),
-	nconf = require("nconf"),
-	async = require('async'),
-	_ = require("underscore"),
-	middleware = require("./../../middleware/middleware"),
-	library = require("./../../middleware/library"),
+const logger = require('log4js').getLogger("AdministratorsRoutes");
+const nconf = require("nconf");
+const async = require('async');
+const _ = require("underscore");
+const middleware = require("./../../middleware/middleware");
+const library = require("./../../middleware/library");
 
-	meta = require("./../../meta"),
-	application = require("./../../"),
-	communication = require("./../../communication"),
-	user = require("./../../model/user"),
-	statistics = require("./../../model/statistics");
+const meta = require("./../../meta");
+const application = require("./../../index");
+const communication = require("./../../communication");
+const user = require("./../../model/user");
+const statistics = require("./../../model/statistics");
 
+class Administration {
 
-(function(AdministratorsRoutes) {
-
-	AdministratorsRoutes.redirectIfNotAdministrator = function (req, res, callback) {
+	redirectIfNotAdministrator (req, res, callback) {
 		if (middleware.isAuthenticated(req)) {
-			user.isAdministrator(req.session.passport.user.uid, function(err, administrator){
+			user.isAdministrator(req.session.passport.user.uid, (err, administrator) => {
 				if (administrator){
 					callback();
 				} else {
@@ -34,97 +33,100 @@ var logger = require('log4js').getLogger("AdministratorsRoutes"),
 		}
 	};
 
-	AdministratorsRoutes.api = function(app){
-		app.get('/api/reload/audio/library', function (req, res) {
+	api (app) {
+		app.get('/api/reload/audio/library', (req, res) => {
 			logger.info("reload audio library");
-			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
-				application.reload(function(){
+			this.redirectIfNotAdministrator(req, res, () => {
+				application.reload(() => {
 					var libraryDatas = library.getAudio();
 					middleware.json(req, res, libraryDatas);
 				});
 			});
 		});
 
-		app.get('/api/clear/statistics/:type', function (req, res) {
-			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
-				statistics.clear(req.params.type, function(){
+		app.get('/api/clear/statistics/:type', (req, res) => {
+			this.redirectIfNotAdministrator(req, res, () => {
+				statistics.clear(req.params.type, () => {
 					middleware.redirect("/featured", res);
 				});
 			});
 		});
 
-		app.post('/api/admin/general', function (req, res){
-			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
+		app.post('/api/admin/general', (req, res) => {
+			this.redirectIfNotAdministrator(req, res, () => {
 				var preferences = req.body;
-				async.forEachOf(preferences, function(value, key, callback){
-					meta.settings.setOne("global", key, value, function (err) {
-							if (err) {
-									callback(err);
-							}
+				async.forEachOf(preferences, (value, key, callback) => {
+					meta.settings.setOne("global", key, value, (err) => {
+						if (err) {
+							callback(err);
+						}
 
-							logger.info("Global parameter saved: ", key, value);
-							callback();
+						logger.info("Global parameter saved: ", key, value);
+						callback();
 					});
-				}, function(){
+				}, () => {
 					res.redirect("/admin");
 				});
 			});
 		});
 	};
 
-	AdministratorsRoutes.routes = function (app){
-		var loadAdminScreen = function(req, res, apiView){
-			AdministratorsRoutes.redirectIfNotAdministrator(req, res, function (){
-				var properties = ["global"];
-				logger.info("Client access to admin index [" + req.ip + "]");
-				meta.settings.get(properties, function (err, settings){
-					if (apiView){
-						middleware.render('api/admin/index', req, res, settings);
-					} else {
-						middleware.render('admin/index', req, res, settings);
-					}
-				});
+	loadAdminScreen (req, res, apiView) {
+		this.redirectIfNotAdministrator(req, res, () => {
+			var properties = ["global"];
+			logger.info("Client access to admin index [" + req.ip + "]");
+			meta.settings.get(properties, (err, settings) => {
+				if (apiView){
+					middleware.render('api/admin/index', req, res, settings);
+				} else {
+					middleware.render('admin/index', req, res, settings);
+				}
 			});
-		}
-
-		app.get('/admin/', function (req, res) {
-			loadAdminScreen(req, res);
 		});
+	}
 
-		app.get('/api/view/admin', function (req, res) {
-			loadAdminScreen(req, res, "api");
-		});
-
-		var renderUserView = function(req, res, view){
-			user.getAllUsers(function (err, usersDatas){
-				async.map(usersDatas.users, function (userData, next){
-					userData.avatar = middleware.getAvatar(userData.username);
-					userData.cover = middleware.getCover(userData.username);
-					user.getGroupsByUsername(userData.username, function (groups){
-						userData = _.extend(userData, {groups: groups});
-						userData.status = communication.status(userData.username);
-						next(null, userData);
-					});
-				}, function (err, usersDatas){
-					middleware.render(view, req, res, {users: usersDatas, token: new Date().getTime()});
+	renderUserView (req, res, view) {
+		user.getAllUsers(function (err, usersDatas){
+			async.map(usersDatas.users, function (userData, next){
+				userData.avatar = middleware.getAvatar(userData.username);
+				userData.cover = middleware.getCover(userData.username);
+				user.getGroupsByUsername(userData.username, function (groups){
+					userData = _.extend(userData, {groups: groups});
+					userData.status = communication.status(userData.username);
+					next(null, userData);
 				});
+			}, function (err, usersDatas){
+				middleware.render(view, req, res, {users: usersDatas, token: new Date().getTime()});
 			});
-		};
-
-		app.get("/api/view/users", function (req, res){
-			renderUserView(req, res, "api/users");
 		});
-		app.get("/users", function (req, res){
-			renderUserView(req, res, "admin/users");
+	};
+
+	routes (app) {
+		
+		app.get('/admin/', (req, res) => {
+			this.loadAdminScreen(req, res);
 		});
 
-		app.get("/register", function(req, res){
+		app.get('/api/view/admin', (req, res) => {
+			this.loadAdminScreen(req, res, "api");
+		});
+
+		app.get("/api/view/users", (req, res) => {
+			this.renderUserView(req, res, "api/users");
+		});
+		app.get("/users", (req, res) => {
+			this.renderUserView(req, res, "admin/users");
+		});
+
+		app.get("/register", (req, res) => {
 			middleware.render("admin/register");
 		});
 	};
 
-	AdministratorsRoutes.load = function (app) {
+	load (app) {
 		this.api(app);
 		this.routes(app);
 	};
-})(exports);
+}
+
+module.exports = new Administration();
