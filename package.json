@@ -97,7 +97,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "dev-start": "node app.js dev"
+    "dev-start": "nodemon --watch src app.js"
   },
   "name": "ongaku",
   "single-instance": true,
@@ -108,6 +108,7 @@
     "grunt-contrib-uglify": "^3.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-docco-dir": "^0.1.5",
-    "grunt-nw-builder": "^3.1.0"
+    "grunt-nw-builder": "^3.1.0",
+    "nodemon": "^1.12.0"
   }
 }
