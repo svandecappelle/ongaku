@@ -15,8 +15,7 @@ if (!primaryDBName) {
     process.exit();
 }
 
-
-var primaryDB = require('./database/' + primaryDBName);
+var primaryDB = require(`./${primaryDBName}`);
 primaryDB.init(function () {
     logger.info("well done configured database");
 });

@@ -1,31 +1,25 @@
-/*jslint node: true */
-'use strict';
+const nconf = require("nconf");
+const primaryDBName = nconf.get('database');
+const model = require(`./database/${primaryDBName}/library`);
 
-var logger = require('log4js').getLogger('LibraryModel'),
-    db = require('./database');
+class LibraryModel {
 
-(function (Library) {
-
-  Library.get = function (username, callback){
-    db.getSetMembers(username + ':library', function (err, uids) {
-        if (err) {
-            return callback(err);
-        }
-
-        callback(null, uids);
-    });
+  get (username, callback) {
+    model.get(username, callback);
   };
 
-  Library.append = function (username, uid, callback){
-    db.setAdd(username + ':library', uid, callback);
+  append (username, uid, callback) {
+    model.append(username, uid, callback);
   };
 
-  Library.remove = function (username, uid, callback){
-    db.setRemove(username + ':library', uid, callback);
+  remove (username, uid, callback) {
+    model.remove(username, uid, callback);
   };
 
-  Library.getSharedFolders = function(callback){
-    db.getSetMembers('users:shared-folders', callback);
+  getSharedFolders (callback) {
+    model.getSharedFolders(callback);
   };
 
-}(exports));
+}
+
+module.exports = new LibraryModel();
