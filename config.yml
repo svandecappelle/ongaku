@@ -8,6 +8,17 @@ defaultLanguage: fr
 database: redis
 type: browser
 playingtype: streaming
+postgres:
+    host: localhost
+    database: ongaku
+    username: svandecappelle
+    password:
+    type: postgresql
+    logging: false
+    #schema: svandecappelle
+    dialect: postgres
+    dialectOptions:
+      multipleStatements: true
 redis:
     host: 127.0.0.1
     port: 6379

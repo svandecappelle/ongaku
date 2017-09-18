@@ -9,6 +9,34 @@ const logger = require('log4js').getLogger('routes');
 
 class Routes {
 
+  testingInstallFromSql(){
+    // 
+    const version = require("../utils/version");
+    version.check().then((version) => {
+      console.log(version);
+
+      if ( !version.installed ){
+        var prompt = require('prompt');
+        prompt.start();
+        
+        prompt.get({
+          type: "string",
+          pattern: /Y|n/,
+          message: 'do you want to install application ? Y/n',
+          name: "install"
+        }, function (err, result) {
+          if (err) { return onErr(err); }
+          console.log('Command-line input received:');
+          console.log('  Username: ' + result.install);
+          if (result.install === 'Y') {
+            var install = require("../model/database/postgresql/install");
+            install.install();
+          }
+        });
+      }
+    });
+  }
+
   load (app) {
     authentication.initialize(app);
     authentication.load(app);
