@@ -1294,7 +1294,7 @@ var getStatistics = function(name, callback){
             res.end();
           });
         } catch(error){
-          logger.error("Not compatible canvas generation wave.");
+          logger.error("Not compatible canvas generation wave.", error);
         }
       });
     };
