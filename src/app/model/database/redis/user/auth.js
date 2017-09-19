@@ -1,16 +1,14 @@
-var db = require('../database'),
-    meta = require('../../meta');
+var db = require('../../index'),
+    meta = require('../../../../meta');
 
-module.exports = function (User) {
-    User.auth = {};
-
-    User.auth.logAttempt = function (uid, callback) {
-        db.exists('lockout:' + uid, function (err, exists) {
+class UserAuthRediisModel {
+    logAttempt (uid, callback) {
+        db.exists('lockout:' + uid, (err, exists) => {
             if (!exists) {
-                db.increment('loginAttempts:' + uid, function (err, attempts) {
+                db.increment('loginAttempts:' + uid, (err, attempts) => {
                     if ((meta.config.loginAttempts || 5) < attempts) {
                         // Lock out the account
-                        db.set('lockout:' + uid, '', function (err) {
+                        db.set('lockout:' + uid, '', (err) => {
                             db.delete('loginAttempts:' + uid);
                             db.pexpire('lockout:' + uid, 1000 * 60 * (meta.config.lockoutDuration || 60));
                             callback(new Error('account-locked'));
@@ -26,7 +24,10 @@ module.exports = function (User) {
         });
     };
 
-    User.auth.clearLoginAttempts = function (uid) {
+    clearLoginAttempts (uid) {
         db.delete('loginAttempts:' + uid);
     };
-};
+}
+
+
+module.exports = new UserAuthRediisModel();

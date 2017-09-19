@@ -6,3 +6,5 @@ public/user
 nw/
 public/assets/
 bower_components
+package-lock.json
+users/

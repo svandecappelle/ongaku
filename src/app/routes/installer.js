@@ -1,16 +1,17 @@
 /*jslint node: true */
-var middleware = require("./../middleware/middleware")
-  nconf = require("nconf"),
-  logger = require('log4js').getLogger('installer'),
-  user = require("../model/user"),
-  groups = require("../model/groups");
+const middleware = require("./../middleware/middleware");
+const nconf = require("nconf");
+const logger = require('log4js').getLogger('installer');
+const user = require("../model/user");
+const groups = require("../model/groups");
 
-(function (InstallerRoutes) {
-  "use strict";
+class Installer {
 
-  InstallerRoutes.installed = false;
+  constructor(){
+    this.installed = false;
+  }
 
-  InstallerRoutes.onInstall = function(properties, callback){
+  onInstall (properties, callback) {
     if ( properties.username === "" && properties.length < 6){
       return callback(new Error("Username choice invalid. Minimum length 6 characters"));
     }
@@ -22,7 +23,7 @@ var middleware = require("./../middleware/middleware")
     if (properties.password !== properties["password-confirmation"]){
       return callback(new Error("Password doesn't match confirmation"));
     }
-    groups.create("administrators", "Application administrators members", function(err){
+    groups.create("administrators", "Application administrators members", (err) => {
       user.create(properties, function (err, uuid) {
         if (err) {
           logger.error("Error while create user: ", err);
@@ -36,7 +37,7 @@ var middleware = require("./../middleware/middleware")
           logger.info("Main admin user installed");
         });
 
-        groups.join("administrators", properties.email, function(err){
+        groups.join("administrators", properties.email, (err) => {
           if (err){
             logger.error(err);
             return callback(err);
@@ -48,20 +49,20 @@ var middleware = require("./../middleware/middleware")
     });
   };
 
-  InstallerRoutes.load = function (app, afterInstall) {
-    app.use(function (req, res, next) {
-      if ( !InstallerRoutes.installed && req.url !== "/install" ){
+  load (app, afterInstall) {
+    app.use((req, res, next) => {
+      if ( !this.installed && req.url !== "/install" ){
         res.redirect("/install");
       } else {
         next();
       }
     });
 
-    app.get('/install', function (req, res) {
+    app.get('/install', (req, res) => {
       middleware.render('admin/installer', req, res, nconf.get());
     });
 
-    app.post(['/', '/install'], function(req, res){
+    app.post(['/', '/install'], (req, res) => {
       InstallerRoutes.onInstall(req.body, (error) => {
         if (error){
           res.status(500).send({
@@ -79,5 +80,7 @@ var middleware = require("./../middleware/middleware")
         }
       });
     });
-  };
-}(exports));
+  }
+}
+
+module.exports = new Installer();

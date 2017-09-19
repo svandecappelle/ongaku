@@ -1,7 +1,7 @@
 (function(Translator){
 	"use strict";
 	var nconf = require('nconf'),
-        utils = require('./../../utils.js'),
+        utils = require('./../../utils'),
         path = require('path'),
         fs = require('fs'),
         logger = require('log4js').getLogger("Translator"),

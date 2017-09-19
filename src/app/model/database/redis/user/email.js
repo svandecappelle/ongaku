@@ -5,41 +5,41 @@ var async = require('async'),
     nconf = require('nconf'),
     logger = require('log4js').getLogger("User:email"),
     user = require('./../user'),
-    utils = require('./../../utils'),
-    db = require('./../database'),
+    utils = require('./../../../../utils'),
+    db = require('./../../index'),
     emailer = require('./../emailer');
 
-(function (UserEmail) {
+class UserEmailRedisModel {
 
-    UserEmail.exists = function (email, callback) {
-        user.getUidByEmail(email, function (err, exists) {
+    exists (email, callback) {
+        user.getUidByEmail(email, (err, exists) => {
             callback(err, !!exists);
         });
     };
 
-    UserEmail.available = function (email, callback) {
-        db.isObjectField('email:uid', email, function (err, exists) {
+    available (email, callback) {
+        db.isObjectField('email:uid', email, (err, exists) => {
             callback(err, !exists);
         });
     };
 
-    UserEmail.verify = function (uid, email) {
+    verify (uid, email) {
         var confirm_code = utils.generateUUID(),
             confirm_link = nconf.get('url') + '/confirm/' + confirm_code;
 
         async.series([
-            function (next) {
+            (next) => {
                 db.setObject('confirm:' + confirm_code, {
                     email: email,
                     uid: uid
                 }, next);
             },
-            function (next) {
+            (next) => {
                 db.expireAt('confirm:' + confirm_code, Math.floor(Date.now() / 1000 + 60 * 60 * 2), next);
             }
-        ], function (err) {
+        ], (err) => {
             // Send intro email w/ confirm code
-            user.getUserField(uid, 'username', function (err, username) {
+            user.getUserField(uid, 'username', (err, username) => {
                 if (err) {
                     return logger.error(err.message);
                 }
@@ -58,8 +58,8 @@ var async = require('async'),
         });
     };
 
-    UserEmail.confirm = function (code, callback) {
-        db.getObject('confirm:' + code, function (err, confirmObj) {
+    confirm (code, callback) {
+        db.getObject('confirm:' + code, (err, confirmObj) => {
             if (err) {
                 return callback({
                     status: 'error'
@@ -67,7 +67,7 @@ var async = require('async'),
             }
 
             if (confirmObj && confirmObj.uid && confirmObj.email) {
-                db.setObjectField('email:confirmed', confirmObj.email, '1', function () {
+                db.setObjectField('email:confirmed', confirmObj.email, '1', () => {
                     callback({
                         status: 'ok'
                     });
@@ -79,5 +79,6 @@ var async = require('async'),
             }
         });
     };
+}
 
-}(exports));
+module.exports = new UserEmailRedisModel();

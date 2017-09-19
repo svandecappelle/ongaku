@@ -45,7 +45,7 @@ class Communication {
 	}
 
 	emit (room, event, data) {
-		logger.info(`emit to room: ${room}`, event,  data.message);
+		logger.info(`emit to room: ${room}`, event, data ? data.message : undefined);
 		this.io.to(room).emit(event, data);
 	}
 
