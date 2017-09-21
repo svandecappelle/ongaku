@@ -104,7 +104,9 @@ var getStatistics = function(name, callback){
         }
       });
 
-      entries = _.sortBy(entries, statistic.name).reverse();
+      entries = _.sortBy(entries, (entry) => {
+        return entry ? parseInt(entry[statistic.name]): -1;
+      }).reverse();
 
       var lenght = 10;
       entries = _.first(_.compact(entries), lenght);
@@ -1275,14 +1277,6 @@ class Users {
       });
     });
 
-<<<<<<< HEAD
-          Waveform(src, options, function(err , buffer) {
-            res.write(buffer);
-            res.end();
-          });
-        } catch(error){
-          logger.error("Not compatible canvas generation wave.", error);
-=======
     app.get("/api/view/featured", (req, res) => {
       logger.info("Client access to featured [" + req.ip + "]");
       middleware.render('api/featured', req, res);
@@ -1294,7 +1288,6 @@ class Users {
         var color = 'white';
         if (req.query.color){
           color = req.query.color;
->>>>>>> 16dc4821c0ab4e5b182ad9f76b0b9a51786c643f
         }
         var options = {
             waveColor: color,
