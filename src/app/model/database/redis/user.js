@@ -1,6 +1,5 @@
 /*jslint node: true */
 'use strict';
-var mixin = require('mixin');
 var bcrypt = require('bcryptjs'),
     async = require('async'),
     nconf = require('nconf'),

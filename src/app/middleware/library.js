@@ -235,6 +235,7 @@
     var imageSource;
     var sizes = ['small', 'medium', 'large', 'extralarge', 'mega'];
     var images = null;
+    
     if (imageList){
       images = _.map(_.sortBy(imageList, function(image){
         return sizes.indexOf(image.size);
