@@ -1,15 +1,16 @@
-extends ../layouts/app
+extends ../layouts/app.pug
 block append headpage
     title Ongaku music
 block append library
-    include ../api/featured
+    include ../library/library.pug
 block append songlist
     section.song-list
-        include ../layouts/playlist
+        include ../layouts/playlist.pug
 block append scripts
   script.
     $(function (){
       $.ongaku.library.bind("user/#{session.user.username}");
+      $.ongaku.library.fetch();
       $.get("/api/user/playlists", function(output){
         $.each(output, function(index, playlist){
           var playlistBlock = $("<a>");

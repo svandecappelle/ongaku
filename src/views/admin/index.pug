@@ -1,8 +1,9 @@
-extends ../layouts/app
+extends ../layouts/app.pug
 block append headpage
-	title Ongaku login
+	title Ongaku administration panel
 block append library
-	include ../api/middleware/login
+	include ../api/admin/index
+
 block append songlist
 	section.song-list
 		include ../layouts/playlist

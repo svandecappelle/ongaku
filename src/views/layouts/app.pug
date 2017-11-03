@@ -71,12 +71,12 @@ html
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
                   li.dropdown#language-chooser(style="float: left; margin-left: 5px;")
-                      a.dropdown-toggle(data-toggle="dropdown", data-original-title="#{i18n.language}")
-                        i.fa.fa-fw.fa-flag(title="#{i18n.language}")
-                      ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
-                        for language in languages
-                          li
-                            a.language(data-locale="#{language}")= i18n.i18n_languages[language]
+                    a.dropdown-toggle(data-toggle="dropdown", data-original-title="#{i18n.language}")
+                      i.fa.fa-fw.fa-flag(title="#{i18n.language}")
+                    ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
+                      for language in languages
+                        li
+                          a.language(data-locale="#{language}")= i18n.i18n_languages[language]
                     if meta.type == "browser"
                       unless session.user.isAnonymous
                           li.dropdown(style="float: left;")

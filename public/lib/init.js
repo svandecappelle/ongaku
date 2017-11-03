@@ -17,7 +17,7 @@ function loadView(ev, view){
 
 function Connection(opts){
   this.opts = opts;
-  this.socket = io();
+  //this.socket = io();
   // this.socket = io.connect('http://' + opts.session.host + '/');
 }
 
@@ -42,8 +42,9 @@ Connection.prototype.notify = function (id, opts) {
 };
 
 Connection.prototype.bind = function () {
-  var that = this;
-  this.socket.on('connect', function () {
+  var that = this;/*
+  this.socket.on('connection', function () {
+    alert("connected socket io");
     if ($.ongaku.getUser().username){
       that.socket.emit('room:join', $.ongaku.getUser().username);
       that.socket.emit('room:join', that.opts.session.sessionID);
@@ -52,7 +53,7 @@ Connection.prototype.bind = function () {
     }
     $.chat.init(that.socket, $.ongaku.getUser().username);
     // that.socket.join(that.opts.session.sessionID);
-  });
+  });*/
 
   this.socket.on('notification', function (data) {
     that.notify("application-message", data);

@@ -4,7 +4,7 @@
 	var utils, fs, XRegExp;
 
 	fs = require('fs');
-	XRegExp = require('xregexp').XRegExp;
+	XRegExp = require('xregexp');
 
 	process.profile = function(operation, start) {
 		console.log('%s took %d milliseconds', operation, process.elapsedTimeSince(start));

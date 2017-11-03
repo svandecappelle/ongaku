@@ -1,8 +1,8 @@
-extends ../layouts/app
+extends ../layouts/app.pug
 block append headpage
-	title Ongaku error page
+	title Ongaku forbidden access
 block append library
-	include ../api/middleware/500
+	include ../api/middleware/403
 block append songlist
 	section.song-list
 		include ../layouts/playlist

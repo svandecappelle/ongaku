@@ -25,7 +25,7 @@ class Routes {
           message: 'do you want to install application ? Y/n',
           name: "install"
         }, function (err, result) {
-          if (err) { return onErr(err); }
+          if (err) { return console.error(err); }
           console.log('Command-line input received:');
           console.log('  Username: ' + result.install);
           if (result.install === 'Y') {
@@ -38,6 +38,8 @@ class Routes {
   }
 
   load (app) {
+    this.testingInstallFromSql();
+
     authentication.initialize(app);
     authentication.load(app);
 

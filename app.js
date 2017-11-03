@@ -67,7 +67,7 @@ var logger = log4js.getLogger('Server');
 
         // public PATHS
         app.set('views', __dirname + '/src/views');
-        app.set('view engine', 'jade');
+        app.set('view engine', 'pug');
         app.use('/dependencies', express.static(__dirname + '/public/dependencies'));
         app.use('/assets', express.static(__dirname + '/public/assets'));
         app.use('/img', express.static(__dirname + '/public/img'));
