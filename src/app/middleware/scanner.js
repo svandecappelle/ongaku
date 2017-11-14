@@ -141,54 +141,19 @@ class Decoder {
   audio (filePath) {
     return new Promise((resolve, reject) => {
       if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
-        if (groove){
-          groove.open(filePath, (err, file) => {
-            if (err) {
-              console.log('');
-              logger.error("filePath: " + filePath, err);
-              return reject(err);
-              //throw err;
-            }
-
-            file.close( (err) => {
-              if (err) {
-                  throw err;
-              }
-            });
-            resolve(this.song(filePath, file.metadata(), file.duration()));
-          });
-        } else {
-          logger.debug("Loading using mm: ", filePath);
+        logger.debug("Loading using mm: ", filePath);
+        try{
           var parser = mm(fs.createReadStream(filePath), { duration: true }, (err, metadata) => {
             logger.debug(`libelement: ${filePath}`, err, metadata)
             if (err) {
-              logger.error(`libelement: ${filePath}`, err)
+              logger.error(`libelement: ${filePath}`, err);
               return reject(err);
             }
 
             resolve(this.song(filePath, metadata, metadata.duration));
           });
-
-          parser.on("metadata", (metadata) => {
-            if (metadata.picture) {
-              metadata.picture = undefined;
-            }
-            logger.error('libelement: ', this.song(filePath, metadata, metadata.duration));
-            //return cb(null, results);
-            resolve(this.song(filePath, metadata, metadata.duration));
-          });
-
-          parser.on("done", (err) => {
-            var libElement;
-            if (err) {
-              // in error call the loopback
-              console.log('');
-              logger.warn("Error on parsing metadata on " + filePath);
-              //libElement = this.song(filePath, {}, null);
-            }
-            logger.error('libelement: ', libElement)
-            //resolve(this.song(filePath, {}, null));
-          });
+        } catch (error) {
+          reject(error);
         }
       } else {
         logger.error(`metadata-check: ${filePath} `)
@@ -340,7 +305,36 @@ class Scanner {
 
   scan (apath, nextDirectoryCallback, appender, libraryCallBack) {
     logger.debug("Scanning " + appender.type + " directory: ".concat(apath));
+    var files = walkSync(apath);
+    files = _.filter(files, (file) => {
+      return appender.check(file);
+    });
+    logger.info(files.length);
+    var bar = new ProgressBar('  "Scanning ' + apath + '" [:bar] :rate/bps :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: files.length
+    });
 
+    async.map(files, (file, next) => {
+      bar.tick(1);
+      appender.decode(file).then((song) => {
+        logger.debug("decoded", song);
+        next(null, song);
+      }, (e)=>{
+        logger.error(e);
+        next(null, null);
+      }).catch((error) => {
+        next(null, null);
+      });
+    }, (err, results) => {
+      results = _.compact(results);
+      //logger.info(results);
+      logger.info("scanned files: ", results.length);
+      libraryCallBack(err, results, false);
+    })
+    /*
     fs.readdir(apath, (err, files) => {
       var bar = new ProgressBar('  "Scanning ' + apath + '" [:bar] :rate/bps :percent :etas', {
         complete: '=',
@@ -407,7 +401,7 @@ class Scanner {
             logger.info(res);
             
             logger.info("#################");
-          });*/
+          });
 
 
           nextDirectoryCallback(err, null);
@@ -446,7 +440,7 @@ class Scanner {
           libraryCallBack(err, results, nextDirectoryCallback === libraryCallBack);
         }
       });
-    });
+    });*/
   };
 }
 
