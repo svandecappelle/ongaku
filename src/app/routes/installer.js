@@ -63,7 +63,7 @@ class Installer {
     });
 
     app.post(['/', '/install'], (req, res) => {
-      InstallerRoutes.onInstall(req.body, (error) => {
+      this.onInstall(req.body, (error) => {
         if (error){
           res.status(500).send({
             status: "error",
@@ -72,7 +72,7 @@ class Installer {
         } else {
           logger.info('Application installed');
           afterInstall();
-          InstallerRoutes.installed = true;
+          this.installed = true;
           res.send({
             status: "installed",
             redirectTo: "/"

@@ -102,11 +102,14 @@
   },
   "scripts": {
     "start": "node app.js",
+    "build": "grunt",
+    "postinstall": "bower install",
     "dev-start": "nodemon --watch src app.js"
   },
   "name": "ongaku",
   "single-instance": true,
   "devDependencies": {
+    "bower": "^1.8.2",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-cssmin": "^2.2.1",
     "grunt-contrib-jshint": "^1.1.0",

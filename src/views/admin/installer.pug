@@ -41,13 +41,13 @@ html
                     h2 Step 1: Redis database (readonly -> view configuration file).
                     .form-group
                         label host
-                        input.form-control(type="text", placeholder="host", value="#{redis.host}", disabled)
+                        input.form-control(type="text", placeholder="host", value=redis.host, disabled)
                     .form-group
                         label port
-                        input.form-control(type="text", placeholder="port", value="#{redis.port}", disabled)
+                        input.form-control(type="text", placeholder="port", value=redis.port, disabled)
                     .form-group
                         label database
-                        input.form-control(type="text", placeholder="database", value="#{redis.database}", disabled)
+                        input.form-control(type="text", placeholder="database", value=redis.database, disabled)
                 .group
                     h2 Step 2: Create administrator account.
                     .form-group
@@ -64,30 +64,30 @@ html
                         input.form-control(type="password", placeholder="Password", name="password-confirmation")
                 .footer(style="text-align: center;")
                     button.btn.btn-success(type='submit') Install
-          script.
+        script.
             $("#installer-form").submit(function(event){
-              event.preventDefault();
-              var $inputs = $( this ).find( "input" );
+                event.preventDefault();
+                var $inputs = $( this ).find( "input" );
 
-              // not sure if you wanted this, but I thought I'd add it.
-              // get an associative array of just the values.
-              var values = {};
-              $inputs.each(function() {
-                  values[this.name] = $(this).val();
-              });
-              $.post( "/install", values ).done(function(response){
+                // not sure if you wanted this, but I thought I'd add it.
+                // get an associative array of just the values.
+                var values = {};
+                $inputs.each(function() {
+                    values[this.name] = $(this).val();
+                });
+                $.post( "/install", values ).done(function(response){
                 if( response.status === 'installed'){
-                  window.location = response.redirectTo;
+                    window.location = response.redirectTo;
                 }
-              }).fail(function($xhr){
+                }).fail(function($xhr){
                 var data = $xhr.responseJSON;
                 iziToast.error({
-                  position: 'topCenter',
-                  message: data.error,
-                  transitionIn: 'flipInX',
-                  transitionOut: 'flipOutX',
-                  title: 'Error:'
+                    position: 'topCenter',
+                    message: data.error,
+                    transitionIn: 'flipInX',
+                    transitionOut: 'flipOutX',
+                    title: 'Error:'
                 });
-              });
-              
+                });
+                
             });

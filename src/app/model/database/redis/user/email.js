@@ -9,10 +9,10 @@ var async = require('async'),
     db = require('./../../index'),
     emailer = require('./../emailer');
 
-class UserEmailRedisModel {
+class UserEmailRedisModel extends user {
 
     exists (email, callback) {
-        user.getUidByEmail(email, (err, exists) => {
+        this.getUidByEmail(email, (err, exists) => {
             callback(err, !!exists);
         });
     };
@@ -39,7 +39,7 @@ class UserEmailRedisModel {
             }
         ], (err) => {
             // Send intro email w/ confirm code
-            user.getUserField(uid, 'username', (err, username) => {
+            this.getUserField(uid, 'username', (err, username) => {
                 if (err) {
                     return logger.error(err.message);
                 }
