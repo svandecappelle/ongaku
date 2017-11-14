@@ -19,7 +19,6 @@ class Communication {
 	}
 
 	open () {
-
 		this.io.on('connection', (socket) => {
 		  logger.info('a user connected');
 
@@ -33,7 +32,7 @@ class Communication {
 				this.statuses[data.user] = data.status;
 				this.broadcast('status:change', data);
 			});
-
+			socket.emit('notification', {'message': 'ok'});
 			socket.on('chat:message', (data) => {
 				this.emit(data.to, 'chat:message', data);
 			});

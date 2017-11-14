@@ -38,7 +38,7 @@ class Routes {
   }
 
   load (app) {
-    this.testingInstallFromSql();
+    // this.testingInstallFromSql();
 
     authentication.initialize(app);
     authentication.load(app);

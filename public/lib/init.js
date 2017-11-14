@@ -17,8 +17,6 @@ function loadView(ev, view){
 
 function Connection(opts){
   this.opts = opts;
-  //this.socket = io();
-  // this.socket = io.connect('http://' + opts.session.host + '/');
 }
 
 Connection.prototype.notify = function (id, opts) {
@@ -42,8 +40,10 @@ Connection.prototype.notify = function (id, opts) {
 };
 
 Connection.prototype.bind = function () {
-  var that = this;/*
-  this.socket.on('connection', function () {
+  var that = this;
+  this.socket = io();
+  // this.socket = io.connect('http://' + opts.session.host + '/');
+  this.socket.on('con', function () {
     alert("connected socket io");
     if ($.ongaku.getUser().username){
       that.socket.emit('room:join', $.ongaku.getUser().username);
@@ -52,8 +52,8 @@ Connection.prototype.bind = function () {
       that.socket.emit('room:join', that.opts.session.sessionID);
     }
     $.chat.init(that.socket, $.ongaku.getUser().username);
-    // that.socket.join(that.opts.session.sessionID);
-  });*/
+    that.socket.join(that.opts.session.sessionID);
+  });
 
   this.socket.on('notification', function (data) {
     that.notify("application-message", data);
