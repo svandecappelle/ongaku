@@ -43,19 +43,19 @@ section.sidebar.show
                         .row.list-group-item
                             .col-md-1
                                 if (file.indexOf('.jpeg')!==-1 || file.indexOf('.JPEG')!==-1  ||file.indexOf('.jpg')!==-1 || file.indexOf('.JPG')!==-1 || file.indexOf('.PNG')!==-1 || file.indexOf('.png')!==-1 || file.indexOf('.gif')!==-1 || file.indexOf('.GIF')!==-1)
-                                    img(src="/upload/files/imported/#{file}", style="height: 30px;")
+                                    img(src="/upload/files/imported/"+ file, style="height: 30px;")
                                 else if (file.indexOf('.mp3')!==-1 || file.indexOf('.MP3')!==-1 || file.indexOf('.ogg')!==-1 || file.indexOf('.OGG')!==-1 || file.indexOf('.flac')!==-1 || file.indexOf('.flac')!==-1)
                                     i.fa.fa-headphones
                                 else
                                     i.fa.fa-file-o(style="font-size: 30px;")
                             .col-md-9.file.imported-file
-                                a.imported-filename(href="/upload/files/imported/#{file}", target="#{target}")=filename
+                                a.imported-filename(href="/upload/files/imported/" + file, target=target)=filename
                             .col-md-1(style="text-align: center;")
-                                a.delete.imported-filename(href="/upload/imported/#{file}/delete")
+                                a.delete.imported-filename(href="/upload/imported/" + file + "/delete")
                                     i.fa.fa-remove
                             .col-md-1(style="text-align: center;")
                                 if (file.indexOf('.zip')!==-1 || file.indexOf('.ZIP')!==-1 || file.indexOf('.tar')!==-1 || file.indexOf('.TAR')!==-1)
-                                    a.extract.imported-filename(title="extract", href="/upload/imported/#{file}/extract")
+                                    a.extract.imported-filename(title="extract", href="/upload/imported/" + file + "/extract")
                                         i.fa.fa-file-archive-o
 
 

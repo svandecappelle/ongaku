@@ -29,8 +29,6 @@ html
         script(src="/dependencies/jquery-mousewheel-3.1.12/jquery.mousewheel.min.js")
         script(src="/dependencies/alertifyjs-0.10.2/alertify.min.js")
         script(src="/dependencies/jScrollPane/jquery.jscrollpane.min.js")
-        //script(src="/dependencies/socket.io/socket.io.js")
-        script(src="/lib/socket.io.js")
         script(src="/dependencies/video-js/video.js")
         script(src="/dependencies/js-cookie.js")
         script(src="/dependencies/d3.js")
@@ -43,7 +41,7 @@ html
         if !session.user.isAnonymous
           style.
             body{
-              background-image: url('/user/#{session.user.username}/background');
+              background-image: url('/user/'+session.user.username+'/background');
             }
     body
         a#responsive-menu
@@ -72,12 +70,12 @@ html
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
                   li.dropdown#language-chooser(style="float: left; margin-left: 5px;")
-                    a.dropdown-toggle(data-toggle="dropdown", data-original-title="#{i18n.language}")
-                      i.fa.fa-fw.fa-flag(title="#{i18n.language}")
+                    a.dropdown-toggle(data-toggle="dropdown", data-original-title=i18n.language)
+                      i.fa.fa-fw.fa-flag(title=i18n.language)
                     ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
                       for language in languages
                         li
-                          a.language(data-locale="#{language}")= i18n.i18n_languages[language]
+                          a.language(data-locale=language)= i18n.i18n_languages[language]
                     if meta.type == "browser"
                       unless session.user.isAnonymous
                           li.dropdown(style="float: left;")
@@ -94,7 +92,7 @@ html
                       li.dropdown(style="float: left;margin-left: 0.8rem;")
                           a.dropdown-toggle(data-toggle="dropdown", data-original-title="Profile")
                               if session.user.avatar
-                                  img.user-avatar(src="/user/#{session.user.username}/avatar")
+                                  img.user-avatar(src="/user/"+session.user.username+"/avatar")
                               else
                                   if session.user.isAnonymous
                                       i.fa.fa-fw.fa-sign-in
@@ -110,7 +108,7 @@ html
                                   span= i18n.register
                             else
                               li
-                                a.view(href="/user/#{session.user.username}/info", data-view="user/#{session.user.username}/info")
+                                a.view(href="/user/"+session.user.username+"/info", data-view="user/"+session.user.username+"/info")
                                     i.fa.fa-circle.status.online
                                     span#username(style="margin-left:10px;") #{session.user.username}
                               li

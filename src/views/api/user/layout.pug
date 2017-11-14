@@ -5,18 +5,18 @@ section.sidebar.show
         h1 Fiche utilisateur
   .user-sidebar.library-view
     div.account(data-sticky-container)
-      div.cover.initialised(style="background-image: url(/user/#{user.username}/cover?#{token}); background-position: 47.0141% 20.4126%;")
+      div.cover.initialised(style="background-image: url(/user/"+user.username+"/cover?"+token+"); background-position: 47.0141% 20.4126%;")
         div.avatar-container
           div.avatar(style="z-index: 1;")
-            img.user-profile-picture(src="/user/#{user.username}/avatar?#{token}")
-          i(data-user="#{user.username}", class="fa fa-circle status #{user.status}")
+            img.user-profile-picture(src="/user/" + user.username +"/avatar?"+token)
+          i(data-user=user.username, class="fa fa-circle status" + user.status)
         div.container
           div.btn-group.account-fab(style="z-index: 1;")
             button.fab.dropdown-toggle(type="button", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
               i.fa.fa-ellipsis-v
             ul.dropdown-menu.dropdown-menu-right
               li
-                a.inline-block(href="/user/#{user.username}/info", id="profile") Profil
+                a.inline-block(href="/user/" + user.username + "/info", id="profile") Profil
               li
                 a(href="edit") Paramètres
           div.controls(style="position: absolute")
@@ -49,7 +49,7 @@ section.sidebar.show
             div.account-picture-block
               div.avatar-container
                 div.avatar
-                  img.user-profile-picture(src="/user/#{user.username}/avatar?#{token}")
+                  img.user-profile-picture(src="/user/" + user.username + "/avatar?"+token)
             ul.list-group
               li
                 a.list-group-item.custom-file-upload

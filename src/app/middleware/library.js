@@ -411,6 +411,9 @@
       if (type === "video" && obj.type === type) {
         found = obj.name.toLowerCase().match(filterClause);
       } else if (type === "audio" && obj.type === type) {
+        if ( !obj.title ) {
+          logger.error("error checking object: ", obj);
+        }
         found = obj.title.toString().latinize().toLowerCase().match(filterClause);
         found = found ? found : obj.album.toString().latinize().toLowerCase().match(filterClause);
         found = found ? found : obj.artist.toString().latinize().toLowerCase().match(filterClause);
