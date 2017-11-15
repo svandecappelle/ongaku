@@ -37,14 +37,20 @@
     return byFirst;
   }});
 
-  Library.beginScan = function (callback) {
-    var that = this;
-    scan.library(function (lib) {
-      if (lib.audio) {
-        that.populate("audio", lib, callback);
-      } else if (lib.video){
-        that.populate("video", lib, callback);
-      }
+  Library.beginScan = function () {
+    return new Promise((resolve, reject) => {
+      scan.library().then((lib) => {
+        if (lib.audio) {
+          this.populate("audio", lib);
+        }
+        if (lib.video){
+          this.populate("video", lib);
+        }
+        resolve(lib);
+      }, (error) => {
+        logger.error(`Error scanning library: `, error);
+        reject(error);
+      });
     });
   };
 
@@ -53,18 +59,18 @@
 
     scan.addToScan(folder.path);
     Library.removeFolder(folder);
-    scan.scanFolder(folder.path, function result(folderContent) {
+    scan.scanFolder(folder.path).then( (folderContent) => {
       folderContent.private = folder.isPrivate
 
       if (folderContent.audio){
         that.populate("audio", {
           folder: folder,
           content: folderContent
-        }, function (){
-          callback({
-            type: 'audio'
-          });
         }, folder);
+        
+        callback({
+          type: 'audio'
+        });
       } else if (folderContent.video){
         callback({
           type: 'video'
@@ -92,7 +98,7 @@
     });
   }
 
-  Library.populate = function (type, folderScanResult, callback, folder) {
+  Library.populate = function (type, folderScanResult, folder) {
     var destination = Library.data;
     var flattenDestination = Library.flatten;
     var lib;
@@ -159,7 +165,7 @@
             Library.getArtistCover(artist);
           } else {
             logger.debug("already scanned artist '" + artist.artist + "': " + Library.loadingCoverArtists[artist.artist]);
-            artist.image = Library.loadingCoverArtists[artist.artist] = artist.image;
+            artist.image = Library.loadingCoverArtists[artist.artist];
           }
           _.each(albums, function (album, index) {
             if (album !== "Unknown album" && Library.loadingCoverAlbums[artist.artist][album.title] === undefined) {
@@ -190,10 +196,8 @@
 
     if (type === "audio" && (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll)) ) {
       this.audioScanned = true;
-      callback();
     } else if (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll)) {
       this.videoScanned = true;
-      callback();
     }
   };
 
@@ -263,22 +267,22 @@
 
       // Rescan full library.
       Library.flatten = null;
-      this.beginScan(function () {
-        if (that.videoScanned && that.audioScanned){
+      this.beginScan().then( () => {
+        if (this.videoScanned && this.audioScanned){
 
-          library.getSharedFolders(function(err, folders){
+          library.getSharedFolders((err, folders) => {
             if (folders){
               var foldersScanning = _.map(folders, (folder) => {
                 return { path: folder, scanned: 0 };
               });
-              async.each(folders, function(folder, next){
+              async.each(folders, (folder, next) => {
                 var username = folder.split("[")[0];
                 var folderObject = {
                   path: path.join( __dirname , `../../../public/user/${username}/imported/${folder.replace(username + "[", "").slice(0, -1)}`),
                   username: folder.split("[")[0]
                 };
                 logger.info(`adding user shared folder: ${folderObject.path} ---> ${folderObject.username}`);
-                Library.addFolder(folderObject, function(scanResults){
+                Library.addFolder(folderObject, (scanResults) => {
                   var scannedFolder = _.where(foldersScanning, {
                     path: folder
                   });
@@ -289,8 +293,8 @@
                     next();
                   }
                 });
-              }, function(){
-                that.scanProgress = false;
+              }, () => {
+                this.scanProgress = false;
                 callback();
               });
             } else {

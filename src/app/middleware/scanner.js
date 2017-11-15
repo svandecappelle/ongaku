@@ -85,32 +85,6 @@ class Decoder {
     };
   };
 
-/*
-  video (file, metadatas, duration) {
-    var durationMin = Math.floor(duration / 60),
-        durationSec = Math.floor(duration % 60),
-        uuid,
-        shasum = crypto.createHash('sha1');
-
-    shasum.update(file);
-
-    uuid = shasum.digest('hex');
-    if (durationSec < 10) {
-        durationSec = "0".concat(durationSec);
-    }
-    return {
-        artist: metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : "Unknown artist",
-        file: file,
-        relativePath: typeof nconf.get("library") === 'String' ? file.replace(nconf.get("library"), ""): file,
-        title: metadatas.title ? metadatas.title : metadatas.TITLE ? metadatas.TITLE : path.basename(file.replace(nconf.get("library"), "")),
-        album: metadatas.album ? metadatas.album : metadatas.ALBUM ? metadatas.ALBUM : "Uknown album",
-        metadatas: metadatas,
-        duration: durationMin.toString().concat(":").concat(durationSec),
-        uid: shasum.digest('hex'),
-        encoding: path.extname(file.replace(nconf.get("library"), "")).replace(".", "")
-    };
-  };*/
-
   video (filePath) {
     var uuid,
       shasum = crypto.createHash('sha1');
@@ -198,7 +172,7 @@ class Scanner {
     this.all_files_count -= walkSync(folder).length;
   }
 
-  library (callback) {
+  library () {
     this.all_files_count = 0;
     this.scanned_files_count = 0;
 
@@ -218,124 +192,90 @@ class Scanner {
       for (var fold_index = 0; fold_index < folders.length; fold_index++) {
         this.all_files_count += walkSync(folders[fold_index]).length;
       }
+      
+      return new Promise((resolve, reject) => {
+        async.map(folders, (folder, next) => {
+          this.scanFolder(folder).then( (ret) => {
+            var finishedType;
 
-      async.each(folders, (folder, next) => {
-
-        logger.debug(this.all_files_count);
-
-        this.scanFolder(folder, (ret) => {
-          logger.debug(this.all_files_count);
-
-          var finishedType = 1;
-
-          if (ret.isFinishedAll){
             console.log('');
             logger.debug("directory scanned", folder);
-            if (ret.audio){
-              scanned.audio.push(folder);
-              finishedType = scanned.audio;
-            } else {
-              scanned.video.push(folder)
-              finishedType = scanned.video;
-            }
-          }
-
-          logger.debug(scanned);
-
-          if (scanned.audio.indexOf(folder) !== -1 && scanned.video.indexOf(folder) !== -1){
+            scanned.audio.push(folder);
+            scanned.video.push(folder)
+            logger.debug(scanned);
             ret.isFinishedAll = true;
             console.log('');
-
 
             delete scanned.video[scanned.video.indexOf(folder)];
             delete scanned.audio[scanned.audio.indexOf(folder)];
 
-            logger.debug("scanned all lib folders", folder);
-            next(ret);
-          } else {
-            ret.isFinishedAll = false;
+            logger.info("scanned all lib folders", folder);
+            next(null, ret);        
+          });
+        }, function(error, ret){
+          if (error) {
+            logger.error("Directories scanned with error", error);
+            return reject(error);
           }
-        });
-      }, function(ret){
-        logger.info("all directories scanned", ret);
-        callback(ret);
 
+          logger.info("all directories scanned", ret);
+          resolve(ret);
+        });
       });
     } else {
       var folder = nconf.get("library");
       logger.debug('scan unique folder:', folder);
       this.all_files_count = walkSync(folder).length;
 
-      this.scanFolder(folder, callback);
+      return this.scanFolder(folder);
     }
   };
 
-  scanFolder (folder, callback) {
-    logger.debug(`scanFolder: ${folder}`);
-    if (fs.existsSync(folder)){
-      async.parallel({
-        audio: (next) => {
-          this.scanAudio(folder, (err, res, isFinishedAll) => {
-            logger.debug("Callback scan audio folder", folder);
-            callback({audio: res, isFinishedAll: isFinishedAll});
-          });
-        },
-        video: (next) => {
-          this.scanVideo(folder, (err, res, isFinishedAll) => {
-            logger.debug("Callback scan video folder");
-            callback({video: res, isFinishedAll: isFinishedAll});
-          });
-        }
-      }, function(err, obj){
+  scanFolder (folder) {
 
-      });
-    } else {
-      callback({audio: null, isFinishedAll: true});
-      callback({video: null, isFinishedAll: true});
-    }
+    return new Promise((resolve, reject) => {
+      logger.debug(`scanFolder: ${folder}`);
+      if (fs.existsSync(folder)) {
+        async.parallel({
+          audio: (next) => {
+            this.scanAudio(folder).then((res) => {
+              logger.debug(`Callback scan audio folder: ${folder}`, res.length);
+              next(null, res);
+            });
+          },
+          video: (next) => {
+            this.scanVideo(folder).then((res) => {
+              logger.debug(`Callback scan video folder: ${folder}`, res.length);
+              next(null,  res);
+            });
+          }
+        }, function(err, scanned){
+          logger.info(`Adding ${scanned.audio.length} audio files and ${scanned.video.length} video files to library.`);
+          resolve(scanned);
+        });
+      } else{
+        reject(`Folder ${folder} does not exists`);
+      }
+    });
   };
 
-  scanVideo (apath, callback) {
-      this.scan(apath, callback, new Decoder("video", this), callback);
+  scanVideo (apath) {
+      return this.scan(apath, new Decoder("video", this));
   };
 
   scanAudio (apath, callback) {
-      this.scan(apath, callback, new Decoder("audio", this), callback);
+      return this.scan(apath, new Decoder("audio", this));
   };
 
-  scan (apath, nextDirectoryCallback, appender, libraryCallBack) {
-    logger.debug("Scanning " + appender.type + " directory: ".concat(apath));
-    var files = walkSync(apath);
-    files = _.filter(files, (file) => {
-      return appender.check(file);
-    });
-    logger.info(files.length);
-    var bar = new ProgressBar('  "Scanning ' + apath + '" [:bar] :rate/bps :percent :etas', {
-      complete: '=',
-      incomplete: ' ',
-      width: 20,
-      total: files.length
-    });
+  scan (apath, appender) {
+    return new Promise((resolve, reject) => {
 
-    async.map(files, (file, next) => {
-      bar.tick(1);
-      appender.decode(file).then((song) => {
-        logger.debug("decoded", song);
-        next(null, song);
-      }, (e)=>{
-        logger.error(e);
-        next(null, null);
-      }).catch((error) => {
-        next(null, null);
+      logger.debug("Scanning " + appender.type + " directory: ".concat(apath));
+      var files = walkSync(apath);
+      files = _.filter(files, (file) => {
+        return appender.check(file);
       });
-    }, (err, results) => {
-      results = _.compact(results);
-      //logger.info(results);
-      logger.info("scanned files: ", results.length);
-      libraryCallBack(err, results, false);
-    })
-    /*
-    fs.readdir(apath, (err, files) => {
+      logger.debug(files.length);
       var bar = new ProgressBar('  "Scanning ' + apath + '" [:bar] :rate/bps :percent :etas', {
         complete: '=',
         incomplete: ' ',
@@ -343,104 +283,23 @@ class Scanner {
         total: files.length
       });
 
-      if (files === undefined){
-        console.log('');
-        logger.warn("Not any files found on your library folder.");
-        if (nextDirectoryCallback !== libraryCallBack) {
-          logger.info("finish folder scan: " + apath + " type: " + appender.type);
-          nextDirectoryCallback(err, results);
-          libraryCallBack(err, [], false);
-        } else {
-          logger.debug("finish lib scan: " + apath + " type: " + appender.type, (nextDirectoryCallback !== libraryCallBack ? "Not": "") + "Finished");
-          libraryCallBack(err, [], callback === libraryCallBack);
-        }
-        return;
-      }
-      var counter = 0;
-      async.map(files,
-        (file, next) => {
-          var file = files[counter++],
-              newpath = path.join(apath, file);
-          this.scanned_files_count += 1;
-          bar.tick(1);
-
-
-          
-          fs.stat(newpath, (err, stat) => {
-              if (err) {
-                logger.error(err);
-                return next(err);
-              }
-
-              if (stat.isFile()) {
-                logger.debug("File found".concat(newpath));
-                if (appender) {
-                  if (!appender.check(file)){
-                    return next('Not a controlled file');
-                  }
-
-                  appender.decode(newpath).then((song) => {
-                    logger.debug("decoded", song);
-                    next(null, song);
-                  }).catch(error => {
-                    logger.warn("error getting metadatas: ", error);
-                    next(error);
-                  });
-                }
-              } else if (stat.isDirectory()) {
-                return this.scan(newpath, next, appender, libraryCallBack); // recursion loop
-              }
-          });
+      async.mapLimit(files, 25, (file, next) => {
+        bar.tick(1);
+        appender.decode(file).then((song) => {
+          logger.debug("decoded", song);
+          next(null, song);
+        }, (e) => {
+          logger.error(e);
+          next(null, null);
+        }).catch((error) => {
+          next(null, null);
+        });
       }, (err, results) => {
-        if (err) {
-          logger.debug(err);
-/*
-          _.each(results, (res) => {
-            logger.info("#################");
-            
-            logger.info(res);
-            
-            logger.info("#################");
-          });
-
-
-          nextDirectoryCallback(err, null);
-          libraryCallBack(err, null, nextDirectoryCallback === libraryCallBack);
-          return;
-        }
-
         results = _.compact(results);
-        results = _.flatten(results);
-        logger.debug(apath, results.length);
-
-       
-        logger.debug("finish folder scan: " + apath + " type: " + appender.type);
-        
-        setTimeout( () => {
-          var message = `<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width:${this.status()}%"></div></div>`;
-
-          communication.broadcast("library:scanner:progress", {
-            close: false,
-            message: message,
-            value: this.status()
-          });
-        }, 2500);
-        if (results.length){
-          logger.debug("All files " + appender.type + " scanned into " + apath + " finished: " + results.length + " elements found."); 
-        }
-        if (nextDirectoryCallback !== libraryCallBack) {
-
-          logger.debug("finish folder scan: " + apath + " type: " + appender.type);
-        
-          nextDirectoryCallback(err, results);
-          libraryCallBack(err, results, false);
-        } else {
-          logger.info("finish lib scan: " + apath + " type: " + appender.type, (nextDirectoryCallback !== libraryCallBack ? "Not": "") + "Finished");
-          nextDirectoryCallback(err, results);
-          libraryCallBack(err, results, nextDirectoryCallback === libraryCallBack);
-        }
+        logger.debug("scanned files: ", results.length);
+        resolve(results);
       });
-    });*/
+    });
   };
 }
 

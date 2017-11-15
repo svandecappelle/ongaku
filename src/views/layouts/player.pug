@@ -17,9 +17,9 @@ block player
 			.play-position
 			.play-position-switcher
 			if (data.playing)
-				img#waveform(src="/api/waveform/#{data.playing.uid}")
+				img#waveform(src="/api/waveform/" + data.playing.uid)
 				.playing-wave-container
-					img#playing-wave(src="/api/waveform/#{data.playing.uid}?color=blue")
+					img#playing-wave(src="/api/waveform/" + data.playing.uid + "?color=blue")
 			else
 				img#waveform
 				.playing-wave-container
@@ -28,7 +28,7 @@ block player
 			if !meta.requireAuthentication || (meta.requireAuthentication && !session.user.isAnonymous) 
 				audio#controls(controls="controls", width="100%;")
 					if (data.playing)
-						source(type="audio/#{data.playing.encoding}", src="/api/stream/#{data.playing.uid}.#{data.playing.encoding}")
+						source(type="audio/" + data.playing.encoding, src="/api/stream/" + data.playing.uid + "." + data.playing.encoding)
 			else
 				.player.empty
 					span #{stream_auth_required}
@@ -36,7 +36,7 @@ block player
 			#plays-type(style='position: absolute; right: 8rem; vertical-align: middle; bottom: 0; top: 0; margin-top: 1.5rem;', title="Streaming")
 				.toggle-icon.icon.red
 					- valuedesktop = meta.playingtype === 'streaming'
-					input(name="streaming", type="checkbox", value="#{valuedesktop}")
+					input(name="streaming", type="checkbox", value=valuedesktop)
 					.handle
 						.glyphicon.glyphicon-music
 	script.
