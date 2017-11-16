@@ -40,11 +40,22 @@
   Library.beginScan = function () {
     return new Promise((resolve, reject) => {
       scan.library().then((lib) => {
-        if (lib.audio) {
-          this.populate("audio", lib);
-        }
-        if (lib.video){
-          this.populate("video", lib);
+        if (Array.isArray(lib){
+          _.each(lib, (libFolder) => {
+            if (libFolder.audio) {
+              this.populate("audio", libFolder);
+            }
+            if (libFolder.video){
+              this.populate("video", libFolder);
+            }
+          });
+        } else {
+          if (lib.audio) {
+            this.populate("audio", lib);
+          }
+          if (lib.video){
+            this.populate("video", lib);
+          }
         }
         resolve(lib);
       }, (error) => {
