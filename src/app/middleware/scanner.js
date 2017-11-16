@@ -209,7 +209,7 @@ class Scanner {
             delete scanned.video[scanned.video.indexOf(folder)];
             delete scanned.audio[scanned.audio.indexOf(folder)];
 
-            logger.info("scanned all lib folders", folder);
+            logger.info("scanned all lib folders");
             next(null, ret);        
           });
         }, function(error, ret){
@@ -218,7 +218,7 @@ class Scanner {
             return reject(error);
           }
 
-          logger.info("all directories scanned", ret);
+          logger.info("all directories scanned");
           resolve(ret);
         });
       });
