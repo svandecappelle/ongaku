@@ -40,7 +40,7 @@
   Library.beginScan = function () {
     return new Promise((resolve, reject) => {
       scan.library().then((lib) => {
-        if (Array.isArray(lib){
+        if (Array.isArray(lib)) {
           _.each(lib, (libFolder) => {
             if (libFolder.audio) {
               this.populate("audio", libFolder);
