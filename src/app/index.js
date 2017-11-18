@@ -52,8 +52,6 @@ class Application {
 	}
 
 	start () {
-		logger.info("Ready to serve on " + nconf.get('port') + " port");
-		
 		var q = async.queue((task, callback) => {
 			logger.info("Launch task: ".concat(task.name));
 			callback();

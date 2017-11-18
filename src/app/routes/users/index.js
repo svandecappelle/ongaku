@@ -689,7 +689,7 @@ class Users {
           libraryDatas = library.searchPage(opts);
         }
 
-        exporter.toZip(libraryDatas, username, (filename) => {
+        exporter.toZip(libraryDatas, username).then((filename) => {
           res.download(filename);
         });
       });
@@ -711,7 +711,7 @@ class Users {
           zipName += " - ".concat(req.params.album);
           libraryDatas = library.getAlbum(req.params.artist, req.params.album);
         }
-        exporter.toZip(libraryDatas, zipName, (filename) => {
+        exporter.toZip(libraryDatas, zipName).then((filename) => {
           res.download(filename);
         });
       };

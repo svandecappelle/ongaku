@@ -1,29 +1,30 @@
-(function (Authority) {
-    "use strict";
+var passport = require('passport'),
+bcrypt = require('bcryptjs'),
+path = require('path'),
+nconf = require('nconf'),
+logger = require('log4js').getLogger("authority"),
+async = require("async"),
 
-  var passport = require('passport'),
-    bcrypt = require('bcryptjs'),
-    path = require('path'),
-    nconf = require('nconf'),
-    logger = require('log4js').getLogger("authority"),
-    async = require("async"),
+middleware = require("./middleware"),
+communication = require("./../communication"),
+meta = require('./../meta'),
+user = require('./../model/user'),
+db = require('./../model/database'),
+library = require('./library'),
+security = require('./../model/security'),
+utils = require('./../utils');
 
-    middleware = require("./middleware"),
-    communication = require("./../communication"),
-    meta = require('./../meta'),
-    user = require('./../model/user'),
-    db = require('./../model/database'),
-    library = require('./library'),
-    security = require('./../model/security'),
-    utils = require('./../utils');
+
 const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
 
-    Authority.logout = function (req, res) {
+class Authority {
+
+    logout (req, res) {
       if (req.isAuthenticated()) {
         logger.info('[Auth] Session ' + req.sessionID + ' logout (uid: ' + req.session.passport.user + ')');
         req.session.locale = nconf.get("defaultLocale");
 
-        setTimeout(function(){
+        setTimeout(() => {
           communication.emit(req.session.sessionID, "notification", { message: 'disconnected from application' });
         }, 1500);
 
@@ -33,11 +34,11 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
       middleware.redirect('/', res);
     };
 
-    Authority.authenticate = function(req, res, next) {
+    authenticate (req, res, next) {
       if (meta.config.allowLocalLogin !== undefined && parseInt(meta.config.allowLocalLogin, 10) === 0) {
         return res.send(404);
       }
-      passport.authenticate('local', function (err, userData, info) {
+      passport.authenticate('local', (err, userData, info) => {
         var duration;
         if (err) {
           return next(err);
@@ -67,7 +68,7 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
           req.session.locale = nconf.get("defaultLocale");
         }
 
-        user.isAdministrator(userData.uid, function(err, admin){
+        user.isAdministrator(userData.uid, (err, admin) => {
           userData.administrator = admin;
           var userBean = {
             uid: userData.uid,
@@ -75,7 +76,7 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
             tokenId: userData.security,
             administrator: userData.administrator
           };
-          req.logIn(userBean, function () {
+          req.logIn(userBean, () => {
             if (userData.uid) {
               //user.logIP(userData.uid, req.ip);
               logger.info("user '" + userData.uid + "' connected on: " + req.ip);
@@ -112,9 +113,9 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
       })(req, res, next);
     };
 
-   Authority.register = function (req, res) {
-    user.count(function(err, usercount){
-      meta.settings.getOne("global", "allowRegisteration", function(err, val){
+   register (req, res) {
+    user.count((err, usercount) => {
+      meta.settings.getOne("global", "allowRegisteration", (err, val) => {
         if (usercount < parseInt(val)){
           var userData = {
               username: req.body.username,
@@ -123,7 +124,7 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
               ip: req.ip
           };
 
-          user.create(userData, function (err, uid) {
+          user.create(userData, (err, uid) => {
             if (err || !uid) {
               return res.redirect('/register');
             }
@@ -151,14 +152,14 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
     });
   };
 
-  Authority.login = function (username, password, done) {
+  login (username, password, done) {
     if (!username || !password) {
       return done(new Error('[[error:invalid-user-data]]'));
     }
 
     var userslug = username;
 
-    user.getUidByUsername(userslug, function (err, uid) {
+    user.getUidByUsername(userslug, (err, uid) => {
       if (err) {
         return done(err);
       }
@@ -168,7 +169,7 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
         return done(null, false, '[[error:no-user]]');
       }
 
-      user.auth.logAttempt(uid, function (err) {
+      user.auth.logAttempt(uid, (err) => {
         if (err) {
           if ("[[error:account-locked]]" === err.message){
             return done(null, false, {
@@ -180,7 +181,7 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
           }
         }
 
-        db.getObjectFields('user:' + uid, ['password', 'banned'], function (err, userData) {
+        db.getObjectFields('user:' + uid, ['password', 'banned'], (err, userData) => {
           if (err) {
             return done(err);
           }
@@ -196,7 +197,7 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
             });
           }
 
-          bcrypt.compare(password, userData.password, function (err, res) {
+          bcrypt.compare(password, userData.password, (err, res) => {
             if (err) {
               return done(new Error('bcrypt compare error'));
             }
@@ -209,13 +210,13 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
             user.auth.clearLoginAttempts(uid);
 
             async.auto({
-              settings: function(next) {
+              settings: (next) => {
                 user.getSettings(uid, next);
               },
-              security: function(next) {
+              security: (next) => {
                 security.getAccessId(uid, next);
               }
-            }, function(err, results){
+            }, (err, results) => {
               done(null, {
                 uid: uid,
                 settings: results.settings,
@@ -228,4 +229,6 @@ const USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
       });
     });
   };
-}(exports));
+}
+
+module.exports = new Authority();

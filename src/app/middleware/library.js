@@ -218,7 +218,6 @@
         'artist' : artist.artist.trim(),
     }, function (err, art) {
       if (err) {
-        console.log('');
         logger.warn("artist '" + artist.artist + "' not found");
         Library.loadingCoverArtists[artist.artist] = null;
       } else if (art.image) {
@@ -235,7 +234,6 @@
       'album' : album.album_origin ? album.album_origin.trim() : album.title.trim()
     }, function (err, alb) {
       if (err) {
-        console.log('');
         logger.warn("[" + artist.artist + "] -> album:: '" + album.title + "' not found");
         Library.loadingCoverAlbums[artist.artist][album.title] = null;
       } else if (alb.image) {

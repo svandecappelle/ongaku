@@ -158,10 +158,7 @@ class Scanner {
   }
 
   status () {
-    // twice because of scanning directory for audio and video files.
-    // TODO search a better method to scan only one time the directories.
-    //  logger.error(this.scanned_files_count);
-    return this.scanned_files_count * 100 / (this.all_files_count * 2);
+    return this.scanned_files_count * 100 / this.all_files_count;
   };
 
   addToScan (folder){
@@ -188,17 +185,12 @@ class Scanner {
         audio: [],
         video: []
       }
-
-      for (var fold_index = 0; fold_index < folders.length; fold_index++) {
-        this.all_files_count += walkSync(folders[fold_index]).length;
-      }
       
       return new Promise((resolve, reject) => {
         async.map(folders, (folder, next) => {
           this.scanFolder(folder).then( (ret) => {
             var finishedType;
 
-            console.log('');
             logger.debug("directory scanned", folder);
             scanned.audio.push(folder);
             scanned.video.push(folder)
@@ -209,7 +201,6 @@ class Scanner {
             delete scanned.video[scanned.video.indexOf(folder)];
             delete scanned.audio[scanned.audio.indexOf(folder)];
 
-            logger.info("scanned all lib folders");
             next(null, ret);        
           });
         }, function(error, ret){
@@ -225,7 +216,6 @@ class Scanner {
     } else {
       var folder = nconf.get("library");
       logger.debug('scan unique folder:', folder);
-      this.all_files_count = walkSync(folder).length;
 
       return this.scanFolder(folder);
     }
@@ -275,7 +265,9 @@ class Scanner {
       files = _.filter(files, (file) => {
         return appender.check(file);
       });
-      logger.debug(files.length);
+      this.all_files_count += files.length;
+      logger.debug(`${this.all_files_count} files to scan on ${apath}`);
+
       var bar = new ProgressBar('  "Scanning ' + apath + '" [:bar] :rate/bps :percent :etas', {
         complete: '=',
         incomplete: ' ',
@@ -285,6 +277,20 @@ class Scanner {
 
       async.mapLimit(files, 25, (file, next) => {
         bar.tick(1);
+
+        this.scanned_files_count += 1;
+        logger.debug(`${this.all_files_count}/${this.scanned_files_count} left to scan on ${apath}`);
+        logger.debug(`${this.status()} elapsed on ${apath}`);
+
+        setTimeout( () => {
+          var message = `<div class="progress" style="min-width: 300px; height: 10px;"><div class="progress-bar progress-bar-info progress-bar-striped active" style="width:${this.status()}%"></div></div>`;
+
+          communication.broadcast("library:scanner:progress", {
+            close: false,
+            message: message,
+            value: this.status()
+          });
+        }, 250);
         appender.decode(file).then((song) => {
           logger.debug("decoded", song);
           next(null, song);

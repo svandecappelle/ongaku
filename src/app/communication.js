@@ -20,7 +20,9 @@ class Communication {
 
 	open () {
 		this.io.on('connection', (socket) => {
-		  logger.info('a user connected');
+		  var address = socket.handshake.address;
+		  var userAgent = socket.client.request.headers['user-agent'];
+		  logger.info(`User ${address} connected to communication system`);
 
 			socket.on('room:join', (data) => {
 				logger.info(`joining room: ${data}`);
@@ -32,7 +34,6 @@ class Communication {
 				this.statuses[data.user] = data.status;
 				this.broadcast('status:change', data);
 			});
-			socket.emit('notification', {'message': 'ok'});
 			socket.on('chat:message', (data) => {
 				this.emit(data.to, 'chat:message', data);
 			});

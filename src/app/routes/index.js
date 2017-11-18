@@ -45,7 +45,8 @@ class Routes {
 
     group.get("administrators", {truncateUserList: true}, function(err, admin_group){
       if (!admin_group || !admin_group.members || admin_group.members.length === 0){
-        logger.info("Not installed");
+        console.log("");
+        logger.info("Application not installed");
         installer.load(app, function(){
           // users routes
           users.load(app);
@@ -54,7 +55,7 @@ class Routes {
           admins.load(app);
         });
       } else {
-        logger.info("Application already installed");
+        logger.debug("Application already installed");
         // users routes
         users.load(app);
 
