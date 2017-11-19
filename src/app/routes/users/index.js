@@ -136,7 +136,25 @@ class SuccessCall {
 
 class Users {
 
-
+    incrementPlays (mediauid, userSession) {
+      mediauid = mediauid.replace(".mp3", '');
+      statistics.set('plays', mediauid, 'increment', () => {
+        logger.info(`set statistics: ${mediauid}`);
+      });
+      var media = library.getByUid(mediauid);
+      logger.info(media);
+      var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
+      if (genre){
+        statistics.set('plays-genre', genre, 'increment', () => {
+          logger.debug("set statistics");
+        });
+      }
+      // TODO communication change this.
+      communication.emit(userSession, 'streaming-playing:started', {
+        uuid: mediauid,
+        encoding: library.getAudioById(mediauid).encoding
+      });
+    }
 
     redirectIfNotAuthenticated (req, res, callback) {
       if (middleware.isAuthenticated(req)) {
@@ -341,12 +359,19 @@ class Users {
 
     app.get('/api/stream/:media', (req, res) => {
       var stream = function () {
-        logger.debug("streaming audio");
-
-        middleware.stream(req, res, req.params.media, "audio");
+        return new Promise((resolve, reject) => {
+          logger.debug("streaming audio");
+          middleware.stream(req, res, req.params.media, "audio");
+          resolve(req.params.media);
+        });
       };
       this.checkingAuthorization(req, res, () => {
-        stream();
+        stream().then((mediauid) => {
+          // TODO change the increment plays to get real play state.
+          // streaming method is not good solution.
+          // cause of this method is called each time the song is loaded and not played 
+          this.incrementPlays(mediauid, req.session.sessionID);
+        });
       });
     });
 
@@ -396,22 +421,7 @@ class Users {
 
     app.post('/api/statistics/:type/:media', (req, res) => {
       if (req.params.type === 'plays') {
-        statistics.set('plays', req.params.media, 'increment', () => {
-          logger.debug("set statistics");
-        });
-        var media = library.getByUid(req.params.media);
-        logger.debug(media);
-        var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
-        if (genre){
-          statistics.set('plays-genre', genre, 'increment', () => {
-            logger.debug("set statistics");
-          });
-        }
-        // TODO communication change this.
-        communication.emit(req.session.sessionID, 'streaming-playing:started', {
-          uuid: req.params.media,
-          encoding: library.getAudioById(req.params.media).encoding
-        });
+        this.incrementPlays(req.params.media);
       }
       middleware.json(req, res, {status: "ok"});
     });
