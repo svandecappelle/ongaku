@@ -6,10 +6,10 @@ section.sidebar.show
     each user in users  
       div(class="panel panel-default user-vignette #{user.status}", data-user="#{user.username}")
         div.image.avatar-vignette
-          img(src="/user/#{user.username}/avatar?#{token}")
+          img(src="/user/" + user.username + "/avatar?" + token)
         div.separated
-          i(data-user="#{user.username}", class="fa fa-circle status #{user.status}")
-          a.view.small-title(style="margin-left:10px;", data-view="user/#{user.username}/info", href="/user/#{user.username}/info") #{user.username}
+          i(data-user=user.username, class="fa fa-circle status " + user.status)
+          a.view.small-title(style="margin-left:10px;", data-view="user/" + user.username + "/info", href="/user/" + user.username + "/info") #{user.username}
         div.separated
           each group in user.groups
             div #{group}
