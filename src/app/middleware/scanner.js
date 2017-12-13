@@ -35,6 +35,7 @@ class Decoder {
   }
 
   song (file, metadatas, duration) {
+    metadatas = _.omit(metadatas, 'picture');
     var durationMin = Math.floor(duration / 60),
         durationSec = Math.floor(duration % 60),
         uuid,
@@ -52,6 +53,7 @@ class Decoder {
     if (metadatas.genre && metadatas.genre.length === 0) {
       metadatas.genre = ["Unknown"];
     }
+
     var artist = metadatas.artist ? metadatas.artist : metadatas.ARTIST ? metadatas.ARTIST : metadatas.artistalbum ? metadatas.artistalbum : "Unknown artist";
     if (Array.isArray(artist) && artist.length === 1){
       artist = artist[0];
