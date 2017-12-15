@@ -16,10 +16,7 @@ describe('Scanner', function() {
     });
 
     it('scan folder should work on existing folder', function(done) {
-        // [ 1, 2, 3].should.containDeep([2, 1]);
-        console.log(path.resolve(__dirname, './library_test'))
         scanner.scanFolder(path.resolve(__dirname, './library_test/one')).then((elements) => {
-            console.log(elements);
             done();
         }).catch((err) => {
             done(err);

@@ -19,20 +19,25 @@ class Application {
 	}
 
 	load (app, callback, session) {
-		meta.settings.merge();
+		return new Promise((resolve, reject) => {
+			meta.settings.merge();
 
-		var routes = require('./routes');
-		routes.load(app);
-		
-		this.app = app;
-		this.served = this.app.listen(nconf.get('port'));
-		communication.listen(this.served);
+			var routes = require('./routes');
+			routes.load(app);
+			
+			this.app = app;
+			this.served = this.app.listen(nconf.get('port'), () => {
+				console.log("test")
+				communication.listen(this.served);
+				var urlService = "http://".concat(nconf.get("hostname")).concat(":").concat(nconf.get("port"));
+				logger.info("Service is ready and listening on: " + urlService);
+				if (callback){
+					callback(urlService);
+				}
 
-		var urlService = "http://".concat(nconf.get("hostname")).concat(":").concat(nconf.get("port"));
-		logger.info("Service is ready and listening on: " + urlService);
-		if (callback){
-			callback(urlService);
-		}
+				resolve(this.served);
+			});
+		});
 	}
 
 	reload (callback) {
