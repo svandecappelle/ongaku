@@ -100,8 +100,4 @@ var logger = log4js.getLogger('Server');
         application.load(app, callback, session);
         application.start();
     };
-
-    if (process.window === undefined){
-      ApplicationRoot.preload().start();
-    }
 }(exports));

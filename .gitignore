@@ -8,3 +8,5 @@ public/assets/
 bower_components
 package-lock.json
 users/
+coverage/
+.nyc_output/
