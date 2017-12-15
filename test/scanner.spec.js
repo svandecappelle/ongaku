@@ -1,15 +1,8 @@
 var assert = require('should');
 const scanner = require('../src/app/middleware/scanner');
 const path = require('path');
-const log4js = require('log4js');
 
-const application = require('../app');
-application.preload()
-
-log4js.configure({
-    appenders: { console: { type: 'console' } },
-    categories: { default: { appenders: ['console'], level: 'error' } }  
-});
+require('./helpers/app-helper');
 
 describe('Scanner', function() {
   describe('#folder', function() {
