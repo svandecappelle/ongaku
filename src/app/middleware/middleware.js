@@ -11,8 +11,9 @@ const transcoder = require("./transcoder");
 const meta = require("./../meta");
 const translator = require("./translator");
 const gravatar = require("gravatar");
+var identicon;
 try {
-    const identicon = require("identicon");
+    identicon = require("identicon");
 } catch (err){
   logger.warn("identicon disabled");
 }
