@@ -4,6 +4,7 @@ const path = require('path');
 const yaml_config = require('node-yaml-config');
 const log4js = require('log4js');
 const logger = log4js.getLogger('CommandLineTools');
+const readline = require('readline');
 
 class CommandLineUtils {
 
@@ -43,6 +44,8 @@ class CommandLineUtils {
         this.unlock(command[1]);
       } else if (command[0] === "checkuser") {
         this.checkuser(command[1]);
+      } else if (command[0] === "passwd") {
+      	this.passwd(command[1]);
       }
     });
   }
@@ -52,6 +55,36 @@ class CommandLineUtils {
     var db = require('./src/app/model/database');
     db.get('lockout:'+userid, (err, value) => {
       logger.info(err, value);
+    });
+  }
+
+  passwd (username) {
+    var rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+    rl.question('new passwd: ', (password) => {
+      rl.close();
+      
+      var user = require('./src/app/model/user');
+      user.hashPassword(password, (err, hash) => {
+        if (err) {
+           logger.error('Error generating hash password: ', error);
+	   return;
+        }
+        user.getUidByUsername(username, (err, uid) => {
+          if (err){
+	    logger.error('username invalid');
+            return;
+          }
+          user.setUserField(uid, 'password', hash, (error) => {
+	    if (error){
+	      logger.error('Error updating password: ', error);
+	    }
+	    logger.info('done');
+	  });
+	});
+      });
     });
   }
 
