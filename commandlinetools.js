@@ -33,28 +33,58 @@ class CommandLineUtils {
           upload_url: '/uploads/'
       });
     }
-    console.log("parse opts");
     this.parseOpts();
   }
 
   parseOpts() {
     process.argv.slice(2).forEach((command) => {
       command = command.split("=");
-      if (command[0] === 'unlock') {
-        this.unlock(command[1]);
-      } else if (command[0] === "checkuser") {
-        this.checkuser(command[1]);
-      } else if (command[0] === "passwd") {
-      	this.passwd(command[1]);
+      if ( typeof this[command[0]] === 'function') {
+        this[command[0]](command[1]).then(() => {
+	  process.exit();
+	}).catch((error) => {
+	  logger.error(error);
+	  process.exit(1);
+	});
+      } else {
+      	logger.error(`Cannot found command ${command[0]}`);
       }
     });
   }
 
-  checkuser (userid) {
+  check (userid) {
     var user = require('./src/app/model/user');
     var db = require('./src/app/model/database');
-    db.get('lockout:'+userid, (err, value) => {
-      logger.info(err, value);
+    return new Promise((resolve, reject) => {
+        user.getUserData(userid, (err, data) => {
+	if (err){
+	  return reject(err);
+	}
+	logger.info(data);
+        db.get('lockout:'+userid, (err, value) => {
+	  if (err){
+	    return reject(err);
+	  }
+	  logger.info(`User: ${userid} locked:`, value != null);
+	  resolve();
+        });
+      });
+    });
+  }
+  list () {
+    var user = require('./src/app/model/user');
+    return new Promise((resolve, reject) => {
+       user.search("", (err, users) => {
+         if (err){
+           return reject(err);
+         }
+         if (users){
+           users.users.forEach((info) => {
+	     logger.info(info);
+	   });
+         }
+	 resolve();
+      });
     });
   }
 
@@ -63,27 +93,30 @@ class CommandLineUtils {
       input: process.stdin,
       output: process.stdout
     });
-    rl.question('new passwd: ', (password) => {
-      rl.close();
+    
+    return new Promise((resolve, reject) => {
+      rl.question('new passwd: ', (password) => {
+        rl.close();
       
-      var user = require('./src/app/model/user');
-      user.hashPassword(password, (err, hash) => {
-        if (err) {
-           logger.error('Error generating hash password: ', error);
-	   return;
-        }
-        user.getUidByUsername(username, (err, uid) => {
-          if (err){
-	    logger.error('username invalid');
-            return;
+        var user = require('./src/app/model/user');
+        user.hashPassword(password, (err, hash) => {
+          if (err) {
+             return reject('Error generating hash password: ', error);
           }
-          user.setUserField(uid, 'password', hash, (error) => {
-	    if (error){
-	      logger.error('Error updating password: ', error);
-	    }
-	    logger.info('done');
+          user.getUidByUsername(username, (err, uid) => {
+            if (err){
+	      return reject('username invalid');
+            }
+	    logger.info(uid);
+            user.setUserField(username, 'password', hash, (error) => {
+	      if (error){
+	        return reject('Error updating password: ', error);
+	      }
+	      logger.info(`Password for ${username} updated`);
+	      resolve();
+	    });
 	  });
-	});
+        });
       });
     });
   }
