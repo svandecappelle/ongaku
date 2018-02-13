@@ -1,6 +1,8 @@
 /*jslint node: true */
 const middleware = require("./../middleware/middleware");
 const nconf = require("nconf");
+const _ = require("underscore");
+
 const logger = require('log4js').getLogger('installer');
 const user = require("../model/user");
 const groups = require("../model/groups");
@@ -23,6 +25,10 @@ class Installer {
     if (properties.password !== properties["password-confirmation"]){
       return callback(new Error("Password doesn't match confirmation"));
     }
+
+    properties = _.omit(properties, ['password-confirmation', '0']);
+    properties.uid = properties.email;
+
     groups.create("administrators", "Application administrators members", (err) => {
       user.create(properties, function (err, uuid) {
         if (err) {

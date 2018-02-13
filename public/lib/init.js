@@ -110,7 +110,7 @@ function initApplication(opts){
 
   $(function () {
     $('#responsive-menu').on('click', function(){
-      $("#header").toggleClass("show");
+      // $("#header").toggleClass("show");
       $("nav.menu").toggleClass("show");
       $("body").toggleClass("cannot-scroll");
       new Sticky('section.song-list > .list-container .playlist-columns');

@@ -359,7 +359,7 @@ section.song-list > .list-container .song .track-info.track-px, section.song-lis
   width: 100%;
 }
 
-section.song-list > .list-container .song .track-num, , section.song-list > .list-container .playlist-columns .tracks-columns .track-num, .library.featured .track-num{
+section.song-list > .list-container .song .track-num, section.song-list > .list-container .playlist-columns .tracks-columns .track-num, .library.featured .track-num{
   width: 56px;
   text-align: right;
   margin-left: 16px;
@@ -1013,6 +1013,7 @@ ul.group.artist span.artistname{
 
 .toggle-icon>.handle>.glyphicon{
   box-sizing: border-box;
+  top: 0px;
   line-height: 1.20rem;
   font-size: 0.8rem;
   vertical-align: middle;
@@ -1026,7 +1027,7 @@ ul.group.artist span.artistname{
   background: #FFA400;
 }
 .icon.on .handle {
-  left: calc(65px - 1.5rem);
+  left: calc(65px - 1.4rem);
   color: #FFA400;
 }
 .icon.on.red {
@@ -1983,25 +1984,21 @@ section.song-list > .list-container.shows{
     }
 
     #responsive-menu{
-        width: 8rem;
-        height: 8rem;
+        width: 11.5rem;
+        height: 11.5rem;
         position: fixed;
-        top: 0px;
+        bottom: 0px;
         right: unset;
-        left: 0rem;
+        left: 20rem;
         background: #fff;
         z-index: 3000000;
-        font-size: 4.5rem;
-        padding: 1.3rem 2rem;
+        font-size: 6.5rem;
+        padding: 1.6rem 2.3rem;
         color: black;
     }
 
-    #header a.header-link, #header .mini-title{
+    #header {
         display: none;
-    }
-
-    #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
-        height: 3rem;
     }
 
     .sp-replacer.sp-light{
@@ -2030,17 +2027,13 @@ section.song-list > .list-container.shows{
         right: 0px;
         height: 0px;
         left: 0px;
-        top: 10rem;
+        top: 0px;
         width: 100%;
         padding: 0px;
         text-align: center;
         font-size: 5rem;
         transition: all linear 0.25s;
         z-index: 6000;
-    }
-
-    #header .navbar-header{
-        height: 0px;
     }
 
     nav .menu {
@@ -2129,31 +2122,6 @@ section.song-list > .list-container.shows{
 
     .player .current-playing-image{
         width: 7.5rem;
-    }
-
-    #header .nav>ul>li>a>i{
-        font-size: 7rem;
-        padding-top: 0.3rem;
-        padding-left: 2px;
-    }
-    #header{
-        height: 0px;
-        padding-left: 6rem !important;
-        min-height: 0px;
-        opacity: 0;
-        transition: all linear 0.1s;
-        top: -6rem;
-    }
-
-    #header.show{
-        height: 10rem;
-        opacity: 1;
-        top: 0px;
-    }
-
-    #header>.nav>ul>li>a, #header>.navbar-header>nav>ul>li>a{
-        height: 10rem;
-        font-size: 5rem;
     }
 
     input.searchbox:focus + .layer{

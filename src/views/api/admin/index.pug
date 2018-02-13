@@ -14,58 +14,58 @@ section.sidebar.show
               .form-group
                 label.col-md-4.control-label Port number
                 .col-md-6
-                  input.form-control(name="port", value="#{port}")
+                  input.form-control(name="port", value=port)
               .form-group.form-group-sm
                 label.col-md-4.control-label Allow user register
                 .col-md-6
-                  input(name="allowRegisteration", value="#{allowRegisteration}")
+                  input(name="allowRegisteration", value=allowRegisteration)
               .form-group.form-group-sm
                 label.col-md-4.control-label Require authentication to stream
                 .col-md-6
                   .toggle-icon.icon.red
-                    input(name="requireLogin", type="checkbox", value="#{requireLogin}")
+                    input(name="requireLogin", type="checkbox", value=requireLogin)
                     .handle
                       .glyphicon.glyphicon-headphones
               .form-group.form-group-sm
                 label.col-md-4.control-label Allow user upload
                 .col-md-6
                   .toggle-icon.icon.green
-                    input(name="allowUpload", type="checkbox", value="#{allowUpload}")
+                    input(name="allowUpload", type="checkbox", value=allowUpload)
                     .handle
                       .glyphicon.glyphicon-cloud-upload
               .form-group.form-group-sm
                 label.col-md-4.control-label Enable video
                 .col-md-6
                   .toggle-icon.icon.green
-                    input(name="videoStream", type="checkbox", value="#{videoStream}")
+                    input(name="videoStream", type="checkbox", value=videoStream)
                     .handle
                       .glyphicon.glyphicon-sd-video
               .form-group.form-group-sm
                 label.col-md-4.control-label User library is public
                 .col-md-6
                   .toggle-icon.icon.green
-                    input(name="publicLibrary", type="checkbox", value="#{publicLibrary}")
+                    input(name="publicLibrary", type="checkbox", value=publicLibrary)
                     .handle
                       .glyphicon.glyphicon-globe
               .form-group.form-group-sm
                 label.col-md-4.control-label User download
                 .col-md-6
                   .toggle-icon.icon.green
-                    input(name="allowDownload", type="checkbox", value="#{allowDownload}")
+                    input(name="allowDownload", type="checkbox", value=allowDownload)
                     .handle
                       .glyphicon.glyphicon-cloud-download
-              .form-group.form-group-sm
+              .form-group.form-group-sm.hidden
                 label.col-md-4.control-label Streaming buffer size
                 .col-md-6
-                  input(name="bufferSize", value="#{bufferSize}").form-control
+                  input(name="bufferSize", value=bufferSize).form-control
               .form-group.form-group-sm
                 label.col-md-4.control-label Allowed formats
                 .col-md-6
-                  input(name="allow-format", value="#{audio}").form-control
+                  input(name="allow-format", value=audio).form-control
               .form-group.form-group-sm
                 label.col-md-4.control-label Notification ('cariage return' separated)
                 .col-md-6
-                  input.form-control(name="notifications", value="#{notifications}")
+                  input.form-control(name="notifications", value=notifications)
               .form-group
                 .pull-right.col-md-4
                   button.btn.btn-danger.col-md-12(type="button") Reset to default values

@@ -273,7 +273,6 @@ class UserRedisModel extends security {
         if (!user) {
             return callback(null, user);
         }
-
         async.waterfall([
             (next) => {
                 self.isAdministrator(user.uid, next);

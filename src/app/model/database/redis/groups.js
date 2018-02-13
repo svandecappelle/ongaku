@@ -256,7 +256,7 @@ class GroupsRedisModel {
     joinAs (groupName, uid, role, callback) {
         this.exists(groupName, (err, exists) => {
             if (exists) {
-                this.isMemberAs(groupName, uid, role, (err, isMember) => {
+                this.isMemberAs(uid, groupName, role, (err, isMember) => {
                     if (!isMember) {
                         db.setAdd('group:' + groupName + ':' + role, uid, callback);
                     } else {
