@@ -83,7 +83,7 @@
   Translator.languageCollectonInstance = new Translator.LanguageCollecton();
 
   Translator.Language = function(lang){
-    if (!lang || lang === 'undefined'){
+    if (!lang || lang === 'undefined' || !fs.existsSync(path.resolve(__dirname, lang)) ){
       lang = nconf.get("defaultLanguage");
     }
     this._lang = lang;
