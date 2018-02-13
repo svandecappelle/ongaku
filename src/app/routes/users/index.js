@@ -142,7 +142,7 @@ class Users {
         logger.info(`set statistics: ${mediauid}`);
       });
       var media = library.getByUid(mediauid);
-      logger.info(media);
+      logger.debug(media);
       var genre = media.metadatas.genre ? media.metadatas.genre : media.metadatas.GENRE;
       if (genre){
         statistics.set('plays-genre', genre, 'increment', () => {
@@ -906,7 +906,6 @@ class Users {
     });
 
     app.post("/user/:username/edit", (req, res) => {
-      logger.info(req.body);
       var lang = req.body.lang;
       req.session.locale = lang;
 

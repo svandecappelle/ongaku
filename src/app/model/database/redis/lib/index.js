@@ -61,7 +61,7 @@
         }
 
         redisClient.on('error', function (err) {
-            logger.error(err.stack);
+            logger.error(err, new Error());
         });
 
         module.client = redisClient;

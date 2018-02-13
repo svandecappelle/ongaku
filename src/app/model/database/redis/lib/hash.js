@@ -11,7 +11,7 @@ module.exports = function(redisClient, module) {
 	};
 
 	module.setObjectField = function(key, field, value, callback) {
-		redisClient.hset(key, field, value, callback);
+		redisClient.hset(key.toString(), field.toString(), value.toString(), callback);
 	};
 
 	module.getObject = function(key, callback) {
