@@ -234,8 +234,27 @@
               success: function (mediaElement) {
                 mediaElement.addEventListener('loadedmetadata', function () {
                   $("#transcoding-message").remove();
-                  $('#waveform').attr('src', '/api/waveform/' + $.ongaku.getCurrent());
-                  $('#playing-wave').attr('src', '/api/waveform/' + $.ongaku.getCurrent() + '?color=' + $.ongaku.themer.getBaseColor());
+                  $('#waveform').hide();
+                  $('#pending-waveform').show();
+                  
+                  $('#waveform')
+                    .on('load', function() {
+                      $(this).show();
+                      $('#pending-waveform').hide();
+                    })
+                    .on('error', function() {
+                      $('#pending-waveform').hide();
+                    })
+                    .attr('src', '/api/waveform/' + $.ongaku.getCurrent());
+
+                  $('#playing-wave')
+                    .on('load', function() {
+                      $(this).show();
+                      $('#pending-waveform').hide();
+                    }).on('error', function() {
+                      $('#pending-waveform').hide();
+                    })
+                    .attr('src', '/api/waveform/' + $.ongaku.getCurrent() + '?color=' + $.ongaku.themer.getBaseColor());
                 });
                 mediaElement.addEventListener('ended', function () {
                   $.ongaku.next();

@@ -1311,7 +1311,8 @@ class Users {
           res.end();
         });
       } catch(error){
-        logger.error("Not compatible canvas generation wave.");
+        res.status(500).send("");
+        logger.warn("Not compatible canvas generation wave.");
       }
     });
   };

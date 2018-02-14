@@ -143,12 +143,15 @@ const walkSync = (dir, filelist) => {
   if ( ! filelist ){
     filelist = [];
   }
-  fs.readdirSync(dir).forEach(file => {
-    filelist = filelist.concat(path.join(dir, file));
-    if (fs.statSync(path.join(dir, file)).isDirectory()){
-      filelist = walkSync(path.join(dir, file), filelist);
-    }
-  });
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir).forEach(file => {
+      filelist = filelist.concat(path.join(dir, file));
+      
+      if (fs.statSync(path.join(dir, file)).isDirectory()){
+        filelist = walkSync(path.join(dir, file), filelist);
+      }
+    });
+  }
   return filelist;
 }
 

@@ -499,6 +499,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   position: relative;
   display: inline-block;
   max-width: 600px;
+  height: 4.5rem;
   margin-top: 5px !important;
   z-index: 1;
   cursor: pointer;
