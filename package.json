@@ -96,7 +96,6 @@
     "uglify-js": "3.1.x",
     "underscore": "1.8.3",
     "uuid": "^3.1.0",
-    "vid-streamer": ">=1.0.0",
     "xregexp": "~3.2.0"
   },
   "scripts": {
