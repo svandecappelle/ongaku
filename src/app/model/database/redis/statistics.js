@@ -10,7 +10,7 @@ class StatisticsRedisModel {
   set (name, id, value, callback){
     var hash = 'statistics:' + name;
 
-    logger.debug("statistics edit: " + value);
+    logger.info("statistics edit: " + value);
     if (value === 'increment' || value === 'decrement') {
       this.getOne(name, id, (err, val) => {
         if (val) {
@@ -35,10 +35,8 @@ class StatisticsRedisModel {
     db.deleteObject(hash, (err) => {
         if (err) {
           logger.error(err);
-          callback(err);
-        } else {
-          callback(null);
         }
+        callback(err);
     });
   };
 
@@ -47,10 +45,8 @@ class StatisticsRedisModel {
     db.getObject(hash, (err, set) => {
         if (err) {
           logger.error(err);
-          callback(err);
-        } else {
-          callback(null, set);
         }
+        return callback(err, set);
     });
   };
 
