@@ -163,7 +163,7 @@ class Transcoder {
                 "rootFolder": "/tmp/ongaku",
                 "rootPath": "stream"
             },
-            streamer = require("streamer");
+            streamer = require("./streamer");
         streamer.settings(settings);
         reqStreaming.url = "/stream/".concat(sessionId).concat(".mp3");
         streamer.call(reqStreaming, res);
