@@ -10,6 +10,9 @@ const library = require("./library");
 const transcoder = require("./transcoder");
 const meta = require("./../meta");
 const translator = require("./translator");
+const streamer = require("./streamer");
+
+
 const gravatar = require("gravatar");
 var identicon;
 try {
@@ -136,10 +139,8 @@ class Middleware {
                         "insertContentDisposition": false,
                         "random": false,
                         "rootFolder": "/",
-                        "rootPath": "stream",
-                        "server": "VidStreamer.js/0.1.4"
+                        "rootPath": "stream"
                     };
-
                 //if (nconf.get("ostype") == 'windows'){
                 //  logger.info('os is windows');
                 // Windows doesn't have save same rootPatht definitions that unix / linux
@@ -147,10 +148,9 @@ class Middleware {
                   src = src.replace("C:\\", "");
                   settings.rootFolder = "C:\\";
                 }
-                var vidStreamer = require("vid-streamer").settings(settings);
-
+                streamer.settings(settings);
                 reqStreaming.url = "/stream/" + src;
-                vidStreamer(reqStreaming, res);
+                streamer.call(reqStreaming, res);
             }
         }
     };

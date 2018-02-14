@@ -1090,7 +1090,7 @@ ul.group.artist span.artistname{
     float: left;
     min-width: 160px;
     padding: 5px 0px;
-    margin: 2px 0px 0px;
+    margin: 0px;
     list-style: none outside none;
     background-color: #FFF;
     border: 1px solid rgba(0, 0, 0, 0.15);
@@ -1152,6 +1152,10 @@ h2{
 
 #header h2 {
   color: #fff;
+}
+
+.btn, .btn-default {
+  border-radius: 0px;
 }
 
 .btn.btn-danger, .btn.btn-close, .btn.btn-remove {
@@ -1771,6 +1775,10 @@ a.link.video>.name{
   color: white;
   background-color: transparent;
   border: none;
+}
+
+.input-group-addon {
+  border-radius: 0px;
 }
 
 .search input.searchbox{
