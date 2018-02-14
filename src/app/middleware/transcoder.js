@@ -161,12 +161,12 @@ class Transcoder {
                 "forceDownload": false,
                 "random": false,
                 "rootFolder": "/tmp/ongaku",
-                "rootPath": "stream",
-                "server": "VidStreamer.js/0.1.4"
+                "rootPath": "stream"
             },
-            vidStreamer = require("vid-streamer").settings(settings);
+            streamer = require("streamer");
+        streamer.settings(settings);
         reqStreaming.url = "/stream/".concat(sessionId).concat(".mp3");
-        vidStreamer(reqStreaming, res);
+        streamer.call(reqStreaming, res);
     };
 
     cleanup(playlist, encoder) {
