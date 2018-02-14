@@ -46,33 +46,33 @@ script.
         
         var trackElementTitle = $('<div>', {
           class: 'track-info',
-          style: 'width: calc(33% - 112px); white-space: nowrap;'
+          style: 'width: calc(33% - (144px / 3)); white-space: nowrap;'
         });
         trackDetailElement.append(trackElementTitle);
         
         if (track.album){
           var trackElementAlbum = $('<div>', {
             class: 'track-info',
-            style: 'width: calc(33% - 112px); white-space: nowrap;'
+            style: 'width: calc(33% - (144px / 3)); white-space: nowrap;'
           });
           trackDetailElement.append(trackElementAlbum);
           trackElementAlbum.html(track.album); 
         } else {
           trackElementTitle.css({
-            "width": "calc(60% - 112px)"
+            "width": "calc(60% - (144px / 3))"
           });
         }
         
         if (track.artist){
           var trackElementArtist = $('<div>', {
             class: 'track-info',
-            style: 'width: calc(33% - 112px); white-space: nowrap;'
+            style: 'width: calc(33% - (144px / 3)); white-space: nowrap;'
           });
           trackDetailElement.append(trackElementArtist);
           trackElementArtist.html(track.artist); 
         } else {
           trackElementTitle.css({
-            "width": "calc(60% - 112px)"
+            "width": "calc(60% - (144px / 3))"
           });
         }
         
