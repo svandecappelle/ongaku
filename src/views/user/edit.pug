@@ -7,11 +7,11 @@ block append userpage-content
             .col-md-4
                 select.form-control(name="lang")
                     for language in languages
-                        option(value="#{language}")= i18n.i18n_languages[language]
+                        option(value=language)= i18n.i18n_languages[language]
         .form-group
             label.col-md-2.control-label access key
             .col-md-4
-                input(type='text', name='access_id', value='#{key}')
+                input(type='text', name='access_id', value=key)
         .form-group
             .col-md-4(style='text-align: center')
                 button.btn.btn-success.btn-lg(id="login", type="submit", style='width: 100%')= i18n.save
