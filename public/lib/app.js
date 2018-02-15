@@ -1,3 +1,84 @@
+function FeaturedTracksList(tracks, opts) {
+  var tracksElement = $('<ul>', {class: "tracklist"});
+  var count = 1;
+  $.each(tracks, function(index, track){
+    if (track) {
+      var trackElement = $('<li>', {
+        "class": "song-track"
+      });
+      var trackDetailElement = $('<div>', {
+        class: 'track trackappend track-info',
+        "data-uid": track.uid,
+        "data-encoding": track.encoding,
+        "data-placement": "bottom auto",
+        "data-toggle": "tooltip",
+        "data-title": "Add track to current playlist"
+      });
+      var trackElementNum = $('<div>', {
+        class: 'track-info track-num'
+      });
+      trackDetailElement.append(trackElementNum);
+      
+      var trackElementTitle = $('<div>', {
+        class: 'track-info',
+        style: 'width: calc(33% - (144px / 3)); white-space: nowrap;'
+      });
+      trackDetailElement.append(trackElementTitle);
+      
+      if (track.album){
+        var trackElementAlbum = $('<div>', {
+          class: 'track-info',
+          style: 'width: calc(33% - (144px / 3)); white-space: nowrap;'
+        });
+        trackDetailElement.append(trackElementAlbum);
+        trackElementAlbum.html(track.album); 
+      } else {
+        trackElementTitle.css({
+          "width": "calc(60% - (144px / 3))"
+        });
+      }
+      
+      if (track.artist){
+        var trackElementArtist = $('<div>', {
+          class: 'track-info',
+          style: 'width: calc(33% - (144px / 3)); white-space: nowrap;'
+        });
+        trackDetailElement.append(trackElementArtist);
+        trackElementArtist.html(track.artist); 
+      } else {
+        trackElementTitle.css({
+          "width": "calc(60% - (144px / 3))"
+        });
+      }
+      if (opts && opts.playcounter) {
+        var trackElementPlaysCount = $('<div>', {
+          class: 'track-info track-num'
+        }).text(track.plays);
+        trackDetailElement.append(trackElementPlaysCount);
+      }
+      
+      if (count < 10){
+        trackElementNum.html("0" + count);
+      } else {
+        trackElementNum.html(count);
+      }
+      trackElementTitle.html(track.title);
+      
+      trackElement.append(trackDetailElement);
+      tracksElement.append(trackElement);
+      $(trackDetailElement).tooltip();
+
+      trackDetailElement.on("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          $.ongaku.playlist.appendFromElement($(this));
+      });
+      count+=1;
+    }
+  });
+  return tracksElement;
+}
+
 +function ($) {
     'use strict';
 
@@ -1003,7 +1084,6 @@
 
       document.body.removeChild(textArea);
     }
-
 
     function LibraryTracksList(tracks, view) {
       var tracksElement = $('<ul>', {class: "group tracklist"});

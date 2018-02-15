@@ -14,40 +14,4 @@ block append userpage-content
       .playlists-elements
       div.small-title Personal library
       hr
-      .library
-
-  script.
-    function initView(){
-      $("span.upload").on("click", function(){
-        alert("a");
-      })
-      
-      $(".user-sidebar a.view").on("click", function(ev){
-        loadView(ev, $(this).data("view"));
-      });
-      $.get("/api/user/#{user.username}/playlists", function(output){
-        $.each(output, function(index, playlist){
-          var playlistBlock = $("<div>", {
-            class: "playlist"
-          });
-          playlistBlock.text(playlist);
-          $(".playlists-elements").append(playlistBlock);
-        });
-      });
-      
-      $.get("/api/user/#{user.username}/library/all", function(output){
-        $.each(output, function(index, artist){
-          $.each(artist.albums, function(index, album){
-            $.each(album.tracks, function(index, song){
-            
-              var songBlock = $("<div>", {
-                class: "song"
-              });
-              songBlock.text(song.title);
-              $(".library").append(songBlock);
-            });
-          });
-          
-        });
-      });
-    }
+      .library.featured

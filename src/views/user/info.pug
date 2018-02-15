@@ -1,45 +1,8 @@
-extends layout.pug
-block append userpage-content
-  .user-panel
-    .panel.panel-default
-      div.separated
-        div.small-title Groups
-        hr
-        each group in user.groups
-          div #{group}
-  .user-panel
-    .panel.panel-default
-      div.small-title Playlists
-      hr
-      .playlists-elements
-      div.small-title Personal library
-      hr
-      .library
-
-block append scripts  
-  script.
-    $(function(){
-      $.get("/api/user/#{user.username}/playlists", function(output){
-        $.each(output, function(index, playlist){
-          var playlistBlock = $("<div>", {
-            class: "playlist"
-          });
-          playlistBlock.text(playlist);
-          $(".playlists-elements").append(playlistBlock);
-        });
-      });
-      
-      $.get("/api/user/#{user.username}/library/all", function(output){
-        $.each(output, function(index, artist){
-          $.each(artist.albums, function(index, album){
-            $.each(album.tracks, function(index, song){
-            
-              var songBlock = $("<div>");
-              songBlock.text(song.title);
-              $(".library").append(songBlock);
-            });
-          });
-          
-        });
-      });
-    });
+extends ../layouts/app.pug
+block append headpage
+    title Ongaku music
+block append library
+    include ../api/user/info.pug
+block append songlist
+    section.song-list
+      include ../layouts/playlist.pug

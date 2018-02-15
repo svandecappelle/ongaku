@@ -175,6 +175,7 @@ section.song-list > .list-container {
   left: 80%;
   right: 0px;
   top: 0px;
+  z-index: 1;
   bottom: calc(5rem + 4rem);
   background-color: rgba(30, 30, 30, 0.84);
   color: #FFF;
@@ -1155,6 +1156,32 @@ h2{
   color: #fff;
 }
 
+.black {
+  color: #000;
+}
+
+.white {
+  color: #fff;
+}
+
+.attention {
+  color: #fff;
+  text-shadow: 0 1px 1px #811;
+  border-color: #bd362f;
+  background-image: linear-gradient(#ee5f5b,#bd362f);
+}
+
+.attention:hover {
+  text-shadow: 0 1px 1px #bd362f;
+  color: #fff;
+  background-image: linear-gradient(#811,#811);
+}
+
+.attention:hover a{
+  text-shadow: 0 1px 1px #bd362f;
+  color: #fff;
+}
+
 .btn, .btn-default {
   border-radius: 0px;
 }
@@ -1536,13 +1563,13 @@ a.link.video>.name{
 }
 
 .account .avatar-container, .account .avatar-container {
-    top: 230px;
+  top: 230px;
   width: 128px;
   height: 128px;
   border: 4px solid white;
   border-radius: 50%;
   margin: auto;
-    z-index: 150000;
+  z-index: 1;
 }
 
 .account .cover .avatar-container {
