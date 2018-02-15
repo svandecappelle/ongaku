@@ -369,9 +369,10 @@ section.song-list > .list-container .song .track-num, section.song-list > .list-
 
 section.song-list > .list-container .song:hover .track-num:before, section.song-list > .list-container .song.playing .track-num:before{
   content: '\f04b';
-  font-family: "FontAwesome";
+  font-family: Font Awesome\ 5 Free;
   left: 5px;
   position: absolute;
+  font-weight: 600;
 }
 
 section.song-list > .list-container .songs-container ul li a.playing{
@@ -382,7 +383,8 @@ section.song-list > .list-container .song .track-num:after{
   content: '\f001';
   margin-left: 3px;
   margin-right: 3px;
-  font-family: "FontAwesome";
+  font-weight: 600;
+  font-family: Font Awesome\ 5 Free;
 }
 
 section.song-list > .list-container .song .track-info.track, section.song-list > .list-container .playlist-columns .tracks-columns .track-info.track{

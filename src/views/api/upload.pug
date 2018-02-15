@@ -46,8 +46,10 @@ section.sidebar.show
                                     img(src="/upload/files/imported/"+ file, style="height: 30px;")
                                 else if (file.indexOf('.mp3')!==-1 || file.indexOf('.MP3')!==-1 || file.indexOf('.ogg')!==-1 || file.indexOf('.OGG')!==-1 || file.indexOf('.flac')!==-1 || file.indexOf('.flac')!==-1)
                                     i.fa.fa-headphones
+                                else if (file.indexOf('.zip')!==-1 || file.indexOf('.ZIP')!==-1 || file.indexOf('.tar')!==-1 || file.indexOf('.TAR')!==-1)
+                                    i.fa.fa-file-archive(style="font-size: 30px;")
                                 else
-                                    i.fa.fa-file-o(style="font-size: 30px;")
+                                    i.fa.fa-file(style="font-size: 30px;")
                             .col-md-9.file.imported-file
                                 a.imported-filename(href="/upload/files/imported/" + file, target=target)=filename
                             .col-md-1(style="text-align: center;")
@@ -56,7 +58,7 @@ section.sidebar.show
                             .col-md-1(style="text-align: center;")
                                 if (file.indexOf('.zip')!==-1 || file.indexOf('.ZIP')!==-1 || file.indexOf('.tar')!==-1 || file.indexOf('.TAR')!==-1)
                                     a.extract.imported-filename(title="extract", href="/upload/imported/" + file + "/extract")
-                                        i.fa.fa-file-archive-o
+                                        i.fa.fa-file-archive
 
 
 script.
