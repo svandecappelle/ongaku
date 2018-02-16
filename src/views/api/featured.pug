@@ -14,13 +14,13 @@ section.sidebar.show
         .tools
           if !session.user.isAnonymous && session.user.administrator
             a(href="/api/clear/statistics/plays")
-              i.fa.fa-sync
+              i.fal.fa-sync
         h1= i18n.most_played_tracks
       ul.mostplays.tracklist.plays-genre
         .tools
           if !session.user.isAnonymous && session.user.administrator
             a(href="/api/clear/statistics/plays-genre")
-              i.fa.fa-sync
+              i.fal.fa-sync
         h1= i18n.most_played_genre
 script.
   function initView(){

@@ -343,7 +343,7 @@ function FeaturedTracksList(tracks, opts) {
                   var parent = $(this).closest('.audio-player');
                   $(this).closest('.audio-player').find(".progress-bar").css("width", "100%");
                   parent.find('.playpause').removeClass('is-playing').addClass('is-paused');
-                  parent.find('.playpause').find('.fa').removeClass('fa-pause').addClass('fa-play');
+                  parent.find('.playpause').find('.fal').removeClass('fa-pause').addClass('fa-play');
                   parent.removeClass('is-playing').addClass('is-paused').addClass('already-played');
                 });
                 mediaElement.addEventListener('play', function () {
@@ -361,7 +361,7 @@ function FeaturedTracksList(tracks, opts) {
                   var playButton = parent.find('.playpause');
 
                   $(this).removeClass('is-paused').addClass('is-playing');
-                  playButton.find('.fa').removeClass('fa-play').addClass('fa-pause');
+                  playButton.find('.fal').removeClass('fa-play').addClass('fa-pause');
                   parent.removeClass('is-paused').addClass('is-playing');
                   if ($.ongaku.getCurrent()){
                     var title = $(".playlist").find("[data-uid='" + $.ongaku.getCurrent() + "']").find(".track-title").text() + " ";
@@ -437,7 +437,7 @@ function FeaturedTracksList(tracks, opts) {
                   var parent = $(this).closest('.audio-player');
                   var playButton = parent.find('.playpause');
                   playButton.removeClass('is-playing').addClass('is-paused');
-                  playButton.find('.fa').removeClass('fa-pause').addClass('fa-play');
+                  playButton.find('.fal').removeClass('fa-pause').addClass('fa-play');
                   parent.removeClass('is-playing').addClass('is-paused');
                 });
 
@@ -663,7 +663,6 @@ function FeaturedTracksList(tracks, opts) {
       if (editable){
         valueLabel = $('<input>', {
           "class": "editable-mt-value form-control",
-          "style": "color: black;",
           "type": "text",
           'value': value
         });

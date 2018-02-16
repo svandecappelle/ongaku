@@ -39,7 +39,7 @@ nav a:hover {
   border-right: 1px solid #{main_color};
 }
 
-.fab {
+.fabutton {
   background-color: #{main_color};
 }
 
