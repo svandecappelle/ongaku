@@ -12,16 +12,16 @@ section.sidebar.show
         
         .panel(style="margin: 5px;")
             h2 Uploaded files:
-            .container-fluid.imported-files.list-group(style="width: 80%; margin: 5px auto;")
-                if directory
-                    h2=directory
-                        .pull-right
-                            .col-md-8 Set folder public
-                            .col-md-4(style='font-size:1rem')
-                                .toggle-icon.icon.blue
-                                    input(name="setPublic", type="checkbox", value="#{isShared}")
-                                    .handle
-                                      .glyphicon.glyphicon-gift
+            if directory || directory === undefined
+                .row(style='width: 80%; margin: 5px auto;')
+                    .col-md-8
+                        h3= 'Set folder ' + (directory ? '/'.concat(directory) : '/') + ' public'
+                    .col-md-4(style='font-size:1rem;')
+                        .toggle-icon.icon.blue(style='position: absolute;right: 0;top: 23px;')
+                            input(name="setPublic", type="checkbox", value=isShared)
+                            .handle
+                                .glyphicon.glyphicon-gift
+            .imported-files.list-group(style="width: 80%; margin: 5px auto;")
                 if files
                     .row.list-group-item(style="text-align: center; font-weight: bold;")
                         .col-md-1
