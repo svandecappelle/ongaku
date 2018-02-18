@@ -164,7 +164,7 @@ class Middleware {
 
         var urlServer = null;
 
-        if (middlewareObject.req.headers.host.lastIndexOf(":" + nconf.get("port")) != -1){
+        if (middlewareObject.req.headers && middlewareObject.req.headers.host && middlewareObject.req.headers.host.lastIndexOf(":" + nconf.get("port")) != -1){
             urlServer = middlewareObject.req.headers.host.substring(0, middlewareObject.req.headers.host.length - (nconf.get("port").length + 1));
         } else {
             urlServer = middlewareObject.req.headers.host;
