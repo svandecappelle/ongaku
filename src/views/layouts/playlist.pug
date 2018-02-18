@@ -1,5 +1,5 @@
 a.toggle-menu.toggle.pulse.appender.playlist-appender
-  i.fa.fa-list
+  i.fal.fa-list
 .list-container(data-sticky-container)
   .infos
       .saved-playlist
@@ -20,19 +20,19 @@ a.toggle-menu.toggle.pulse.appender.playlist-appender
                       ul.dropdown-menu.playlists-dropdown(role="menu", style="margin-left: 15px;")
               .list-actions(style="float:right;")
                   span.button#save-current-playlist
-                      i.fa.fa-save
+                      i.fal.fa-save
                   span.button#new-playlist
-                      i.fa.fa-plus
+                      i.fal.fa-plus
                   span.button#delete-playlist(style="background-color: rgba(255,120,120,0.6);")
-                      i.fa.fa-trash
+                      i.fal.fa-trash
                   span.button
-                      i.fa.fa-eraser
+                      i.fal.fa-eraser
             else if meta.requireAuthentication
               div #{i18n.stream_auth_required}
             else
               .list-actions(style="float:right;")
                 span.button
-                    i.fa.fa-eraser
+                    i.fal.fa-eraser
   .playlist-columns
       .tracks-columns
           .track-info.track-px

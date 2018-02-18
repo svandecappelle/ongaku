@@ -4,17 +4,17 @@ block player
 		.song-info
 			img.current-playing-image
 			button.previous(disabled)
-				i.fa.fa-step-backward
+				i.fal.fa-step-backward
 			button.playpause.is-paused(disabled)
-				i.fa.fa-play
+				i.fal.fa-play
 			button.next(disabled)
-				i.fa.fa-step-forward
+				i.fal.fa-step-forward
 			.title
 			.song-time
 				.song-current-time
 				.song-duration
 		.waveform
-			i#pending-waveform.fa.fa-circle-o-notch.fa-spin.fa-3x(style='color: #fff;line-height: 4.5rem; display: none; vertical-align: middle;')
+			i#pending-waveform.fal.fa-circle-o-notch.fa-spin.fa-3x(style='color: #fff;line-height: 4.5rem; display: none; vertical-align: middle;')
 			.play-position
 			.play-position-switcher
 			if (data.playing)

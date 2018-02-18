@@ -9,10 +9,10 @@ section.sidebar.show
         div.avatar-container
           div.avatar(style="z-index: 1;")
             img.user-profile-picture(src="/user/" + user.username +"/avatar?"+token)
-          i(data-user=user.username, class="fa fa-circle status" + user.status)
+          i(data-user=user.username, class="fa fa-circle status " + user.status)
         div.container
           div.btn-group.account-fab(style="z-index: 1;")
-            button.fab.dropdown-toggle(type="button", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+            button.fabutton.dropdown-toggle(type="button", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
               i.fa.fa-ellipsis-v
             ul.dropdown-menu.dropdown-menu-right
               li
@@ -36,36 +36,43 @@ section.sidebar.show
         h1.fullname #{user.username}
         h2.username @#{user.username}
         div.text-center.profile-meta
-          span Inscrit
-          strong.timeago(title="Fri Nov 20 2015 14:41:16 GMT+0100 (CET)") il y a environ #{user.signup}
-          span Dernière connexion
-          strong.timeago(title="Fri Feb 12 2016 15:29:48 GMT+0100 (CET)") il y a environ #{user.lastconnection}
-          br
-          span Email
-          strong
-            i.fa.fa-eye-slash(title="Email masqué")
+          div 
+            span Inscrit
+            strong.timeago(title="Fri Nov 20 2015 14:41:16 GMT+0100 (CET)") il y a environ #{user.signup}
+          div
+            span Dernière connexion
+            strong.timeago(title="Fri Feb 12 2016 15:29:48 GMT+0100 (CET)") il y a environ #{user.lastconnection}
+          div
+            span Email
+            strong
+              i.fa.fa-eye-slash(title="Email masqué")
+        
         div.row
-          div.col-md-2.col-sm-4.text-center#account-editions(data-margin-top="110")
-            div.account-picture-block
-              div.avatar-container
-                div.avatar
-                  img.user-profile-picture(src="/user/" + user.username + "/avatar?"+token)
-            ul.list-group
-              li
-                a.list-group-item.custom-file-upload
-                  input.img-upload(type="file", name="avatar")
-              li
-                a.list-group-item.custom-file-upload
-                  input.img-upload(type="file", name="background")
-              li
-                a.list-group-item.custom-file-upload
-                  input.img-upload(type="file", name="cover")
-              li
-                a.list-group-item.modalview(data-toggle="modal") Changer le mot de passe
-              li
-                a.btn.btn-danger#deleteAccountBtn(href="#") Supprimer le compte
-          div.col-md-10(style='float: right;')
-            block userpage-content
+          if session.user.username == user.username
+            div.col-md-2.col-sm-4.text-center#account-editions(data-margin-top="110")
+              div.account-picture-block
+                div.avatar-container
+                  div.avatar
+                    img.user-profile-picture(src="/user/" + user.username + "/avatar?"+token)
+              ul.list-group(style="font-size: 14px;")
+                li.list-group-item
+                  a.black.custom-file-upload
+                    input.img-upload(type="file", name="avatar")
+                li.list-group-item
+                  a.black.custom-file-upload
+                    input.img-upload(type="file", name="background")
+                li.list-group-item
+                  a.black.custom-file-upload
+                    input.img-upload(type="file", name="cover")
+                li.list-group-item
+                  a.black.modalview(data-toggle="modal") Changer le mot de passe
+                li.list-group-item.attention
+                  a.white#deleteAccountBtn(href="#") Supprimer le compte
+            div.col-md-10(style="float: right;")
+              block userpage-content
+          else
+            div.col-md-12
+              block userpage-content
           include change-password
 script.
   function initView(){
@@ -99,11 +106,34 @@ script.
         $(this).parent().find("button").text("Changer fond");
       }
     });
-    $(".img-upload").on('change', function () {
-      console.log("changed image");
-      // $(this).data("liteUploader").startUpload();
-    });
     $(".modalview").on("click", function(){
       $('#changePassword').modal();
+    });
+      
+    $(".user-sidebar a.view").on("click", function(ev){
+      loadView(ev, $(this).data("view"));
+    });
+    $.get("/api/user/#{user.username}/playlists", function(output){
+      $.each(output, function(index, playlist){
+        var playlistBlock = $("<div>", {
+          class: "playlist"
+        });
+        playlistBlock.text(playlist);
+        $(".playlists-elements").append(playlistBlock);
+      });
+    });
+    
+    $.get("/api/user/#{user.username}/library/all", function(output){
+      var values = [];
+      $.each(output, function(index, artist){
+        $.each(artist.albums, function(index, album){
+          $.each(album.tracks, function(index, song){
+            // $(".library").append(songBlock);
+            values.push(song);
+          });
+        });
+      });
+
+      $(".library").append(new FeaturedTracksList(values, {playcounter: false}));
     });
   }

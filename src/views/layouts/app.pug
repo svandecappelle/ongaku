@@ -3,7 +3,7 @@ html
     head
         block headpage
         meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
-        link(rel="stylesheet", type="text/css", href="/dependencies/font-awesome-4.2.0/css/font-awesome.min.css")
+        link(rel="stylesheet", type="text/css", href="/dependencies/font-awesome/css/fontawesome-all.min.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/mediaelement/mediaelementplayer.css")
         link(rel="stylesheet", type="text/css", href="/dependencies/mediaelement/player.css")
         link(rel="stylesheet", type="text/css", href="/bower_components/bootstrap/dist/css/bootstrap.min.css")
@@ -45,7 +45,7 @@ html
             }
     body
         a#responsive-menu
-          i.fa.fa-bars
+          i.fal.fa-bars
         #header.nav.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 25px;",role="navigation")
             h1(style="float:left;margin:0px;")
                 a.header-link(href="/")
@@ -56,22 +56,22 @@ html
                     ul.nav.navbar.varbar-nav.pull-left
                         li.nav-home
                             a.view(href="/", title="Acceuil", data-view="audio")
-                                i.fa.fa-home
+                                i.fal.fa-home
                                 span.text= i18n.home
                         if !session.user.isAnonymous && session.user.administrator || meta.type == "desktop"
                             li.nav-cog
                                 a.view(href="/admin", title="Administration", data-view='admin')
-                                  i.fa.fa-cog
+                                  i.fal.fa-cog
                                   span.text= i18n.admin_zone
                             li.nav-reload
                                 a(href="#reload", title="Reload library")
-                                  i.fa.fa-book
+                                  i.fal.fa-book
                                   span.text Reload lib
             div.nav.navbar-nav.navbar-right.pull-right(style="margin-right: 10px;")
                 ul
                   li.dropdown#language-chooser(style="float: left; margin-left: 5px;")
                     a.dropdown-toggle(data-toggle="dropdown", data-original-title=i18n.language)
-                      i.fa.fa-fw.fa-flag(title=i18n.language)
+                      i.fal.fa-fw.fa-flag(title=i18n.language)
                     ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
                       for language in languages
                         li
@@ -80,7 +80,7 @@ html
                       unless session.user.isAnonymous
                           li.dropdown(style="float: left;")
                               a.dropdown-toggle#notif_dropdown(data-toggle="dropdown", data-original-title="Notifications")
-                                  i.fa.fa-fw.fa-bell-o(title="Notifications")
+                                  i.fal.fa-fw.fa-bell-o(title="Notifications")
                               ul.dropdown-menu(role="menu", aria-labelledby="dropdownMenu")
                                   if session.notifications.count > 0
                                       li
@@ -95,9 +95,9 @@ html
                                   img.user-avatar(src="/user/"+session.user.username+"/avatar")
                               else
                                   if session.user.isAnonymous
-                                      i.fa.fa-fw.fa-sign-in
+                                      i.fal.fa-ellipsis-v
                                   else
-                                      i.fa.fa-fw.fa-user
+                                      i.fal.fa-fw.fa-user
                           ul.dropdown-menu.user-status(role="menu")
                             if session.user.isAnonymous
                               li
@@ -137,24 +137,24 @@ html
                 ul
                     li
                         a.view(href="/featured", data-view="featured")
-                            i.glyphicon.glyphicon-star
+                            i.far.fa-star
                             div #{i18n.featured}
                     li
                         a.view(href="/", data-view="audio")
-                            i.glyphicon.glyphicon-music
+                            i.fa.fa-music
                             div #{i18n.music}
                     if meta.videoStream === 'true'
                       li
                           a.view(href="/video", data-view="video")
-                              i.glyphicon.glyphicon-facetime-video
+                              i.fab.fa-youtube
                               div #{i18n.video}
                     li
                         a.view(href="/users", data-view="users")
-                            i.glyphicon.glyphicon-user
+                            i.fa.fa-users
                             div #{i18n.ongaku_users}
                     li
                         a
-                            i.glyphicon.glyphicon-tasks
+                            i.far.fa-microphone-alt
                             div #{i18n.radios}
             if !session.user.isAnonymous
               .menu.me
@@ -162,18 +162,18 @@ html
                       li
                           //TODO active view layer
                           a.view(href="/library", data-view="library")
-                              i.glyphicon.glyphicon-book
+                              i.far.fa-book
                               div #{i18n.library}
                       if meta.allowUpload === 'true'
                         li
                           a.vew(href="/upload", data-view="upload")
-                              i.glyphicon.glyphicon-upload
+                              i.fa.fa-upload
                               div #{i18n.upload}
             .menu.project
                 ul
                     li
                         a(href="https://github.com/svandecappelle/ongaku", target="_blank")
-                            i.fa.fa-github(style="font-size: 20pt;")
+                            i.fab.fa-github(style="font-size: 20pt;")
                             div #{i18n.project}
 
         main.main-content

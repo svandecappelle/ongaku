@@ -21,6 +21,12 @@ ul {
     z-index: 150000;
 }
 
+.modal-content{
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 0px;
+  color: #fff;
+}
+
 main{
   overflow: auto;
 }
@@ -97,10 +103,8 @@ nav{
 
 nav.menu{
   background-color: #1a2226;
-}
-
-nav .menu{
-  margin-top: 20px;
+  bottom: 5rem;
+  top: 3.1rem;
 }
 
 nav a{
@@ -175,6 +179,7 @@ section.song-list > .list-container {
   left: 80%;
   right: 0px;
   top: 0px;
+  z-index: 1;
   bottom: calc(5rem + 4rem);
   background-color: rgba(30, 30, 30, 0.84);
   color: #FFF;
@@ -368,9 +373,10 @@ section.song-list > .list-container .song .track-num, section.song-list > .list-
 
 section.song-list > .list-container .song:hover .track-num:before, section.song-list > .list-container .song.playing .track-num:before{
   content: '\f04b';
-  font-family: "FontAwesome";
+  font-family: Font Awesome\ 5 Pro;
   left: 5px;
   position: absolute;
+  font-weight: 400;
 }
 
 section.song-list > .list-container .songs-container ul li a.playing{
@@ -381,7 +387,8 @@ section.song-list > .list-container .song .track-num:after{
   content: '\f001';
   margin-left: 3px;
   margin-right: 3px;
-  font-family: "FontAwesome";
+  font-weight: 400;
+  font-family: Font Awesome\ 5 Pro;
 }
 
 section.song-list > .list-container .song .track-info.track, section.song-list > .list-container .playlist-columns .tracks-columns .track-info.track{
@@ -849,7 +856,7 @@ ul.group.artist span.artistname{
 
 .menu.project{
   position: absolute;
-  bottom: 6rem;
+  bottom: 0px;
   left: 0px;
   right: 0px;
 }
@@ -1155,6 +1162,32 @@ h2{
   color: #fff;
 }
 
+.black {
+  color: #000;
+}
+
+.white {
+  color: #fff;
+}
+
+.attention {
+  color: #fff;
+  text-shadow: 0 1px 1px #811;
+  border-color: #bd362f;
+  background-image: linear-gradient(#ee5f5b,#bd362f);
+}
+
+.attention:hover {
+  text-shadow: 0 1px 1px #bd362f;
+  color: #fff;
+  background-image: linear-gradient(#811,#811);
+}
+
+.attention:hover a{
+  text-shadow: 0 1px 1px #bd362f;
+  color: #fff;
+}
+
 .btn, .btn-default {
   border-radius: 0px;
 }
@@ -1341,8 +1374,9 @@ a.link.video>.name{
 }
 
 .editable-mt-array input.form-control{
-    box-shadow: none;
-    border-bottom: 2px solid black;
+  box-shadow: none;
+  border-bottom: 2px solid fff;
+  color: #fff;
 }
 
 .editable-mt-array td{
@@ -1536,13 +1570,13 @@ a.link.video>.name{
 }
 
 .account .avatar-container, .account .avatar-container {
-    top: 230px;
+  top: 230px;
   width: 128px;
   height: 128px;
   border: 4px solid white;
   border-radius: 50%;
   margin: auto;
-    z-index: 150000;
+  z-index: 1;
 }
 
 .account .cover .avatar-container {
@@ -1599,7 +1633,7 @@ a.link.video>.name{
     display: none;
 }
 
-.fab {
+.fabutton {
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.156863),0 2px 10px 0 rgba(0,0,0,0.117647);
     background-color: #337ab7;
     border: none;
