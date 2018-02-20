@@ -43,6 +43,7 @@ const userFilesOpts = {
 };
 
 var rmdirAsync = function(path, callback) {
+  
   fs.readdir(path, function(err, files) {
     if(err) {
       // Pass the error on to callback
@@ -80,6 +81,16 @@ var rmdirAsync = function(path, callback) {
         }
       });
     });
+  });
+};
+
+var rmRecurse = function (path, callback) {
+  fs.lstat(path, function(err, stats) {
+    if ( stats.isDirectory() ) {
+      rmdirAsync(path, callback);
+    } else {
+      fs.unlink(path, callback);
+    }
   });
 };
 
@@ -1165,6 +1176,33 @@ class Users {
       }
     });
 
+    app.post('/user/:username/theme-upload', (req, res) => {
+      var username = req.session.passport.user.username;
+
+      var busboy = new Busboy({ headers: req.headers });
+      req.session.save(function () {
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        if (!fs.existsSync(DEFAULT_USERS__DIRECTORY + username)){
+          fs.mkdirSync(DEFAULT_USERS__DIRECTORY + username);
+        }
+
+        if (!fs.existsSync(DEFAULT_USERS__DIRECTORY + username + "/imported")) {
+          fs.mkdirSync(DEFAULT_USERS__DIRECTORY + username + "/imported");
+        }
+
+        var saveTo = DEFAULT_USERS__DIRECTORY + username + "/imported/theme.css";
+          file.pipe(fs.createWriteStream(saveTo));
+        });
+
+        busboy.on('finish', () => {
+          middleware.redirect("/", res);
+        });
+
+        req.pipe(busboy);
+      });
+    });
+
     app.post("/api/files/set-properties/imported/:filename(*)", (req, res) => {
       if (nconf.get("allowUpload") === 'true') {
         this.redirectIfNotAuthenticated(req, res, () => {
@@ -1244,7 +1282,7 @@ class Users {
         this.redirectIfNotAuthenticated(req, res, () => {
           var username = req.session.passport.user.username;
           if (fs.existsSync(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename)) {
-            rmdirAsync(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename, () => {
+            rmRecurse(DEFAULT_USERS__DIRECTORY + username + "/imported/" + req.params.filename, () => {
               middleware.redirect("/upload", res);
             });
           }
