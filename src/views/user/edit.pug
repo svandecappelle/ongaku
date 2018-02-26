@@ -3,15 +3,46 @@ extends layout.pug
 block append userpage-content
     form#general.form-horizontal(method='post')
         .form-group
-            label.col-md-2.control-label= i18n.language
-            .col-md-4
+            label.col-sm-2.control-label= i18n.language
+            .input-group
                 select.form-control(name="lang")
                     for language in languages
                         option(value=language)= i18n.i18n_languages[language]
         .form-group
-            label.col-md-2.control-label access key
-            .col-md-4
-                input(type='text', name='access_id', value=key)
+            label.col-sm-2.control-label access key
+            .input-group.col-md-4
+                input#tokenid.form-control.disabled(type='text', name='access_id', style='background-color: #1a2226', value=key, disabled)
+                span.input-group-btn
+                    button.btn.btn-default#regenerate-token(title="Regenerate new", type='button')
+                        i.fal.fa-sync
         .form-group
-            .col-md-4(style='text-align: center')
+            label.col-sm-2.control-label User theme
+            .input-group
+                select.form-control(name="predefined-theme")
+                    if themes
+                        for theme in themes
+                            option(value=theme)= theme
+                    else
+                        option(value="default") default
+        .form-group
+            label.col-sm-2.control-label Load theme
+            .input-group.btn.btn-default
+                input.btn.btn-default#theme-upload(type='file', name='upload-theme', accept=".css")
+        .form-group
+            .input-group(style='text-align: center')
                 button.btn.btn-success.btn-lg(id="login", type="submit", style='width: 100%')= i18n.save
+
+    script.
+        $(function(){
+            $('#regenerate-token').click(function(ev) {
+                $('#tokenid').val(Math.random().toString(36).substr(2, 16));
+            });
+            $('input[name=upload-theme]').customFile("Load theme");
+            $("#theme-upload").liteUploader({
+                script: "theme-upload"
+            }).on("lu:progress", function (e, percentage) {
+                $(this).parent().find("button").text("Uploading: " + percentage + "%");
+            }).on("lu:success", function (e, response) {
+                $(this).parent().find("button").text("Theme uploaded");
+            });
+        });

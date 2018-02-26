@@ -43,6 +43,9 @@ html
             body{
               background-image: url('/user/'+session.user.username+'/background');
             }
+        if session.user.user_theme
+            link(rel="stylesheet", type="text/css", href=session.user.user_theme)
+
     body
         a#responsive-menu
           i.fal.fa-bars

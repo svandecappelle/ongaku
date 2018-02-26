@@ -24,6 +24,7 @@ try {
 var allowedStreamingAudioTypes = ["mp3", "ogg"];
 
 var USERS_IMAGE_DIRECTORY = path.join(__dirname, "/../../../public/user/");
+
 if (!fs.existsSync(USERS_IMAGE_DIRECTORY)) {
     fs.mkdirSync(USERS_IMAGE_DIRECTORY);
     logger.info("User folder not exists. Create one.");
@@ -54,6 +55,10 @@ class Middleware {
                 if (middlewareObject.req.isAuthenticated()) {
                     middlewareObject.objs.session.user.avatar = this.getAvatar(middlewareObject.req.user.username);
                     middlewareObject.objs.session.user.cover = this.getCover(middlewareObject.req.user.username);
+                    logger.info(USERS_IMAGE_DIRECTORY.concat("imported/theme.css"));
+                    if (fs.existsSync(USERS_IMAGE_DIRECTORY.concat(middlewareObject.req.user.username + "/imported/theme.css"))) {
+                        middlewareObject.objs.session.user.user_theme = "/upload/files/imported/theme.css";
+                    }
                 }
                 next(null, middlewareObject);
             }, this.session, this.meta, this.translate);

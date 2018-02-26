@@ -54,7 +54,7 @@ section.sidebar.show
                                 a.imported-filename(href="/upload/files/imported/" + file, target=target)=filename
                             .col-md-1(style="text-align: center;")
                                 a.delete.imported-filename(href="/upload/imported/" + file + "/delete")
-                                    i.fal.fa-remove
+                                    i.fa.fa-trash
                             .col-md-1(style="text-align: center;")
                                 if (file.indexOf('.zip')!==-1 || file.indexOf('.ZIP')!==-1 || file.indexOf('.tar')!==-1 || file.indexOf('.TAR')!==-1)
                                     a.extract.imported-filename(title="extract", href="/upload/imported/" + file + "/extract")
