@@ -87,9 +87,12 @@ a:focus{
   transition: all 0.2s ease-in;
 }
 
+.menus {
+  background-color: #1a2226;
+}
+
 nav{
   width: 45px;
-  height: 100%;
   float: left;
   overflow: hidden;
   box-sizing: border-box;
@@ -102,7 +105,6 @@ nav{
 }
 
 nav.menu{
-  background-color: #1a2226;
   bottom: 5rem;
   top: 3.1rem;
 }
@@ -368,7 +370,6 @@ section.song-list > .list-container .song .track-num, section.song-list > .list-
   width: 56px;
   text-align: right;
   margin-left: 16px;
-  transition: all 0.4s linear 0.4s;
 }
 
 section.song-list > .list-container .song:hover .track-num:before, section.song-list > .list-container .song.playing .track-num:before{
@@ -458,8 +459,7 @@ section.song-list > .list-container .song .track-time, section.song-list > .list
   right: 0;
   width: 100%;
   z-index: 1000;
-  background-color: #1a2226;
-    height: 5rem;
+  height: 5rem;
 }
 
 .player .current-playing-image{
@@ -1057,6 +1057,11 @@ ul.group.artist span.artistname{
   color: #B1CA39;
 }
 
+#header svg {
+  width: 30px;
+  height: 40px;
+}
+
 #header a.header-link{
   color: white;
 }
@@ -1128,7 +1133,6 @@ ul.group.artist span.artistname{
 #header{
   height: 3rem;
   color: #fff;
-  background: repeat scroll 0px 0px #1a2226;
   border: none;
   z-index: 20000;
   margin-bottom: 0px;

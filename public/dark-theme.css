@@ -45,7 +45,7 @@ nav a:hover {
 
 section.song-list > .list-container .playlist-columns .tracks-columns{
   background-color: #{main_color};
-  color: black;
+  color: white;
 }
 
 ul.group.album > li {

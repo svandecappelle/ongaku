@@ -1,0 +1,111 @@
+body{
+    background-color: #fff;
+}
+
+.library.featured .mostplays {
+    background-color: rgba(213, 213, 213, 0.8);
+    color: #1a2226;
+}
+
+h1, .mostplays.tracklist .tools a{
+    color: #1a2226;
+}
+
+#header svg g {
+    color: #1a2226;
+    stroke: #1a2226;
+    fill: #1a2226;
+}
+
+#header h2, #header, #header .sp-replacer{
+    color: #1a2226;
+}
+
+span.button{
+    background-color: #fff;
+    color: #1a2226;
+}
+
+.dropdown-menu{
+    background-color: #dedede;
+}
+.menus {
+    background-color: #dedede;
+    color: #1a2226;
+}
+
+.menus ul li a, .menus nav ul li a, #header > .nav > ul > li > a, #header > .navbar-header > nav > ul > li > a{
+    color: #1a2226;
+}
+
+#header > .nav > ul > li > a {
+    color: #1a2226;
+}
+
+
+#header > .nav > ul > li:hover > a, #header > .navbar-header > nav > ul > li:hover > a {
+    color: #fff;
+}
+
+#header > .nav > ul > li:hover > a, #header > .navbar-header > nav > ul > li:hover > a.dropdown-toggle{
+    color: #1a2226;
+}
+
+section.sidebar .search{
+    background-color: rgba(224, 224, 224, 0.8);
+}
+
+ul.group.artist > li{
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.pending-list{
+    border-top: 6px solid #fff;
+    background-color: rgba(215, 215, 215, 0.8);
+}
+
+section.song-list > .list-container {
+    background-color: rgba(213, 213, 213, 0.8);
+}
+
+.panel{
+    background-color: rgba(255, 255, 255, 0.77);
+    border-color: #d8d8d8;
+    color: #1a2226;
+}
+
+ul.group.artist span.artistname{
+    color: #1a2226;
+}
+
+.form-control::-moz-placeholder, .form-control::placeholder {
+    color: #1a2226
+}
+
+.search, .search .input-group-addon{
+    color: #1a2226;
+}
+
+.lib.group.artist.open > li > a.trackaction{
+    color: #1a2226;
+}
+
+.audio-player .song-info, .audio-player button{
+    color: #1a2226;
+}
+
+.mejs-button.mejs-volume-button.mejs-mute, .mejs-button.mejs-volume-button.mejs-unmute{
+    margin-right: 20px;
+}
+
+.mejs-button.mejs-volume-button:after{
+    content: '';
+    background-color: #1a2226;
+    border-radius: 50%;
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 15px;
+    position: absolute;
+    z-index: -1;
+    left: -30%;
+}

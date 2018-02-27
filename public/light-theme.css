@@ -29,7 +29,7 @@ nav a:hover {
 }
 
 .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
-  color: white;
+  color: black;
   background: #{main_color};
 }
 
@@ -39,13 +39,13 @@ nav a:hover {
   border-right: 1px solid #{main_color};
 }
 
-.fab {
+.fabutton {
   background-color: #{main_color};
 }
 
 section.song-list > .list-container .playlist-columns .tracks-columns{
   background-color: #{main_color};
-  color: white;
+  color: black;
 }
 
 ul.group.album > li {

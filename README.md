@@ -11,13 +11,24 @@ Demo [Here](http://music.mizore.fr/ "here")
 * Install node
 * Clone the project
 * Install project dependencies
-  * Install libgroove ***(optional, if not installed ffmpeg is used to convert non streamable files)***: [Instruction here](https://github.com/andrewrk/libgroove#installation "Instruction here")
-  * Install Grunt: ```npm install -g grunt-cli```
+  * Install ffmpeg
+    * Ubuntu / Debian
+    ``` sudo apt install ffmpeg ```
+    * Fedora / CentOs
+    ``` sudo dnf install ffmpeg ```
+    * Archlinux / Manjaro
+    ``` sudo pacman -S ffmpeg```
+  * Install node canvas dependencies
+    * Ubuntu / Debian
+    ``` sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++ ```
+    * Fedora / CentOs
+    ``` sudo yum install cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel ```
+    * Archlinux / Manjaro
+    ``` sudo pacman -S  cairo cairomm libjpeg-turbo pango pangomm giflib ```
   * Run: ```npm install```
-  * Run ```grunt```
 * Configure your library dir and redis database in ```config.yml``` file
 * Start ```npm start```
-* Go to your browser at: ```hostname:4000/``` and create an admin user using the web installer.
+* Go to your browser at: ```hostname:4000/``` and create an admin user using the web installer. (consider configuring nginx as reverse proxy to serve :80 or :443 ports on www)
 
 Screenshots:
 ![Screenshot1](http://imagik.fr/images/2016/10/25/Capturedecrande2016-10-2517-39-07.png)
