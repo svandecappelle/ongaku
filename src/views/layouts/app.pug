@@ -37,19 +37,21 @@ html
         script(src="/bower_components/izitoast/dist/js/iziToast.min.js")
 
         script(src="/assets/application.min.js")
-        
         if !session.user.isAnonymous
-          style.
-            body{
-              background-image: url('/user/'+session.user.username+'/background');
-            }
+            style.
+                body{
+                    background-image: url('/user/#{session.user.username}/background');
+                }
+        
+        if session.theme
+            link(rel="stylesheet", type="text/css", href='/themes/' + session.theme + '.css')
         if session.user.user_theme
             link(rel="stylesheet", type="text/css", href=session.user.user_theme)
 
     body
         a#responsive-menu
           i.fal.fa-bars
-        #header.nav.navbar.navbar-default.navbar-fixed-top.header(style="padding-left: 25px;",role="navigation")
+        #header.nav.navbar.navbar-default.navbar-fixed-top.header.menus(style="padding-left: 25px;",role="navigation")
             h1(style="float:left;margin:0px;")
                 a.header-link(href="/")
                   include logo
@@ -135,7 +137,7 @@ html
                                   span(style="margin-left:10px;")= i18n.status.offline
             div.pull-right(style="padding-top: 6px;")
               input#base-color(type="text")
-        nav.menu.main-menu
+        nav.menu.main-menu.menus
             .menu.menu-discover
                 ul
                     li

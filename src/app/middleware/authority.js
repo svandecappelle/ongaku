@@ -1,6 +1,7 @@
 var passport = require('passport'),
 bcrypt = require('bcryptjs'),
 path = require('path'),
+_ = require('underscore'),
 nconf = require('nconf'),
 logger = require('log4js').getLogger("authority"),
 async = require("async"),
@@ -62,6 +63,10 @@ class Authority {
           req.session.cookie.maxAge = duration;
         }
         logger.info("Connecting: " , userData);
+        if (userData.settings){
+          req.session = _.extend(req.session, userData.settings);
+        }
+
         if (userData.settings && userData.settings.locale){
           req.session.locale = userData.settings.locale;
         } else {

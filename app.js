@@ -73,6 +73,7 @@ class AppRoot {
         app.set('views', __dirname + '/src/views');
         app.set('view engine', 'pug');
         app.use('/dependencies', express.static(__dirname + '/public/dependencies'));
+        app.use('/themes', express.static(__dirname + '/public/themes'));
         app.use('/assets', express.static(__dirname + '/public/assets'));
         app.use('/img', express.static(__dirname + '/public/img'));
         app.use('/bower_components', express.static(__dirname + '/bower_components'));

@@ -789,14 +789,20 @@ class Users {
       var text_shadow = color.replace(", 1)", ", 0.3)");
 
       var fileContent;
-      if (tinycolor(color).getBrightness() >= 70){
-        fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
-        // fileContent = replaceAll(fileContent, '#{font_background_main_color}', "rgb(0,0,0)");
+      var lights_themes = ["light"];
+      if (!req.session.theme || !_.contains(lights_themes, req.session.theme)) {
+        if (tinycolor(color).getBrightness() >= 70) {
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
+        } else {
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/light-theme.css"), 'utf-8');
+        }
       } else {
-        fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/light-theme.css"), 'utf-8');
-        // fileContent = replaceAll(fileContent, '#{font_background_main_color}', "rgb(255, 255, 255)");
+        if (tinycolor(color).getBrightness() >= 70) {
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/light-theme.css"), 'utf-8');
+        } else {
+          fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
+        }
       }
-
       fileContent = replaceAll(fileContent, '#{main_color}', color);
       fileContent = replaceAll(fileContent, '#{text_shadow}', text_shadow);
 
@@ -882,6 +888,13 @@ class Users {
               user.getGroupsByUsername(username, (groups) => {
                 userData = _.extend(userData, { groups: groups });
                 userData.status = communication.status(userData.username);
+                var theme_path = path.resolve(__dirname, "../../../../public/themes");
+
+                var files = fs.readdirSync(theme_path);
+                var themes = _.filter(files, (file) => {
+                  var stats = fs.lstatSync(path.resolve(theme_path, file));
+                  return !stats.isDirectory() && path.extname(file) === '.css';
+                });
 
                 security.getAccessId(req.session.passport.user.uid, (err, key) => {
                   if (err){
@@ -892,7 +905,8 @@ class Users {
                   middleware.render('user/edit', req, res, {
                     user: userData,
                     token: new Date().getTime(),
-                    key: key
+                    key: key,
+                    themes: themes.map(theme => path.basename(theme, '.css'))
                   });
                   // http://music.mizore.fr/api/album-download/Acus%20Vacuum/Tempus%20Consumens?key=TtMjOReVhJI8
                 });
@@ -919,20 +933,28 @@ class Users {
     app.post("/user/:username/edit", (req, res) => {
       var lang = req.body.lang;
       req.session.locale = lang;
+      req.session.theme = req.body.theme;
 
       // save settings to user settings db.
-
-      user.setSingleSetting(req.session.passport.user.uid, 'locale', lang, () => {
-        logger.info("Setting locale saved to db");
-      });
-
-      security.set(req.session.passport.user.uid, req.body.access_id, (err) => {
-        if (err){
-          return logger.error("Error adding grant access by key", err);
-        }
-        logger.info("security access granted");
-      });
-
+      if (lang){
+        user.setSingleSetting(req.session.passport.user.uid, 'locale', lang, () => {
+          logger.info("Setting locale saved to db");
+        });
+      }
+      if (req.body.theme) {
+        user.setSingleSetting(req.session.passport.user.uid, 'theme', req.body.theme, () => {
+          logger.info("Setting theme saved to db");
+        });
+      }
+      logger.info(req.body.tokenid);
+      if ( req.body.tokenid ) {
+        security.set(req.session.passport.user.uid, req.body.tokenid, (err) => {
+          if (err){
+            return logger.error("Error adding grant access by key", err);
+          }
+          logger.info("security access granted");
+        });
+      }
       var busboy = new Busboy({ headers: req.headers });
       req.session.save(function () {
         res.setHeader('Access-Control-Allow-Credentials', 'true');
