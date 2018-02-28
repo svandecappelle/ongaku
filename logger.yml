@@ -4,7 +4,7 @@ default:
       type: console
     file:
       type: file
-      filename: logs/output.log
+      filename: /var/log/ongaku/output.log
       maxLogSize: 50000000
       backups: 3
   categories:

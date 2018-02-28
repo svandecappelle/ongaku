@@ -1,0 +1,14 @@
+[Unit]
+Description=Ongaku Service
+
+[Service]
+User=pi
+Restart=always
+RestartSec=10
+standardOutput=syslog
+StandardError=syslog
+ExecStart=/usr/bin/node /opt/ongaku/startup.js
+
+
+[Install]
+WantedBy=multi-user.target
