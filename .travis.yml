@@ -1,10 +1,16 @@
 language: node_js
 node_js:
   - 6.11
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq ffmpeg
-  - sudo apt-get install -qq libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
+addons:
+  apt:
+    packages:
+      - ffmpeg
+      - libcairo2-dev 
+      - libjpeg-dev 
+      - libpango1.0-dev 
+      - libgif-dev 
+      - build-essential 
+      - g++
 install: npm install
 sudo: false
 script:
