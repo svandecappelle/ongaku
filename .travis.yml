@@ -6,7 +6,6 @@ before_install:
   - sudo apt-get install -qq ffmpeg
   - sudo apt-get install -qq libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++
 install: npm install
-before_script: grunt
 sudo: false
 script:
   - npm test
