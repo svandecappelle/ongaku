@@ -1,18 +1,7 @@
 language: node_js
 node_js:
   - 6.11
-addons:
-  apt:
-    sources:
-      - debian-sid
-    packages:
-      - ffmpeg
-      - libcairo2-dev 
-      - libjpeg-dev 
-      - libpango1.0-dev 
-      - libgif-dev 
-      - build-essential 
-      - g++
+before_script: "sudo aptitude -y -q install ffmpeg libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++"
 install: npm install
 sudo: false
 script:
