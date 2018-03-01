@@ -664,7 +664,8 @@ function FeaturedTracksList(tracks, opts) {
         valueLabel = $('<input>', {
           "class": "editable-mt-value form-control",
           "type": "text",
-          'value': value
+          'value': value,
+          'data-name': title
         });
 
         valueLabel.css({
@@ -1202,7 +1203,23 @@ function FeaturedTracksList(tracks, opts) {
     function showMetadatas(track){
       var popup = new Popup(track.artist + ' / ' + track.album + ' / ' + track.title);
       popup.append(new MetadatasArray(track.metadatas, true).html());
-      popup.defaultActions();
+      popup.actions([{
+        text: 'Close',
+        callback: function(){
+          that.hide();
+        }
+      }, {
+        text: 'ok',
+        callback: function(){
+          var data = {};
+          $('.editable-mt-value').each(function() {
+            data[$(this).data('name')] = $(this).val();
+          });
+          $.post('/api/metadata/set/'+track.uid, data).done(function() {
+            popup.hide();
+          });
+        }
+      }]);
       popup.show();
     }
 

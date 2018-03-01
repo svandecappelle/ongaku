@@ -6,6 +6,7 @@ const _ = require("underscore");
 const unzip = require("node-unzip-2");
 const path = require("path");
 const Busboy = require('busboy');
+const ffmetadata = require("ffmetadata");
 
 const library = require("./../../middleware/library");
 const middleware = require("./../../middleware/middleware");
@@ -609,7 +610,20 @@ class Users {
 
     app.post('/api/metadata/set/:id', (req, res) => {
       var id = req.params.id;
+      var data = req.body;
       var metadata = req.body.metadatas;
+      var filename = library.getFile(id);
+
+      ffmetadata.write(filename, data, (err) => {
+        if (err) {
+          res.status(500).json('Error writing metadata');
+          logger.error("Error writing metadata", err);
+        } else {
+          logger.info("Data written");
+          res.status(200).json('Data written');
+        }
+      });
+
     });
 
     app.get("/api/user/:username/playlists", (req, res) => {
