@@ -109,3 +109,36 @@ ul.group.artist span.artistname{
     z-index: -1;
     left: -30%;
 }
+
+.waveform .play-position, .waveform .play-position-switcher{
+    box-shadow: 1px 0 0 transparent;
+}
+
+.pending-list{
+    border-top: 6px solid #808080;
+}
+
+.btn-default{
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.btn-default:hover{
+    color: #fff;
+    background-color: #1a2226;
+    border-color: #1a2226;
+}
+
+.dropdown-menu, .dropdown-menu > li > a {
+    color: #333;
+}
+
+.tabs [id^="tab-"]:checked + label.tab, .tabs [id^="tab-"]:checked ~ [class^="tab-content"]{
+    background: rgba(196, 201, 204, 0.77) none repeat scroll 0 0;
+    color: #333;
+}
+
+.user-vignette a, .panel h2, .title-page{
+    color: #333;
+}

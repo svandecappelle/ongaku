@@ -121,19 +121,22 @@ function initApplication(opts){
 
   videojs.options.flash.swf = "http://" + opts.session.host + "/video-js/video-js.swf";
 
-  var basecolor = Cookies.get("base-color");
-  if (basecolor){
-    $.ongaku.themer.setBaseColor(basecolor);
-  } else {
+  // var basecolor = Cookies.get("base-color");
+  //if (basecolor){
+  //  $.ongaku.themer.setBaseColor(basecolor);
+  //} else {
     $.ongaku.themer.setBaseColor(opts.theme['base-color']);
-  }
+  //}
   $("#base-color").spectrum({
-    color:  basecolor ? basecolor : opts.theme['base-color'],
+    color: opts.theme['base-color'],
     "body": "input.colorpicker",
     "showAlpha": false,
     "preferredFormat": "rgb",
     move: function(color) {
       $.ongaku.themer.setBaseColor(color.toRgbString());
+    },
+    change: function(color){
+      $.post('/api/set-color-scheme', {color: color.toRgbString()});
     }
   });
 

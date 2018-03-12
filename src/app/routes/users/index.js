@@ -43,6 +43,8 @@ const userFilesOpts = {
   }
 };
 
+const lights_themes = ["light"];
+
 var rmdirAsync = function(path, callback) {
   
   fs.readdir(path, function(err, files) {
@@ -626,6 +628,27 @@ class Users {
 
     });
 
+    app.post('/api/metadata/selection/set/', (req, res) => {
+      var ids = req.body.ids;
+      var metadata = req.body.metadatas;
+      
+      logger.info("set metadata on ", ids, metadata);
+      async.eachLimit(ids, 10, (id, next) => {
+        var filename = library.getFile(id);
+        ffmetadata.write(filename, metadata, (err) => {
+          next(err);
+        });
+      }, (err) => {
+        if (err) {
+          res.status(500).json('Error writing metadata');
+          logger.error("Error writing metadata", err);
+        } else {
+          logger.info("Data written");
+          res.status(200).json('Data written');
+        }
+      });
+    });
+
     app.get("/api/user/:username/playlists", (req, res) => {
       var username = req.params.username;
       playlist.getPlaylists(username, (err, playlists) => {
@@ -803,7 +826,6 @@ class Users {
       var text_shadow = color.replace(", 1)", ", 0.3)");
 
       var fileContent;
-      var lights_themes = ["light"];
       if (!req.session.theme || !_.contains(lights_themes, req.session.theme)) {
         if (tinycolor(color).getBrightness() >= 70) {
           fileContent = fs.readFileSync(path.join(__dirname, "../../../../public/dark-theme.css"), 'utf-8');
@@ -1354,7 +1376,7 @@ class Users {
 
     app.get("/api/featured", (req, res) => {
       var stats = [{name: 'plays', type: 'track'},
-                  {name: 'plays-genre'}];
+        {name: 'plays-genre'}];
       getStatistics(stats, function(err, entries){
         middleware.json(req, res, {stats: entries});
       });
@@ -1365,10 +1387,28 @@ class Users {
       middleware.render('api/featured', req, res);
     });
 
+    app.post("/api/set-color-scheme", (req, res) => {
+      this.callIfAuthenticated(req, res, () => {
+        user.setSingleSetting(req.session.passport.user.uid, 'color-scheme', req.body.color, () => {
+          req.session.user['color-scheme'] = req.body.color
+          req.session.save(function () {
+            logger.info(`Setting theme ${req.body.color} saved to db`);
+            res.status(200).send("OK");    
+          });  
+        });
+      });
+    });
+
     app.get("/api/waveform/:uid", (req, res) => {
       try {
         var src = library.getRelativePath(path.basename(req.params.uid));
         var color = 'white';
+        
+
+        if (req.session.theme && _.contains(lights_themes, req.session.theme)) {
+          color = '#929292';
+        }
+        
         if (req.query.color){
           color = req.query.color;
         }

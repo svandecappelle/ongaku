@@ -925,7 +925,6 @@ ul.group.artist span.artistname{
   background: #FAFAFA;
 }
 .tabs .tab-content {
-  z-index: 2;
   display: none;
   width: 100%;
   line-height: 25px;
@@ -935,7 +934,16 @@ ul.group.artist span.artistname{
   left: 0;
   border-radius: 5px;
   overflow: auto;
-  bottom: 0;
+}
+.input-group .form-control{
+  z-index: 0;
+}
+
+.title-page{
+  font-size: 1.5em; 
+  margin-bottom:5px; 
+  margin-top:8px;
+  color: #FFF;
 }
 
 .tabs li:first-child .tab-content{
@@ -946,7 +954,6 @@ ul.group.artist span.artistname{
   top: 0;
   padding-top: 17px;
   background: rgba(26, 34, 38, 0.77) none repeat scroll 0% 0%;
-  z-index: 6;
   color: #E2E2E2;
   box-sizing: border-box;
   line-height: 21px;
@@ -1973,6 +1980,10 @@ section.song-list > .list-container.shows{
 }
 .sp-container {
   position: fixed !important;
+}
+
+.albumselect, .trackselect {
+  margin-right: 3px;
 }
 /*
 @media screen and (max-width: 600px) {

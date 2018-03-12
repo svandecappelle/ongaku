@@ -1,7 +1,6 @@
 section.sidebar.show
   .search
-    .col-lg-8.col-md-8
-      h1(style="color: #FFF;")= i18n.all_users
+    .title-page= i18n.all_users
   .user-sidebar.library-view(style="top:70px;")
     each user in users  
       div(class="panel panel-default user-vignette #{user.status}", data-user="#{user.username}")

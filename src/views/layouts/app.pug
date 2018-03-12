@@ -189,6 +189,7 @@ html
 
         script.
           console.log('#{meta.type}');
+          console.log(!{JSON.stringify(theme)});
           $(function(){
             initApplication({
               user: !{JSON.stringify(session.user)},

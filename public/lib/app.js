@@ -530,10 +530,10 @@ function FeaturedTracksList(tracks, opts) {
     };
 
     var Themer = function(){
-      var savedColor = Cookies.get("base-color");
+      /*var savedColor = Cookies.get("base-color");
       if (savedColor) {
         this.color = savedColor;
-      }
+      }*/
     };
 
     Themer.prototype.getBaseColor = function () {
@@ -553,7 +553,7 @@ function FeaturedTracksList(tracks, opts) {
       }
       this.color = color;
 
-      Cookies.set("base-color", color, { expires: 365 });
+      // Cookies.set("base-color", color, { expires: 365 });
 
       $(".mejs-time-loaded").css({
         "background" : color
@@ -722,6 +722,20 @@ function FeaturedTracksList(tracks, opts) {
           url: '/api/user/library/add',
           type: 'POST',
           data: JSON.stringify(this.getElements(element)),
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          async: false,
+          success: function() {
+            // console.log("added");
+          }
+      });
+    };
+
+    UserLib.prototype.appendUsingUids = function (uids) {
+      $.ajax({
+          url: '/api/user/library/add',
+          type: 'POST',
+          data: {elements: uids},
           contentType: 'application/json; charset=utf-8',
           dataType: 'json',
           async: false,
@@ -907,6 +921,65 @@ function FeaturedTracksList(tracks, opts) {
         }, view));
     };
 
+    function showMultipleMetadata(album, ids) {
+
+      var commonMetadatas = {};
+      var deleted = {};
+
+      album.tracks.forEach(function(track){
+        var keys = Object.keys(track.metadatas);
+
+        keys.forEach(function(key) {
+          if ( !commonMetadatas[key] && !deleted[key] ){
+            commonMetadatas[key] = track.metadatas[key];
+          } else if (JSON.stringify(commonMetadatas[key]) !== JSON.stringify(track.metadatas[key])) {
+            delete commonMetadatas[key];
+            deleted[key] = true;
+          }
+        });
+      });
+      showMetadatas({
+        artist: album.artist, 
+        album: album.title,
+        title: "",
+        metadatas: commonMetadatas
+      }, function(data, popup){
+        $.post('/api/metadata/selection/set/', {
+          ids: ids,
+          metadatas: data
+        }).done(function(){
+          popup.hide();
+        });
+      });
+    };
+
+    function playAllToggler() {
+      if ($('input.track[type="checkbox"]:checked').length > 0) {
+        if ($('#append-all').length === 0){
+          var appendAll = $('<a>', {
+            type: 'button',
+            class: 'btn btn-default',
+            text: 'Append all',
+            id: 'append-all'
+          });
+          appendAll.on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var uids = [];
+            
+            $.each($('input.track[type="checkbox"]:checked'), function(){
+              uids.push($(this).data('uid'));
+            });
+
+            $.ongaku.playlist.appendUsingUids(JSON.stringify({elements: uids}));
+          });
+          $('.search .actions').append(appendAll);
+        }
+      } else {
+        $('#append-all').remove();
+      }
+    };
+
     function LibraryAlbum(album, view){
       var baseThemeColor = $.ongaku.themer.getBaseColor(),
         albumElement = $('<li>');
@@ -984,6 +1057,25 @@ function FeaturedTracksList(tracks, opts) {
       albumElement.append(albumAppender);
 
       if (!$.ongaku.isAnonymous()){
+        var albumSelectElement = $('<div>', {
+          class: 'albumselect'
+        });
+        var albumSelectInput = $('<input>', {
+          type: 'checkbox',
+          style: "float: left;"
+        });
+        albumSelectElement.append(albumSelectInput);
+
+        albumSelectInput.on('change', function(){
+          var selectionMode = $(this).is(':checked');
+          $(albumElement).find(".trackselect>input").prop('checked', selectionMode);
+          playAllToggler();
+        });
+
+        albumElement.append(albumSelectElement);
+      }
+
+      if (!$.ongaku.isAnonymous()){
         if (album.download !== false){
           albumElement.append(albumDownloader);
           albumElement.append(albumShare);
@@ -993,6 +1085,35 @@ function FeaturedTracksList(tracks, opts) {
         } else {
           new UserLib().appender(albumElement);
         }
+
+        var albumShowDetail = $('<a>', {
+          "tabindex": 0,
+          "class": "trackaction metadatas-details",
+          "data-placement": "left",
+          "data-toggle": "popover",
+          "data-html": "true",
+          "data-content": "Edit metadatas",
+          "data-trigger": "hover",
+          "data-delay": 100
+        });
+        var glyphShowDetail = $('<i>', {
+          "class": 'glyphicon glyphicon-info-sign' // metadata-track,
+        });
+        albumShowDetail.append(glyphShowDetail);
+
+        albumShowDetail.on('click', function(){
+          // album metadata
+          var ids = [];
+          $.each($(this).parent().find('.trackselect>input'), function() {
+            if ($(this).is(":checked")){
+              ids.push($(this).data('uid'));
+            }
+          });
+          showMultipleMetadata(album, ids);
+        });
+
+        albumElement.append(albumShowDetail);
+
       }
       $(albumAppender).tooltip();
 
@@ -1174,13 +1295,31 @@ function FeaturedTracksList(tracks, opts) {
           trackElement.append(trackDownloader);
         }
 
+        // metadata edition
+        if (!$.ongaku.isAnonymous()){
+          var trackSelectElement = $('<div>', {
+            class: 'trackselect'
+          });
+          var inputSelectTrack = $('<input>', {
+            type: 'checkbox',
+            class: 'track',
+            style: "float: left;",
+            "data-uid": track.uuid
+          });
+          trackSelectElement.append(inputSelectTrack);
+          inputSelectTrack.on('change', function(){
+            playAllToggler();
+          });
+          
+          trackElement.append(trackSelectElement);  
+        }
+
         var trackNoElement = $('<div>', {
           class: 'trackno'
         });
         trackNoElement.text(track.metadatas && track.metadatas.track ? track.metadatas.track.no : '-');
 
         trackElement.append(trackNoElement);
-
 
         trackElement.append(trackDetailElement);
         tracksElement.append(trackElement);
@@ -1189,7 +1328,6 @@ function FeaturedTracksList(tracks, opts) {
         $(trackShowDetail).on("click", function(){
           showMetadatas(track);
         });
-
 
         trackDetailElement.on("click", function (event) {
             event.preventDefault();
@@ -1200,13 +1338,13 @@ function FeaturedTracksList(tracks, opts) {
       return tracksElement;
     }
 
-    function showMetadatas(track){
+    function showMetadatas(track, onSave){
       var popup = new Popup(track.artist + ' / ' + track.album + ' / ' + track.title);
       popup.append(new MetadatasArray(track.metadatas, true).html());
       popup.actions([{
         text: 'Close',
         callback: function(){
-          that.hide();
+          popup.hide();
         }
       }, {
         text: 'ok',
@@ -1215,9 +1353,13 @@ function FeaturedTracksList(tracks, opts) {
           $('.editable-mt-value').each(function() {
             data[$(this).data('name')] = $(this).val();
           });
-          $.post('/api/metadata/set/'+track.uid, data).done(function() {
-            popup.hide();
-          });
+          if (track.uid){
+            $.post('/api/metadata/set/'+track.uid, data).done(function() {
+              popup.hide();
+            });
+          } else {
+            onSave(data, popup);
+          }
         }
       }]);
       popup.show();
@@ -1343,9 +1485,6 @@ function FeaturedTracksList(tracks, opts) {
 
           button.text(value.text);
           button.on('click', value.callback);
-          button.css({
-              'float': 'right'
-          });
           that.actionsElement.append(button);
         });
         this.content.append(this.actionsElement);
@@ -1814,6 +1953,30 @@ function FeaturedTracksList(tracks, opts) {
       } else {
         $(element).parent().find(".track").each(function (id, track) {
             $.ongaku.playlist.append($(track).data("uid"));
+        });
+      }
+    };
+
+    Playlist.prototype.appendUsingUids = function (uids) {
+      $("#save-current-playlist").prop('disabled', false);
+      // TODO check if test on lenght is necessary or not.
+      // For asynchronous lib append debug
+      // console.log("append from element");
+      if (uids.length > 0){
+        $.ajax({
+            url: '/api/playlist/addgroup',
+            type: 'POST',
+            data: uids,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            async: false,
+            success: function(playlist) {
+                $.ongaku.playlist.rebuild(playlist);
+
+                if ($(".playlist .song").length === 1) {
+                    $.ongaku.next();
+                }
+            }
         });
       }
     };

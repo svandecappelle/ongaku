@@ -7,13 +7,13 @@ section.sidebar.show
 				input.searchbox.form-control(type="text"
 					, placeholder=i18n.search, style="height:3rem", data-type="audio")
 				.layer
-		.col-lg-4.col-md-4.col-xs-4
+		.col-lg-4.col-md-4.col-xs-4.actions
 			.btn-group
-				a.btn.btn-default.downloader(href="#", style="margin-left: 5px; display: none; height:39px; padding-top: 8px;") search result
+				a.btn.btn-default.downloader(href="#", style="display: none; height:39px; padding-top: 8px;") search result
 					i.glyphicon.glyphicon-download(style="padding-left: 5px;")
 			.btn-group
 				a.btn.btn-default.dropdown-toggle.groupby-button(type="button", data-toggle="dropdown" aria-expanded="false")
-					span(style="margin-right: 5px;")= i18n.group_by
+					span= i18n.group_by
 					span.value
 					span.caret(style="margin-left: 5px;")
 				ul.dropdown-menu.groupby.groupby-menu(role="menu")
@@ -23,9 +23,9 @@ section.sidebar.show
 						a(data-groupby="album", data-label="#{i18n.albums}")= i18n.albums
 						a(data-groupby="genre", data-label="#{i18n.genre}")= i18n.genre
 						a(data-groupby="genre,artist", data-label="#{i18n.genre_and_artists}")= i18n.genre_and_artists
-			.btn-group(style="margin-left: 5px;")
+			.btn-group
 				a.btn.btn-default.dropdown-toggle.sortby-button(type="button", data-toggle="dropdown" aria-expanded="false")
-					span(style="margin-right: 5px;")= i18n.sort_by
+					span= i18n.sort_by
 					span.value
 					span.caret(style="margin-left: 5px;")
 				ul.dropdown-menu.sortby.sortby-menu(role="menu")

@@ -12,12 +12,33 @@ const ProgressBar = require('progress');
 
 var groove;
 var mm;
+var ffmetadata;
+
+_.mixin({
+  'orderKeysBy': function (obj, comparator, order) {
+    if (_.isString(comparator) && _.isEmpty(order)) {
+      order = comparator;
+      comparator = null;
+    }
+    var keys = _.sortBy(_.keys(obj), function (key) {
+      return comparator ? comparator(obj[key], key) : key;
+    }, order);
+
+    var values = _.map(keys, function (key) {
+      return obj[key];
+    });
+
+    return _.object(keys, values);
+  }
+});
+
 // groove seems to be better than mm
 try {
   groove = require('groove');
 } catch (ex){
   logger.warn("Optional dependency not installed");
   mm = require('musicmetadata');
+  ffmetadata = require("ffmetadata");
 }
 
 class Decoder {
@@ -35,7 +56,15 @@ class Decoder {
   }
 
   song (file, metadatas, duration) {
-    metadatas = _.omit(metadatas, 'picture');
+    var WMATags = ['DeviceConformanceTemplate', 'IsVBR', 'DeviceConformanceTemplate', 'PeakValue', 'AverageLevel'];
+
+    metadatas = _.omit(metadatas, (value, key) => {
+      return key.indexOf("WM") === 0;
+    });
+
+    metadatas = _.omit(metadatas, ['picture', 'encoder', 'metadatas']);
+    metadatas = _.omit(metadatas, WMATags);
+
     var durationMin = Math.floor(duration / 60),
         durationSec = Math.floor(duration % 60),
         uuid,
@@ -72,6 +101,7 @@ class Decoder {
       metadatas.album = `${metadatas.album} Disk - ${metadatas.disk.no}/${metadatas.disk.of}`;
     }
 
+    metadatas = _.orderKeysBy(metadatas);
 
     return {
         artist: artist,
@@ -118,16 +148,26 @@ class Decoder {
     return new Promise((resolve, reject) => {
       if (_.contains(nconf.get('audio'), path.extname(filePath).replace(".", ""))) {
         logger.debug("Loading using mm: ", filePath);
-        try{
-          var parser = mm(fs.createReadStream(filePath), { duration: true }, (err, metadata) => {
-            logger.debug(`libelement: ${filePath}`, err, metadata)
+        try {
+          // Check if ffmetadata is best than mm
+          ffmetadata.read(filePath, (err, metadataFFMPEG) => {
+            logger.debug(`libelement: ${filePath}`, err, metadataFFMPEG)
             if (err) {
               logger.error(`libelement: ${filePath}`, err);
               return reject(err);
             }
 
-            resolve(this.song(filePath, metadata, metadata.duration));
+            var parser = mm(fs.createReadStream(filePath), { duration: true }, (err, metadata) => {
+              logger.debug(`libelement: ${filePath}`, err, metadataFFMPEG)
+              if (err) {
+                logger.error(`libelement: ${filePath}`, err);
+                return reject(err);
+              }
+  
+              resolve(this.song(filePath, metadataFFMPEG, metadata.duration));
+            });
           });
+
         } catch (error) {
           reject(error);
         }

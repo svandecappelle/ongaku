@@ -52,11 +52,19 @@ class Middleware {
         objs: viewParams
       },
       call = async.compose((middlewareObject, next) => {
+        middlewareObject.objs.theme = nconf.get("theme");
+
         if (middlewareObject.req.isAuthenticated()) {
           middlewareObject.objs.session.user.avatar = this.getAvatar(middlewareObject.req.user.username);
           middlewareObject.objs.session.user.cover = this.getCover(middlewareObject.req.user.username);
           if (fs.existsSync(USERS_IMAGE_DIRECTORY.concat(middlewareObject.req.user.username + "/imported/theme.css"))) {
             middlewareObject.objs.session.user.user_theme = "/upload/files/imported/theme.css";
+          }
+
+          logger.info(middlewareObject.objs.session.user.settings);
+          
+          if (middlewareObject.objs.session.user.settings) {
+            middlewareObject.objs.theme['base-color'] = middlewareObject.objs.session.user.settings.color_scheme;
           }
         }
         next(null, middlewareObject);
@@ -73,7 +81,6 @@ class Middleware {
     if (middlewareObject.objs.session === undefined) {
       middlewareObject.objs.session = {};
     }
-    middlewareObject.objs.theme = nconf.get("theme");
     middlewareObject.objs.languages = translator.getAvailableLanguages();
 
     call(middlewareObject, (err, middlewareObject) => {
