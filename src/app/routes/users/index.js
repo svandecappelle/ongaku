@@ -977,7 +977,7 @@ class Users {
           logger.info("Setting locale saved to db");
         });
       }
-      if (req.body.theme) {
+      if (req.body.theme !== undefined) {
         user.setSingleSetting(req.session.passport.user.uid, 'theme', req.body.theme, () => {
           logger.info("Setting theme saved to db");
         });
