@@ -60,8 +60,6 @@ class Middleware {
           if (fs.existsSync(USERS_IMAGE_DIRECTORY.concat(middlewareObject.req.user.username + "/imported/theme.css"))) {
             middlewareObject.objs.session.user.user_theme = "/upload/files/imported/theme.css";
           }
-
-          logger.info(middlewareObject.objs.session.user.settings);
           
           if (middlewareObject.objs.session.user.settings) {
             middlewareObject.objs.theme['base-color'] = middlewareObject.objs.session.user.settings.color_scheme;

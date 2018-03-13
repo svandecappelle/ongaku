@@ -623,6 +623,7 @@ class Users {
         } else {
           logger.info("Data written");
           res.status(200).json('Data written');
+          library.refreshMetadatas(id);
         }
       });
 
@@ -636,6 +637,7 @@ class Users {
       async.eachLimit(ids, 10, (id, next) => {
         var filename = library.getFile(id);
         ffmetadata.write(filename, metadata, (err) => {
+          library.refreshMetadatas(id);
           next(err);
         });
       }, (err) => {
@@ -1136,7 +1138,8 @@ class Users {
       var username = req.params.username,
         background = username + "/background";
         if (!middleware.hasImageFile(username, "background")){
-          background = "background.jpg";
+          background = path.resolve(__dirname, "../../../../public/img/background.jpg");
+          return res.sendFile(background);
         }
 
         res.sendFile(background, userFilesOpts);
