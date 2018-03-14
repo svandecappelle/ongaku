@@ -9,6 +9,7 @@ const nconf = require("nconf");
 const uuid = require('uuid');
 const crypto = require('crypto');
 const ProgressBar = require('progress');
+const events = require("events");
 
 var Decoder = require('./decoder').class;
 
@@ -46,9 +47,10 @@ const walkSync = (dir, filelist) => {
   return filelist;
 }
 
-class Scanner {
+class Scanner extends events.EventEmitter {
   
-  constructor(){
+  constructor () {
+    super();
     this.all_files_count = 0;
     this.scanned_files_count = 0;  
   }
@@ -187,8 +189,10 @@ class Scanner {
             value: this.status()
           });
         }, 250);
+
         appender.decode(file).then((song) => {
           logger.debug("decoded", song);
+          this.emit('decoded', song, appender.type);
           next(null, song);
         }, (e) => {
           logger.error(e);
