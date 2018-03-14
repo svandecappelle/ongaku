@@ -967,7 +967,7 @@ function FeaturedTracksList(tracks, opts) {
             event.stopPropagation();
             var uids = [];
             
-            $.each($('input.track[type="checkbox"]:checked'), function(){
+            $.each($('input.trackselect[type="checkbox"]:checked'), function(){
               uids.push($(this).data('uid'));
             });
 
@@ -1302,7 +1302,7 @@ function FeaturedTracksList(tracks, opts) {
           });
           var inputSelectTrack = $('<input>', {
             type: 'checkbox',
-            class: 'track',
+            class: 'trackselect',
             style: "float: left;",
             "data-uid": track.uuid
           });
