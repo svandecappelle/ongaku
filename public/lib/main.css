@@ -27,10 +27,6 @@ ul {
   color: #fff;
 }
 
-main{
-  overflow: auto;
-}
-
 main.default{
   display: inline-block !important;
 }
@@ -180,7 +176,7 @@ section.song-list > .list-container {
   position: fixed;
   left: 80%;
   right: 0px;
-  top: 0px;
+  top: 1px;
   z-index: 1;
   bottom: calc(5rem + 4rem);
   background-color: rgba(30, 30, 30, 0.84);
@@ -1985,6 +1981,20 @@ section.song-list > .list-container.shows{
 .albumselect, .trackselect {
   margin-right: 3px;
 }
+
+#multi-option-container {
+  position: sticky;
+  top: 113px;
+  left: 0px;
+  right: 0px;
+  background: rgba(30,30,30,.84);
+  z-index: 1;
+}
+
+#multi-option-container i {
+  margin-right: 0.5em;
+}
+
 /*
 @media screen and (max-width: 600px) {
     html { font-size: 100%; }

@@ -953,30 +953,61 @@ function FeaturedTracksList(tracks, opts) {
       });
     };
 
+    function getAllSelectedUids () {
+      var uids = [];
+      
+      $.each($('input.track[type="checkbox"]:checked'), function() {
+        uids.push($(this).data('uid'));
+      });
+      return uids;
+    }
+
     function playAllToggler() {
       if ($('input.track[type="checkbox"]:checked').length > 0) {
-        if ($('#append-all').length === 0){
+        if ($('#multi-option-container').length === 0){
           var appendAll = $('<a>', {
             type: 'button',
-            class: 'btn btn-default',
-            text: 'Append all',
-            id: 'append-all'
+            class: 'btn btn-default'
+          });
+          appendAll.append($('<i>', {
+            class: 'fal fa-plus'
+          }));
+          appendAll.append($('<span>', {
+            text: 'Append all to playlist'
+          }));
+          var playAll = $('<a>', {
+            type: 'button',
+            class: 'btn btn-default'
+          });
+          playAll.append($('<i>', {
+            class: 'fal fa-play'
+          }));
+          playAll.append($('<span>', {
+            text: 'Play all'
+          }));
+          var multiSelectOptionsContainer = $('<div>', {
+            id: 'multi-option-container'
+          });
+          playAll.on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var uids = getAllSelectedUids();
+            $.ongaku.playlist.clear();
+            $.ongaku.playlist.appendUsingUids(JSON.stringify({elements: uids}));
           });
           appendAll.on('click', function(event) {
             event.preventDefault();
             event.stopPropagation();
-            var uids = [];
-            
-            $.each($('input.trackselect[type="checkbox"]:checked'), function(){
-              uids.push($(this).data('uid'));
-            });
+            var uids = getAllSelectedUids();
 
             $.ongaku.playlist.appendUsingUids(JSON.stringify({elements: uids}));
           });
-          $('.search .actions').append(appendAll);
+          multiSelectOptionsContainer.append(playAll);
+          multiSelectOptionsContainer.append(appendAll);
+          $('.main-content').prepend(multiSelectOptionsContainer);
         }
       } else {
-        $('#append-all').remove();
+        $('#multi-option-container').remove();
       }
     };
 
