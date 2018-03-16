@@ -42,17 +42,15 @@ Connection.prototype.notify = function (id, opts) {
 Connection.prototype.bind = function () {
   var that = this;
   this.socket = io();
-  // this.socket = io.connect('http://' + opts.session.host + '/');
-  this.socket.on('con', function () {
-    alert("connected socket io");
+
+  $.chat.init(that.socket, $.ongaku.getUser().username);
+  this.socket.on('connected', function () {
     if ($.ongaku.getUser().username){
       that.socket.emit('room:join', $.ongaku.getUser().username);
       that.socket.emit('room:join', that.opts.session.sessionID);
     } else {
       that.socket.emit('room:join', that.opts.session.sessionID);
     }
-    $.chat.init(that.socket, $.ongaku.getUser().username);
-    that.socket.join(that.opts.session.sessionID);
   });
 
   this.socket.on('notification', function (data) {

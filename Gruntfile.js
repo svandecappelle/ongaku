@@ -8,6 +8,16 @@ module.exports = function (grunt) {
         }
       }
     },
+    sass: {
+      options: {
+        sourceMap: false
+      },
+      dist: {
+        files: {
+          'public/lib/chat.css': 'public/lib/chat.scss'
+        }
+      }
+    },
     concat: {
       css: {
         src: ['public/assets/main.min.css', 'public/assets/chat.min.css', 'public/assets/media-theme.min.css', 'public/assets/video-js-ongaku-theme.min.css'],
@@ -62,11 +72,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-sass');
+
   grunt.loadNpmTasks('grunt-docco-dir');
   grunt.loadNpmTasks('grunt-nw-builder');
 
   grunt.registerTask('doc', ['concat']);
   grunt.registerTask('quality', ['concat']);
-  grunt.registerTask('default', ['uglify', 'cssmin', 'concat']);
+  grunt.registerTask('default', ['uglify', 'sass', 'cssmin', 'concat']);
   grunt.registerTask('desktop', ['nwjs']);
 };

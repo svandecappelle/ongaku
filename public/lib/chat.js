@@ -86,7 +86,7 @@
         class: "chat-opener"
       });
       this.opener.append($("<i>", {
-        class: "fa fa-comments-o"
+        class: "fal fa-comments"
       }));
       this.opener.append($("<span>", {
         text: "Chat"
@@ -254,6 +254,7 @@
     */
     $.chat = {
       init: function(socket, user){
+        console.log("init chat");
         if (!$.chat.el){
           $.chat.el = new Chat(socket, user);
           $('.message-box').draggable();

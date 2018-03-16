@@ -24,6 +24,8 @@ class Communication {
 		  var userAgent = socket.client.request.headers['user-agent'];
 		  logger.info(`User ${address} connected to communication system`);
 
+		  	socket.emit('connected');
+
 			socket.on('room:join', (data) => {
 				logger.info(`joining room: ${data}`);
 				socket.join(data);

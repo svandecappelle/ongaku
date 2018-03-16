@@ -1,0 +1,145 @@
+.chat-container {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.5);
+    .message-box.show {
+        visibility: visible;
+        opacity: 1;
+        box-shadow: 5px 5px 16px #000;
+        padding-top: 5px;
+        border-top: 4px solid #787070;
+    }
+    .message-box {
+        visibility: hidden;
+        position: fixed;
+        height: 300px;
+        width: 500px;
+        background-color: rgba(255, 255, 255, 0.95);
+        opacity: 0;
+    }
+    .message-box li.active {
+        background-color: #FFF;
+        color: #000;
+    }
+    .message-inbox {
+        max-height: 225px;
+        overflow: auto;
+    }
+    .input-box {
+        width: 80%;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        outline: 0px none;
+        border-radius: 0px;
+        border: none;
+        right: 52px;
+        padding: 5px;
+        font-size: 1.2rem;
+        border-bottom: 2px solid #000;
+        background-color: transparent;
+        color: #000;
+        border-top: 2px solid #000;
+        display: inline-block;
+    }
+    .nav>li>a,
+    .nav>li>a:focus {
+        padding: 5px 3px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: none;
+    }
+    .nav>li>a:hover,
+    .nav>li>a:focus {
+        border: none !important;
+        background-color: transparent !important;
+        cursor: pointer;
+        transition: none;
+    }
+    .nav>li.active,
+    .nav>li.active>a {
+        color: #000;
+        border: none;
+        transition: none;
+    }
+    .nav>li.active:hover,
+    .nav>li.active>a:hover {
+        color: #fff;
+        border: none;
+        transition: none;
+    }
+    .nav>li:hover,
+    .nav>li:hover a {
+        background-color: #000;
+        color: #fff;
+        transition: none;
+    }
+    .nav>li {
+        border-bottom: 1px solid #000;
+        border-radius: 0px;
+        padding: 5px;
+        cursor: pointer !important;
+        transition: none;
+    }
+}
+
+.msg.right {
+    text-align: right;
+    .from {
+        color: #fef9f9;
+    }
+}
+
+.msg {
+    .from {
+        text-decoration: underline;
+        font-weight: bold;
+        color: #fbfbfb;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 5px;
+        &:after {
+            content: ':'
+        }
+    }
+}
+
+.msg {
+    .msg {
+        .value-message {
+            padding: 3px 10px;
+            width: auto;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, .5);
+            color: #000;
+        }
+    }
+    .date {
+        font-size: 0.7rem;
+        color: #474545;
+        padding: 2px;
+    }
+}
+
+.chat-message-send-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    outline: 0px none;
+    border: none;
+    padding: 3px 7px;
+    font-size: 1.2rem;
+    background-color: transparent;
+    color: #000;
+    border: 2px solid #000;
+    display: inline-block;
+    border-radius: 3px;
+    transition: all ease-out 0.3s;
+}
+
+.chat-message-send-button:hover {
+    background-color: #FFF;
+    color: #000;
+    transition: all ease-out 0.3s;
+}
