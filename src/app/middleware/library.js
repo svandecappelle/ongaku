@@ -1,4 +1,4 @@
-const  scan = require("./scanner");
+const scan = require("./scanner");
 const _ = require("underscore");
 const logger = require("log4js").getLogger('Library');
 const nconf = require("nconf");
@@ -13,16 +13,16 @@ var Decoder = require('./decoder').class;
 
 var LastfmAPI = require('lastfmapi');
 var lfm = new LastfmAPI({
-  'api_key' : 'f21088bf9097b49ad4e7f487abab981e',
-  'secret' : '7ccaec2093e33cded282ec7bc81c6fca'
+  'api_key': 'f21088bf9097b49ad4e7f487abab981e',
+  'secret': '7ccaec2093e33cded282ec7bc81c6fca'
 });
 
-function parseLastFm (imageList) {
+function parseLastFm(imageList) {
   var imageSource;
   var sizes = ['small', 'medium', 'large', 'extralarge', 'mega'];
   var images = null;
-  
-  if (imageList){
+
+  if (imageList) {
     images = _.map(_.sortBy(imageList, (image) => {
       return sizes.indexOf(image.size);
     }), (image) => {
@@ -33,29 +33,31 @@ function parseLastFm (imageList) {
   return images;
 }
 
-_.mixin({groupByMulti: (obj, values, context) => {
-  if (!values.length)
-    return obj;
-  //obj = _.sortBy(obj, values[0], context);
-  var byFirst = _.groupBy(obj, values[0], context),
-    rest = values.slice(1);
-  for (var prop in byFirst) {
-    byFirst[prop] = _.groupByMulti(byFirst[prop], rest, context);
+_.mixin({
+  groupByMulti: (obj, values, context) => {
+    if (!values.length)
+      return obj;
+    //obj = _.sortBy(obj, values[0], context);
+    var byFirst = _.groupBy(obj, values[0], context),
+      rest = values.slice(1);
+    for (var prop in byFirst) {
+      byFirst[prop] = _.groupByMulti(byFirst[prop], rest, context);
+    }
+    return byFirst;
   }
-  return byFirst;
-}});
+});
 
 
-class Library{
-  
+class Library {
+
   constructor() {
-    this.data  = {audio: [], video: []};
+    this.data = { audio: [], video: [] };
     this.flatten = [];
-  
+
     this.audioScanned = false;
     this.videoScanned = false;
     this.scanProgress = false;
-  
+
     this.loadingCoverAlbums = [];
     this.loadingCoverArtists = [];
 
@@ -76,14 +78,14 @@ class Library{
 
         // logger.info("elem", libraryElement);
         libraryElement;
-        
+
         var tracks = [libraryElement];
         this.flatten = _.union(this.flatten, tracks);
 
         this.getArtistCover({
           artist: song.artist
         });
-        
+
         var album = {
           title: song.album
         };
@@ -106,7 +108,7 @@ class Library{
    * Scan the library
    * 
    */
-  beginScan () {
+  beginScan() {
     return new Promise((resolve, reject) => {
       scan.library().then((lib) => {
         if (Array.isArray(lib)) {
@@ -114,7 +116,7 @@ class Library{
             if (libFolder.audio) {
               this.populate("audio", libFolder);
             }
-            if (libFolder.video){
+            if (libFolder.video) {
               this.populate("video", libFolder);
             }
           });
@@ -122,7 +124,7 @@ class Library{
           if (lib.audio) {
             this.populate("audio", lib);
           }
-          if (lib.video){
+          if (lib.video) {
             this.populate("video", lib);
           }
         }
@@ -140,24 +142,24 @@ class Library{
    * @param {String} folder path 
    * @param {function} callback 
    */
-  addFolder (folder, callback){
+  addFolder(folder, callback) {
     var that = this;
 
     scan.addToScan(folder.path);
     this.removeFolder(folder);
-    scan.scanFolder(folder.path).then( (folderContent) => {
+    scan.scanFolder(folder.path).then((folderContent) => {
       folderContent.private = folder.isPrivate
 
-      if (folderContent.audio){
+      if (folderContent.audio) {
         that.populate("audio", {
           folder: folder,
           content: folderContent
         }, folder);
-        
+
         callback({
           type: 'audio'
         });
-      } else if (folderContent.video){
+      } else if (folderContent.video) {
         callback({
           type: 'video'
         });
@@ -179,10 +181,10 @@ class Library{
    * 
    * @param {String} folder remove the folder from scanned library folders
    */
-  removeFolder (folder){
+  removeFolder(folder) {
     scan.removeToScan(folder.path);
     this.flatten = _.filter(this.flatten, (track) => {
-      if (track.username && track.username === folder.username && folder.path === track.userfolder){
+      if (track.username && track.username === folder.username && folder.path === track.userfolder) {
         return false;
       }
       return true;
@@ -196,13 +198,13 @@ class Library{
    * @param {Object} folderScanResult object of all scanned results
    * @param {Object} folder folder path and state
    */
-  populate (type, folderScanResult, folder) {
+  populate(type, folderScanResult, folder) {
     var destination = this.data;
     var flattenDestination = this.flatten;
     var lib;
     var isPrivate = false;
 
-    if (folderScanResult.content){
+    if (folderScanResult.content) {
       lib = folderScanResult.content[type];
       if (folderScanResult.folder.private) {
         isPrivate = true;
@@ -224,9 +226,9 @@ class Library{
         libraryElement.metadatas = {};
       }
 
-      if (folder && folder.username){
+      if (folder && folder.username) {
         // library is a user private but shared folder.
-        _.extend(libraryElement, {username: folder.username});
+        _.extend(libraryElement, { username: folder.username });
         libraryElement.metadatas.sharedBy = folder.username;
         libraryElement.userfolder = folder.path;
       }
@@ -238,7 +240,7 @@ class Library{
       this.data[type] = _.union(this.data[type], lib);
     }
 
-    if (type === "audio" && (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll)) ) {
+    if (type === "audio" && (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll))) {
       this.audioScanned = true;
     } else if (folderScanResult.isFinishedAll || (folderScanResult.content && folderScanResult.content.isFinishedAll)) {
       this.videoScanned = true;
@@ -250,15 +252,15 @@ class Library{
    * 
    * @param {String} artist artist name
    */
-  getArtistCover (artist){
+  getArtistCover(artist) {
     var alreadyScanned = this.loadingCoverArtists[artist.artist] !== undefined;
-    
+
     // logger.info(artist);
-    if ( !alreadyScanned ){
+    if (!alreadyScanned) {
       this.loadingCoverArtists[artist.artist] = "/img/artist.jpg";
 
       lfm.artist.getInfo({
-          'artist' : artist.artist.trim(),
+        'artist': artist.artist.trim(),
       }, (err, art) => {
         if (err) {
           logger.warn("artist '" + artist.artist + "' not found");
@@ -277,19 +279,19 @@ class Library{
    * @param {String} artist artist name 
    * @param {String} album album title
    */
-  getAlbumCover (artist, album){
-    if (this.loadingCoverAlbums[artist.artist] === undefined){
+  getAlbumCover(artist, album) {
+    if (this.loadingCoverAlbums[artist.artist] === undefined) {
       this.loadingCoverAlbums[artist.artist] = {};
     }
 
     var alreadyScanned = this.loadingCoverAlbums[artist.artist][album.title] !== undefined;
 
-    if ( !alreadyScanned ){
+    if (!alreadyScanned) {
       this.loadingCoverAlbums[artist.artist][album.title] = "/img/album.jpg";
-      
+
       lfm.album.getInfo({
-        'artist' : artist.artist.trim(),
-        'album' : album.album_origin ? album.album_origin.trim() : album.title.trim()
+        'artist': artist.artist.trim(),
+        'album': album.album_origin ? album.album_origin.trim() : album.title.trim()
       }, (err, alb) => {
         if (err) {
           logger.warn("[" + artist.artist + "] -> album:: '" + album.title + "' not found");
@@ -305,8 +307,8 @@ class Library{
   /**
    * Check if library is scanning a folder.
    */
-  scanning () {
-      return this.scanProgress !== undefined ? this.scanProgress : false;
+  scanning() {
+    return this.scanProgress !== undefined ? this.scanProgress : false;
   };
 
   /**
@@ -314,55 +316,55 @@ class Library{
    * 
    * @param {function} callback callback function called when scan is finished 
    */
-  scan (callback) {
-      var that = this;
-      this.scanProgress = true;
-      this.videoScanned = false;
-      this.audioScanned = false;
-      // Clear all datas.
-      this.data  = {audio: [], video: []};
-      this.loadingCoverAlbums = [];
-      this.loadingCoverArtists = [];
+  scan(callback) {
+    var that = this;
+    this.scanProgress = true;
+    this.videoScanned = false;
+    this.audioScanned = false;
+    // Clear all datas.
+    this.data = { audio: [], video: [] };
+    this.loadingCoverAlbums = [];
+    this.loadingCoverArtists = [];
 
-      // Rescan full library.
-      this.flatten = null;
-      this.beginScan().then( () => {
-        if (this.videoScanned && this.audioScanned){
+    // Rescan full library.
+    this.flatten = null;
+    this.beginScan().then(() => {
+      if (this.videoScanned && this.audioScanned) {
 
-          library.getSharedFolders((err, folders) => {
-            if (folders){
-              var foldersScanning = _.map(folders, (folder) => {
-                return { path: folder, scanned: 0 };
-              });
-              async.each(folders, (folder, next) => {
-                var username = folder.split("[")[0];
-                var folderObject = {
-                  path: path.join( __dirname , `../../../public/user/${username}/imported/${folder.replace(username + "[", "").slice(0, -1)}`),
-                  username: folder.split("[")[0]
-                };
-                logger.info(`adding user shared folder: ${folderObject.path} ---> ${folderObject.username}`);
-                this.addFolder(folderObject, (scanResults) => {
-                  var scannedFolder = _.where(foldersScanning, {
-                    path: folder
-                  });
-                  scannedFolder.scanned += 1;
-
-                  if (scannedFolder.scanned === 2){
-                    // Audio and video are scanned.
-                    next();
-                  }
+        library.getSharedFolders((err, folders) => {
+          if (folders) {
+            var foldersScanning = _.map(folders, (folder) => {
+              return { path: folder, scanned: 0 };
+            });
+            async.each(folders, (folder, next) => {
+              var username = folder.split("[")[0];
+              var folderObject = {
+                path: path.join(__dirname, `../../../public/user/${username}/imported/${folder.replace(username + "[", "").slice(0, -1)}`),
+                username: folder.split("[")[0]
+              };
+              logger.info(`adding user shared folder: ${folderObject.path} ---> ${folderObject.username}`);
+              this.addFolder(folderObject, (scanResults) => {
+                var scannedFolder = _.where(foldersScanning, {
+                  path: folder
                 });
-              }, () => {
-                this.scanProgress = false;
-                callback();
+                scannedFolder.scanned += 1;
+
+                if (scannedFolder.scanned === 2) {
+                  // Audio and video are scanned.
+                  next();
+                }
               });
-            } else {
-              that.scanProgress = false;
+            }, () => {
+              this.scanProgress = false;
               callback();
-            }
-          });
-        }
-      });
+            });
+          } else {
+            that.scanProgress = false;
+            callback();
+          }
+        });
+      }
+    });
   };
 
   /**
@@ -370,22 +372,22 @@ class Library{
    * 
    * @param {String} uuid unique file identifier
    */
-  getRelativePath (uuid) {
-      uuid = uuid.replace(".mp3", "");
-      uuid = uuid.replace(".ogg", "");
-      uuid = uuid.replace(".wav", "");
-      var libElement = this.getByUid(uuid);
-      return libElement.relativePath;
+  getRelativePath(uuid) {
+    uuid = uuid.replace(".mp3", "");
+    uuid = uuid.replace(".ogg", "");
+    uuid = uuid.replace(".wav", "");
+    var libElement = this.getByUid(uuid);
+    return libElement.relativePath;
   };
 
-  refreshMetadatas (uuid) {
+  refreshMetadatas(uuid) {
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
     var filePath = this.getRelativePath(uuid);
 
     return new Promise((resolve, reject) => {
-      
+
       try {
         // Check if ffmetadata is best than mm
         ffmetadata.read(filePath, (err, metadataFFMPEG) => {
@@ -413,23 +415,23 @@ class Library{
         reject(error);
       }
     });
-    
+
     return libElement.relativePath;
   }
 
-/*
-  getAudio (groupby, sortby) {
-    if (groupby){
-      return this.search({
-        filter: "",
-        type: "audio",
-        groupby: groupby,
-        sortby: sortby
-      });
-    } else {
-      return this.data.audio;
-    }
-  };*/
+  /*
+    getAudio (groupby, sortby) {
+      if (groupby){
+        return this.search({
+          filter: "",
+          type: "audio",
+          groupby: groupby,
+          sortby: sortby
+        });
+      } else {
+        return this.data.audio;
+      }
+    };*/
 
   /**
    * Get audio contents using some filters and render properties
@@ -439,14 +441,14 @@ class Library{
    * @param {*} groupby group by criterion
    * @param {*} sortby sort by criterion
    */
-  getAudio (page, lenght, groupby, sortby) {
+  getAudio(page, lenght, groupby, sortby) {
     var audios = this.search({
       filter: "",
       type: "audio"
     });
 
 
-    if (groupby){
+    if (groupby) {
       audios = this.search({
         filter: "",
         type: "audio",
@@ -457,18 +459,18 @@ class Library{
     audios = _.first(_.rest(audios, page * lenght), lenght);
     return audios;
   };
-/*
-  getVideo () {
-    return this.data.video;
-  };
-*/
+  /*
+    getVideo () {
+      return this.data.video;
+    };
+  */
   /**
    * Get video contents.
    * 
    * @param {*} page page number (starts from 0)
    * @param {*} lenght number of records
    */
-  getVideo (page, lenght) {
+  getVideo(page, lenght) {
     return _.first(_.rest(this.data.video, page * lenght), lenght);
   };
 
@@ -477,12 +479,12 @@ class Library{
    * 
    * @param {String} uuid unique file identifier
    */
-  getByUid (uuid) {
+  getByUid(uuid) {
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
 
-    return _.find(this.flatten, {uid: uuid});
+    return _.find(this.flatten, { uid: uuid });
   };
 
   /**
@@ -490,12 +492,12 @@ class Library{
    * 
    * @param {String} uuid unique file identifier
    */
-  set (uuid, libElement) {
+  set(uuid, libElement) {
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
-    logger.info("Update: ", _.findIndex(this.flatten, {uid: uuid}));
-    return this.flatten[_.findIndex(this.flatten, {uid: uuid})] = libElement;
+    logger.info("Update: ", _.findIndex(this.flatten, { uid: uuid }));
+    return this.flatten[_.findIndex(this.flatten, { uid: uuid })] = libElement;
   };
 
   /**
@@ -503,12 +505,12 @@ class Library{
    * 
    * @param {String} uuid unique file identifier
    */
-  getAlbumArtImage (uuid) {
+  getAlbumArtImage(uuid) {
     uuid = uuid.replace(".mp3", "");
     uuid = uuid.replace(".ogg", "");
     uuid = uuid.replace(".wav", "");
 
-    return this.loadingCoverAlbums[_.find(this.flatten, {uuid: uuid}).artist][_.find(this.flatten, {uuid: uuid}).album];
+    return this.loadingCoverAlbums[_.find(this.flatten, { uuid: uuid }).artist][_.find(this.flatten, { uuid: uuid }).album];
   };
 
   /**
@@ -517,18 +519,18 @@ class Library{
    * @param {Object} opts search options
    * @param {Array} fromList list to filter (Optional)
    */
-  search (opts, fromList) {
+  search(opts, fromList) {
     var filter = opts.filter,
       type = opts.type,
       groupby = opts.groupby,
       sortby = opts.sortby;
     var searchResultList;
 
-    if (filter.indexOf("~") === 0){
+    if (filter.indexOf("~") === 0) {
       var filters = filter.substring(1, filter.length).split(" ");
       logger.debug("Search into any of these values: ", filters);
       _.each(filters, (subFilter) => {
-        if (searchResultList){
+        if (searchResultList) {
           searchResultList = this.search({
             filter: subFilter,
             type: type,
@@ -545,7 +547,7 @@ class Library{
       return this.groupby(searchResultList, groupby);
     }
 
-    if (!fromList){
+    if (!fromList) {
       fromList = this.flatten;
       if (opts.user) {
         fromList = _.union(fromList, this.flattenDestination[opts.user]);
@@ -554,15 +556,15 @@ class Library{
           return track.private === undefined || !track.private;
         });
       }
-    } 
+    }
     if (filter) {
-      searchResultList =  _.filter(fromList, (obj) => {
+      searchResultList = _.filter(fromList, (obj) => {
         var filterClause = ".*".concat(filter.latinize().toLowerCase().trim().replace(/ /g, ".*")).concat(".*"),
           found = false;
         if (type === "video" && obj.type === type) {
           found = obj.name.toLowerCase().match(filterClause);
         } else if (type === "audio" && obj.type === type) {
-          if ( !obj.title ) {
+          if (!obj.title) {
             logger.error("error checking object: ", obj);
           }
           found = obj.title.toString().latinize().toLowerCase().match(filterClause);
@@ -571,20 +573,20 @@ class Library{
 
           if (!found) {
             _.each(obj.metadatas, (val, key) => {
-              if (!found){
-                if (typeof val === 'String' ){
-                  if (val.latinize().toLowerCase().match(filterClause)){
+              if (!found) {
+                if (typeof val === 'String') {
+                  if (val.latinize().toLowerCase().match(filterClause)) {
                     found = true;
                   }
-                } else if (Array.isArray(val)){
-                  for (var value of val){
-                    if (value.toString().latinize().toLowerCase().match(filterClause)){
+                } else if (Array.isArray(val)) {
+                  for (var value of val) {
+                    if (value.toString().latinize().toLowerCase().match(filterClause)) {
                       found = true
                       break;
                     }
                   }
                 } else {
-                  if (val === filterClause){
+                  if (val === filterClause) {
                     found = true
                   }
                 }
@@ -599,7 +601,7 @@ class Library{
     }
     var arrayResults = [];
 
-    if (type === "audio" && groupby){
+    if (type === "audio" && groupby) {
       arrayResults = this.groupby(searchResultList, groupby, sortby);
     } else {
       arrayResults = searchResultList;
@@ -616,22 +618,22 @@ class Library{
    * @param {String | Array} groupbyClause group by criterion
    * @param {String} sortby sort by criterion
    */
-  groupby (searchResultList, groupbyClause, sortby){
+  groupby(searchResultList, groupbyClause, sortby) {
     groupbyClause = groupbyClause ? groupbyClause : ['artist', 'album'];
 
-    searchResultList = _.sortBy( searchResultList, sortby);
+    searchResultList = _.sortBy(searchResultList, sortby);
 
     var groupedResultList = _.groupByMulti(searchResultList, groupbyClause);
 
     var output = _.map(groupedResultList, (val, groupObject) => {
       var rootGroupObject = {};
-      if (groupbyClause[0] === "artist"){
+      if (groupbyClause[0] === "artist") {
         rootGroupObject.image = this.loadingCoverArtists[groupObject];
-      } else if (groupbyClause[0] === "album" && this.loadingCoverAlbums[val[0].artist]){
+      } else if (groupbyClause[0] === "album" && this.loadingCoverAlbums[val[0].artist]) {
         rootGroupObject.cover = this.loadingCoverAlbums[val[0].artist][groupObject];
       }
 
-      if (groupbyClause.length > 1){
+      if (groupbyClause.length > 1) {
         rootGroupObject[groupbyClause[0]] = groupObject;
 
         var filteredTracks = _.map(val, (album, title) => {
@@ -642,23 +644,30 @@ class Library{
             })
           };
 
-          if (groupbyClause[1] === "album" && this.loadingCoverAlbums[groupObject]){
+          if (groupbyClause[1] === "album" && this.loadingCoverAlbums[groupObject]) {
             albumObject.cover = this.loadingCoverAlbums[groupObject][albumObject.title];
-            if (!albumObject.cover){
+            if (!albumObject.cover) {
               albumObject.cover = '/img/album.jpg';
             }
-          } else if (groupbyClause[1] === "artist"){
+          } else if (groupbyClause[1] === "artist") {
             albumObject.image = this.loadingCoverArtists[albumObject.title];
           }
 
-          albumObject.tracks = _.sortBy( albumObject.tracks, (element) => {
-            return element.metadatas && element.metadatas.track ? element.metadatas.track.no : 0;
+          albumObject.tracks = _.sortBy(albumObject.tracks, (element) => {
+            if (element.metadatas && element.metadatas.track) {
+              if (element.metadatas.track.no) {
+                return element.metadatas.track;
+              } else {
+                return element.metadatas.track.no;
+              }
+            }
+            return 0;
           });
 
           return albumObject;
         });
 
-        if (groupbyClause[1] === "album"){
+        if (groupbyClause[1] === "album") {
           rootGroupObject.albums = filteredTracks;
         } else {
           rootGroupObject[groupbyClause[1]] = filteredTracks;
@@ -667,7 +676,7 @@ class Library{
       } else {
         rootGroupObject[groupbyClause[0]] = groupObject;
 
-        val = _.sortBy( val, (element) => {
+        val = _.sortBy(val, (element) => {
           return element.metadatas && element.metadatas.track ? element.metadatas.track.no : 0;
         });
         rootGroupObject.tracks = val;
@@ -684,7 +693,7 @@ class Library{
    * 
    * @param {Object} opts search options
    */
-  searchPage (opts) {
+  searchPage(opts) {
     var that = this;
     return _.first(_.rest(that.search(opts), opts.page * opts.lenght), opts.lenght);
   };
@@ -698,8 +707,8 @@ class Library{
    * @param {String} username 
    * @param {Object} filter 
    */
-  getUserLibrary (ids, page, length, username, filter) {
-    var searchResultList =  _.filter(this.flatten, (obj) => {
+  getUserLibrary(ids, page, length, username, filter) {
+    var searchResultList = _.filter(this.flatten, (obj) => {
       return _.contains(ids, obj.uid) || (obj.private && obj.user === username);
     });
 
@@ -731,7 +740,7 @@ class Library{
 
       return artistObject;
     });
-    if (page){
+    if (page) {
       return _.first(_.rest(arrayResults, page * length), length);
     }
     return arrayResults;
@@ -746,8 +755,8 @@ class Library{
    * @param {String} username 
    * @param {Object} filter 
    */
-  getAudioById (ids, page, length, username, filter) {
-    var searchResultList =  _.filter(this.flatten, (obj) => {
+  getAudioById(ids, page, length, username, filter) {
+    var searchResultList = _.filter(this.flatten, (obj) => {
       return _.contains(ids, obj.uid);
     });
 
@@ -772,7 +781,7 @@ class Library{
 
       return artistObject;
     });
-    if (page){
+    if (page) {
       return _.first(_.rest(arrayResults, page * length), length);
     }
     return arrayResults;
@@ -783,7 +792,7 @@ class Library{
    * 
    * @param {String} artist artist name
    */
-  getAlbums (artist){
+  getAlbums(artist) {
     return this.getAlbum(artist);
   };
 
@@ -793,11 +802,11 @@ class Library{
    * @param {String} artist artist name
    * @param {String} album album title
    */
-  getAlbum (artist, album){
+  getAlbum(artist, album) {
     var arrayResults;
-    if (artist === "all"){
+    if (artist === "all") {
       arrayResults = this.groupby(this.flatten, ["album"]);
-      arrayResults = _.where(arrayResults, {album: album});
+      arrayResults = _.where(arrayResults, { album: album });
       var albumsObject = [];
       _.each(arrayResults, (album) => {
         albumsObject.push({
@@ -808,10 +817,10 @@ class Library{
       return albumsObject;
     } else {
       arrayResults = this.groupby(this.flatten);
-      arrayResults = _.where(arrayResults, {artist: artist});
+      arrayResults = _.where(arrayResults, { artist: artist });
       var albumSearched;
       _.each(arrayResults[0].albums, (albumObj, index) => {
-        if(albumObj.title === album){
+        if (albumObj.title === album) {
           albumSearched = albumObj;
         }
       });
@@ -825,7 +834,7 @@ class Library{
    * 
    * @param {String} uid unique file identifier 
    */
-  getFile (uid){
+  getFile(uid) {
     return this.getRelativePath(uid);
   };
 
@@ -834,8 +843,8 @@ class Library{
    * 
    * @param {Array} ids unique file identifier
    */
-  getAudioFlattenById (ids){
-    var searchResultList =  _.filter(this.flatten, (obj) => {
+  getAudioFlattenById(ids) {
+    var searchResultList = _.filter(this.flatten, (obj) => {
       return _.contains(ids, obj.uid);
     });
     return searchResultList;
