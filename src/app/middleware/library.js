@@ -656,9 +656,12 @@ class Library {
           albumObject.tracks = _.sortBy(albumObject.tracks, (element) => {
             if (element.metadatas && element.metadatas.track) {
               if (element.metadatas.track.no) {
-                return element.metadatas.track;
-              } else {
                 return element.metadatas.track.no;
+              } else {
+                if (element.metadatas.track.indexOf('/')){
+                  return element.metadatas.track.split('/')[0];
+                }
+                return element.metadatas.track;
               }
             }
             return 0;
@@ -677,7 +680,17 @@ class Library {
         rootGroupObject[groupbyClause[0]] = groupObject;
 
         val = _.sortBy(val, (element) => {
-          return element.metadatas && element.metadatas.track ? element.metadatas.track.no : 0;
+          if (element.metadatas && element.metadatas.track) {
+            if (element.metadatas.track.no) {
+              return element.metadatas.track.no;
+            } else {
+              if (element.metadatas.track.indexOf('/')){
+                return element.metadatas.track.split('/')[0];
+              }
+              return element.metadatas.track;
+            }
+          }
+          return 0;
         });
         rootGroupObject.tracks = val;
       }
