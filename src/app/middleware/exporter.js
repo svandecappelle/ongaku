@@ -17,10 +17,13 @@ const _ = require("underscore");
             });
           });
         });
-        var buffer = zip.generate({type:"nodebuffer"});
-        fs.writeFile(filename, buffer, function(err) {
+        zip.generateAsync({type:"nodebuffer"}).then( (content) => {
+          fs.writeFile(filename, content, function(err) {
+            if (err) reject(err);
+            resolve(filename);
+          });
+        }).catch((err) => {
           if (err) reject(err);
-          resolve(filename);
         });
       });
     }
