@@ -64,9 +64,15 @@ class Decoder {
       metadatas.title = metadatas.TITLE;
     }
 
-    if (metadatas.disk && metadatas.disk.of > 1) {
+    if ((metadatas.disk && metadatas.disk.of > 1) || metadatas.TPA) {
       metadatas.album_origin = metadatas.album;
-      metadatas.album = `${metadatas.album} Disk - ${metadatas.disk.no}/${metadatas.disk.of}`;
+      var discNo;
+      if (metadatas.TPA) {
+        discNo = `${metadatas.TPA}`;
+      } else {
+        discNo = `${metadatas.disk.no}/${metadatas.disk.of}`;
+      }
+      metadatas.album = `${metadatas.album} Disk - ${discNo}`;
     }
 
     metadatas = _.orderKeysBy(metadatas);
