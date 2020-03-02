@@ -60,7 +60,7 @@ class Middleware {
           if (fs.existsSync(USERS_IMAGE_DIRECTORY.concat(middlewareObject.req.user.username + "/imported/theme.css"))) {
             middlewareObject.objs.session.user.user_theme = "/upload/files/imported/theme.css";
           }
-          
+
           if (middlewareObject.objs.session.user.settings) {
             middlewareObject.objs.theme['base-color'] = middlewareObject.objs.session.user.settings.color_scheme;
           }
@@ -173,7 +173,7 @@ class Middleware {
 
     var urlServer = null;
 
-    if (middlewareObject.req.headers.host.lastIndexOf(":" + nconf.get("port")) != -1) {
+    if (middlewareObject.req.headers.host && middlewareObject.req.headers.host.lastIndexOf(":" + nconf.get("port")) != -1) {
       urlServer = middlewareObject.req.headers.host.substring(0, middlewareObject.req.headers.host.length - (nconf.get("port").length + 1));
     } else {
       urlServer = middlewareObject.req.headers.host;

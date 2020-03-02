@@ -46,7 +46,7 @@ const userFilesOpts = {
 const lights_themes = ["light"];
 
 var rmdirAsync = function(path, callback) {
-  
+
   fs.readdir(path, function(err, files) {
     if(err) {
       // Pass the error on to callback
@@ -138,10 +138,10 @@ var getStatistics = function(name, callback){
 };
 
 class SuccessCall {
-  
+
   json () {
     return {
-      code: 200, 
+      code: 200,
       message: "Success"
     };
   }
@@ -383,7 +383,7 @@ class Users {
         stream().then((mediauid) => {
           // TODO change the increment plays to get real play state.
           // streaming method is not good solution.
-          // cause of this method is called each time the song is loaded and not played 
+          // cause of this method is called each time the song is loaded and not played
           this.incrementPlays(mediauid, req.session.sessionID);
         });
       });
@@ -632,7 +632,7 @@ class Users {
     app.post('/api/metadata/selection/set/', (req, res) => {
       var ids = req.body.ids;
       var metadata = req.body.metadatas;
-      
+
       logger.info("set metadata on ", ids, metadata);
       async.eachLimit(ids, 10, (id, next) => {
         var filename = library.getFile(id);
@@ -1396,8 +1396,8 @@ class Users {
           req.session.user['color-scheme'] = req.body.color
           req.session.save(function () {
             logger.info(`Setting theme ${req.body.color} saved to db`);
-            res.status(200).send("OK");    
-          });  
+            res.status(200).send("OK");
+          });
         });
       });
     });
@@ -1406,12 +1406,12 @@ class Users {
       try {
         var src = library.getRelativePath(path.basename(req.params.uid));
         var color = 'white';
-        
+
 
         if (req.session.theme && _.contains(lights_themes, req.session.theme)) {
           color = '#929292';
         }
-        
+
         if (req.query.color){
           color = req.query.color;
         }
@@ -1429,7 +1429,7 @@ class Users {
         });
       } catch(error){
         res.status(500).send("");
-        logger.warn("Not compatible canvas generation wave.");
+        logger.warn("Not compatible canvas generation wave.", error);
       }
     });
   };

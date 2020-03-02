@@ -91,7 +91,7 @@ Application.prototype.restart = function (callback) {
 Application.prototype.log = function () {
 	process.stdout.write('\nType '.red + 'Ctrl-C '.bold + 'to exit'.red);
 	process.stdout.write('\n\n'.reset);
-	cproc.spawn('tail', ['-F', './logs/output.log'], {
+	cproc.spawn('tail', ['-F', './logs/ongaku/output.log'], {
 		cwd: __dirname,
 		stdio: 'inherit'
 	});
